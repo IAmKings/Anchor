@@ -31,6 +31,15 @@ class AndroidEncryptedProbeStoreTest {
     @After
     fun cleanUp() {
         context.deleteDatabase(databaseName)
+        context.getSharedPreferences("anchor_database_keys", android.content.Context.MODE_PRIVATE)
+            .edit()
+            .remove("wrapped_keystore-$databaseName")
+            .commit()
+    }
+
+    @Test
+    fun usesIsolatedDatabaseName() {
+        assertNotEquals("anchor.db", databaseName)
     }
 
     @Test

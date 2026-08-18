@@ -49,11 +49,34 @@ class BaselineAssessmentTest {
     }
 
     @Test
+    fun scaleAttributionNamesPfizerSourceAndDisclaimsDiagnosis() {
+        assertTrue(scaleSource.contains("Pfizer"))
+        assertTrue(scaleSource.contains("phqscreeners.com"))
+        assertTrue(scaleSource.contains("版权"))
+        assertTrue(scaleDisclaimer.contains("不作为医疗诊断"))
+        assertFalse(scaleSource.contains("已获法务确认"))
+        assertFalse(scaleDisclaimer.contains("确诊"))
+    }
+
+    @Test
     fun resultCopyMatchesBandsWithoutPepTalk() {
         assertEquals("轻度状态", phqBandLabel(AssessmentBand.Mild))
         assertEquals("中重度", phqBandLabel(AssessmentBand.ModeratelySevere))
         assertEquals("需要立即支持", resultBadge(SafetyAction.CrisisGuidance))
         assertEquals("中度至重度", resultBadge(SafetyAction.MedicalWaiting))
         assertEquals("可以开始练习", resultBadge(SafetyAction.Continue))
+    }
+
+    @Test
+    fun oneThingLockUsesFourteenDaysAndLeavesLegacyProfilesOpen() {
+        val start = 1_000L
+        assertTrue(additionalPracticeUnlocked(null, start))
+        assertFalse(additionalPracticeUnlocked(start, start + REASSESSMENT_INTERVAL_MILLIS - 1))
+        assertTrue(additionalPracticeUnlocked(start, start + REASSESSMENT_INTERVAL_MILLIS))
+        assertFalse(practiceVisible(FirstAnchor.WaveWaiting, FirstAnchor.MicroAction, unlocked = false))
+        assertTrue(practiceVisible(FirstAnchor.MicroAction, FirstAnchor.MicroAction, unlocked = false))
+        assertTrue(practiceVisible(FirstAnchor.WaveWaiting, FirstAnchor.MicroAction, unlocked = true))
+        assertTrue(oneThingLockBody(FirstAnchor.MicroAction).contains("5 分钟微行动"))
+        assertFalse(oneThingLockBody(FirstAnchor.MicroAction).contains("必须"))
     }
 }

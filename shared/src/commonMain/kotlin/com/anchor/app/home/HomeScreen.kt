@@ -62,7 +62,11 @@ import com.anchor.app.relation.HomeRelationPresentation
 import com.anchor.app.relation.homeRelationPresentation
 import com.anchor.app.relation.homeRelationPreviewNote
 import com.anchor.app.relation.previewHomeRelation
+import com.anchor.app.onboarding.additionalPracticeUnlocked
+import com.anchor.app.onboarding.oneThingLockBody
+import com.anchor.app.onboarding.practiceVisible
 import com.anchor.app.storage.AnchorStore
+import com.anchor.app.storage.FirstAnchor
 import com.anchor.app.storage.WorryResolution
 import com.anchor.app.ui.formatCountdown
 import kotlin.math.PI
@@ -100,7 +104,13 @@ fun HomeScreen(
     onCameraLog: () -> Unit,
     relationPreview: HomeRelationKind? = null,
     onRelationPreviewChange: (HomeRelationKind?) -> Unit = {},
+    forceOneThingLock: Boolean = false,
+    onDismissOneThingLock: () -> Unit = {},
 ) {
+    val profile = store.userProfile()
+    val unlocked = !forceOneThingLock && additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis())
+    val selectedAnchor = profile.firstAnchor ?: if (forceOneThingLock) FirstAnchor.MicroAction else null
+    fun showPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, selectedAnchor, unlocked)
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = { HomeTopBar(onHelp = onHelp, onSettings = onSettings) },
@@ -123,7 +133,7 @@ fun HomeScreen(
                         shape = CircleShape,
                         modifier = Modifier.semantics { contentDescription = "此刻需要帮助" },
                     ) { Text("助", fontWeight = FontWeight.SemiBold, fontSize = 18.sp) }
-                } else {
+                } else if (showPractice(FirstAnchor.WorryVault)) {
                     FloatingActionButton(
                         onClick = onHang,
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -181,6 +191,13 @@ fun HomeScreen(
                     onWorryVault = onWorryVault,
                     relationPreview = relationPreview,
                     onRelationPreviewChange = onRelationPreviewChange,
+                    showWave = showPractice(FirstAnchor.WaveWaiting),
+                    showRhythm = showPractice(FirstAnchor.Rhythm),
+                    showMicroAction = showPractice(FirstAnchor.MicroAction),
+                    showWorry = showPractice(FirstAnchor.WorryVault),
+                    showRelation = showPractice(FirstAnchor.SocialEnergy) || showPractice(FirstAnchor.AltruisticTask),
+                    lockNote = if (!unlocked && selectedAnchor != null) oneThingLockBody(selectedAnchor) else null,
+                    onDismissLockPreview = if (forceOneThingLock) onDismissOneThingLock else null,
                 )
             }
             Spacer(Modifier.height(72.dp))
@@ -268,6 +285,13 @@ private fun PracticeHome(
     onWorryVault: () -> Unit,
     relationPreview: HomeRelationKind? = null,
     onRelationPreviewChange: (HomeRelationKind?) -> Unit = {},
+    showWave: Boolean = true,
+    showRhythm: Boolean = true,
+    showMicroAction: Boolean = true,
+    showWorry: Boolean = true,
+    showRelation: Boolean = true,
+    lockNote: String? = null,
+    onDismissLockPreview: (() -> Unit)? = null,
 ) {
     val rhythm = store.rhythmEntries().firstOrNull()
     val actions = store.microActions()
@@ -297,7 +321,15 @@ private fun PracticeHome(
         ) {
             Text("应用仅适用轻度调节", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f), fontSize = 14.sp)
         }
-        WaveEntry(onClick = onWave)
+        lockNote?.let {
+            Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 22.sp)
+        }
+        onDismissLockPreview?.let { dismiss ->
+            TextButton(onClick = dismiss) { Text("关闭预览") }
+        }
+        if (showWave) {
+            WaveEntry(onClick = onWave)
+        }
         val relationState = if (relationPreview != null) {
             previewHomeRelation(relationPreview)
         } else {
@@ -353,6 +385,7 @@ private fun PracticeHome(
             RelationBanner(relationState)
         }
         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            if (showRhythm) {
             StatusCard(
                 glyph = "光",
                 wellColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -368,6 +401,8 @@ private fun PracticeHome(
                     }
                 }
             }
+            }
+            if (showMicroAction) {
             StatusCard(
                 glyph = "步",
                 wellColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -389,6 +424,8 @@ private fun PracticeHome(
                     )
                 }
             }
+            }
+            if (showWorry) {
             StatusCard(
                 glyph = "箱",
                 wellColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f),
@@ -397,6 +434,8 @@ private fun PracticeHome(
                 trailing = if (isWorrySessionOpen()) "开" else "锁",
                 onClick = onWorryVault,
             )
+            }
+            if (showRelation) {
             StatusCard(
                 glyph = if (relationState.kind == HomeRelationKind.Exhausted) "植" else "他",
                 wellColor = when (relationState.kind) {
@@ -412,6 +451,7 @@ private fun PracticeHome(
                 relationState.cardHint?.let { hint ->
                     Text(hint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
                 }
+            }
             }
         }
     }

@@ -27,7 +27,8 @@ CREATE TABLE user_profile (
   age_group TEXT,
   onboarding_complete INTEGER NOT NULL CHECK (onboarding_complete IN (0, 1)),
   first_anchor TEXT,
-  crisis_region TEXT
+  crisis_region TEXT,
+  first_anchor_at INTEGER
 );
 
 CREATE TABLE emotion_card (
@@ -148,11 +149,11 @@ clearSafetyState:
 DELETE FROM safety_state;
 
 upsertUserProfile:
-INSERT OR REPLACE INTO user_profile(id, age_group, onboarding_complete, first_anchor, crisis_region)
-VALUES (1, ?, ?, ?, ?);
+INSERT OR REPLACE INTO user_profile(id, age_group, onboarding_complete, first_anchor, crisis_region, first_anchor_at)
+VALUES (1, ?, ?, ?, ?, ?);
 
 readUserProfile:
-SELECT age_group, onboarding_complete, first_anchor, crisis_region
+SELECT age_group, onboarding_complete, first_anchor, crisis_region, first_anchor_at
 FROM user_profile
 WHERE id = 1;
 

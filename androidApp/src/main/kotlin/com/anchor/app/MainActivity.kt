@@ -7,7 +7,6 @@ import android.media.MediaPlayer
 import android.app.NotificationManager
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.getValue
@@ -406,11 +405,7 @@ class MainActivity : FragmentActivity() {
     }
 
     private fun updatePrivacyShield() {
-        if (appLockEnabled) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        } else {
-            window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        }
+        applyPrivacyShield(window, appLockEnabled)
     }
 
     private companion object {

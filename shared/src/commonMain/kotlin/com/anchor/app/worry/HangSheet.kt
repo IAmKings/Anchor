@@ -37,6 +37,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.safety.CrisisClarificationDialog
+import com.anchor.app.safety.findCrisisPhrase
 import com.anchor.app.storage.AnchorStore
 
 private val SheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
@@ -53,10 +55,12 @@ fun HangSheet(
     speechRecording: Boolean,
     onCaptureSpeech: ((String) -> Unit) -> Unit,
     onStopRecording: () -> String?,
+    onCrisisGuidance: () -> Unit = {},
     onClose: () -> Unit,
 ) {
     var content by remember { mutableStateOf("") }
     var savedMessage by remember { mutableStateOf<String?>(null) }
+    var pendingPhrase by remember { mutableStateOf<String?>(null) }
 
     fun close() {
         if (speechRecording) onStopRecording()
@@ -66,9 +70,25 @@ fun HangSheet(
     fun sealText() {
         val text = content.trim()
         if (text.isBlank()) return
+        val hit = findCrisisPhrase(text)
+        if (hit != null) {
+            pendingPhrase = hit
+            return
+        }
         store.addWorryCard(text, nowMillis(), nextSessionMillis())
         content = ""
         savedMessage = vaultSealedMessage(isSessionOpen(), nextSessionLabel())
+    }
+
+    fun confirmSeal(goToCrisis: Boolean) {
+        val text = content.trim()
+        if (text.isNotBlank()) {
+            store.addWorryCard(text, nowMillis(), nextSessionMillis())
+            content = ""
+            savedMessage = vaultSealedMessage(isSessionOpen(), nextSessionLabel())
+        }
+        pendingPhrase = null
+        if (goToCrisis) onCrisisGuidance()
     }
 
     fun sealSpeech() {
@@ -116,6 +136,14 @@ fun HangSheet(
                 onHang = { sealText() },
                 onDismiss = { close() },
                 showDismiss = savedMessage != null,
+            )
+        }
+        pendingPhrase?.let { phrase ->
+            CrisisClarificationDialog(
+                phrase = phrase,
+                onNotSelf = { confirmSeal(goToCrisis = false) },
+                onSelf = { confirmSeal(goToCrisis = true) },
+                onUncertain = { confirmSeal(goToCrisis = true) },
             )
         }
     }

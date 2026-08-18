@@ -38,6 +38,26 @@ class CrisisResourcesTest {
     }
 
     @Test
+    fun remainingRegionsFollowPrdFallbackTable() {
+        val uk = crisisResource(CrisisRegion.UnitedKingdom, youth = false)
+        assertEquals("999 / 112", uk.emergency)
+        assertTrue(uk.hotline.contains("116 123"))
+        assertTrue(uk.hotline.contains("111"))
+
+        val japan = crisisResource(CrisisRegion.Japan, youth = false)
+        assertEquals("110 / 119", japan.emergency)
+        assertEquals("0570-064-556", japan.hotline)
+
+        val other = crisisResource(CrisisRegion.Other, youth = false)
+        assertEquals("当地紧急电话", other.emergency)
+        assertTrue(other.hotline.contains("当地"))
+
+        val macauYouth = crisisResource(CrisisRegion.Macau, youth = true)
+        assertEquals("999", macauYouth.emergency)
+        assertTrue(macauYouth.hotline.contains("就近"))
+    }
+
+    @Test
     fun designedRegionsUseDedicatedHotlineCards() {
         val mainland = medicalGuideContent(CrisisRegion.MainlandChina, youth = false)
         assertEquals(listOf("120", "110"), mainland.emergency.numbers)

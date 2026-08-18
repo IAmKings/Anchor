@@ -1,13 +1,26 @@
 package com.anchor.app
 
 import android.content.Context
+import android.view.Window
+import android.view.WindowManager
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 
-class AndroidBiometricLock(private val activity: FragmentActivity) {
-    private val preferences = activity.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+fun applyPrivacyShield(window: Window, enabled: Boolean) {
+    if (enabled) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+    } else {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+    }
+}
+
+class AndroidBiometricLock(
+    private val activity: FragmentActivity,
+    preferencesName: String = PREFERENCES,
+) {
+    private val preferences = activity.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
 
     var enabled: Boolean
         get() = preferences.getBoolean(ENABLED, false)
@@ -48,7 +61,7 @@ class AndroidBiometricLock(private val activity: FragmentActivity) {
     }
 
     companion object {
-        private const val PREFERENCES = "app-lock"
+        internal const val PREFERENCES = "app-lock"
         private const val ENABLED = "enabled"
         private const val AUTHENTICATORS =
             BiometricManager.Authenticators.BIOMETRIC_WEAK or

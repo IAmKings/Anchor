@@ -61,6 +61,8 @@ fun SettingsScreen(
     onPreviewReturnToPractice: () -> Unit = {},
     onPreviewMedicalGuide: () -> Unit = {},
     onPreviewHomeRelation: () -> Unit = {},
+    onPreviewCrisisClarification: () -> Unit = {},
+    onPreviewOneThingLock: () -> Unit = {},
     onOpenReassessment: () -> Unit = {},
     onClose: () -> Unit,
 ) {
@@ -170,6 +172,8 @@ fun SettingsScreen(
             TextButton(onClick = onPreviewReturnToPractice) { Text("预览回归练习（不改状态）") }
             TextButton(onClick = onPreviewMedicalGuide) { Text("预览就医指南（不改地区）") }
             TextButton(onClick = onPreviewHomeRelation) { Text("预览首页回血 / 抽干 / 耗竭（不改记录）") }
+            TextButton(onClick = onPreviewCrisisClarification) { Text("预览危机澄清（不改状态）") }
+            TextButton(onClick = onPreviewOneThingLock) { Text("预览一次一件锁定（不改选择）") }
         }
         Spacer(Modifier.height(16.dp))
     }

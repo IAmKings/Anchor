@@ -10,13 +10,13 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class AndroidBackgroundTimerTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
-    private val timer = AndroidBackgroundTimer(context)
-    private val microActionTimer = AndroidBackgroundTimer(context, BackgroundTimerKind.MicroAction)
+    private val timer = AndroidBackgroundTimer(context, BackgroundTimerKind.InstrumentedA)
+    private val otherTimer = AndroidBackgroundTimer(context, BackgroundTimerKind.InstrumentedB)
 
     @After
     fun cleanUp() {
         timer.cancel()
-        microActionTimer.cancel()
+        otherTimer.cancel()
     }
 
     @Test
@@ -29,9 +29,9 @@ class AndroidBackgroundTimerTest {
     @Test
     fun timerKindsDoNotOverwriteEachOther() {
         timer.schedule(5_000L)
-        microActionTimer.schedule(10_000L)
+        otherTimer.schedule(10_000L)
         timer.cancel()
 
-        assertEquals(true, microActionTimer.remainingMillis() > 0)
+        assertEquals(true, otherTimer.remainingMillis() > 0)
     }
 }

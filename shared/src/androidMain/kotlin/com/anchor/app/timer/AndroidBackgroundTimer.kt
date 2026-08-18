@@ -19,7 +19,7 @@ private const val FIRED = "fired"
 private const val IN_APP_NOTICE_PENDING = "in-app-notice-pending"
 const val TIMER_KIND = "timer-kind"
 private const val NOTIFICATION_CHANNEL = "timer-completion"
-enum class BackgroundTimerKind { Wave, MicroAction }
+enum class BackgroundTimerKind { Wave, MicroAction, InstrumentedA, InstrumentedB }
 
 class AndroidBackgroundTimer(context: Context, private val kind: BackgroundTimerKind = BackgroundTimerKind.Wave) {
     private val appContext = context.applicationContext
@@ -95,6 +95,8 @@ class BackgroundTimerReceiver : BroadcastReceiver() {
 }
 
 private fun deliverTimerCompletionNotification(context: Context, kind: BackgroundTimerKind): Boolean {
+    if (!kind.shouldNotify) return false
+
     val manager = context.getSystemService(NotificationManager::class.java)
     manager.createNotificationChannel(
         NotificationChannel(
@@ -143,14 +145,27 @@ private fun deliverTimerCompletionNotification(context: Context, kind: Backgroun
 }
 
 private val BackgroundTimerKind.requestCode: Int
-    get() = if (this == BackgroundTimerKind.Wave) 7001 else 7011
+    get() = when (this) {
+        BackgroundTimerKind.Wave -> 7001
+        BackgroundTimerKind.MicroAction -> 7011
+        BackgroundTimerKind.InstrumentedA -> 7901
+        BackgroundTimerKind.InstrumentedB -> 7911
+    }
 
 private val BackgroundTimerKind.notificationId: Int
-    get() = if (this == BackgroundTimerKind.Wave) 7002 else 7012
+    get() = when (this) {
+        BackgroundTimerKind.Wave -> 7002
+        BackgroundTimerKind.MicroAction -> 7012
+        BackgroundTimerKind.InstrumentedA -> 7902
+        BackgroundTimerKind.InstrumentedB -> 7912
+    }
+
+private val BackgroundTimerKind.shouldNotify: Boolean
+    get() = this == BackgroundTimerKind.Wave || this == BackgroundTimerKind.MicroAction
 
 private val BackgroundTimerKind.completionText: String
-    get() = if (this == BackgroundTimerKind.Wave) {
-        "它自己退了。你没有掐掉它，它也会走。"
-    } else {
-        "五分钟到了。停在这里，也算完成了一次尝试。"
+    get() = when (this) {
+        BackgroundTimerKind.Wave -> "它自己退了。你没有掐掉它，它也会走。"
+        BackgroundTimerKind.MicroAction -> "五分钟到了。停在这里，也算完成了一次尝试。"
+        BackgroundTimerKind.InstrumentedA, BackgroundTimerKind.InstrumentedB -> ""
     }

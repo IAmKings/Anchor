@@ -3,6 +3,7 @@ package com.anchor.app.storage
 import com.anchor.app.safety.AssessmentBand
 import com.anchor.app.safety.Clarification
 import com.anchor.app.safety.SafetyAction
+import com.anchor.app.safety.SafetyMode
 import com.anchor.app.safety.SafetyOutcome
 import com.anchor.app.safety.SafetyPolicy
 import com.anchor.app.safety.SafetyState
@@ -35,6 +36,7 @@ data class UserProfile(
     val ageGroup: AgeGroup? = null,
     val onboardingComplete: Boolean = false,
     val firstAnchor: FirstAnchor? = null,
+    val firstAnchorAtMillis: Long? = null,
     val crisisRegion: CrisisRegion = CrisisRegion.MainlandChina,
 )
 
@@ -122,6 +124,7 @@ val emotionVocabulary = listOf(
 
 interface AnchorStore {
     fun evaluateAndStore(input: AssessmentInput): SafetyOutcome
+    fun enterCrisisWaiting()
     fun safetyState(): SafetyState
     fun assessments(): List<StoredAssessment>
     fun userProfile(): UserProfile
@@ -196,6 +199,10 @@ class InMemoryAnchorStore : AnchorStore {
         )
         state = outcome.state
         return outcome
+    }
+
+    override fun enterCrisisWaiting() {
+        state = SafetyState(SafetyMode.MedicalWaiting)
     }
 
     override fun safetyState(): SafetyState = state

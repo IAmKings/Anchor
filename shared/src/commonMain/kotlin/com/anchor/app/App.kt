@@ -31,6 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.onboarding.FirstRunAssessment
 import com.anchor.app.onboarding.FirstAnchorChoice
+import com.anchor.app.onboarding.additionalPracticeUnlocked
+import com.anchor.app.onboarding.oneThingLockBody
+import com.anchor.app.onboarding.practiceVisible
+import com.anchor.app.storage.FirstAnchor
 import com.anchor.app.onboarding.ReassessmentFlow
 import com.anchor.app.onboarding.isReassessmentBanner
 import com.anchor.app.onboarding.medicalReassessAllowed
@@ -41,6 +45,7 @@ import com.anchor.app.home.HomeScreen
 import com.anchor.app.relation.HomeRelationKind
 import com.anchor.app.journal.CameraLogScreen
 import com.anchor.app.journal.RecordsHub
+import com.anchor.app.safety.CrisisClarificationDialog
 import com.anchor.app.safety.HelpNowScreen
 import com.anchor.app.safety.ReturnToPracticeScreen
 import com.anchor.app.safety.MedicalGuideScreen
@@ -173,6 +178,24 @@ fun App(
     var medicalGuideVisible by remember { mutableStateOf(false) }
     var medicalGuidePreviewing by remember { mutableStateOf(false) }
     var homeRelationPreview by remember { mutableStateOf<HomeRelationKind?>(null) }
+    var crisisClarificationPreviewVisible by remember { mutableStateOf(false) }
+    var oneThingLockPreview by remember { mutableStateOf(false) }
+    val profile = store.userProfile()
+    val practiceUnlocked = !oneThingLockPreview && additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis())
+    val lockedAnchor = profile.firstAnchor ?: if (oneThingLockPreview) FirstAnchor.MicroAction else null
+    fun canPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, lockedAnchor, practiceUnlocked)
+    val oneThingNote = lockedAnchor?.takeIf { !practiceUnlocked }?.let(::oneThingLockBody)
+    fun openCrisisFromText(persistWaiting: Boolean) {
+        if (persistWaiting) store.enterCrisisWaiting()
+        hangSheetVisible = false
+        worryVaultVisible = false
+        emotionCardsVisible = false
+        cameraLogVisible = false
+        recordsHubVisible = false
+        settingsVisible = false
+        crisisClarificationPreviewVisible = false
+        helpVisible = true
+    }
     var somaticChecklistVisible by remember { mutableStateOf(false) }
     var assessmentPreviewVisible by remember { mutableStateOf(false) }
     var reassessmentVisible by remember(store) {
@@ -241,13 +264,25 @@ fun App(
                 return@Surface
             }
             if (relationVisible) {
-                RelationFlow(store, nowMillis) { relationVisible = false }
+                RelationFlow(
+                    store = store,
+                    nowMillis = nowMillis,
+                    showInventory = canPractice(FirstAnchor.SocialEnergy),
+                    showAltruism = canPractice(FirstAnchor.AltruisticTask),
+                    onClose = { relationVisible = false },
+                )
                 return@Surface
             }
             if (anchorChoiceVisible) {
                 FirstAnchorChoice(
                     onConfirm = { firstAnchor ->
-                        store.saveUserProfile(store.userProfile().copy(firstAnchor = firstAnchor))
+                        val current = store.userProfile()
+                        store.saveUserProfile(
+                            current.copy(
+                                firstAnchor = firstAnchor,
+                                firstAnchorAtMillis = current.firstAnchorAtMillis ?: nowMillis(),
+                            ),
+                        )
                         anchorChoiceVisible = false
                     },
                 )
@@ -275,6 +310,7 @@ fun App(
                     onStopRecording = onStopWorryRecording,
                     audioPlaybackStatus = audioPlaybackStatus,
                     onPlayAudio = onPlayWorryAudio,
+                    onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
                     onClose = {
                         if (speechRecording) onStopWorryRecording()
                         worryVaultVisible = false
@@ -388,18 +424,42 @@ fun App(
                             settingsVisible = false
                             homeRelationPreview = HomeRelationKind.Filled
                         },
+                        onPreviewCrisisClarification = { crisisClarificationPreviewVisible = true },
+                        onPreviewOneThingLock = {
+                            settingsVisible = false
+                            oneThingLockPreview = true
+                        },
                         onOpenReassessment = { settingsVisible = false; reassessmentVisible = true },
                         onClose = { settingsVisible = false },
+                    )
+                }
+                if (crisisClarificationPreviewVisible) {
+                    CrisisClarificationDialog(
+                        phrase = "活不下去",
+                        previewing = true,
+                        onNotSelf = { crisisClarificationPreviewVisible = false },
+                        onSelf = { openCrisisFromText(persistWaiting = false) },
+                        onUncertain = { openCrisisFromText(persistWaiting = false) },
                     )
                 }
                 return@Surface
             }
             if (emotionCardsVisible) {
-                EmotionCardsScreen(store, nowMillis) { emotionCardsVisible = false }
+                EmotionCardsScreen(
+                    store = store,
+                    nowMillis = nowMillis,
+                    onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
+                    onClose = { emotionCardsVisible = false },
+                )
                 return@Surface
             }
             if (cameraLogVisible) {
-                CameraLogScreen(store, nowMillis) { cameraLogVisible = false }
+                CameraLogScreen(
+                    store = store,
+                    nowMillis = nowMillis,
+                    onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
+                    onClose = { cameraLogVisible = false },
+                )
                 return@Surface
             }
             if (recordsHubVisible) {
@@ -413,6 +473,9 @@ fun App(
                     onSettings = { recordsHubVisible = false; settingsVisible = true },
                     onHelp = { recordsHubVisible = false; helpVisible = true },
                     onClose = { recordsHubVisible = false },
+                    showEmotion = canPractice(FirstAnchor.EmotionLabel),
+                    showJournal = canPractice(FirstAnchor.FactsJournal),
+                    lockNote = oneThingNote,
                 )
                 return@Surface
             }
@@ -436,22 +499,28 @@ fun App(
                     formatLocalTime = formatLocalTime,
                     isWorrySessionOpen = isWorrySessionOpen,
                     nextWorrySessionLabel = nextWorrySessionLabel,
-                    onWave = { waveVisible = true },
+                    onWave = { if (canPractice(FirstAnchor.WaveWaiting)) waveVisible = true },
                     onRecords = { recordsHubVisible = true },
                     onInsights = { insightsVisible = true },
                     onSettings = { settingsVisible = true },
                     onHelp = { helpVisible = true },
                     onMedicalGuide = { medicalGuideVisible = true },
                     onSomaticChecklist = { somaticChecklistVisible = true },
-                    onWorryVault = { worryVaultVisible = true },
+                    onWorryVault = { if (canPractice(FirstAnchor.WorryVault)) worryVaultVisible = true },
                     hangSheetOpen = hangSheetVisible,
-                    onHang = { hangSheetVisible = true },
-                    onMicroAction = { microActionVisible = true },
-                    onRhythm = { rhythmVisible = true },
-                    onRelation = { relationVisible = true },
-                    onCameraLog = { cameraLogVisible = true },
+                    onHang = { if (canPractice(FirstAnchor.WorryVault)) hangSheetVisible = true },
+                    onMicroAction = { if (canPractice(FirstAnchor.MicroAction)) microActionVisible = true },
+                    onRhythm = { if (canPractice(FirstAnchor.Rhythm)) rhythmVisible = true },
+                    onRelation = {
+                        if (canPractice(FirstAnchor.SocialEnergy) || canPractice(FirstAnchor.AltruisticTask)) {
+                            relationVisible = true
+                        }
+                    },
+                    onCameraLog = { if (canPractice(FirstAnchor.FactsJournal)) cameraLogVisible = true },
                     relationPreview = homeRelationPreview,
                     onRelationPreviewChange = { homeRelationPreview = it },
+                    forceOneThingLock = oneThingLockPreview,
+                    onDismissOneThingLock = { oneThingLockPreview = false },
                 )
                 if (hangSheetVisible) {
                     HangSheet(
@@ -464,6 +533,7 @@ fun App(
                         speechRecording = speechRecording,
                         onCaptureSpeech = onCaptureWorrySpeech,
                         onStopRecording = onStopWorryRecording,
+                        onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
                         onClose = {
                             if (speechRecording) onStopWorryRecording()
                             hangSheetVisible = false

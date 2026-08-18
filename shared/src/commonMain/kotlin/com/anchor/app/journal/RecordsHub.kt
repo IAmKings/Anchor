@@ -47,6 +47,9 @@ fun RecordsHub(
     onSettings: () -> Unit,
     onHelp: () -> Unit,
     onClose: () -> Unit,
+    showEmotion: Boolean = true,
+    showJournal: Boolean = true,
+    lockNote: String? = null,
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -76,7 +79,10 @@ fun RecordsHub(
                 fontSize = 15.sp,
                 lineHeight = 24.sp,
             )
-            if (!medicalWaiting) {
+            lockNote?.let {
+                Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 22.sp)
+            }
+            if (!medicalWaiting && showEmotion) {
                 RecordEntryCard(
                     glyph = "情",
                     wellColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.55f),
@@ -87,6 +93,7 @@ fun RecordsHub(
                     onClick = onEmotionCards,
                 )
             }
+            if (showJournal || medicalWaiting) {
             RecordEntryCard(
                 glyph = "栏",
                 wellColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
@@ -96,6 +103,7 @@ fun RecordsHub(
                 contentDescription = "双栏日志",
                 onClick = onCameraLog,
             )
+            }
             Spacer(Modifier.height(24.dp))
         }
     }

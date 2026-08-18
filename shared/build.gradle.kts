@@ -37,9 +37,15 @@ kotlin {
             implementation("androidx.sqlite:sqlite:2.6.2")
             implementation("net.zetetic:sqlcipher-android:4.17.0")
         }
+        iosMain.dependencies {
+            implementation("app.cash.sqldelight:native-driver:2.3.2")
+        }
         androidInstrumentedTest.dependencies {
             implementation("androidx.test.ext:junit:1.3.0")
             implementation("androidx.test:runner:1.7.0")
+        }
+        androidUnitTest.dependencies {
+            implementation("app.cash.sqldelight:sqlite-driver:2.3.2")
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

@@ -40,6 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.safety.CrisisClarificationDialog
+import com.anchor.app.safety.findCrisisPhrase
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.WorryCard
 import com.anchor.app.storage.WorryResolution
@@ -61,10 +63,12 @@ fun WorryVaultScreen(
     onStopRecording: () -> String?,
     audioPlaybackStatus: String?,
     onPlayAudio: (String) -> Unit,
+    onCrisisGuidance: () -> Unit = {},
     onClose: () -> Unit,
 ) {
     var content by remember { mutableStateOf("") }
     var confirmationVisible by remember { mutableStateOf(false) }
+    var pendingPhrase by remember { mutableStateOf<String?>(null) }
     var forcedOpen by remember { mutableStateOf(false) }
     var savedMessage by remember { mutableStateOf<String?>(null) }
     var action by remember { mutableStateOf("") }
@@ -134,10 +138,14 @@ fun WorryVaultScreen(
                 nextSessionLabel = nextSessionLabel(),
                 nowMillis = nowMillis(),
                 onHang = {
-                    store.addWorryCard(content, nowMillis(), nextSessionMillis())
-                    content = ""
-                    savedMessage = vaultSealedMessage(open, nextSessionLabel())
-                    revision++
+                    val hit = findCrisisPhrase(content)
+                    if (hit != null) pendingPhrase = hit
+                    else {
+                        store.addWorryCard(content, nowMillis(), nextSessionMillis())
+                        content = ""
+                        savedMessage = vaultSealedMessage(open, nextSessionLabel())
+                        revision++
+                    }
                 },
                 onSpeech = {
                     if (speechRecording) {
@@ -157,6 +165,30 @@ fun WorryVaultScreen(
             )
         }
         Spacer(Modifier.height(24.dp))
+    }
+    pendingPhrase?.let { phrase ->
+        CrisisClarificationDialog(
+            phrase = phrase,
+            onNotSelf = {
+                store.addWorryCard(content, nowMillis(), nextSessionMillis())
+                content = ""
+                savedMessage = vaultSealedMessage(open, nextSessionLabel())
+                revision++
+                pendingPhrase = null
+            },
+            onSelf = {
+                store.addWorryCard(content, nowMillis(), nextSessionMillis())
+                content = ""
+                pendingPhrase = null
+                onCrisisGuidance()
+            },
+            onUncertain = {
+                store.addWorryCard(content, nowMillis(), nextSessionMillis())
+                content = ""
+                pendingPhrase = null
+                onCrisisGuidance()
+            },
+        )
     }
 }
 

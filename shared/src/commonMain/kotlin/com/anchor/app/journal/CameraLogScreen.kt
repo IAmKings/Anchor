@@ -38,6 +38,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.safety.CrisisClarificationDialog
+import com.anchor.app.safety.findCrisisPhrase
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.CameraLog
 import com.anchor.app.storage.firstEvaluativeWord
@@ -45,20 +47,57 @@ import com.anchor.app.storage.firstEvaluativeWord
 private val CardShape = RoundedCornerShape(16.dp)
 
 @Composable
-fun CameraLogScreen(store: AnchorStore, nowMillis: () -> Long, onClose: () -> Unit) {
+fun CameraLogScreen(
+    store: AnchorStore,
+    nowMillis: () -> Long,
+    onCrisisGuidance: () -> Unit = {},
+    onClose: () -> Unit,
+) {
     var composing by remember { mutableStateOf(false) }
     var reflectionVisible by remember { mutableStateOf(false) }
     var revision by remember { mutableIntStateOf(0) }
+    var pendingPhrase by remember { mutableStateOf<String?>(null) }
+    var pendingSave by remember { mutableStateOf<(() -> Unit)?>(null) }
     if (composing) {
         NewCameraLog(
             onCancel = { composing = false },
             onSave = { fact, inference ->
-                store.addCameraLog(fact, inference, nowMillis())
-                revision++
-                composing = false
-                reflectionVisible = true
+                val save = {
+                    store.addCameraLog(fact, inference, nowMillis())
+                    revision++
+                    composing = false
+                    reflectionVisible = true
+                }
+                val hit = findCrisisPhrase(listOf(fact, inference))
+                if (hit == null) save()
+                else {
+                    pendingSave = save
+                    pendingPhrase = hit
+                }
             },
         )
+        pendingPhrase?.let { phrase ->
+            CrisisClarificationDialog(
+                phrase = phrase,
+                onNotSelf = {
+                    pendingSave?.invoke()
+                    pendingSave = null
+                    pendingPhrase = null
+                },
+                onSelf = {
+                    pendingSave?.invoke()
+                    pendingSave = null
+                    pendingPhrase = null
+                    onCrisisGuidance()
+                },
+                onUncertain = {
+                    pendingSave?.invoke()
+                    pendingSave = null
+                    pendingPhrase = null
+                    onCrisisGuidance()
+                },
+            )
+        }
         return
     }
     val logs = remember(revision) { store.cameraLogs() }

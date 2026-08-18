@@ -118,6 +118,24 @@ fun LocalInsightsScreen(
             detail = "只计数已被处理的卡片，没有完成率，也没有断档提醒。",
         )
         InsightCard(
+            title = worryUnsolvableTitle,
+            value = worryUnsolvableCopy(store.worryCards()),
+            detail = worryUnsolvableDetail,
+        )
+        run {
+            val logs = store.cameraLogs()
+            val hits = interpretationHits(logs)
+            InsightCard(
+                title = interpretationTitle,
+                value = interpretationCopy(interpretationSampleCount(logs), hits),
+                detail = interpretationDetail,
+            ) {
+                hits.forEach { hit ->
+                    Text(interpretationHitLine(hit), fontSize = 15.sp, lineHeight = 22.sp)
+                }
+            }
+        }
+        InsightCard(
             title = "关系监控",
             value = monitorCopy(store.relationContacts()),
             detail = "只计需要监控自己的关系段数，不是得分。",

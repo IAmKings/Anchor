@@ -70,6 +70,8 @@ class InMemoryAnchorStoreTest {
         )
         assertEquals(SafetyAction.Continue, recovered.action)
         assertEquals(SafetyState(), store.safetyState())
+        store.enterCrisisWaiting()
+        assertEquals(SafetyState(SafetyMode.MedicalWaiting), store.safetyState())
 
         store.clearAllData()
         assertTrue(store.assessments().isEmpty())

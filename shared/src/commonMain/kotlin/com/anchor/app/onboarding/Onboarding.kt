@@ -95,11 +95,17 @@ fun FirstRunAssessment(
 
     fun persistProfile(complete: Boolean, firstAnchor: FirstAnchor? = null) {
         if (!persist) return
+        val current = store.userProfile()
         store.saveUserProfile(
             UserProfile(
                 ageGroup = ageGroup,
                 onboardingComplete = complete,
-                firstAnchor = firstAnchor,
+                firstAnchor = firstAnchor ?: current.firstAnchor,
+                firstAnchorAtMillis = if (firstAnchor != null && current.firstAnchorAtMillis == null) {
+                    nowMillis()
+                } else {
+                    current.firstAnchorAtMillis
+                },
                 crisisRegion = crisisRegion,
             ),
         )

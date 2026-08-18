@@ -10,5 +10,10 @@
         <receiver
             android:name="com.anchor.app.SpeechProbeReceiver"
             android:exported="true" />
+        <activity
+            android:name=".PrivacyShieldHostActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Anchor" />
     </application>
 </manifest>
+

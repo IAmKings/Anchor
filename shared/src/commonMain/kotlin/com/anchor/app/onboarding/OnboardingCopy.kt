@@ -36,7 +36,7 @@ internal const val privacyTitle = "隐私政策"
 internal const val privacyBody = "数据只留在这台设备。没有账号，也不会上传。换机只能通过你自己导出的加密备份。"
 internal const val scalePrompt = "过去两周，你有多少时间被以下问题困扰？请根据真实感受选择。"
 internal const val scaleDisclaimer = "评估结果仅供参考，不作为医疗诊断依据。"
-internal const val scaleSource = "PHQ-9 / GAD-7 来源：PHQ Screeners（Pfizer 支持开发）。"
+internal const val scaleSource = "PHQ-9 / GAD-7 版权归 Pfizer，来源 phqscreeners.com。免费用于筛查参考。"
 internal const val submitAssessmentLabel = "提交评估"
 internal const val bufferTitle = "评估已提交"
 internal const val bufferBody = "深呼吸，我们正在为你整理反馈…"
@@ -48,6 +48,19 @@ internal const val medicalWaitingBody = "日常练习已暂时隐去，请优先
 internal const val firstAnchorHeadline = "感谢你的诚实。目前你可以通过行为来进行日常调节。"
 internal const val firstAnchorBody = "建议从最轻微的动作开始，请在下方列表里只选一个。"
 internal const val firstAnchorCommitHint = "选定后我们将固定练习 14 天"
+internal const val oneThingLockNote = "这 14 天只练这一件。不是任务。"
+
+internal fun additionalPracticeUnlocked(firstAnchorAtMillis: Long?, nowMillis: Long): Boolean =
+    firstAnchorAtMillis == null || nowMillis - firstAnchorAtMillis >= REASSESSMENT_INTERVAL_MILLIS
+
+internal fun practiceVisible(anchor: FirstAnchor, selected: FirstAnchor?, unlocked: Boolean): Boolean =
+    unlocked || selected == null || selected == anchor
+
+internal fun firstAnchorTitle(anchor: FirstAnchor): String =
+    (p0FirstAnchors + p1FirstAnchors).first { it.anchor == anchor }.title
+
+internal fun oneThingLockBody(anchor: FirstAnchor): String =
+    "这 14 天只练「${firstAnchorTitle(anchor)}」。不是任务。"
 internal const val item9CrisisNote = "如果你现在处于立即危险中，请直接拨打当地急救或报警电话。"
 
 internal const val bufferDelayMillis = 3_000L

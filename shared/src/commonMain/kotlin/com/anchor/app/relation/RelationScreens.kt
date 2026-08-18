@@ -50,12 +50,16 @@ private val CardShape = RoundedCornerShape(16.dp)
 fun RelationFlow(
     store: AnchorStore,
     nowMillis: () -> Long,
+    showInventory: Boolean = true,
+    showAltruism: Boolean = true,
     onClose: () -> Unit,
 ) {
     var step by remember { mutableStateOf(RelationStep.Hub) }
     var revision by remember { mutableIntStateOf(0) }
     when (step) {
         RelationStep.Hub -> RelationHub(
+            showInventory = showInventory,
+            showAltruism = showAltruism,
             onInventory = { step = RelationStep.Inventory },
             onLedger = { step = RelationStep.Ledger },
             onAltruism = { step = RelationStep.Altruism },
@@ -87,6 +91,8 @@ fun RelationFlow(
 
 @Composable
 private fun RelationHub(
+    showInventory: Boolean,
+    showAltruism: Boolean,
     onInventory: () -> Unit,
     onLedger: () -> Unit,
     onAltruism: () -> Unit,
@@ -103,9 +109,13 @@ private fun RelationHub(
         TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("返回") }
         Text(relationHubTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
         Text(relationHubBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
-        HubButton(inventoryTitle, inventoryHint, onInventory)
-        HubButton(ledgerTitle, ledgerHint, onLedger)
-        HubButton(altruismTitle, "默认先抽不社交的小事。", onAltruism)
+        if (showInventory) {
+            HubButton(inventoryTitle, inventoryHint, onInventory)
+            HubButton(ledgerTitle, ledgerHint, onLedger)
+        }
+        if (showAltruism) {
+            HubButton(altruismTitle, "默认先抽不社交的小事。", onAltruism)
+        }
         Text(leavingCopy, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
     }
 }
