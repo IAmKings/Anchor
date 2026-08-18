@@ -1,0 +1,20 @@
+{
+  "id": "acc1498fed6e443b8e5fbb4c984f9f7e",
+  "name": "projects/4724290021803215791/screens/acc1498fed6e443b8e5fbb4c984f9f7e",
+  "title": "解锁通知 - 状态平稳回归练习",
+  "category": "10-rhythm-notifications",
+  "categoryLabel": "晨间节律与通知",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/acc1498fed6e443b8e5fbb4c984f9f7e/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/acc1498fed6e443b8e5fbb4c984f9f7e/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/10-rhythm-notifications/解锁通知---状态平稳回归练习__acc1498f.png",
+    "html": "design/10-rhythm-notifications/解锁通知---状态平稳回归练习__acc1498f.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

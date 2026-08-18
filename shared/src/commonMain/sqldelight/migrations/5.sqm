@@ -1,0 +1,8 @@
+CREATE TABLE emotion_card (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  emotion TEXT NOT NULL,
+  event TEXT NOT NULL,
+  hardest_part TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  passed_at INTEGER
+);

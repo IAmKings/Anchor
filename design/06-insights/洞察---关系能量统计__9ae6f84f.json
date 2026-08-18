@@ -1,0 +1,20 @@
+{
+  "id": "9ae6f84f29fd41588723f372253ff510",
+  "name": "projects/4724290021803215791/screens/9ae6f84f29fd41588723f372253ff510",
+  "title": "洞察 - 关系能量统计",
+  "category": "06-insights",
+  "categoryLabel": "洞察与趋势",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2358",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/9ae6f84f29fd41588723f372253ff510/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/9ae6f84f29fd41588723f372253ff510/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/06-insights/洞察---关系能量统计__9ae6f84f.png",
+    "html": "design/06-insights/洞察---关系能量统计__9ae6f84f.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

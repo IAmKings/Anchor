@@ -1,0 +1,242 @@
+<!DOCTYPE html><html class="light" lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Anchor - 就医指南</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary": "#8e4d34",
+                      "tertiary": "#645d55",
+                      "surface-dim": "#dcdad4",
+                      "inverse-primary": "#accfb8",
+                      "tertiary-fixed-dim": "#cec5ba",
+                      "primary-fixed-dim": "#accfb8",
+                      "surface-container-highest": "#e5e2dc",
+                      "on-primary-fixed-variant": "#2e4d3c",
+                      "outline": "#727973",
+                      "surface": "#fcf9f3",
+                      "tertiary-fixed": "#ebe1d6",
+                      "on-tertiary": "#ffffff",
+                      "dark-card": "#262521",
+                      "background": "#fcf9f3",
+                      "secondary-fixed": "#ffdbcf",
+                      "on-secondary-fixed-variant": "#71361f",
+                      "outline-variant": "#c2c8c1",
+                      "on-tertiary-fixed": "#1f1b14",
+                      "border-subtle": "#E3DDD3",
+                      "primary": "#466552",
+                      "on-primary-fixed": "#012112",
+                      "error": "#ba1a1a",
+                      "on-tertiary-container": "#302b24",
+                      "secondary-container": "#feaa8b",
+                      "surface-card": "#FFFFFF",
+                      "text-muted": "#8A837A",
+                      "on-tertiary-fixed-variant": "#4c463e",
+                      "surface-tint": "#466552",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "surface-container-low": "#f6f3ed",
+                      "on-primary-container": "#133222",
+                      "on-background": "#1c1c18",
+                      "on-error": "#ffffff",
+                      "on-surface-variant": "#424843",
+                      "dark-bg": "#1C1B18",
+                      "surface-container-high": "#ebe8e2",
+                      "on-error-container": "#93000a",
+                      "primary-container": "#7a9b86",
+                      "error-container": "#ffdad6",
+                      "inverse-surface": "#31312d",
+                      "secondary-fixed-dim": "#ffb59a",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#1c1c18",
+                      "surface-bright": "#fcf9f3",
+                      "on-secondary-container": "#783c24",
+                      "surface-container": "#f0eee8",
+                      "text-primary": "#33302B",
+                      "primary-fixed": "#c8ebd3",
+                      "tertiary-container": "#9a9288",
+                      "surface-variant": "#e5e2dc",
+                      "on-secondary-fixed": "#380d00",
+                      "inverse-on-surface": "#f3f0ea"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "stack-lg": "40px",
+                      "gutter-card": "16px",
+                      "margin-page": "20px",
+                      "stack-sm": "8px",
+                      "stack-md": "24px"
+              },
+              "fontFamily": {
+                      "label-md": ["Manrope", "sans-serif"],
+                      "headline-lg-mobile": ["Manrope", "sans-serif"],
+                      "headline-lg": ["Manrope", "sans-serif"],
+                      "body-lg": ["Manrope", "sans-serif"],
+                      "numeral-mono": ["JetBrains Mono", "monospace"],
+                      "body-md": ["Manrope", "sans-serif"]
+              },
+              "fontSize": {
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}],
+                      "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                      "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-header {
+            background: rgba(252, 249, 243, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen font-body-md">
+<!-- Top App Bar (Task-Focused: Minimal, Back action, NO shell structural nav) -->
+<header class="fixed top-0 w-full z-50 glass-header border-b border-border-subtle/30 h-16 flex justify-between items-center px-margin-page">
+<button aria-label="返回" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors" onclick="window.location.href='{{DATA:SCREEN:SCREEN_19}}'">
+<span class="material-symbols-outlined text-on-surface" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">就医指南</h1>
+<div class="w-10 h-10"></div> <!-- Placeholder for balance -->
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-safe px-margin-page space-y-stack-lg max-w-2xl mx-auto">
+<!-- Intro / Tone Setting -->
+<section class="text-center px-4">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                寻求专业帮助是保护自己最重要的一步。<br>判断诊断不是你的责任，那是医生的工作。
+            </p>
+</section>
+<!-- Emergency Hotlines (地区化热线) -->
+<section class="space-y-stack-sm">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="emergency">emergency</span>
+                紧急援助热线
+            </h2>
+<div class="bg-surface-card rounded-xl border border-border-subtle overflow-hidden">
+<!-- Immediate Danger Alert -->
+<div class="bg-error-container p-gutter-card flex gap-3 items-start border-b border-border-subtle/30">
+<span class="material-symbols-outlined text-error mt-0.5" data-icon="warning">warning</span>
+<div>
+<p class="font-body-md text-body-md text-on-error-container font-semibold">如遇生命危险或需紧急医疗干预</p>
+<p class="font-label-md text-label-md text-on-error-container/80 mt-1">请立即拨打 <span class="font-numeral-mono text-numeral-mono text-error">120</span> 或 <span class="font-numeral-mono text-numeral-mono text-error">110</span></p>
+</div>
+</div>
+<div class="divide-y divide-border-subtle/50">
+<!-- National Hotline -->
+<div class="p-gutter-card flex justify-between items-center hover:bg-surface-container-lowest transition-colors cursor-pointer active:scale-95 duration-200">
+<div>
+<p class="font-label-md text-label-md text-on-surface font-semibold">全国希望24小时热线</p>
+<p class="font-body-md text-body-md text-text-muted mt-0.5">面向全国心理危机干预</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-numeral-mono text-numeral-mono text-secondary">400-161-9995</span>
+<button class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+</div>
+<!-- Adolescent Hotline -->
+<div class="p-gutter-card flex justify-between items-center hover:bg-surface-container-lowest transition-colors cursor-pointer active:scale-95 duration-200">
+<div>
+<p class="font-label-md text-label-md text-on-surface font-semibold">青少年心理咨询热线</p>
+<p class="font-body-md text-body-md text-text-muted mt-0.5">共青团中央设立</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-numeral-mono text-numeral-mono text-primary">12355</span>
+<button class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+</div>
+<!-- Regional - Beijing -->
+<div class="p-gutter-card flex justify-between items-center hover:bg-surface-container-lowest transition-colors cursor-pointer active:scale-95 duration-200">
+<div>
+<p class="font-label-md text-label-md text-on-surface font-semibold">北京心理援助热线</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-numeral-mono text-numeral-mono text-primary">010-82951332</span>
+<button class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Preparation Checklist (就诊准备清单) -->
+<section class="space-y-stack-sm mb-stack-lg">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="fact_check">fact_check</span>
+                就诊准备清单
+            </h2>
+<div class="grid grid-cols-1 gap-unit">
+<!-- Step 1 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle flex gap-4 items-start">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-numeral-mono text-label-md flex-shrink-0">1</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface font-semibold">寻找陪伴者</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">寻找一位信任的家人或朋友陪同就诊。他们在你状态不佳时能提供客观描述和情感支持。</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle flex gap-4 items-start">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-numeral-mono text-label-md flex-shrink-0">2</div>
+<div class="w-full">
+<h3 class="font-label-md text-label-md text-on-surface font-semibold flex justify-between items-center">
+                            整理症状记录
+                            <button class="text-primary font-label-md text-label-md flex items-center gap-1 hover:opacity-80">
+                                打开记录 <span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">回顾并导出你在 Anchor 上的状态记录，帮助医生快速了解你的睡眠、情绪起伏和躯体化症状。</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle flex gap-4 items-start">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-numeral-mono text-label-md flex-shrink-0">3</div>
+<div>
+<h3 class="font-label-md text-label-md text-on-surface font-semibold">基础躯体排查提醒</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">很多心理症状可能由躯体问题引起。初诊时，可向医生询问是否需要进行以下基础排查：</p>
+<div class="mt-3 flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container-low rounded-full font-label-md text-label-md text-on-surface-variant border border-border-subtle">甲状腺功能 (T3/T4/TSH)</span>
+<span class="px-3 py-1 bg-surface-container-low rounded-full font-label-md text-label-md text-on-surface-variant border border-border-subtle">贫血检查</span>
+<span class="px-3 py-1 bg-surface-container-low rounded-full font-label-md text-label-md text-on-surface-variant border border-border-subtle">维生素 D 水平</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB Subdued / Contextual (SOS Button) -->
+<div class="fixed bottom-8 right-6 z-40">
+<button class="w-14 h-14 bg-secondary rounded-full flex items-center justify-center text-on-secondary shadow-lg active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="sos" data-weight="fill" style="font-variation-settings: 'FILL' 1;">sos</span>
+</button>
+</div>
+
+
+</body></html>

@@ -1,0 +1,20 @@
+{
+  "id": "66dae04b1fb54769bb986009e488e46b",
+  "name": "projects/4724290021803215791/screens/66dae04b1fb54769bb986009e488e46b",
+  "title": "首次复评邀请与进度对比",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2784",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/66dae04b1fb54769bb986009e488e46b/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/66dae04b1fb54769bb986009e488e46b/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/首次复评邀请与进度对比__66dae04b.png",
+    "html": "design/01-onboarding-assessment/首次复评邀请与进度对比__66dae04b.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

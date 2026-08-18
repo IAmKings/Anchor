@@ -1,0 +1,242 @@
+<!DOCTYPE html><html class="light" lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>锚点 Anchor - 今天</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#727973",
+                        "secondary-fixed": "#ffdbcf",
+                        "tertiary-fixed": "#ebe1d6",
+                        "outline-variant": "#c2c8c1",
+                        "primary-container": "#7a9b86",
+                        "primary-fixed": "#c8ebd3",
+                        "tertiary": "#645d55",
+                        "on-background": "#1c1c18",
+                        "surface-container-high": "#ebe8e2",
+                        "background": "#fcf9f3",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "inverse-on-surface": "#f3f0ea",
+                        "secondary-container": "#feaa8b",
+                        "on-surface": "#1c1c18",
+                        "on-primary-container": "#133222",
+                        "on-tertiary-container": "#302b24",
+                        "dark-bg": "#1C1B18",
+                        "primary-fixed-dim": "#accfb8",
+                        "surface-card": "#FFFFFF",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "dark-card": "#262521",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#012112",
+                        "on-secondary-container": "#783c24",
+                        "text-primary": "#33302B",
+                        "surface-container-highest": "#e5e2dc",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "on-secondary-fixed": "#380d00",
+                        "surface": "#fcf9f3",
+                        "on-surface-variant": "#424843",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#f0eee8",
+                        "surface-container-low": "#f6f3ed",
+                        "surface-variant": "#e5e2dc",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "surface-bright": "#fcf9f3",
+                        "inverse-surface": "#31312d",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "inverse-primary": "#accfb8",
+                        "tertiary-container": "#9a9288",
+                        "error-container": "#ffdad6",
+                        "text-muted": "#8A837A",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "on-error-container": "#93000a",
+                        "secondary": "#8e4d34",
+                        "border-subtle": "#E3DDD3",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dcdad4",
+                        "surface-tint": "#466552",
+                        "primary": "#466552"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "20px",
+                        "unit": "4px",
+                        "stack-lg": "40px",
+                        "stack-md": "24px",
+                        "gutter-card": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["manrope"],
+                        "body-md": ["manrope"],
+                        "label-md": ["manrope"],
+                        "headline-lg": ["manrope"],
+                        "body-lg": ["manrope"],
+                        "numeral-mono": ["jetbrainsMono"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        @keyframes slow-breathe {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(122, 155, 134, 0.4); }
+            50% { transform: scale(1.02); box-shadow: 0 0 0 20px rgba(122, 155, 134, 0); }
+        }
+        
+        .animate-breathe {
+            animation: slow-breathe 5s ease-in-out infinite;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-text-primary antialiased min-h-screen flex flex-col font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16 md:hidden">
+<button aria-label="SOS Emergency" class="text-secondary dark:text-secondary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 duration-300 flex items-center justify-center p-2 -ml-2 rounded-full" onclick="window.location.href='{{DATA:SCREEN:SCREEN_15}}'">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim tracking-tight">锚点 Anchor</h1>
+<button aria-label="Settings" class="text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-opacity active:scale-95 duration-300 flex items-center justify-center p-2 -mr-2 rounded-full">
+<span class="material-symbols-outlined text-[28px]">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[88px] pb-[120px] px-margin-page flex flex-col gap-stack-lg max-w-2xl mx-auto w-full md:pt-stack-lg md:px-stack-lg">
+<!-- Disclaimer -->
+<div class="flex items-center justify-center gap-2 opacity-70">
+<span class="material-symbols-outlined text-[16px] text-text-muted">info</span>
+<p class="font-label-md text-label-md text-text-muted">应用仅适用轻度调节</p>
+</div>
+<!-- The Wave Component (Core Anchor) -->
+<section class="flex flex-col items-center justify-center py-stack-md">
+<button class="group relative w-full max-w-[320px] aspect-square bg-primary-container rounded-full flex flex-col items-center justify-center gap-4 animate-breathe transition-all duration-500 active:scale-95 tap-highlight-none shadow-lg hover:shadow-xl overflow-hidden"><div class="absolute inset-0 rounded-full border border-primary-container/50 scale-105 opacity-50 group-hover:scale-110 transition-transform duration-1000 ease-out"></div><div class="absolute inset-0 rounded-full border border-primary-container/20 scale-110 opacity-30 group-hover:scale-125 transition-transform duration-1000 ease-out delay-75"></div><animated-svg src="{{DATA:ANIMATION:ANIMATION_15}}" class="absolute inset-0 w-full h-full"></animated-svg><div class="relative z-10 flex flex-col items-center justify-center gap-4"><h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-primary-container tracking-tight">浪潮等待</h2><p class="font-body-md text-body-md text-on-primary-container/80">难受的时候点这里</p></div></button>
+</section>
+<!-- Status Cards (Bento/List hybrid) -->
+<section class="flex flex-col gap-stack-md w-full">
+<!-- Check-in Card -->
+<div class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card flex items-center justify-between group hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-text-muted">今日起床见光打卡</span>
+<div class="flex items-center gap-3 mt-1">
+<span class="font-numeral-mono text-numeral-mono text-text-primary text-[16px]">⏰ 7:02</span>
+<span class="font-numeral-mono text-numeral-mono text-text-primary text-[16px]">☀ 7:40</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">check_circle</span>
+</div>
+<!-- Micro-action Card -->
+<div class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card flex items-center justify-between group hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">directions_walk</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-text-muted">微行动</span>
+<span class="font-body-md text-body-md text-text-primary mt-0.5">穿好鞋走到楼下</span>
+</div>
+</div>
+<button class="text-primary font-label-md text-label-md px-3 py-1.5 rounded-full border border-border-subtle hover:bg-surface-container-low transition-colors">
+                    完成
+                </button>
+</div>
+<!-- Worry Safe Card -->
+<div class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card flex items-center justify-between group hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-text-muted">忧虑保险箱</span>
+<span class="font-body-md text-body-md text-text-primary mt-0.5">3张卡，20:00开箱</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant">lock</span>
+</div>
+</section>
+</main>
+<!-- Floating Action Button (FAB) -->
+<button aria-label="挂卡" class="fixed bottom-[100px] right-margin-page w-14 h-14 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-none border border-primary-fixed-dim/20 active:scale-90 hover:opacity-90 transition-all duration-200 z-40 md:hidden">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl border-t border-border-subtle/50 bg-surface/90 dark:bg-dark-bg/90 backdrop-blur-2xl md:hidden">
+<div class="flex justify-around items-center pt-2 pb-safe px-4 h-[80px]">
+<!-- Active Tab: 今天 -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold active:scale-90 transition-transform duration-200 min-w-[64px] py-1">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">home_app_logo</span>
+<span class="font-label-md text-label-md mt-1">今天</span>
+</button>
+<!-- Inactive Tab: 记录 -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 min-w-[64px] py-1 rounded-lg">
+<span class="material-symbols-outlined text-[24px]">edit_note</span>
+<span class="font-label-md text-label-md mt-1">记录</span>
+</button>
+<!-- Inactive Tab: 洞察 -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 min-w-[64px] py-1 rounded-lg">
+<span class="material-symbols-outlined text-[24px]">insights</span>
+<span class="font-label-md text-label-md mt-1">洞察</span>
+</button>
+<!-- Inactive Tab: 我的 -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 min-w-[64px] py-1 rounded-lg">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="font-label-md text-label-md mt-1">我的</span>
+</button>
+</div>
+<!-- Safe area padding for newer mobile devices -->
+<div class="h-safe w-full"></div>
+</nav>
+<!-- Support for safe-area-inset in CSS -->
+<style>
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .pb-safe {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .h-safe {
+                height: env(safe-area-inset-bottom);
+            }
+        }
+    </style>
+
+
+
+
+</body></html>

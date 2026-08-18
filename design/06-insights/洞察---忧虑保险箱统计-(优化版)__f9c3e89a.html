@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Insights - Worry Statistics</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "text-muted": "#8A837A",
+                    "inverse-on-surface": "#f3f0ea",
+                    "inverse-primary": "#accfb8",
+                    "tertiary-fixed": "#ebe1d6",
+                    "on-background": "#1c1c18",
+                    "on-primary-container": "#133222",
+                    "surface-tint": "#466552",
+                    "surface-card": "#FFFFFF",
+                    "tertiary-container": "#9a9288",
+                    "tertiary": "#645d55",
+                    "error": "#ba1a1a",
+                    "inverse-surface": "#31312d",
+                    "primary": "#466552",
+                    "border-subtle": "#E3DDD3",
+                    "surface-dim": "#dcdad4",
+                    "secondary-fixed": "#ffdbcf",
+                    "surface-container-high": "#ebe8e2",
+                    "surface-bright": "#fcf9f3",
+                    "on-secondary-fixed": "#380d00",
+                    "secondary-container": "#feaa8b",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#302b24",
+                    "surface": "#fcf9f3",
+                    "on-surface": "#1c1c18",
+                    "on-tertiary-fixed": "#1f1b14",
+                    "surface-container-low": "#f6f3ed",
+                    "dark-bg": "#1C1B18",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed-variant": "#71361f",
+                    "primary-container": "#7a9b86",
+                    "surface-variant": "#e5e2dc",
+                    "on-primary-fixed-variant": "#2e4d3c",
+                    "on-secondary-container": "#783c24",
+                    "surface-container-highest": "#e5e2dc",
+                    "tertiary-fixed-dim": "#cec5ba",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#4c463e",
+                    "secondary": "#8e4d34",
+                    "on-primary-fixed": "#012112",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#f0eee8",
+                    "primary-fixed-dim": "#accfb8",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#727973",
+                    "dark-card": "#262521",
+                    "text-primary": "#33302B",
+                    "outline-variant": "#c2c8c1",
+                    "secondary-fixed-dim": "#ffb59a",
+                    "background": "#fcf9f3",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#424843",
+                    "primary-fixed": "#c8ebd3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "stack-lg": "40px",
+                    "stack-sm": "8px",
+                    "stack-md": "24px",
+                    "gutter-card": "16px",
+                    "margin-page": "20px"
+            },
+            "fontFamily": {
+                    "body-md": ["manrope", "sans-serif"],
+                    "numeral-mono": ["jetbrainsMono", "monospace"],
+                    "body-lg": ["manrope", "sans-serif"],
+                    "headline-lg-mobile": ["manrope", "sans-serif"],
+                    "headline-lg": ["manrope", "sans-serif"],
+                    "label-md": ["manrope", "sans-serif"]
+            },
+            "fontSize": {
+                    "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Custom scrollbar to maintain clean aesthetic */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E3DDD3;
+            border-radius: 4px;
+        }
+        
+        /* Gentle entry animation */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased pb-32 pt-24 selection:bg-primary-container selection:text-on-primary-container min-h-screen">
+<!-- TopAppBar (From JSON) -->
+<header class="fixed top-0 w-full z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16">
+<button aria-label="Emergency" class="flex items-center justify-center p-2 -ml-2 rounded-full hover:opacity-80 transition-opacity active:scale-95 duration-300 text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined">emergency</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim tracking-tight">
+            锚点 Anchor
+        </h1>
+<button aria-label="Settings" class="flex items-center justify-center p-2 -mr-2 rounded-full hover:opacity-80 transition-opacity active:scale-95 duration-300 text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="px-margin-page flex flex-col gap-stack-lg max-w-lg mx-auto">
+<!-- Page Title -->
+<header class="animate-fade-up" style="animation-delay: 0.1s;">
+<h2 class="font-headline-lg text-headline-lg text-text-primary">洞察</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">你的忧虑空间记录</p>
+</header>
+<!-- 1. Cumulative Count (Gentle Fact, No KPI) -->
+<section class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card flex flex-col items-center justify-center animate-fade-up" style="animation-delay: 0.2s;">
+<span class="font-label-md text-label-md text-text-muted mb-2 tracking-wide uppercase">累计受理</span>
+<div class="flex items-baseline gap-2">
+<span class="font-numeral-mono text-numeral-mono text-4xl text-primary tracking-tight">214</span>
+<span class="font-body-md text-body-md text-text-muted">件</span>
+</div>
+<p class="font-label-md text-label-md text-text-muted mt-3 text-center opacity-80">每一件都被看见，无需立刻解决。</p>
+</section>
+<!-- 2. Processing Mode Distribution -->
+<section class="animate-fade-up flex flex-col gap-stack-sm" style="animation-delay: 0.3s;">
+<h3 class="font-body-md text-body-md text-text-primary mb-2">处理模式分布</h3>
+<!-- Stacked Bar -->
+<div class="w-full h-8 flex rounded-lg overflow-hidden border border-border-subtle/50 mb-4 bg-surface-container-lowest">
+<div class="h-full bg-primary-container transition-all duration-1000 ease-out" style="width: 45%;" title="转化为行动 45%"></div>
+<div class="h-full bg-surface-variant transition-all duration-1000 ease-out" style="width: 35%;" title="暂时无解 35%"></div>
+<div class="h-full bg-surface-dim transition-all duration-1000 ease-out" style="width: 20%;" title="已不再重要 20%"></div>
+</div>
+<!-- Legend -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary-container border border-border-subtle"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">转化为行动</span>
+</div>
+<span class="font-numeral-mono text-label-md text-text-muted">45%</span>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low -mx-4 px-4 py-2 rounded-lg">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-surface-variant border border-border-subtle"></div>
+<span class="font-label-md text-label-md text-text-primary">暂时无解</span>
+</div>
+<span class="font-numeral-mono text-label-md text-text-primary">35%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-surface-dim border border-border-subtle"></div>
+<span class="font-label-md text-label-md text-text-muted">已不再重要</span>
+</div>
+<span class="font-numeral-mono text-label-md text-text-muted">20%</span>
+</div>
+</div>
+</section>
+<!-- 3. Trend Chart (Smooth, abstract line) -->
+<section class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card animate-fade-up" style="animation-delay: 0.4s;">
+<div class="flex justify-between items-baseline mb-6">
+<h3 class="font-body-md text-body-md text-text-primary">无解念头趋势</h3>
+<span class="font-label-md text-label-md text-text-muted">近 30 天</span>
+</div>
+<!-- SVG representation of a calming, non-volatile trend -->
+<div class="w-full h-32 relative flex items-end">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 100 40">
+<!-- Grid lines (soft) -->
+<line stroke="#E3DDD3" stroke-dasharray="2 2" stroke-width="0.5" x1="0" x2="100" y1="10" y2="10"></line>
+<line stroke="#E3DDD3" stroke-dasharray="2 2" stroke-width="0.5" x1="0" x2="100" y1="20" y2="20"></line>
+<line stroke="#E3DDD3" stroke-dasharray="2 2" stroke-width="0.5" x1="0" x2="100" y1="30" y2="30"></line>
+<!-- Smooth line (Bezier curve) emphasizing long term flow -->
+<path class="opacity-80" d="M 0 35 C 20 30, 30 15, 50 20 C 70 25, 85 10, 100 15" fill="none" stroke="#7a9b86" stroke-linecap="round" stroke-width="2"></path>
+<!-- Area under curve (soft gradient) -->
+<defs>
+<lineargradient id="trendGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#7a9b86" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#7a9b86" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M 0 35 C 20 30, 30 15, 50 20 C 70 25, 85 10, 100 15 L 100 40 L 0 40 Z" fill="url(#trendGradient)"></path>
+</svg>
+</div>
+<div class="flex justify-between mt-2 font-label-md text-label-md text-text-muted opacity-60">
+<span>月初</span>
+<span>波动自然发生</span>
+<span>月末</span>
+</div>
+</section>
+<!-- 4. Insight Card (Compassionate support) -->
+<section class="bg-surface-container border border-border-subtle rounded-xl p-gutter-card flex gap-4 items-start animate-fade-up" style="animation-delay: 0.5s;">
+<div class="p-2 bg-surface-card rounded-full border border-border-subtle shadow-sm flex-shrink-0">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">nightlight</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    80% 的夜间忧虑通常是暂时无解的。这很正常，请允许它们存在，无需急于解决。
+                </p>
+</div>
+</section>
+<!-- 5. Pattern Recognition (Non-judgmental observation) -->
+<section class="animate-fade-up flex flex-col gap-stack-sm" style="animation-delay: 0.6s;">
+<h3 class="font-body-md text-body-md text-text-primary mb-2">模式识别</h3>
+<div class="bg-surface-card border border-border-subtle rounded-xl p-5 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-text-muted">psychology</span>
+<span class="font-body-md text-body-md text-text-primary">近期主要模式</span>
+</div>
+<div class="inline-flex items-center gap-2 bg-surface-container-low rounded-lg px-4 py-3 border border-border-subtle w-fit">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="font-body-md text-body-md text-text-primary">对未来的不确定感</span>
+</div>
+<p class="font-label-md text-label-md text-text-muted mt-1">
+                    系统在您最近的 12 条记录中观察到了这种倾向。看见它，就是松绑的第一步。
+                </p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (From JSON) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-safe px-4 bg-surface/90 dark:bg-dark-bg/90 backdrop-blur-2xl rounded-t-xl border-t border-border-subtle/50 z-50 pb-6">
+<!-- 今天 (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 p-2 rounded-lg w-16" href="#">
+<span class="material-symbols-outlined mb-1">home_app_logo</span>
+<span class="font-label-md text-label-md">今天</span>
+</a>
+<!-- 记录 (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 p-2 rounded-lg w-16" href="#">
+<span class="material-symbols-outlined mb-1">edit_note</span>
+<span class="font-label-md text-label-md">记录</span>
+</a>
+<!-- 洞察 (Active) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 p-2 rounded-lg w-16" href="#">
+<div class="px-4 py-1 bg-primary-container/30 rounded-full mb-1 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+</div>
+<span class="font-label-md text-label-md">洞察</span>
+</a>
+<!-- 我的 (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 p-2 rounded-lg w-16" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-md text-label-md">我的</span>
+</a>
+</nav>
+</body></html>

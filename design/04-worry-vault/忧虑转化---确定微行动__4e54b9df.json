@@ -1,0 +1,20 @@
+{
+  "id": "4e54b9dfe7824b3cb4cf98bc6f040c26",
+  "name": "projects/4724290021803215791/screens/4e54b9dfe7824b3cb4cf98bc6f040c26",
+  "title": "忧虑转化 - 确定微行动",
+  "category": "04-worry-vault",
+  "categoryLabel": "忧虑保险箱与忧虑专场",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/4e54b9dfe7824b3cb4cf98bc6f040c26/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/4e54b9dfe7824b3cb4cf98bc6f040c26/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/04-worry-vault/忧虑转化---确定微行动__4e54b9df.png",
+    "html": "design/04-worry-vault/忧虑转化---确定微行动__4e54b9df.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>关系耗竭自测</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=manrope:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Design System Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#9a9288",
+                        "on-tertiary-container": "#302b24",
+                        "on-secondary-fixed": "#380d00",
+                        "dark-bg": "#1C1B18",
+                        "primary-container": "#7a9b86",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "surface-dim": "#dcdad4",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#c8ebd3",
+                        "surface-card": "#FFFFFF",
+                        "surface-container-high": "#ebe8e2",
+                        "surface-tint": "#466552",
+                        "surface": "#fcf9f3",
+                        "text-primary": "#33302B",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-secondary-container": "#783c24",
+                        "dark-card": "#262521",
+                        "on-surface": "#1c1c18",
+                        "outline-variant": "#c2c8c1",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "inverse-surface": "#31312d",
+                        "secondary-fixed": "#ffdbcf",
+                        "on-surface-variant": "#424843",
+                        "tertiary-fixed": "#ebe1d6",
+                        "background": "#fcf9f3",
+                        "border-subtle": "#E3DDD3",
+                        "primary": "#466552",
+                        "on-primary-container": "#133222",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e5e2dc",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f6f3ed",
+                        "surface-container": "#f0eee8",
+                        "tertiary": "#645d55",
+                        "inverse-primary": "#accfb8",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "outline": "#727973",
+                        "secondary": "#8e4d34",
+                        "on-primary-fixed": "#012112",
+                        "on-error": "#ffffff",
+                        "text-muted": "#8A837A",
+                        "on-background": "#1c1c18",
+                        "primary-fixed-dim": "#accfb8",
+                        "inverse-on-surface": "#f3f0ea",
+                        "surface-bright": "#fcf9f3",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "secondary-container": "#feaa8b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "40px",
+                        "stack-sm": "8px",
+                        "unit": "4px",
+                        "gutter-card": "16px",
+                        "stack-md": "24px",
+                        "margin-page": "20px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["manrope"],
+                        "headline-lg": ["manrope"],
+                        "headline-lg-mobile": ["manrope"],
+                        "body-md": ["manrope"],
+                        "numeral-mono": ["jetbrainsMono"],
+                        "label-md": ["manrope"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'manrope', sans-serif;
+        }
+        /* Custom hide scrollbar for horizontal scrolling if needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-text-primary antialiased min-h-screen pb-32 pt-20">
+<!-- TopAppBar from JSON -->
+<header class="fixed top-0 w-full z-50 border-b border-border-subtle/30 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl flex items-center justify-between px-margin-page h-16 transition-all duration-300">
+<div class="flex items-center gap-2 cursor-pointer hover:bg-surface-container-low transition-colors rounded-full p-2 active:scale-95 duration-300">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">anchor</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed tracking-tight">Anchor</h1>
+<div class="flex items-center gap-2 cursor-pointer hover:bg-surface-container-low transition-colors rounded-full p-2 active:scale-95 duration-300">
+<span class="material-symbols-outlined text-on-surface-variant dark:text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">settings</span>
+</div>
+</header>
+<!-- Main Content -->
+<main class="px-margin-page py-stack-md flex flex-col gap-stack-lg max-w-2xl mx-auto">
+<!-- Header Section -->
+<section class="flex flex-col gap-stack-sm text-center items-center">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 0;">diversity_1</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary">关系耗竭自测</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                回想最近互动的几个人。在他们面前，你是否觉得需要小心翼翼地管理自己的言行？请凭直觉作答。
+            </p>
+</section>
+<!-- Assessment List -->
+<section class="flex flex-col gap-gutter-card">
+<!-- Contact Card 1 -->
+<article class="bg-surface-card border border-border-subtle rounded-xl p-5 flex flex-col gap-4 transition-colors duration-300 hover:bg-surface-container-lowest">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover border border-border-subtle" data-alt="A soft-focus, minimalist portrait of a young professional woman with short dark hair, wearing a neutral beige linen shirt. The lighting is warm and diffused, creating a calm, high-key light mode aesthetic. The background is a simple, blurred off-white studio wall. No distracting elements, conveying tranquility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4T1LcPuwt5iq4bjk3sUmoOh7trPQd338xi4CNtbCoId0je74gyXCnyFBJF3Lil0_LHCYBffXm0Nf042ax2Iy7ORNIxWXn4l_4WHbiZnQnzzW2_h2398gr1UeXljq-m3snnxKAgiF5PgABdRo-c96SG2XvCeUTBm3mFJKYovR2yyD6m7uEcNKpPk0gqGyNL-LzPZBJAvJIZrPL3mQcyycQRI2G9IXBAXjs_wEm-_bIphpt6Gv0Hbeq"/>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-text-primary font-medium">Sarah T.</span>
+<span class="font-label-md text-label-md text-text-muted">同事 / 工作伙伴</span>
+</div>
+</div>
+<div class="h-px w-full bg-border-subtle/50"></div>
+<div class="flex flex-col gap-3">
+<p class="font-body-md text-body-md text-on-surface-variant">和她在一起时，我需要时刻注意自己的表现吗？</p>
+<!-- Segmented Control Toggle -->
+<div class="bg-surface-container-highest p-1 rounded-lg flex gap-1 w-full assessment-toggle">
+<button class="flex-1 py-2 text-center rounded-md font-label-md text-label-md transition-all duration-300 text-on-surface-variant hover:text-text-primary toggle-btn" data-value="yes">
+                            是的，很耗神
+                        </button>
+<button class="flex-1 py-2 text-center rounded-md font-label-md text-label-md transition-all duration-300 text-on-surface-variant hover:text-text-primary toggle-btn" data-value="no">
+                            不，我很放松
+                        </button>
+</div>
+</div>
+</article>
+<!-- Contact Card 2 -->
+<article class="bg-surface-card border border-border-subtle rounded-xl p-5 flex flex-col gap-4 transition-colors duration-300 hover:bg-surface-container-lowest">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover border border-border-subtle" data-alt="A serene, minimalist portrait of a middle-aged man with glasses, wearing a simple muted green sweater. Gentle, natural light softly illuminates his face, fitting a tranquil, low-arousal UI style. The background is a clean, uncluttered soft grey, evoking a sense of calm grounding." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz-F1dC71OMJwR2E1UDLKKK9NCGQlpMU-pz_gs_ahz7navnrtfMwx9cL2liaDQSH-UNZjx7PYF0mqlmfIaw4WxLTlfwoTECylTYaj6b-DEY_9pF6Va4BNQod2loN20i1TvwpUNimlC7BuriQ2UVs2T68dYRl9oOAhhu4TaMZwGt_T84imBfMnm4aWSybQUXNyvK_I0L_XlgVGLoKlp9zKF9L7x3rNT4Gvh3d9LM9w4bLHKBOaQgjq-"/>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-text-primary font-medium">Michael R.</span>
+<span class="font-label-md text-label-md text-text-muted">家人</span>
+</div>
+</div>
+<div class="h-px w-full bg-border-subtle/50"></div>
+<div class="flex flex-col gap-3">
+<p class="font-body-md text-body-md text-on-surface-variant">和他在一起时，我需要时刻注意自己的表现吗？</p>
+<div class="bg-surface-container-highest p-1 rounded-lg flex gap-1 w-full assessment-toggle">
+<button class="flex-1 py-2 text-center rounded-md font-label-md text-label-md transition-all duration-300 text-on-surface-variant hover:text-text-primary toggle-btn" data-value="yes">
+                            是的，很耗神
+                        </button>
+<button class="flex-1 py-2 text-center rounded-md font-label-md text-label-md transition-all duration-300 text-on-surface-variant hover:text-text-primary toggle-btn" data-value="no">
+                            不，我很放松
+                        </button>
+</div>
+</div>
+</article>
+<!-- Contact Card 3 -->
+<article class="bg-surface-card border border-border-subtle rounded-xl p-5 flex flex-col gap-4 transition-colors duration-300 hover:bg-surface-container-lowest">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover border border-border-subtle" data-alt="An artistic, minimalist portrait of a person with curly hair, wearing an earthy brown top. The image has a very soft, dreamlike quality with low contrast and warm tones, aligning perfectly with a grounded, calming design system. Plain light beige background, minimal details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYWNBKDN4KjxDhaSDlsJBlrX_AGnT_XC_VCMbQJ5kQW4mMpch15KJmhP7nAV8lzupgCegMwCpR7vld6Vog1o9xdH3BINWWam25r1OUhlUtnkrK4SUFy_3oVV3H7ttxj6-QJ6jykHoqb1M4T1vltIiSv0CRwkPZb5OxOLqs78fGQ1RP-faNdcSO4fqgvcgvuGc5484SUPjZnX4PE6AVBmD9TE666WtKLS0yQxW8VwyWQIcmQYZxnLDf"/>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-text-primary font-medium">Alex K.</span>
+<span class="font-label-md text-label-md text-text-muted">朋友</span>
+</div>
+</div>
+<div class="h-px w-full bg-border-subtle/50"></div>
+<div class="flex flex-col gap-3">
+<p class="font-body-md text-body-md text-on-surface-variant">和TA在一起时，我需要时刻注意自己的表现吗？</p>
+<div class="bg-surface-container-highest p-1 rounded-lg flex gap-1 w-full assessment-toggle">
+<button class="flex-1 py-2 text-center rounded-md font-label-md text-label-md transition-all duration-300 text-on-surface-variant hover:text-text-primary toggle-btn" data-value="yes">
+                            是的，很耗神
+                        </button>
+<button class="flex-1 py-2 text-center rounded-md font-label-md text-label-md transition-all duration-300 text-on-surface-variant hover:text-text-primary toggle-btn" data-value="no">
+                            不，我很放松
+                        </button>
+</div>
+</div>
+</article>
+</section>
+<!-- Relationship Relief Suggestion -->
+<section class="bg-surface-container-low rounded-xl p-6 border border-border-subtle mt-4 flex flex-col gap-3">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">spa</span>
+<h3 class="font-body-md text-body-md font-medium">关系缓冲建议</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                如果你发现某些关系让你感到持续耗竭，这并非你的错。试着在接下来的几天里，温和地减少与他们的非必要互动。给自己留出一段“无需表演、无需被评价”的空白时间，让神经系统恢复平静。
+            </p>
+</section>
+</main>
+<!-- BottomNavBar from JSON (Rendered for Mobile, Hidden on md+) -->
+<!-- Active State: Journal (Index 1) based on Semantic Mapping -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-t border-border-subtle/30 rounded-t-xl md:hidden">
+<!-- Item 0: Today (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-500 ease-out cursor-pointer p-2">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">today</span>
+<span class="font-label-md text-label-md">Today</span>
+</div>
+<!-- Item 1: Journal (Active) -->
+<div class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed bg-primary-container/20 dark:bg-on-primary-fixed-variant/30 rounded-full px-4 py-1 active:scale-90 transition-transform duration-500 ease-out cursor-pointer">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="font-label-md text-label-md">Journal</span>
+</div>
+<!-- Item 2: Insights (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-500 ease-out cursor-pointer p-2">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">auto_graph</span>
+<span class="font-label-md text-label-md">Insights</span>
+</div>
+<!-- Item 3: Me (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-500 ease-out cursor-pointer p-2">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-md text-label-md">Me</span>
+</div>
+</nav>
+<!-- Interactive Script for Assessment Toggles -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleGroups = document.querySelectorAll('.assessment-toggle');
+            
+            toggleGroups.forEach(group => {
+                const buttons = group.querySelectorAll('.toggle-btn');
+                
+                buttons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        // Reset all in this group
+                        buttons.forEach(b => {
+                            b.classList.remove('bg-surface-card', 'shadow-sm', 'text-text-primary');
+                            b.classList.add('text-on-surface-variant');
+                        });
+                        
+                        // Activate clicked
+                        btn.classList.remove('text-on-surface-variant');
+                        btn.classList.add('bg-surface-card', 'shadow-sm', 'text-text-primary');
+                        
+                        // Optional: Add a subtle pulse or color shift to the parent card based on answer
+                        const parentCard = btn.closest('article');
+                        if(btn.dataset.value === 'yes') {
+                            parentCard.style.borderColor = 'rgba(186, 26, 26, 0.2)'; // subtle error tint
+                        } else {
+                            parentCard.style.borderColor = 'rgba(70, 101, 82, 0.3)'; // subtle primary tint
+                        }
+                        
+                        setTimeout(() => {
+                            parentCard.style.borderColor = ''; // reset to class default
+                        }, 1000);
+                    });
+                });
+            });
+        });
+    </script>
+</body></html>

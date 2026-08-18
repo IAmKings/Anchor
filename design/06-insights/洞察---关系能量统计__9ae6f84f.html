@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>关系洞察 - 社交能量账本</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f3f0ea",
+                        "tertiary-fixed": "#ebe1d6",
+                        "background": "#fcf9f3",
+                        "tertiary-container": "#9a9288",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#ebe8e2",
+                        "secondary-container": "#feaa8b",
+                        "primary-fixed": "#c8ebd3",
+                        "outline-variant": "#c2c8c1",
+                        "surface-bright": "#fcf9f3",
+                        "surface-dim": "#dcdad4",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#380d00",
+                        "on-tertiary-container": "#302b24",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "surface-variant": "#e5e2dc",
+                        "surface-card": "#FFFFFF",
+                        "surface-tint": "#466552",
+                        "outline": "#727973",
+                        "surface-container-low": "#f6f3ed",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "primary-container": "#7a9b86",
+                        "border-subtle": "#E3DDD3",
+                        "primary": "#466552",
+                        "text-primary": "#33302B",
+                        "on-surface": "#1c1c18",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "secondary": "#8e4d34",
+                        "surface-container": "#f0eee8",
+                        "on-primary-fixed": "#012112",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffdbcf",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "primary-fixed-dim": "#accfb8",
+                        "dark-bg": "#1C1B18",
+                        "surface": "#fcf9f3",
+                        "dark-card": "#262521",
+                        "on-background": "#1c1c18",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "inverse-surface": "#31312d",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-primary-container": "#133222",
+                        "on-secondary-container": "#783c24",
+                        "inverse-primary": "#accfb8",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "on-surface-variant": "#424843",
+                        "tertiary": "#645d55",
+                        "text-muted": "#8A837A",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "stack-lg": "40px",
+                        "unit": "4px",
+                        "gutter-card": "16px",
+                        "stack-md": "24px",
+                        "margin-page": "20px"
+                    },
+                    "fontFamily": {
+                        "numeral-mono": ["JetBrains Mono", "monospace"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"],
+                        "headline-lg-mobile": ["Manrope", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.text-primary');
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .glass-panel {
+            background: rgba(252, 249, 243, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .dark .glass-panel {
+            background: rgba(28, 27, 24, 0.7);
+        }
+
+        .chart-bar-fill {
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .pulse-slow {
+            animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen pb-24 md:pb-0 font-body-md text-body-md flex flex-col md:flex-row">
+<!-- Desktop Navigation Drawer (Hidden on Mobile) -->
+<aside class="hidden md:flex bg-surface-container-lowest dark:bg-dark-card text-secondary dark:text-secondary-fixed-dim rounded-r-xl h-full flex-col p-stack-md w-72 border-r border-border-subtle/30 fixed left-0 top-0 z-40">
+<div class="mb-stack-lg px-2">
+<span class="font-headline-lg text-headline-lg text-primary block mb-2">宁静空间</span>
+<p class="text-text-muted text-sm">你的情绪避难所</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors tap-highlight-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home_app_logo</span>
+<span class="font-label-md text-label-md">今天</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors tap-highlight-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">edit_note</span>
+<span class="font-label-md text-label-md">记录</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container text-on-primary-container transition-colors tap-highlight-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span class="font-label-md text-label-md">洞察</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors tap-highlight-none" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-md text-label-md">我的</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full flex justify-center items-center gap-2 py-3 rounded-full bg-surface-container-low text-secondary border border-border-subtle hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">sos</span>
+<span class="font-label-md text-label-md">紧急求助</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-72 flex flex-col min-h-screen relative">
+<!-- TopAppBar -->
+<header class="bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl fixed top-0 w-full z-30 border-b border-border-subtle/30 md:w-[calc(100%-18rem)]">
+<div class="flex justify-between items-center px-margin-page h-16">
+<button class="p-2 text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-opacity active:scale-95 duration-300 md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex flex-col items-center flex-1">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim tracking-tight">关系洞察</h1>
+<span class="text-[12px] text-text-muted mt-0.5">你的社交能量账本</span>
+</div>
+<button class="p-2 text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-opacity active:scale-95 duration-300">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto pt-24 px-margin-page pb-stack-lg max-w-2xl mx-auto w-full">
+<!-- 核心指标卡片：平均表演耗竭率 -->
+<section class="bg-surface-card dark:bg-dark-card rounded-xl p-gutter-card border border-border-subtle mb-stack-md">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h2 class="font-label-md text-label-md text-text-muted mb-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-container text-sm">masks</span>
+                            平均表演耗竭率
+                        </h2>
+<div class="flex items-baseline gap-2">
+<span class="font-numeral-mono text-numeral-mono text-primary dark:text-primary-fixed-dim text-4xl font-light">68<span class="text-xl">%</span></span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-container text-2xl">battery_alert</span>
+</div>
+</div>
+<p class="text-sm text-text-muted leading-relaxed">
+                    在近期互动中，你需要“演戏”或过度自我监控的比例。较高数值意味着你在此类关系中无法展现真实状态，正在持续消耗心力。
+                </p>
+<!-- 进度条视觉化 -->
+<div class="mt-6">
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full chart-bar-fill" data-target-width="68%" style="width: 0%;"></div>
+</div>
+<div class="flex justify-between mt-2 text-xs text-text-muted">
+<span>真实做自己</span>
+<span>高度伪装</span>
+</div>
+</div>
+</section>
+<!-- 关系分类统计（条形图） -->
+<section class="bg-surface-card dark:bg-dark-card rounded-xl p-gutter-card border border-border-subtle mb-stack-md">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim mb-6">能量关系分布</h3>
+<div class="space-y-6">
+<!-- 回血型 -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-md text-label-md text-primary flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                                回血型关系
+                            </span>
+<span class="font-numeral-mono text-sm text-text-muted">32%</span>
+</div>
+<div class="h-8 w-full bg-surface-container-low rounded-lg overflow-hidden flex">
+<div class="h-full bg-primary-fixed-dim chart-bar-fill" data-target-width="32%" style="width: 0%;"></div>
+</div>
+<p class="text-xs text-text-muted mt-2">无需防备，相处后感到平静或愉悦。</p>
+</div>
+<!-- 抽干型 -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-md text-label-md text-secondary flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+                                抽干型关系
+                            </span>
+<span class="font-numeral-mono text-sm text-text-muted">68%</span>
+</div>
+<div class="h-8 w-full bg-surface-container-low rounded-lg overflow-hidden flex">
+<div class="h-full bg-secondary-container chart-bar-fill" data-target-width="68%" style="width: 0%;"></div>
+</div>
+<p class="text-xs text-text-muted mt-2">需要高度警惕，互动后感到疲惫或内耗。</p>
+</div>
+</div>
+</section>
+<!-- 关键发现 & 行动建议 -->
+<section class="bg-surface-container-low dark:bg-surface-container-highest/20 rounded-xl p-gutter-card border border-border-subtle">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary text-xl">lightbulb</span>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary">关键发现</h3>
+</div>
+<div class="bg-surface-card dark:bg-dark-card rounded-lg p-4 mb-4 border border-border-subtle/50">
+<p class="text-sm text-text-primary mb-2">
+                        近期消耗最高的关系类型：<strong class="font-medium text-secondary">工作汇报相关</strong>
+</p>
+<p class="text-sm text-text-muted">
+                        特别是与 <span class="bg-surface-container px-2 py-0.5 rounded text-text-primary">某位上级</span> 的互动中，你的心率变异性显著降低，显示出较高的隐性压力。
+                    </p>
+</div>
+<div class="border-t border-border-subtle/50 pt-4">
+<h4 class="font-label-md text-label-md text-text-muted mb-3">关系减负建议</h4>
+<p class="text-sm text-text-primary leading-relaxed mb-4">
+                        建议将与此类对象的非必要互动频率降低，或将会面安排在你的能量高峰期（如上午10点）。
+                    </p>
+<div class="flex items-center gap-2 bg-primary-fixed/30 dark:bg-primary-fixed-dim/10 text-primary dark:text-primary-fixed-dim p-3 rounded-lg">
+<span class="material-symbols-outlined text-lg">shield_with_heart</span>
+<span class="text-xs font-medium tracking-wide">这不是断交，是保护。</span>
+</div>
+</div>
+</section>
+<div class="h-8"></div> <!-- Bottom spacer for safe area -->
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-surface/90 dark:bg-dark-bg/90 backdrop-blur-2xl fixed bottom-0 w-full z-50 rounded-t-xl border-t border-border-subtle/50 pt-2 pb-safe px-4 flex justify-around items-center h-16">
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 w-16 h-full rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home_app_logo</span>
+<span class="font-label-md text-[10px] mt-1">今天</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 w-16 h-full rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">edit_note</span>
+<span class="font-label-md text-[10px] mt-1">记录</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 w-16 h-full rounded-lg relative" href="#">
+<!-- Active indicator dot -->
+<div class="absolute top-1 right-3 w-1.5 h-1.5 bg-primary rounded-full"></div>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span class="font-label-md text-[10px] mt-1">洞察</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 w-16 h-full rounded-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-md text-[10px] mt-1">我的</span>
+</a>
+</nav>
+<script>
+        // Trigger chart animations on load
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                const bars = document.querySelectorAll('.chart-bar-fill');
+                bars.forEach(bar => {
+                    const targetWidth = bar.getAttribute('data-target-width');
+                    if(targetWidth) {
+                        bar.style.width = targetWidth;
+                    }
+                });
+            }, 300); // Slight delay for visual effect
+        });
+    </script>
+</body></html>

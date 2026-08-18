@@ -1,0 +1,20 @@
+{
+  "id": "0083cbda31bc4cf683df866e17d34dfb",
+  "name": "projects/4724290021803215791/screens/0083cbda31bc4cf683df866e17d34dfb",
+  "title": "查看就医指南 - 详细引导",
+  "category": "08-medical-safety",
+  "categoryLabel": "就医、安全与浪潮等待",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2470",
+  "source": {
+    "screenshot": "projects/4724290021803215791/files/16993815351923095496",
+    "htmlCode": "projects/4724290021803215791/files/1724326419833943538"
+  },
+  "local": {
+    "screenshot": "design/08-medical-safety/查看就医指南---详细引导__0083cbda.png",
+    "html": "design/08-medical-safety/查看就医指南---详细引导__0083cbda.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

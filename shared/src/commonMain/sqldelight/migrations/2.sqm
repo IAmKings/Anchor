@@ -1,0 +1,17 @@
+CREATE TABLE assessment (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  completed_at INTEGER NOT NULL,
+  phq9_answers TEXT NOT NULL,
+  gad7_answers TEXT NOT NULL,
+  phq9_score INTEGER NOT NULL CHECK (phq9_score BETWEEN 0 AND 27),
+  phq9_band TEXT NOT NULL,
+  gad7_score INTEGER NOT NULL CHECK (gad7_score BETWEEN 0 AND 21),
+  gad7_band TEXT NOT NULL,
+  action TEXT NOT NULL
+);
+
+CREATE TABLE safety_state (
+  id INTEGER NOT NULL PRIMARY KEY CHECK (id = 1),
+  mode TEXT NOT NULL,
+  first_low_assessment_at INTEGER
+);

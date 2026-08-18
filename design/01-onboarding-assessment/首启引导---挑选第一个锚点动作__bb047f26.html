@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>首启流程 - 功能简介</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fcf9f3",
+                        "on-primary-container": "#133222",
+                        "on-tertiary-container": "#302b24",
+                        "text-primary": "#33302B",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#feaa8b",
+                        "tertiary-container": "#9a9288",
+                        "on-secondary-fixed": "#380d00",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ea",
+                        "border-subtle": "#E3DDD3",
+                        "primary-container": "#7a9b86",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "on-surface-variant": "#424843",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "error": "#ba1a1a",
+                        "tertiary": "#645d55",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#fcf9f3",
+                        "surface-dim": "#dcdad4",
+                        "secondary": "#8e4d34",
+                        "primary": "#466552",
+                        "outline-variant": "#c2c8c1",
+                        "surface-card": "#FFFFFF",
+                        "surface-container-high": "#ebe8e2",
+                        "tertiary-fixed": "#ebe1d6",
+                        "on-surface": "#1c1c18",
+                        "primary-fixed-dim": "#accfb8",
+                        "on-secondary-container": "#783c24",
+                        "dark-card": "#262521",
+                        "on-primary-fixed": "#012112",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "secondary-fixed": "#ffdbcf",
+                        "surface-container": "#f0eee8",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "on-background": "#1c1c18",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e5e2dc",
+                        "background": "#fcf9f3",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#accfb8",
+                        "outline": "#727973",
+                        "surface-container-low": "#f6f3ed",
+                        "surface-tint": "#466552",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "text-muted": "#8A837A",
+                        "inverse-surface": "#31312d",
+                        "primary-fixed": "#c8ebd3",
+                        "dark-bg": "#1C1B18"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "gutter-card": "16px",
+                        "margin-page": "20px",
+                        "stack-lg": "40px",
+                        "stack-md": "24px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Manrope", "sans-serif"],
+                        "headline-lg-mobile": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"],
+                        "numeral-mono": ["JetBrains Mono", "monospace"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E3DDD3; border-radius: 4px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col relative pb-[140px] md:pb-[100px]">
+<!-- Minimal Header (Onboarding linear flow) -->
+<header class="w-full flex items-center px-margin-page h-16 shrink-0 pt-safe">
+<button aria-label="返回" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors text-text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-page max-w-2xl mx-auto w-full flex flex-col pt-stack-sm">
+<!-- Introduction Section -->
+<section class="mb-stack-lg">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-text-primary mb-stack-sm">
+                感谢你的诚实。目前你可以通过微行为来进行日常调节。
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                建议从最轻微的动作开始，请在下方列表里<strong class="font-semibold text-text-primary">只选一个</strong>。
+            </p>
+</section>
+<!-- Options List -->
+<section class="flex flex-col gap-stack-sm" id="methods-list">
+<!-- Card Item 1 -->
+<label class="group relative flex items-start gap-4 p-gutter-card bg-surface-card border border-border-subtle rounded-xl cursor-pointer transition-all duration-300 hover:bg-surface-container-lowest has-[:checked]:bg-primary-container has-[:checked]:border-primary has-[:checked]:shadow-[0_0_0_1px_#466552]">
+<input class="peer sr-only" name="method" type="radio" value="morning-light"/>
+<div class="mt-1 w-8 h-8 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-text-primary peer-checked:bg-on-primary-container peer-checked:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">wb_twilight</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-lg-mobile text-[16px] leading-[24px] text-text-primary peer-checked:text-on-primary-container">起床见光</h3>
+<p class="font-body-md text-[14px] leading-[20px] text-on-surface-variant mt-1">每天醒来后，在窗边感受自然光5分钟，唤醒身体节律。</p>
+</div>
+</label>
+<!-- Card Item 2 -->
+<label class="group relative flex items-start gap-4 p-gutter-card bg-surface-card border border-border-subtle rounded-xl cursor-pointer transition-all duration-300 hover:bg-surface-container-lowest has-[:checked]:bg-primary-container has-[:checked]:border-primary has-[:checked]:shadow-[0_0_0_1px_#466552]">
+<input class="peer sr-only" name="method" type="radio" value="micro-action"/>
+<div class="mt-1 w-8 h-8 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-text-primary peer-checked:bg-on-primary-container peer-checked:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-lg-mobile text-[16px] leading-[24px] text-text-primary peer-checked:text-on-primary-container">微小行动</h3>
+<p class="font-body-md text-[14px] leading-[20px] text-on-surface-variant mt-1">每天完成一件极小、极易达成的事情，例如整理一张桌面。</p>
+</div>
+</label>
+<!-- Card Item 3 -->
+<label class="group relative flex items-start gap-4 p-gutter-card bg-surface-card border border-border-subtle rounded-xl cursor-pointer transition-all duration-300 hover:bg-surface-container-lowest has-[:checked]:bg-primary-container has-[:checked]:border-primary has-[:checked]:shadow-[0_0_0_1px_#466552]">
+<input class="peer sr-only" name="method" type="radio" value="breathing"/>
+<div class="mt-1 w-8 h-8 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-text-primary peer-checked:bg-on-primary-container peer-checked:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">air</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-lg-mobile text-[16px] leading-[24px] text-text-primary peer-checked:text-on-primary-container">正念呼吸</h3>
+<p class="font-body-md text-[14px] leading-[20px] text-on-surface-variant mt-1">花3分钟专注于一呼一吸，将游离的思绪带回当下。</p>
+</div>
+</label>
+<!-- Card Item 4 -->
+<label class="group relative flex items-start gap-4 p-gutter-card bg-surface-card border border-border-subtle rounded-xl cursor-pointer transition-all duration-300 hover:bg-surface-container-lowest has-[:checked]:bg-primary-container has-[:checked]:border-primary has-[:checked]:shadow-[0_0_0_1px_#466552]">
+<input class="peer sr-only" name="method" type="radio" value="sensory"/>
+<div class="mt-1 w-8 h-8 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-text-primary peer-checked:bg-on-primary-container peer-checked:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-lg-mobile text-[16px] leading-[24px] text-text-primary peer-checked:text-on-primary-container">感官寻锚</h3>
+<p class="font-body-md text-[14px] leading-[20px] text-on-surface-variant mt-1">找寻周围环境中5种可见之物、4种可触之物，建立现实连接。</p>
+</div>
+</label>
+<!-- Card Item 5 -->
+<label class="group relative flex items-start gap-4 p-gutter-card bg-surface-card border border-border-subtle rounded-xl cursor-pointer transition-all duration-300 hover:bg-surface-container-lowest has-[:checked]:bg-primary-container has-[:checked]:border-primary has-[:checked]:shadow-[0_0_0_1px_#466552]">
+<input class="peer sr-only" name="method" type="radio" value="digital-minimal"/>
+<div class="mt-1 w-8 h-8 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-text-primary peer-checked:bg-on-primary-container peer-checked:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">phonelink_erase</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-lg-mobile text-[16px] leading-[24px] text-text-primary peer-checked:text-on-primary-container">数字睡前</h3>
+<p class="font-body-md text-[14px] leading-[20px] text-on-surface-variant mt-1">睡前30分钟内远离电子屏幕，降低信息刺激。</p>
+</div>
+</label>
+<!-- Card Item 6 -->
+<label class="group relative flex items-start gap-4 p-gutter-card bg-surface-card border border-border-subtle rounded-xl cursor-pointer transition-all duration-300 hover:bg-surface-container-lowest has-[:checked]:bg-primary-container has-[:checked]:border-primary has-[:checked]:shadow-[0_0_0_1px_#466552]">
+<input class="peer sr-only" name="method" type="radio" value="warm-water"/>
+<div class="mt-1 w-8 h-8 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-text-primary peer-checked:bg-on-primary-container peer-checked:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">water_drop</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-lg-mobile text-[16px] leading-[24px] text-text-primary peer-checked:text-on-primary-container">温水抚慰</h3>
+<p class="font-body-md text-[14px] leading-[20px] text-on-surface-variant mt-1">用温水洗手或泡脚，感受温度带来的神经放松。</p>
+</div>
+</label>
+<!-- Card Item 7 -->
+<label class="group relative flex items-start gap-4 p-gutter-card bg-surface-card border border-border-subtle rounded-xl cursor-pointer transition-all duration-300 hover:bg-surface-container-lowest has-[:checked]:bg-primary-container has-[:checked]:border-primary has-[:checked]:shadow-[0_0_0_1px_#466552]">
+<input class="peer sr-only" name="method" type="radio" value="doodling"/>
+<div class="mt-1 w-8 h-8 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-text-primary peer-checked:bg-on-primary-container peer-checked:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">draw</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-lg-mobile text-[16px] leading-[24px] text-text-primary peer-checked:text-on-primary-container">无脑涂鸦</h3>
+<p class="font-body-md text-[14px] leading-[20px] text-on-surface-variant mt-1">拿起笔在纸上随意画线，无需构思，让情绪自然流淌。</p>
+</div>
+</label>
+<!-- Card Item 8 -->
+<label class="group relative flex items-start gap-4 p-gutter-card bg-surface-card border border-border-subtle rounded-xl cursor-pointer transition-all duration-300 hover:bg-surface-container-lowest has-[:checked]:bg-primary-container has-[:checked]:border-primary has-[:checked]:shadow-[0_0_0_1px_#466552]">
+<input class="peer sr-only" name="method" type="radio" value="slow-eating"/>
+<div class="mt-1 w-8 h-8 rounded-full bg-surface-container flex items-center justify-center shrink-0 text-text-primary peer-checked:bg-on-primary-container peer-checked:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-lg-mobile text-[16px] leading-[24px] text-text-primary peer-checked:text-on-primary-container">缓慢品尝</h3>
+<p class="font-body-md text-[14px] leading-[20px] text-on-surface-variant mt-1">选一餐慢慢咀嚼，把全部注意力放在食物的口感和味道上。</p>
+</div>
+</label>
+</section>
+</main>
+<!-- Sticky Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-background/90 backdrop-blur-xl border-t border-border-subtle/50 px-margin-page py-stack-md pb-safe z-50 transition-transform duration-300 flex flex-col items-center">
+<div class="max-w-2xl w-full mx-auto flex flex-col items-center">
+<p class="font-body-md text-[14px] text-on-surface-variant mb-stack-sm text-center">
+                选定后我们将固定练习 14 天
+            </p>
+<button class="w-full max-w-[300px] h-14 rounded-full bg-primary text-surface-card font-label-md text-label-md flex items-center justify-center disabled:bg-surface-variant disabled:text-text-muted transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background" disabled="" id="confirm-btn">
+                确认选择
+            </button>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const radioButtons = document.querySelectorAll('input[name="method"]');
+            const confirmBtn = document.getElementById('confirm-btn');
+
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    if (document.querySelector('input[name="method"]:checked')) {
+                        confirmBtn.removeAttribute('disabled');
+                    }
+                });
+            });
+        });
+    </script>
+</body></html>

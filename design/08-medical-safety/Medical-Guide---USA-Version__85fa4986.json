@@ -1,0 +1,20 @@
+{
+  "id": "85fa4986378b47129df3a8283a7cf17c",
+  "name": "projects/4724290021803215791/screens/85fa4986378b47129df3a8283a7cf17c",
+  "title": "Medical Guide - USA Version",
+  "category": "08-medical-safety",
+  "categoryLabel": "就医、安全与浪潮等待",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "3098",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/85fa4986378b47129df3a8283a7cf17c/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/85fa4986378b47129df3a8283a7cf17c/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/08-medical-safety/Medical-Guide---USA-Version__85fa4986.png",
+    "html": "design/08-medical-safety/Medical-Guide---USA-Version__85fa4986.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

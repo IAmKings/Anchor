@@ -1,0 +1,20 @@
+{
+  "id": "f9c3e89ab81a4544b3150b148ed7ae2a",
+  "name": "projects/4724290021803215791/screens/f9c3e89ab81a4544b3150b148ed7ae2a",
+  "title": "洞察 - 忧虑保险箱统计 (优化版)",
+  "category": "06-insights",
+  "categoryLabel": "洞察与趋势",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2834",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/f9c3e89ab81a4544b3150b148ed7ae2a/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/f9c3e89ab81a4544b3150b148ed7ae2a/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/06-insights/洞察---忧虑保险箱统计-(优化版)__f9c3e89a.png",
+    "html": "design/06-insights/洞察---忧虑保险箱统计-(优化版)__f9c3e89a.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

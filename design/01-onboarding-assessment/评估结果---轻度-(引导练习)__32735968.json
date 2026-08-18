@@ -1,0 +1,20 @@
+{
+  "id": "327359684c4f4223aa1349a6fe7a8b30",
+  "name": "projects/4724290021803215791/screens/327359684c4f4223aa1349a6fe7a8b30",
+  "title": "评估结果 - 轻度 (引导练习)",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1772",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/327359684c4f4223aa1349a6fe7a8b30/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/327359684c4f4223aa1349a6fe7a8b30/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/评估结果---轻度-(引导练习)__32735968.png",
+    "html": "design/01-onboarding-assessment/评估结果---轻度-(引导练习)__32735968.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

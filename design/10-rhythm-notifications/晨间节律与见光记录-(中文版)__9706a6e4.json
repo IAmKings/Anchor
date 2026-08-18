@@ -1,0 +1,20 @@
+{
+  "id": "9706a6e44de04ff3ab0c204c523bf5fb",
+  "name": "projects/4724290021803215791/screens/9706a6e44de04ff3ab0c204c523bf5fb",
+  "title": "晨间节律与见光记录 (中文版)",
+  "category": "10-rhythm-notifications",
+  "categoryLabel": "晨间节律与通知",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2554",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/9706a6e44de04ff3ab0c204c523bf5fb/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/9706a6e44de04ff3ab0c204c523bf5fb/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/10-rhythm-notifications/晨间节律与见光记录-(中文版)__9706a6e4.png",
+    "html": "design/10-rhythm-notifications/晨间节律与见光记录-(中文版)__9706a6e4.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

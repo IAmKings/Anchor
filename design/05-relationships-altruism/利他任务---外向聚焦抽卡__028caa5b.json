@@ -1,0 +1,20 @@
+{
+  "id": "028caa5baafb4dbba5731f73908b65d7",
+  "name": "projects/4724290021803215791/screens/028caa5baafb4dbba5731f73908b65d7",
+  "title": "利他任务 - 外向聚焦抽卡",
+  "category": "05-relationships-altruism",
+  "categoryLabel": "关系能量、表演耗竭与利他任务",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/028caa5baafb4dbba5731f73908b65d7/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/028caa5baafb4dbba5731f73908b65d7/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/05-relationships-altruism/利他任务---外向聚焦抽卡__028caa5b.png",
+    "html": "design/05-relationships-altruism/利他任务---外向聚焦抽卡__028caa5b.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

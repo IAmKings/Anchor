@@ -1,0 +1,20 @@
+{
+  "id": "0b2a6df3aa23440e955203f2d341ff8e",
+  "name": "projects/4724290021803215791/screens/0b2a6df3aa23440e955203f2d341ff8e",
+  "title": "微行动完成 - 预测 vs 实际对比",
+  "category": "03-micro-actions",
+  "categoryLabel": "微行动流程",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2772",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/0b2a6df3aa23440e955203f2d341ff8e/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/0b2a6df3aa23440e955203f2d341ff8e/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/03-micro-actions/微行动完成---预测-vs-实际对比__0b2a6df3.png",
+    "html": "design/03-micro-actions/微行动完成---预测-vs-实际对比__0b2a6df3.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

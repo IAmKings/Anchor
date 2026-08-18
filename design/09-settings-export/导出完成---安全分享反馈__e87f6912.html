@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>数据导出完成</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config from Guidelines -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#1c1c18",
+                        "surface-container-highest": "#e5e2dc",
+                        "surface-card": "#FFFFFF",
+                        "primary-container": "#7a9b86",
+                        "secondary-fixed": "#ffdbcf",
+                        "outline-variant": "#c2c8c1",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "on-secondary-fixed": "#380d00",
+                        "surface-bright": "#fcf9f3",
+                        "on-error-container": "#93000a",
+                        "secondary": "#8e4d34",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "on-surface-variant": "#424843",
+                        "outline": "#727973",
+                        "tertiary": "#645d55",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "inverse-on-surface": "#f3f0ea",
+                        "primary-fixed-dim": "#accfb8",
+                        "primary-fixed": "#c8ebd3",
+                        "on-primary-container": "#133222",
+                        "secondary-container": "#feaa8b",
+                        "text-primary": "#33302B",
+                        "surface-container-low": "#f6f3ed",
+                        "surface": "#fcf9f3",
+                        "text-muted": "#8A837A",
+                        "dark-card": "#262521",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#466552",
+                        "on-primary-fixed": "#012112",
+                        "inverse-primary": "#accfb8",
+                        "surface-variant": "#e5e2dc",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "primary": "#466552",
+                        "surface-container": "#f0eee8",
+                        "dark-bg": "#1C1B18",
+                        "tertiary-fixed": "#ebe1d6",
+                        "tertiary-container": "#9a9288",
+                        "on-surface": "#1c1c18",
+                        "background": "#fcf9f3",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#ebe8e2",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dcdad4",
+                        "border-subtle": "#E3DDD3",
+                        "on-tertiary-container": "#302b24",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#783c24",
+                        "inverse-surface": "#31312d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "20px",
+                        "unit": "4px",
+                        "stack-sm": "8px",
+                        "stack-md": "24px",
+                        "stack-lg": "40px",
+                        "gutter-card": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["manrope", "sans-serif"],
+                        "numeral-mono": ["jetbrainsMono", "monospace"],
+                        "body-md": ["manrope", "sans-serif"],
+                        "headline-lg": ["manrope", "sans-serif"],
+                        "headline-lg-mobile": ["manrope", "sans-serif"],
+                        "body-lg": ["manrope", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<main class="flex-1 flex flex-col items-center justify-center px-margin-page pb-stack-lg pt-stack-lg max-w-md mx-auto w-full animate-fade-in-up">
+<div class="w-24 h-24 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center mb-stack-lg shadow-sm">
+<span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">
+                verified
+            </span>
+</div>
+<div class="text-center mb-stack-lg w-full">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-background mb-stack-sm">
+                文件已加密生成
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[280px] mx-auto">
+                你可以通过系统分享功能将其发送给医生，或保存到本地。
+            </p>
+</div>
+<div class="w-full bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex items-start gap-stack-sm mb-stack-lg shadow-sm">
+<span class="material-symbols-outlined text-primary mt-1" style="font-variation-settings: 'FILL' 1;">
+                key
+            </span>
+<div>
+<h3 class="font-label-md text-label-md text-on-background mb-1">
+                    提取密码已复制
+                </h3>
+<p class="font-body-md text-[15px] leading-relaxed text-on-surface-variant">
+                    密码已存入剪贴板。为保护您的数据隐私，建议在分享文件时，将密码通过其他安全渠道单独发送。
+                </p>
+</div>
+</div>
+<div class="w-full flex flex-col gap-stack-sm mt-auto md:mt-0 pt-stack-lg">
+<button class="w-full bg-primary text-surface-card rounded-full py-4 font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all duration-200 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[20px]">
+                    ios_share
+                </span>
+                点击分享
+            </button>
+<a class="w-full py-4 font-label-md text-label-md text-primary text-center hover:bg-surface-container-low rounded-full transition-colors duration-200" href="#">
+                返回主页
+            </a>
+</div>
+</main>
+<script>
+        tailwind.config.theme.extend.animation = {
+            'fade-in-up': 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards'
+        };
+        tailwind.config.theme.extend.keyframes = {
+            fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' }
+            }
+        };
+    </script>
+</body></html>

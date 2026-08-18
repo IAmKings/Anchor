@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Anchor - 微行动</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "on-secondary-container": "#783c24",
+                        "on-primary-container": "#133222",
+                        "text-primary": "#33302B",
+                        "secondary-fixed": "#ffdbcf",
+                        "on-primary-fixed": "#012112",
+                        "inverse-on-surface": "#f3f0ea",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#9a9288",
+                        "inverse-surface": "#31312d",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#f0eee8",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#424843",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e5e2dc",
+                        "primary-container": "#7a9b86",
+                        "primary-fixed": "#c8ebd3",
+                        "surface-dim": "#dcdad4",
+                        "dark-bg": "#1C1B18",
+                        "surface-tint": "#466552",
+                        "on-background": "#1c1c18",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e5e2dc",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "secondary-container": "#feaa8b",
+                        "outline-variant": "#c2c8c1",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#accfb8",
+                        "tertiary-fixed": "#ebe1d6",
+                        "primary": "#466552",
+                        "dark-card": "#262521",
+                        "surface": "#fcf9f3",
+                        "tertiary": "#645d55",
+                        "border-subtle": "#E3DDD3",
+                        "on-secondary-fixed": "#380d00",
+                        "text-muted": "#8A837A",
+                        "background": "#fcf9f3",
+                        "surface-container-high": "#ebe8e2",
+                        "outline": "#727973",
+                        "surface-container-low": "#f6f3ed",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "surface-card": "#FFFFFF",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#accfb8",
+                        "on-tertiary-container": "#302b24",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "surface-bright": "#fcf9f3",
+                        "secondary": "#8e4d34",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#1c1c18"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "8px",
+                        "unit": "4px",
+                        "stack-lg": "40px",
+                        "margin-page": "20px",
+                        "stack-md": "24px",
+                        "gutter-card": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"],
+                        "headline-lg-mobile": ["Manrope", "sans-serif"],
+                        "numeral-mono": ["JetBrains Mono", "monospace"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar for horizontal lists */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-text-primary font-body-md antialiased pb-24 min-h-screen">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16">
+<button class="text-text-primary hover:opacity-80 transition-opacity flex items-center justify-center p-2 -ml-2 rounded-full active:scale-95 duration-300">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-semibold text-text-primary">微行动</h1>
+<div class="w-10"></div> <!-- Spacer for center alignment -->
+</header>
+<!-- Main Canvas -->
+<main class="pt-24 px-margin-page pb-stack-lg flex flex-col gap-stack-lg max-w-2xl mx-auto">
+<!-- Header Section: Context & Empathy -->
+<section class="flex flex-col gap-stack-sm animate-fade-in">
+<div class="inline-flex items-center self-start gap-2 px-3 py-1.5 rounded-full bg-surface-container border border-border-subtle">
+<span class="material-symbols-outlined text-text-muted text-[16px]">battery_1_bar</span>
+<span class="font-label-md text-label-md text-text-muted">当前状态：社交耗竭</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-text-primary pt-2">温和回归</h2>
+<p class="font-body-md text-body-md text-text-muted">你感到有些不知所措。让我们从那些几乎不需要社交或认知能量的微小行动开始吧。</p>
+</section>
+<!-- Featured / Top Pick Section (Bento Style) -->
+<section class="flex flex-col gap-stack-sm">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]" data-weight="fill">star</span>
+<h3 class="font-label-md text-label-md text-text-primary uppercase tracking-wider">首位推荐</h3>
+</div>
+<div class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex flex-col gap-stack-md active:scale-[0.99] transition-transform duration-300">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<span class="inline-flex px-2 py-0.5 rounded-md bg-secondary-fixed text-on-secondary-container font-label-md text-[12px] w-fit">非社交</span>
+<h4 class="font-body-lg text-body-lg text-text-primary">给植物浇水</h4>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md text-text-muted">精力</span>
+<div class="flex gap-0.5 mt-1">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container"></div>
+<div class="w-2 h-2 rounded-full bg-surface-container"></div>
+</div>
+</div>
+</div>
+<p class="font-body-md text-body-md text-text-muted">就一盆。先别管其他的。目标是与生命体建立一点点连接，而不是完成家务。</p>
+<button class="w-full bg-primary text-surface-card py-3 rounded-lg font-label-md text-label-md flex justify-center items-center gap-2 hover:bg-surface-tint transition-colors">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span>
+                    开始计时 (1分钟)
+                </button>
+</div>
+</section>
+<!-- Horizontal Scroll Category Chips -->
+<section class="-mx-margin-page px-margin-page pb-2 overflow-x-auto hide-scrollbar flex gap-3">
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-primary-container/20 border border-primary-fixed-dim text-on-primary-container font-label-md text-label-md transition-colors">
+                非社交聚焦
+            </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-card border border-border-subtle text-text-muted font-label-md text-label-md hover:bg-surface-container transition-colors">
+                身体锚点
+            </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-card border border-border-subtle text-text-muted font-label-md text-label-md hover:bg-surface-container transition-colors">
+                工作/学习
+            </button>
+</section>
+<!-- Alternative Actions List -->
+<section class="flex flex-col gap-3">
+<!-- Action Card 1 -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 flex items-center justify-between gap-4 group hover:border-outline-variant transition-colors cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary transition-colors">directions_walk</span>
+</div>
+<div class="flex-1 flex flex-col">
+<h5 class="font-body-md text-body-md text-text-primary leading-tight">穿好鞋子</h5>
+<span class="font-label-md text-[13px] text-text-muted mt-0.5">就这样，先不用出门。</span>
+</div>
+<button class="w-8 h-8 rounded-full border border-border-subtle flex items-center justify-center text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<!-- Action Card 2 -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 flex items-center justify-between gap-4 group hover:border-outline-variant transition-colors cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary transition-colors">edit_document</span>
+</div>
+<div class="flex-1 flex flex-col">
+<h5 class="font-body-md text-body-md text-text-primary leading-tight">打开文档</h5>
+<span class="font-label-md text-[13px] text-text-muted mt-0.5">写下一句话，然后停下来。</span>
+</div>
+<button class="w-8 h-8 rounded-full border border-border-subtle flex items-center justify-center text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<!-- Action Card 3 -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 flex items-center justify-between gap-4 group hover:border-outline-variant transition-colors cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-text-muted group-hover:text-primary transition-colors">local_drink</span>
+</div>
+<div class="flex-1 flex flex-col">
+<h5 class="font-body-md text-body-md text-text-primary leading-tight">喝半杯水</h5>
+<span class="font-label-md text-[13px] text-text-muted mt-0.5">身体状态重置。</span>
+</div>
+<button class="w-8 h-8 rounded-full border border-border-subtle flex items-center justify-center text-text-muted hover:bg-surface-container hover:text-text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</section>
+<!-- Custom Entry Section -->
+<section class="mt-4 pt-6 border-t border-border-subtle flex flex-col gap-3">
+<label class="font-label-md text-label-md text-text-muted" for="custom-action">想要点别的？</label>
+<div class="relative">
+<input class="w-full bg-surface-card border-none border-b-2 border-border-subtle focus:border-primary focus:ring-0 px-0 py-3 font-body-md text-body-md text-text-primary placeholder:text-text-muted/50 bg-transparent transition-colors" id="custom-action" placeholder="创建你自己的“荒唐简单”行动..." type="text"/>
+<button class="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-primary hover:bg-primary-container/20 rounded-full transition-colors">
+<span class="material-symbols-outlined text-[20px]">arrow_upward</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 w-full rounded-t-xl z-50 bg-surface-container-low/90 backdrop-blur-2xl border-t border-border-subtle/50 flex justify-around items-center pb-safe pt-stack-sm px-2 h-[88px]">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1.5 hover:text-primary transition-colors group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform duration-300">today</span>
+<span class="font-label-md text-[11px] mt-1">今天</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container/40 text-on-primary-container rounded-full px-5 py-1.5 transition-all duration-500 scale-100">
+<span class="material-symbols-outlined" data-weight="fill">edit_note</span>
+<span class="font-label-md text-[11px] mt-1 font-bold">记录</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1.5 hover:text-primary transition-colors group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform duration-300">auto_graph</span>
+<span class="font-label-md text-[11px] mt-1">洞察</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-5 py-1.5 hover:text-primary transition-colors group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform duration-300">person</span>
+<span class="font-label-md text-[11px] mt-1">我的</span>
+</button>
+</nav>
+<script>
+        // Simple subtle entrance animation for cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.bg-surface-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(10px)';
+                card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * (index + 1));
+            });
+        });
+    </script>
+</body></html>

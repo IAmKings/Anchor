@@ -1,0 +1,20 @@
+{
+  "id": "176d77b8a8e144f89279489e076d6b13",
+  "name": "projects/4724290021803215791/screens/176d77b8a8e144f89279489e076d6b13",
+  "title": "就医指南 - 台湾地区版 (TW)",
+  "category": "08-medical-safety",
+  "categoryLabel": "就医、安全与浪潮等待",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2386",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/176d77b8a8e144f89279489e076d6b13/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/176d77b8a8e144f89279489e076d6b13/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/08-medical-safety/就医指南---台湾地区版-(TW)__176d77b8.png",
+    "html": "design/08-medical-safety/就医指南---台湾地区版-(TW)__176d77b8.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

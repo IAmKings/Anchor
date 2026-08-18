@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>锚点 Anchor - 首启流程</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "surface": "#fcf9f3",
+                            "on-primary-container": "#133222",
+                            "on-tertiary-container": "#302b24",
+                            "text-primary": "#33302B",
+                            "surface-container-lowest": "#ffffff",
+                            "secondary-container": "#feaa8b",
+                            "tertiary-container": "#9a9288",
+                            "on-secondary-fixed": "#380d00",
+                            "on-tertiary": "#ffffff",
+                            "inverse-on-surface": "#f3f0ea",
+                            "border-subtle": "#E3DDD3",
+                            "primary-container": "#7a9b86",
+                            "secondary-fixed-dim": "#ffb59a",
+                            "on-surface-variant": "#424843",
+                            "on-tertiary-fixed-variant": "#4c463e",
+                            "error": "#ba1a1a",
+                            "tertiary": "#645d55",
+                            "on-secondary": "#ffffff",
+                            "surface-bright": "#fcf9f3",
+                            "surface-dim": "#dcdad4",
+                            "secondary": "#8e4d34",
+                            "primary": "#466552",
+                            "outline-variant": "#c2c8c1",
+                            "surface-card": "#FFFFFF",
+                            "surface-container-high": "#ebe8e2",
+                            "tertiary-fixed": "#ebe1d6",
+                            "on-surface": "#1c1c18",
+                            "primary-fixed-dim": "#accfb8",
+                            "on-secondary-container": "#783c24",
+                            "dark-card": "#262521",
+                            "on-primary-fixed": "#012112",
+                            "on-primary-fixed-variant": "#2e4d3c",
+                            "secondary-fixed": "#ffdbcf",
+                            "surface-container": "#f0eee8",
+                            "tertiary-fixed-dim": "#cec5ba",
+                            "on-secondary-fixed-variant": "#71361f",
+                            "on-background": "#1c1c18",
+                            "on-tertiary-fixed": "#1f1b14",
+                            "error-container": "#ffdad6",
+                            "surface-variant": "#e5e2dc",
+                            "background": "#fcf9f3",
+                            "surface-container-highest": "#e5e2dc",
+                            "on-primary": "#ffffff",
+                            "inverse-primary": "#accfb8",
+                            "outline": "#727973",
+                            "surface-container-low": "#f6f3ed",
+                            "surface-tint": "#466552",
+                            "on-error": "#ffffff",
+                            "on-error-container": "#93000a",
+                            "text-muted": "#8A837A",
+                            "inverse-surface": "#31312d",
+                            "primary-fixed": "#c8ebd3",
+                            "dark-bg": "#1C1B18"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "stack-sm": "8px",
+                            "gutter-card": "16px",
+                            "margin-page": "20px",
+                            "stack-lg": "40px",
+                            "stack-md": "24px",
+                            "unit": "4px"
+                    },
+                    "fontFamily": {
+                            "label-md": ["Manrope", "sans-serif"],
+                            "headline-lg-mobile": ["Manrope", "sans-serif"],
+                            "headline-lg": ["Manrope", "sans-serif"],
+                            "body-lg": ["Manrope", "sans-serif"],
+                            "body-md": ["Manrope", "sans-serif"],
+                            "numeral-mono": ["JetBrains Mono", "monospace"]
+                    },
+                    "fontSize": {
+                            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                            "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                            "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                            "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}],
+                            "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}],
+                            "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Subtle entrance animation */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-up {
+            animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        
+        /* Custom checkbox style */
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1.5px solid var(--tw-colors-outline-variant);
+            border-radius: var(--tw-border-radius-DEFAULT);
+            background-color: transparent;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .custom-checkbox:checked {
+            background-color: var(--tw-colors-primary);
+            border-color: var(--tw-colors-primary);
+        }
+        
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="bg-background text-text-primary min-h-screen flex flex-col items-center justify-center relative overflow-hidden font-body-md text-body-md">
+<!-- Ambient Background Element -->
+<div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+<div class="absolute top-[-20%] right-[-10%] w-[70vw] h-[70vw] md:w-[40vw] md:h-[40vw] rounded-full bg-surface-container-low blur-3xl opacity-60 mix-blend-multiply"></div>
+<div class="absolute bottom-[-10%] left-[-20%] w-[60vw] h-[60vw] md:w-[35vw] md:h-[35vw] rounded-full bg-surface-container blur-3xl opacity-70 mix-blend-multiply"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-md mx-auto px-margin-page py-12 flex flex-col justify-between min-h-screen h-[100dvh] relative z-10">
+<!-- Top Section: Brand Identity -->
+<div class="flex flex-col items-center mt-12 md:mt-24 space-y-stack-md">
+<div class="opacity-0 animate-fade-up">
+<img alt="锚点 Anchor Logo" class="w-24 h-24 rounded-2xl shadow-sm border border-border-subtle/50 object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLun6nvUqMK4NGFzn1IdzfUA9pAXZrmpEGHVn11AelvpFP6CcXq1rER9uuSqSmO_-1NfkZBqqzpp7BlWSUIx852mVD2pbsTYadAt5vBAU9UtWRV4w48Gh-dhVx5QcB5DIzyfk-qcM_YucNuos3A9Bp6Jhwibs6uELajwvRYttXzm7cJx5RH-nU54ACnZp1Hfu5krBT8Q_F8RA_RJb3o5uWB1KGgFmA13DjHM2heQ9zras5uHn8slTFsY8g"/>
+</div>
+<div class="text-center space-y-stack-sm opacity-0 animate-fade-up delay-100">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary tracking-tight">
+                    锚点 Anchor
+                </h1>
+<p class="font-body-md text-body-md text-text-muted max-w-[260px] mx-auto leading-relaxed">
+                    一款不讲鸡汤，只靠行为与事实的微行为辅助工具。
+                </p>
+</div>
+</div>
+<!-- Middle Section: Visual Spacer / Empty State -->
+<div class="flex-grow flex items-center justify-center">
+<!-- Intentional white space for breathing room -->
+</div>
+<!-- Bottom Section: Actions & Compliance -->
+<div class="w-full space-y-stack-md pb-safe">
+<!-- Age Disclaimer Card -->
+<div class="bg-surface-card border border-border-subtle rounded-xl p-4 flex items-center space-x-3 opacity-0 animate-fade-up delay-200">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary font-variation-settings-'FILL'-0">info</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-text-primary">年龄确认</h3>
+<p class="text-sm text-text-muted leading-snug mt-0.5">本产品面向 18 岁以上人群设计，致力于提供专业、理性的辅助支持。</p>
+</div>
+</div>
+<!-- Agreement Checkbox -->
+<div class="flex items-start space-x-3 px-2 opacity-0 animate-fade-up delay-300">
+<div class="flex items-center h-5 mt-1">
+<input class="custom-checkbox focus:ring-0" id="agreement" type="checkbox"/>
+</div>
+<label class="font-label-md text-label-md text-text-muted cursor-pointer select-none" for="agreement">
+                    我已阅读并同意
+                    <a class="text-primary hover:underline underline-offset-2" href="#">用户协议</a>
+                    与
+                    <a class="text-primary hover:underline underline-offset-2" href="#">隐私政策</a>
+</label>
+</div>
+<!-- Primary Action -->
+<div class="opacity-0 animate-fade-up delay-400">
+<button class="w-full bg-surface-container text-on-surface-variant font-headline-lg-mobile text-headline-lg-mobile py-4 rounded-xl transition-all duration-300 ease-in-out disabled:opacity-60 disabled:cursor-not-allowed group relative overflow-hidden flex flex-col items-center justify-center" disabled="" id="startButton">
+<span>开始基线评估</span>
+<span class="font-label-md text-label-md text-on-surface-variant/70 mt-1 font-normal">终结自我审判的第一步</span>
+</button>
+</div>
+</div>
+</main>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkbox = document.getElementById('agreement');
+            const startButton = document.getElementById('startButton');
+
+            checkbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    startButton.disabled = false;
+                    startButton.classList.remove('bg-surface-container', 'text-on-surface-variant');
+                    startButton.classList.add('bg-primary', 'text-surface-card', 'shadow-sm', 'active:scale-[0.98]');
+                    
+                    // Update subtext color
+                    const subtext = startButton.querySelector('span:last-child');
+                    subtext.classList.remove('text-on-surface-variant/70');
+                    subtext.classList.add('text-surface-card/80');
+                } else {
+                    startButton.disabled = true;
+                    startButton.classList.add('bg-surface-container', 'text-on-surface-variant');
+                    startButton.classList.remove('bg-primary', 'text-surface-card', 'shadow-sm', 'active:scale-[0.98]');
+                    
+                    // Update subtext color
+                    const subtext = startButton.querySelector('span:last-child');
+                    subtext.classList.add('text-on-surface-variant/70');
+                    subtext.classList.remove('text-surface-card/80');
+                }
+            });
+
+            // Simulated ripple effect for the button
+            startButton.addEventListener('click', function(e) {
+                if (this.disabled) return;
+                
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.top = `${y}px`;
+                ripple.style.left = `${x}px`;
+                ripple.style.transform = 'translate(-50%, -50%)';
+                ripple.style.width = '0';
+                ripple.style.height = '0';
+                ripple.style.borderRadius = '50%';
+                ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+                ripple.style.transition = 'width 0.4s ease-out, height 0.4s ease-out, opacity 0.6s ease-out';
+                
+                this.appendChild(ripple);
+                
+                // Trigger reflow
+                void ripple.offsetWidth;
+                
+                ripple.style.width = '300px';
+                ripple.style.height = '300px';
+                ripple.style.opacity = '0';
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,20 @@
+{
+  "id": "59d53b5409f5462cbb5644720e4b4080",
+  "name": "projects/4724290021803215791/screens/59d53b5409f5462cbb5644720e4b4080",
+  "title": "评估结果展示页",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2916",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/59d53b5409f5462cbb5644720e4b4080/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/59d53b5409f5462cbb5644720e4b4080/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/评估结果展示页__59d53b54.png",
+    "html": "design/01-onboarding-assessment/评估结果展示页__59d53b54.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

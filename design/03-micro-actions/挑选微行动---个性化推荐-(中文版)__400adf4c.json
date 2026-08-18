@@ -1,0 +1,20 @@
+{
+  "id": "400adf4ca0344f89935cf9c5179d4f06",
+  "name": "projects/4724290021803215791/screens/400adf4ca0344f89935cf9c5179d4f06",
+  "title": "挑选微行动 - 个性化推荐 (中文版)",
+  "category": "03-micro-actions",
+  "categoryLabel": "微行动流程",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2502",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/400adf4ca0344f89935cf9c5179d4f06/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/400adf4ca0344f89935cf9c5179d4f06/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/03-micro-actions/挑选微行动---个性化推荐-(中文版)__400adf4c.png",
+    "html": "design/03-micro-actions/挑选微行动---个性化推荐-(中文版)__400adf4c.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

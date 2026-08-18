@@ -1,0 +1,20 @@
+{
+  "id": "d9c14e9b48c6485cad6cc9e09f258fba",
+  "name": "projects/4724290021803215791/screens/d9c14e9b48c6485cad6cc9e09f258fba",
+  "title": "浪潮等待模式",
+  "category": "08-medical-safety",
+  "categoryLabel": "就医、安全与浪潮等待",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/d9c14e9b48c6485cad6cc9e09f258fba/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/d9c14e9b48c6485cad6cc9e09f258fba/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/08-medical-safety/浪潮等待模式__d9c14e9b.png",
+    "html": "design/08-medical-safety/浪潮等待模式__d9c14e9b.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

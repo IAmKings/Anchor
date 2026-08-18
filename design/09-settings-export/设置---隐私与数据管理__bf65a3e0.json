@@ -1,0 +1,20 @@
+{
+  "id": "bf65a3e047304b8d8cafebad7a902303",
+  "name": "projects/4724290021803215791/screens/bf65a3e047304b8d8cafebad7a902303",
+  "title": "设置 - 隐私与数据管理",
+  "category": "09-settings-export",
+  "categoryLabel": "设置、隐私与导出",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2068",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/bf65a3e047304b8d8cafebad7a902303/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/bf65a3e047304b8d8cafebad7a902303/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/09-settings-export/设置---隐私与数据管理__bf65a3e0.png",
+    "html": "design/09-settings-export/设置---隐私与数据管理__bf65a3e0.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

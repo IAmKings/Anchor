@@ -1,0 +1,20 @@
+{
+  "id": "ae0f26bbba5f408cbfa8745268f4e3f5",
+  "name": "projects/4724290021803215791/screens/ae0f26bbba5f408cbfa8745268f4e3f5",
+  "title": "首页 - 利他任务动态优化 (社交耗竭态)",
+  "category": "02-home-daily",
+  "categoryLabel": "首页与日常状态",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2672",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/ae0f26bbba5f408cbfa8745268f4e3f5/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/ae0f26bbba5f408cbfa8745268f4e3f5/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/02-home-daily/首页---利他任务动态优化-(社交耗竭态)__ae0f26bb.png",
+    "html": "design/02-home-daily/首页---利他任务动态优化-(社交耗竭态)__ae0f26bb.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

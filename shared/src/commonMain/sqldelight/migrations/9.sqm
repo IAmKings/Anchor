@@ -1,0 +1,4 @@
+ALTER TABLE micro_action ADD COLUMN predicted_difficulty INTEGER CHECK (predicted_difficulty BETWEEN 1 AND 10);
+ALTER TABLE micro_action ADD COLUMN started_at INTEGER;
+ALTER TABLE micro_action ADD COLUMN actual_difficulty INTEGER CHECK (actual_difficulty BETWEEN 1 AND 10);
+ALTER TABLE micro_action ADD COLUMN completed_at INTEGER;

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Micro-action Historical Evidence</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Chart.js for the Comparison Chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "dark-card": "#262521",
+                        "background": "#fcf9f3",
+                        "on-primary-container": "#133222",
+                        "on-surface-variant": "#424843",
+                        "inverse-primary": "#accfb8",
+                        "primary": "#466552",
+                        "tertiary-container": "#9a9288",
+                        "on-error-container": "#93000a",
+                        "border-subtle": "#E3DDD3",
+                        "primary-container": "#7a9b86",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#783c24",
+                        "surface-container-low": "#f6f3ed",
+                        "on-surface": "#1c1c18",
+                        "on-tertiary-container": "#302b24",
+                        "secondary-container": "#feaa8b",
+                        "on-secondary-fixed": "#380d00",
+                        "secondary-fixed": "#ffdbcf",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface": "#fcf9f3",
+                        "surface-container": "#f0eee8",
+                        "secondary": "#8e4d34",
+                        "surface-container-highest": "#e5e2dc",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "surface-bright": "#fcf9f3",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "outline": "#727973",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "on-primary-fixed": "#012112",
+                        "surface-variant": "#e5e2dc",
+                        "surface-dim": "#dcdad4",
+                        "primary-fixed-dim": "#accfb8",
+                        "dark-bg": "#1C1B18",
+                        "tertiary": "#645d55",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "inverse-on-surface": "#f3f0ea",
+                        "primary-fixed": "#c8ebd3",
+                        "on-secondary": "#ffffff",
+                        "text-muted": "#8A837A",
+                        "surface-container-high": "#ebe8e2",
+                        "surface-card": "#FFFFFF",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#31312d",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c2c8c1",
+                        "on-background": "#1c1c18",
+                        "tertiary-fixed": "#ebe1d6",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "surface-tint": "#466552",
+                        "text-primary": "#33302B"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "40px",
+                        "stack-md": "24px",
+                        "stack-sm": "8px",
+                        "unit": "4px",
+                        "margin-page": "20px",
+                        "gutter-card": "16px"
+                    },
+                    "fontFamily": {
+                        "numeral-mono": ["JetBrains Mono"],
+                        "headline-lg": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.text-primary');
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .glass-nav {
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col hide-scrollbar">
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 w-full z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 flex items-center justify-between px-margin-page h-16 transition-colors duration-300">
+<button aria-label="Go back" class="text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full p-2 -ml-2 active:scale-95 duration-300">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">Anchor</h1>
+<button aria-label="Settings" class="text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full p-2 -mr-2 active:scale-95 duration-300">
+<span class="material-symbols-outlined" data-weight="fill">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-page pt-24 pb-32 space-y-stack-lg w-full max-w-2xl mx-auto">
+<!-- Section 1: Header -->
+<section class="space-y-stack-sm text-center md:text-left mt-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Historical Evidence</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg mx-auto md:mx-0">
+                A factual record of your brain's prediction errors. Proof that starting is usually the hardest part.
+            </p>
+</section>
+<!-- Section 2: Summary Stats (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter-card">
+<div class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex flex-col justify-between min-h-[140px]">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-tertiary">psychology</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Average Overestimation</span>
+</div>
+<div class="mt-4">
+<span class="font-numeral-mono text-numeral-mono text-4xl text-primary">60%</span>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 leading-tight">Your brain typically predicts tasks will be much harder than they actually feel.</p>
+</div>
+</div>
+<div class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex flex-col justify-between min-h-[140px]">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-tertiary">history</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Recorded Sessions</span>
+</div>
+<div class="mt-4">
+<span class="font-numeral-mono text-numeral-mono text-4xl text-on-surface">14</span>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 leading-tight">Actions logged where predicted difficulty exceeded actual feeling.</p>
+</div>
+</div>
+</section>
+<!-- Section 3: Comparison Chart -->
+<section class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">show_chart</span>
+                Predicted vs Actual
+            </h3>
+<div class="relative w-full h-[250px]">
+<canvas id="evidenceChart"></canvas>
+</div>
+<div class="flex justify-center gap-6 mt-6">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">Predicted Difficulty</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="font-label-md text-label-md text-on-surface-variant">Actual Feeling</span>
+</div>
+</div>
+</section>
+<!-- Section 4: Evidence List -->
+<section class="space-y-4">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+                Recent Log
+            </h3>
+<div class="space-y-3">
+<!-- Log Item 1 -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex-1">
+<h4 class="font-body-md text-body-md text-on-surface font-medium">Walk downstairs</h4>
+<p class="font-label-md text-label-md text-text-muted">Yesterday, 8:30 AM</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md text-text-muted">Predicted</span>
+<span class="font-numeral-mono text-numeral-mono text-tertiary">8/10</span>
+</div>
+<span class="material-symbols-outlined text-border-subtle">arrow_right_alt</span>
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md text-primary">Actual</span>
+<span class="font-numeral-mono text-numeral-mono text-primary font-medium">3/10</span>
+</div>
+</div>
+</div>
+<!-- Log Item 2 -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex-1">
+<h4 class="font-body-md text-body-md text-on-surface font-medium">Write 1 sentence</h4>
+<p class="font-label-md text-label-md text-text-muted">Oct 12, 2:15 PM</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md text-text-muted">Predicted</span>
+<span class="font-numeral-mono text-numeral-mono text-tertiary">9/10</span>
+</div>
+<span class="material-symbols-outlined text-border-subtle">arrow_right_alt</span>
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md text-primary">Actual</span>
+<span class="font-numeral-mono text-numeral-mono text-primary font-medium">2/10</span>
+</div>
+</div>
+</div>
+<!-- Log Item 3 -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex-1">
+<h4 class="font-body-md text-body-md text-on-surface font-medium">Open email client</h4>
+<p class="font-label-md text-label-md text-text-muted">Oct 10, 9:00 AM</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md text-text-muted">Predicted</span>
+<span class="font-numeral-mono text-numeral-mono text-tertiary">7/10</span>
+</div>
+<span class="material-symbols-outlined text-border-subtle">arrow_right_alt</span>
+<div class="flex flex-col items-end">
+<span class="font-label-md text-label-md text-primary">Actual</span>
+<span class="font-numeral-mono text-numeral-mono text-primary font-medium">4/10</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-4 text-center text-on-surface-variant font-label-md text-label-md border border-dashed border-border-subtle rounded-xl hover:bg-surface-container-low transition-colors mt-4">
+                View Older Records
+            </button>
+</section>
+<!-- Section 5: Quote -->
+<section class="py-8 text-center px-4">
+<span class="material-symbols-outlined text-4xl text-border-subtle mb-4 block">format_quote</span>
+<blockquote class="font-body-lg text-body-lg text-on-surface-variant italic leading-relaxed">
+                "I still keep this table; one look at it helps me get out the door."
+            </blockquote>
+</section>
+</main>
+<!-- BottomNavBar (Shared Component) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-t border-border-subtle/30 pb-safe">
+<div class="flex justify-around items-center px-4 py-3">
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-500 ease-out w-16">
+<span class="material-symbols-outlined text-[24px] mb-1">today</span>
+<span class="font-label-md text-[10px] font-medium tracking-wide">Today</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-500 ease-out w-16">
+<span class="material-symbols-outlined text-[24px] mb-1">edit_note</span>
+<span class="font-label-md text-[10px] font-medium tracking-wide">Journal</span>
+</button>
+<!-- Active Tab: Insights is closest to 'Historical Evidence' -->
+<button class="flex flex-col items-center justify-center text-primary bg-primary-container/20 rounded-full px-4 py-1 active:scale-90 transition-transform duration-500 ease-out">
+<span class="material-symbols-outlined text-[24px] mb-1 fill">auto_graph</span>
+<span class="font-label-md text-[10px] font-medium tracking-wide">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 transition-transform duration-500 ease-out w-16">
+<span class="material-symbols-outlined text-[24px] mb-1">person</span>
+<span class="font-label-md text-[10px] font-medium tracking-wide">Me</span>
+</button>
+</div>
+</nav>
+<!-- Web Nav (Visible only on md+) -->
+<nav class="hidden md:flex fixed top-0 right-0 h-16 items-center px-margin-page z-50 mr-12 gap-8">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Today</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Journal</a>
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1" href="#">Insights</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors" href="#">Me</a>
+</nav>
+<script>
+        // Chart.js Configuration
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('evidenceChart').getContext('2d');
+            
+            // Tailwind colors imported for Chart.js
+            const colorPredicted = '#9a9288'; // tertiary-container
+            const colorActual = '#466552'; // primary
+            const colorGrid = '#E3DDD3'; // border-subtle
+            const colorText = '#8A837A'; // text-muted
+
+            // Dummy data showing predicted is almost always higher than actual
+            const data = {
+                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+                datasets: [
+                    {
+                        label: 'Predicted',
+                        data: [8, 9, 7, 8, 9, 6, 8, 7, 9, 8],
+                        borderColor: colorPredicted,
+                        backgroundColor: colorPredicted,
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 4,
+                        pointBackgroundColor: colorPredicted,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Actual',
+                        data: [3, 2, 4, 3, 2, 3, 2, 4, 3, 2],
+                        borderColor: colorActual,
+                        backgroundColor: colorActual,
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: colorActual,
+                        tension: 0.3
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // Custom legend built in HTML
+                        },
+                        tooltip: {
+                            backgroundColor: '#262521',
+                            titleFont: { family: 'Manrope', size: 12 },
+                            bodyFont: { family: 'JetBrains Mono', size: 14 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 10,
+                            grid: {
+                                color: colorGrid,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                font: { family: 'JetBrains Mono', size: 12 },
+                                color: colorText,
+                                stepSize: 2
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: { family: 'JetBrains Mono', size: 12 },
+                                color: colorText
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+    </script>
+</body></html>

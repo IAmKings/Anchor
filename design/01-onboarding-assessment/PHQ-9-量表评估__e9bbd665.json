@@ -1,0 +1,20 @@
+{
+  "id": "e9bbd6650ebb48cdaf2c504e8f798523",
+  "name": "projects/4724290021803215791/screens/e9bbd6650ebb48cdaf2c504e8f798523",
+  "title": "PHQ-9 量表评估",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "3824",
+  "source": {
+    "screenshot": "projects/4724290021803215791/files/7667718933869362508",
+    "htmlCode": "projects/4724290021803215791/files/1790391911046444084"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/PHQ-9-量表评估__e9bbd665.png",
+    "html": "design/01-onboarding-assessment/PHQ-9-量表评估__e9bbd665.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

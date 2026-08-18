@@ -1,0 +1,20 @@
+{
+  "id": "bb047f265a274aaca3aa0efab05c281b",
+  "name": "projects/4724290021803215791/screens/bb047f265a274aaca3aa0efab05c281b",
+  "title": "首启引导 - 挑选第一个锚点动作",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2488",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/bb047f265a274aaca3aa0efab05c281b/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/bb047f265a274aaca3aa0efab05c281b/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/首启引导---挑选第一个锚点动作__bb047f26.png",
+    "html": "design/01-onboarding-assessment/首启引导---挑选第一个锚点动作__bb047f26.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>记录页 - 双栏日志</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#727973",
+                    "secondary-fixed": "#ffdbcf",
+                    "tertiary-fixed": "#ebe1d6",
+                    "outline-variant": "#c2c8c1",
+                    "primary-container": "#7a9b86",
+                    "primary-fixed": "#c8ebd3",
+                    "tertiary": "#645d55",
+                    "on-background": "#1c1c18",
+                    "surface-container-high": "#ebe8e2",
+                    "background": "#fcf9f3",
+                    "on-secondary-fixed-variant": "#71361f",
+                    "inverse-on-surface": "#f3f0ea",
+                    "secondary-container": "#feaa8b",
+                    "on-surface": "#1c1c18",
+                    "on-primary-container": "#133222",
+                    "on-tertiary-container": "#302b24",
+                    "dark-bg": "#1C1B18",
+                    "primary-fixed-dim": "#accfb8",
+                    "surface-card": "#FFFFFF",
+                    "on-tertiary-fixed-variant": "#4c463e",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "dark-card": "#262521",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#012112",
+                    "on-secondary-container": "#783c24",
+                    "text-primary": "#33302B",
+                    "surface-container-highest": "#e5e2dc",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed-dim": "#ffb59a",
+                    "on-secondary-fixed": "#380d00",
+                    "surface": "#fcf9f3",
+                    "on-surface-variant": "#424843",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#f0eee8",
+                    "surface-container-low": "#f6f3ed",
+                    "surface-variant": "#e5e2dc",
+                    "on-tertiary-fixed": "#1f1b14",
+                    "surface-bright": "#fcf9f3",
+                    "inverse-surface": "#31312d",
+                    "on-primary-fixed-variant": "#2e4d3c",
+                    "inverse-primary": "#accfb8",
+                    "tertiary-container": "#9a9288",
+                    "error-container": "#ffdad6",
+                    "text-muted": "#8A837A",
+                    "tertiary-fixed-dim": "#cec5ba",
+                    "on-error-container": "#93000a",
+                    "secondary": "#8e4d34",
+                    "border-subtle": "#E3DDD3",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#dcdad4",
+                    "surface-tint": "#466552",
+                    "primary": "#466552"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "20px",
+                    "unit": "4px",
+                    "stack-lg": "40px",
+                    "stack-md": "24px",
+                    "gutter-card": "16px",
+                    "stack-sm": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Manrope", "sans-serif"],
+                    "body-md": ["Manrope", "sans-serif"],
+                    "label-md": ["Manrope", "sans-serif"],
+                    "headline-lg": ["Manrope", "sans-serif"],
+                    "body-lg": ["Manrope", "sans-serif"],
+                    "numeral-mono": ["JetBrains Mono", "monospace"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Custom scrollbar for textareas */
+        textarea::-webkit-scrollbar {
+            width: 4px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background-color: var(--color-surface-dim);
+            border-radius: 10px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .input-active-border {
+            position: relative;
+        }
+        .input-active-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #466552; /* primary */
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .input-active-border:focus-within::after {
+            width: 100%;
+        }
+
+        .emotion-hint {
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .emotion-hint.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Glassmorphism utility for floating hint */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col pt-16 pb-24 md:pb-0 md:pt-0">
+<!-- Desktop Sidebar Shell (Hidden on Mobile) -->
+<div class="hidden md:flex fixed top-0 left-0 h-full w-72 bg-surface-container-lowest dark:bg-dark-card flex-col p-stack-md rounded-r-xl flat no shadows z-40 border-r border-border-subtle/30">
+<div class="mb-stack-lg">
+<h1 class="font-headline-lg text-headline-lg text-primary">锚点 Anchor</h1>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center space-x-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home_app_logo</span>
+<span class="font-label-md text-label-md">今天</span>
+</a>
+<a class="flex items-center space-x-3 p-3 rounded-lg bg-primary-container text-on-primary-container transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="font-label-md text-label-md">记录</span>
+</a>
+<a class="flex items-center space-x-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">insights</span>
+<span class="font-label-md text-label-md">洞察</span>
+</a>
+<a class="flex items-center space-x-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-md text-label-md">我的</span>
+</a>
+</nav>
+<!-- Shared Component: NavigationDrawer Bottom Section -->
+<div class="mt-auto pt-4">
+<div class="text-secondary dark:text-secondary-fixed-dim font-body-md text-body-md mb-4 px-2">宁静空间</div>
+<button class="w-full flex items-center justify-center space-x-2 py-3 bg-error text-on-error rounded-full hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sos</span>
+<span class="font-label-md text-label-md">紧急求助</span>
+</button>
+</div>
+</div>
+<!-- Mobile TopAppBar Shell -->
+<header class="md:hidden fixed top-0 w-full z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16 flat no shadows">
+<button class="text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-opacity active:scale-95 duration-300">
+<span class="material-symbols-outlined">emergency</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim tracking-tight">锚点 Anchor</h1>
+<button class="text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-opacity active:scale-95 duration-300">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-72 w-full max-w-4xl mx-auto px-margin-page py-stack-md flex flex-col h-full relative">
+<!-- Header Section -->
+<header class="mb-stack-lg fade-in" style="animation-delay: 0.1s;">
+<div class="inline-flex items-center space-x-2 bg-surface-container px-3 py-1 rounded-full mb-4">
+<span class="material-symbols-outlined text-primary text-sm">visibility</span>
+<span class="font-label-md text-label-md text-on-surface-variant">隔离事实与大脑推断</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-text-primary md:font-headline-lg md:text-headline-lg font-headline-lg-mobile text-headline-lg-mobile">
+                双栏日志
+            </h2>
+<p class="font-body-md text-body-md text-text-muted mt-2 max-w-2xl">
+                帮助你区分客观发生的事件与主观产生的情绪联想，找回内在的平静。
+            </p>
+</header>
+<!-- Bento Grid Layout for Dual Columns -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-card flex-1 min-h-[500px] fade-in" style="animation-delay: 0.2s;">
+<!-- Left Column: Objective Facts -->
+<div class="bg-surface-card border border-border-subtle rounded-xl p-4 md:p-6 flex flex-col relative overflow-hidden group">
+<!-- Header -->
+<div class="flex items-center space-x-3 mb-4 pb-4 border-b border-border-subtle/50">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">videocam</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-text-primary font-bold">摄像头拍到的事实</h3>
+<p class="text-xs text-text-muted">仅记录动作、时间、地点、话语。</p>
+</div>
+</div>
+<!-- Input Area -->
+<div class="flex-1 input-active-border relative rounded-lg bg-surface-bright/50">
+<textarea class="w-full h-full min-h-[300px] bg-transparent border-none resize-none font-body-md text-body-md text-text-primary p-4 focus:ring-0 placeholder:text-text-muted/50" id="fact-input" placeholder="例如：早上9点，他发来一条信息说'我现在很忙'..."></textarea>
+<!-- Dynamic Emotion Hint (Absolute positioned within left col) -->
+<div class="absolute bottom-4 left-4 right-4 glass-panel border border-secondary-fixed-dim/30 rounded-lg p-3 emotion-hint flex items-start space-x-3 shadow-sm z-10" id="emotion-hint-box">
+<span class="material-symbols-outlined text-secondary mt-0.5">lightbulb</span>
+<div class="flex-1">
+<p class="text-sm text-text-primary">检测到情绪化词汇 <span class="font-bold text-secondary" id="detected-word">"愤怒"</span>。</p>
+<p class="text-xs text-text-muted mt-1">这似乎是大脑的推断，试着把它挪到右侧栏？</p>
+</div>
+<button class="px-3 py-1 bg-surface-container-low hover:bg-surface-container rounded text-xs font-medium text-primary transition-colors" id="move-btn">
+                            移动
+                        </button>
+</div>
+</div>
+</div>
+<!-- Right Column: Subjective Inference -->
+<div class="bg-surface-card border border-border-subtle rounded-xl p-4 md:p-6 flex flex-col relative overflow-hidden group">
+<!-- Background subtle pattern/texture (avoiding images, using CSS gradient) -->
+<div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(var(--color-border-subtle) 1px, transparent 1px); background-size: 20px 20px;"></div>
+<!-- Header -->
+<div class="flex items-center space-x-3 mb-4 pb-4 border-b border-border-subtle/50 relative z-10">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-text-primary font-bold">我的大脑推断</h3>
+<p class="text-xs text-text-muted">记录你的猜测、评价、情绪和联想。</p>
+</div>
+</div>
+<!-- Input Area -->
+<div class="flex-1 input-active-border relative rounded-lg bg-surface-bright/50 z-10">
+<textarea class="w-full h-full min-h-[300px] bg-transparent border-none resize-none font-body-md text-body-md text-text-primary p-4 focus:ring-0 placeholder:text-text-muted/50" id="inference-input" placeholder="例如：我觉得他是在针对我，他一定是不在乎我了..."></textarea>
+</div>
+</div>
+</div>
+<!-- Action Area -->
+<div class="mt-stack-md flex justify-end fade-in" style="animation-delay: 0.3s;">
+<button class="px-6 py-3 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors flex items-center space-x-2">
+<span class="material-symbols-outlined">check</span>
+<span>保存记录</span>
+</button>
+</div>
+</main>
+<!-- Mobile BottomNavBar Shell -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-safe px-4 bg-surface/90 dark:bg-dark-bg/90 backdrop-blur-2xl border-t border-border-subtle/50 z-50 rounded-t-xl h-16 flat no shadows">
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 p-2 rounded-lg w-16" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home_app_logo</span>
+<span class="font-label-md text-label-md text-[10px] mt-1">今天</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 p-2 rounded-lg w-16" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="font-label-md text-label-md text-[10px] mt-1">记录</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 p-2 rounded-lg w-16" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">insights</span>
+<span class="font-label-md text-label-md text-[10px] mt-1">洞察</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors active:scale-90 duration-200 p-2 rounded-lg w-16" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-md text-label-md text-[10px] mt-1">我的</span>
+</a>
+</nav>
+<!-- Scripts for interaction -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const factInput = document.getElementById('fact-input');
+            const inferenceInput = document.getElementById('inference-input');
+            const hintBox = document.getElementById('emotion-hint-box');
+            const detectedWordSpan = document.getElementById('detected-word');
+            const moveBtn = document.getElementById('move-btn');
+            
+            // Simple dictionary of emotion/judgment words for demonstration
+            const emotionWords = ['愤怒', '生气', '讨厌', '烦人', '故意', '针对', '伤心', '失望', '觉得', '认为', '肯定'];
+            let currentDetectedWord = '';
+
+            // Handle text input to detect emotion words
+            factInput.addEventListener('input', (e) => {
+                const text = e.target.value;
+                let foundWord = null;
+                
+                // Simple check for demonstration purposes
+                for (const word of emotionWords) {
+                    if (text.includes(word)) {
+                        foundWord = word;
+                        break;
+                    }
+                }
+                
+                if (foundWord) {
+                    currentDetectedWord = foundWord;
+                    detectedWordSpan.textContent = `"${foundWord}"`;
+                    hintBox.classList.add('show');
+                } else {
+                    hintBox.classList.remove('show');
+                }
+            });
+
+            // Handle move button click
+            moveBtn.addEventListener('click', () => {
+                if (!currentDetectedWord) return;
+                
+                // Remove word from fact input
+                const currentText = factInput.value;
+                // Simple replacement (in a real app, this would need more robust regex/selection handling)
+                // For demo, we just extract the sentence containing it or move the whole thing if it's short
+                
+                const sentences = currentText.split(/[。！？；]/);
+                let sentenceToMove = '';
+                let remainingText = '';
+                
+                sentences.forEach(sentence => {
+                    if (sentence.includes(currentDetectedWord)) {
+                        sentenceToMove += sentence + "。";
+                    } else if (sentence.trim().length > 0) {
+                        remainingText += sentence + "。";
+                    }
+                });
+                
+                if (sentenceToMove) {
+                     factInput.value = remainingText.trim();
+                     
+                     // Append to right column
+                     const currentInference = inferenceInput.value;
+                     inferenceInput.value = currentInference ? currentInference + '\n' + sentenceToMove.trim() : sentenceToMove.trim();
+                     
+                     // Flash highlight the right column
+                     inferenceInput.parentElement.classList.add('ring-2', 'ring-secondary-fixed');
+                     setTimeout(() => {
+                         inferenceInput.parentElement.classList.remove('ring-2', 'ring-secondary-fixed');
+                     }, 1000);
+                }
+                
+                hintBox.classList.remove('show');
+                currentDetectedWord = '';
+                inferenceInput.focus();
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,20 @@
+{
+  "id": "e87f691297664ce9944ca0d4c8d554ca",
+  "name": "projects/4724290021803215791/screens/e87f691297664ce9944ca0d4c8d554ca",
+  "title": "导出完成 - 安全分享反馈",
+  "category": "09-settings-export",
+  "categoryLabel": "设置、隐私与导出",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/e87f691297664ce9944ca0d4c8d554ca/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/e87f691297664ce9944ca0d4c8d554ca/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/09-settings-export/导出完成---安全分享反馈__e87f6912.png",
+    "html": "design/09-settings-export/导出完成---安全分享反馈__e87f6912.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

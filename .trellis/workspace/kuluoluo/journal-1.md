@@ -1,0 +1,42 @@
+# Journal - kuluoluo (Part 1)
+
+> AI development session journal
+> Started: 2026-08-16
+
+---
+
+
+
+## Session 1: Anchor P0 收尾 + P1 关系/地区指南/记录中心/历史证据/首页耗竭态
+
+**Date**: 2026-08-18
+**Task**: Anchor P0 收尾 + P1 关系/地区指南/记录中心/历史证据/首页耗竭态
+
+### Summary
+
+继续 Anchor 产品实现：地区就医指南分地区排版、记录 Tab 双入口、微行动历史证据长页、首页回血/抽干/耗竭三态。真机 PJZ110 验证，未改 SafetyState、未删数据、未开应用锁。
+
+### Main Changes
+
+- 就医指南改为地区具名热线卡片+紧急条+三步就诊准备；号码跟 PRD §10.4（12356/1925/18111/988），不用设计稿希望24
+- 记录 Tab 做成双入口卡（情绪标签箱/双栏日志），保留底栏，从卡片返回回到记录页
+- 微行动历史证据独立长页：平均高估分数、预测高于实际次数、双折线、完整列表、源文章引语；结果页改为入口按钮
+- 首页关系三态：24h 内回血/抽干横幅，连续三次更紧优先耗竭态并改成非社交微任务卡；设置可预览且不改记录
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] CrisisResourcesTest / CameraLogCopyTest / MicroActionCopyTest / RelationCopyTest 通过
+- [OK] PJZ110 真机核对四地指南、记录中心、历史证据、首页三态预览；关闭后仍是 Normal 练习首页
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 明确不做：医生 PDF、第5类晨间节律提醒、锁屏通知素材
+- 若要继续：另开任务。Trellis 里 00-bootstrap-guidelines 仍是 in_progress，与本轮产品工作无关

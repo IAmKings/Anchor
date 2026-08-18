@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="anchor_background">#FCF9F3</color>
+    <color name="anchor_primary">#466552</color>
+    <color name="anchor_icon_background">#F7F3E9</color>
+    <color name="anchor_icon_foreground">#7E9E87</color>
+</resources>

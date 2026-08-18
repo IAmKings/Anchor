@@ -1,0 +1,7 @@
+CREATE TABLE camera_log (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  fact TEXT NOT NULL,
+  inference TEXT NOT NULL,
+  fact_needs_hint INTEGER NOT NULL CHECK (fact_needs_hint IN (0, 1)),
+  created_at INTEGER NOT NULL
+);

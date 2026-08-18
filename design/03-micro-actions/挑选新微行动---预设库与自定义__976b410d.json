@@ -1,0 +1,20 @@
+{
+  "id": "976b410dbdc540188d9e50cf3f5d5836",
+  "name": "projects/4724290021803215791/screens/976b410dbdc540188d9e50cf3f5d5836",
+  "title": "挑选新微行动 - 预设库与自定义",
+  "category": "03-micro-actions",
+  "categoryLabel": "微行动流程",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2790",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/976b410dbdc540188d9e50cf3f5d5836/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/976b410dbdc540188d9e50cf3f5d5836/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/03-micro-actions/挑选新微行动---预设库与自定义__976b410d.png",
+    "html": "design/03-micro-actions/挑选新微行动---预设库与自定义__976b410d.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

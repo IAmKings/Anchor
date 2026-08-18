@@ -1,0 +1,20 @@
+{
+  "id": "7f47e918131641fab086c03287940fa5",
+  "name": "projects/4724290021803215791/screens/7f47e918131641fab086c03287940fa5",
+  "title": "设置 - 晨间节律提醒",
+  "category": "10-rhythm-notifications",
+  "categoryLabel": "晨间节律与通知",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2160",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/7f47e918131641fab086c03287940fa5/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/7f47e918131641fab086c03287940fa5/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/10-rhythm-notifications/设置---晨间节律提醒__7f47e918.png",
+    "html": "design/10-rhythm-notifications/设置---晨间节律提醒__7f47e918.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

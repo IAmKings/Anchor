@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Anchor - 动作完成</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-fixed": "#c8ebd3",
+                        "secondary-fixed": "#ffdbcf",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "surface-variant": "#e5e2dc",
+                        "on-primary-container": "#133222",
+                        "on-tertiary-container": "#302b24",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "border-subtle": "#E3DDD3",
+                        "on-secondary-container": "#783c24",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#466552",
+                        "on-secondary-fixed": "#380d00",
+                        "inverse-surface": "#31312d",
+                        "surface-container-low": "#f6f3ed",
+                        "tertiary-fixed": "#ebe1d6",
+                        "secondary": "#8e4d34",
+                        "primary": "#466552",
+                        "surface-container-high": "#ebe8e2",
+                        "dark-bg": "#1C1B18",
+                        "surface-dim": "#dcdad4",
+                        "on-primary-fixed": "#012112",
+                        "inverse-on-surface": "#f3f0ea",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "tertiary": "#645d55",
+                        "primary-fixed-dim": "#accfb8",
+                        "primary-container": "#7a9b86",
+                        "dark-card": "#262521",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "secondary-container": "#feaa8b",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "background": "#fcf9f3",
+                        "surface": "#fcf9f3",
+                        "text-muted": "#8A837A",
+                        "tertiary-container": "#9a9288",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#accfb8",
+                        "outline": "#727973",
+                        "on-error": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1c1c18",
+                        "surface-container": "#f0eee8",
+                        "text-primary": "#33302B",
+                        "surface-bright": "#fcf9f3",
+                        "on-surface": "#1c1c18",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "surface-container-highest": "#e5e2dc",
+                        "outline-variant": "#c2c8c1",
+                        "on-surface-variant": "#424843",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "surface-card": "#FFFFFF",
+                        "on-secondary-fixed-variant": "#71361f"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "stack-md": "24px",
+                        "gutter-card": "16px",
+                        "stack-sm": "8px",
+                        "margin-page": "20px",
+                        "stack-lg": "40px",
+                        "unit": "4px"
+                    },
+                    fontFamily: {
+                        "headline-lg-mobile": ["Manrope", "sans-serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"],
+                        "numeral-mono": ["JetBrains Mono", "monospace"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"]
+                    },
+                    fontSize: {
+                        "headline-lg-mobile": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "body-lg": ["20px", { lineHeight: "32px", fontWeight: "400" }],
+                        "headline-lg": ["22px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "numeral-mono": ["24px", { lineHeight: "32px", fontWeight: "400" }],
+                        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "500" }],
+                        "body-md": ["17px", { lineHeight: "28px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom utilities for safe area and tap highlights */
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        .tap-highlight-transparent { -webkit-tap-highlight-color: transparent; }
+        
+        /* Slow pulse animation for grounding effect */
+        @keyframes gentle-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.95; }
+        }
+        .animate-gentle {
+            animation: gentle-pulse 6s ease-in-out infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Suppressed: This is a linear transactional success screen. Hiding shell to focus on canvas. -->
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-page py-stack-lg flex flex-col gap-stack-lg w-full max-w-md mx-auto pb-32">
+<!-- 1. Success Summary -->
+<section class="flex flex-col items-center justify-center text-center mt-8 animate-gentle">
+<div class="relative w-24 h-24 flex items-center justify-center mb-4">
+<div class="absolute inset-0 bg-primary-fixed rounded-full opacity-50 blur-xl"></div>
+<span class="material-symbols-outlined text-primary text-[72px] relative z-10" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mb-stack-sm tracking-tight">动作完成</h1>
+<div class="bg-surface-card border border-border-subtle rounded-xl px-gutter-card py-4 w-full shadow-sm shadow-border-subtle/20">
+<p class="font-body-md text-body-md text-on-surface-variant">你做到了：</p>
+<p class="font-body-lg text-body-lg text-text-primary font-medium mt-1">「穿上鞋子走到楼下」</p>
+</div>
+</section>
+<!-- 2. Core Comparison (The Gap) -->
+<section class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card flex flex-col gap-stack-md relative overflow-hidden">
+<!-- Decorative subtle bg element -->
+<div class="absolute -right-10 -top-10 w-32 h-32 bg-surface-container rounded-full opacity-50 pointer-events-none"></div>
+<div class="flex items-center gap-2 border-b border-border-subtle pb-3">
+<span class="material-symbols-outlined text-text-muted text-[20px]">compare_arrows</span>
+<h2 class="font-label-md text-label-md text-text-muted uppercase tracking-wider">认知与现实对比</h2>
+</div>
+<div class="flex flex-col gap-6 pt-2">
+<!-- Predicted Bar -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<span class="font-label-md text-label-md text-on-surface-variant">行动前：预测难度</span>
+<span class="font-numeral-mono text-numeral-mono text-on-surface-variant text-lg">8</span>
+</div>
+<div class="w-full h-4 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-outline-variant w-[80%] rounded-full transition-all duration-1000 ease-out"></div>
+</div>
+</div>
+<!-- Actual Bar -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<span class="font-label-md text-label-md text-primary font-bold">行动后：实际体验</span>
+<span class="font-numeral-mono text-numeral-mono text-primary font-bold text-lg">3</span>
+</div>
+<div class="w-full h-4 bg-surface-container rounded-full relative">
+<div class="absolute top-0 left-0 h-full bg-primary-container w-[30%] rounded-full z-10 transition-all duration-1000 ease-out delay-300"></div>
+<!-- Visual Gap Indicator -->
+<div class="absolute top-0 left-[30%] h-full bg-repeating-linear-gradient w-[50%] rounded-r-full opacity-30" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, var(--tw-colors-outline-variant) 4px, var(--tw-colors-outline-variant) 8px);"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Cognitive Insight -->
+<section class="bg-surface-container-low border border-border-subtle rounded-xl p-gutter-card flex gap-4 items-start">
+<div class="bg-surface-card p-2 rounded-full border border-border-subtle shrink-0">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-label-md text-label-md text-text-primary font-bold">认知洞察</h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed text-sm">
+                    数据证明，大脑对困难的预测通常远高于实际执行的感受。下次感到阻力或卡壳时，请深呼吸，回想这个“想象与现实”的落差。
+                </p>
+</div>
+</section>
+<!-- 4. Historical Evidence Chain -->
+<section class="flex flex-col gap-stack-sm">
+<h2 class="font-label-md text-label-md text-text-muted uppercase tracking-wider pl-1">历史证据链</h2>
+<div class="bg-surface-card border border-border-subtle rounded-xl flex flex-col overflow-hidden">
+<!-- Item 1 -->
+<div class="p-gutter-card flex justify-between items-center border-b border-border-subtle/50 hover:bg-surface-container-low transition-colors">
+<span class="font-body-md text-body-md text-text-primary">打开工作文档</span>
+<div class="flex items-center gap-3">
+<div class="flex flex-col items-center">
+<span class="font-label-md text-[10px] text-text-muted">预期</span>
+<span class="font-numeral-mono text-sm text-outline-variant line-through decoration-1">7</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[16px] mt-3">arrow_forward</span>
+<div class="flex flex-col items-center">
+<span class="font-label-md text-[10px] text-primary">实际</span>
+<span class="font-numeral-mono text-sm text-primary font-bold">2</span>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-gutter-card flex justify-between items-center hover:bg-surface-container-low transition-colors">
+<span class="font-body-md text-body-md text-text-primary">回复一封邮件</span>
+<div class="flex items-center gap-3">
+<div class="flex flex-col items-center">
+<span class="font-label-md text-[10px] text-text-muted">预期</span>
+<span class="font-numeral-mono text-sm text-outline-variant line-through decoration-1">6</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[16px] mt-3">arrow_forward</span>
+<div class="flex flex-col items-center">
+<span class="font-label-md text-[10px] text-primary">实际</span>
+<span class="font-numeral-mono text-sm text-primary font-bold">3</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating CTA Action (Thumb Zone Strategy) -->
+<div class="fixed bottom-0 left-0 w-full px-margin-page pt-8 pb-safe bg-gradient-to-t from-background via-background/95 to-transparent z-50 pointer-events-none">
+<div class="max-w-md mx-auto pointer-events-auto">
+<button class="w-full bg-primary text-on-primary py-4 rounded-full font-label-md text-label-md flex justify-center items-center gap-2 hover:bg-on-primary-fixed-variant active:scale-[0.98] transition-all shadow-sm tap-highlight-transparent mb-4">
+                回到今天
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

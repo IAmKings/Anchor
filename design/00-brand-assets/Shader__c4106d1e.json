@@ -1,0 +1,22 @@
+{
+  "id": "c4106d1eb3be4d2eac6cbca04626f656",
+  "name": "projects/4724290021803215791/screens/c4106d1eb3be4d2eac6cbca04626f656",
+  "title": "Shader",
+  "category": "00-brand-assets",
+  "categoryLabel": "品牌与技术素材",
+  "deviceType": null,
+  "width": "512",
+  "height": "512",
+  "source": {
+    "screenshot": null,
+    "htmlCode": "projects/4724290021803215791/screens/c4106d1eb3be4d2eac6cbca04626f656/fileEntries/html"
+  },
+  "local": {
+    "screenshot": null,
+    "html": "design/00-brand-assets/Shader__c4106d1e.html"
+  },
+  "errors": {},
+  "unavailable": [
+    "screenshot"
+  ]
+}

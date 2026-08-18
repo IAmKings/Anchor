@@ -1,0 +1,20 @@
+{
+  "id": "5bdd9c345dc94371b39332eb9fd4e508",
+  "name": "projects/4724290021803215791/screens/5bdd9c345dc94371b39332eb9fd4e508",
+  "title": "评估提交中 - 自动跳转缓冲页",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/5bdd9c345dc94371b39332eb9fd4e508/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/5bdd9c345dc94371b39332eb9fd4e508/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/评估提交中---自动跳转缓冲页__5bdd9c34.png",
+    "html": "design/01-onboarding-assessment/评估提交中---自动跳转缓冲页__5bdd9c34.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

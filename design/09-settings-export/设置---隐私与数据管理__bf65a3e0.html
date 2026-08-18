@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Privacy &amp; Security - Anchor</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#71361f",
+                    "surface-card": "#FFFFFF",
+                    "on-primary-container": "#133222",
+                    "tertiary-fixed": "#ebe1d6",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#7a9b86",
+                    "border-subtle": "#E3DDD3",
+                    "outline": "#727973",
+                    "on-secondary-container": "#783c24",
+                    "secondary-fixed": "#ffdbcf",
+                    "secondary": "#8e4d34",
+                    "surface-tint": "#466552",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-container": "#302b24",
+                    "primary": "#466552",
+                    "secondary-container": "#feaa8b",
+                    "outline-variant": "#c2c8c1",
+                    "dark-bg": "#1C1B18",
+                    "surface": "#fcf9f3",
+                    "on-surface-variant": "#424843",
+                    "surface-variant": "#e5e2dc",
+                    "secondary-fixed-dim": "#ffb59a",
+                    "background": "#fcf9f3",
+                    "surface-container-low": "#f6f3ed",
+                    "error": "#ba1a1a",
+                    "text-muted": "#8A837A",
+                    "surface-dim": "#dcdad4",
+                    "tertiary-container": "#9a9288",
+                    "surface-container-high": "#ebe8e2",
+                    "on-tertiary-fixed": "#1f1b14",
+                    "tertiary": "#645d55",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed-variant": "#2e4d3c",
+                    "inverse-primary": "#accfb8",
+                    "on-tertiary-fixed-variant": "#4c463e",
+                    "surface-container-lowest": "#ffffff",
+                    "dark-card": "#262521",
+                    "on-primary-fixed": "#012112",
+                    "primary-fixed": "#c8ebd3",
+                    "surface-container": "#f0eee8",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#accfb8",
+                    "surface-container-highest": "#e5e2dc",
+                    "on-background": "#1c1c18",
+                    "on-surface": "#1c1c18",
+                    "inverse-surface": "#31312d",
+                    "on-secondary-fixed": "#380d00",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f3f0ea",
+                    "surface-bright": "#fcf9f3",
+                    "tertiary-fixed-dim": "#cec5ba",
+                    "text-primary": "#33302B"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "8px",
+                    "margin-page": "20px",
+                    "stack-lg": "40px",
+                    "unit": "4px",
+                    "stack-md": "24px",
+                    "gutter-card": "16px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Manrope", "sans-serif"],
+                    "numeral-mono": ["JetBrains Mono", "monospace"],
+                    "body-md": ["Manrope", "sans-serif"],
+                    "headline-lg": ["Manrope", "sans-serif"],
+                    "label-md": ["Manrope", "sans-serif"],
+                    "headline-lg-mobile": ["Manrope", "sans-serif"]
+            },
+            "fontSize": {
+                    "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Custom Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: theme('colors.primary');
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: theme('colors.primary');
+        }
+        .toggle-checkbox:checked + .toggle-label:after {
+            transform: translateX(100%);
+            border-color: white;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-text-primary font-body-md antialiased min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-border-subtle/30 flex items-center justify-between px-margin-page h-16 transition-colors md:hidden">
+<button class="text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 duration-300 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">anchor</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">Anchor</h1>
+<button class="text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 duration-300 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-32 px-margin-page max-w-md mx-auto md:max-w-2xl md:pt-16">
+<!-- Page Title -->
+<div class="mb-stack-md">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary">隐私与安全</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">管理您的应用锁、通知和本地数据。</p>
+</div>
+<!-- Layout Stack -->
+<div class="flex flex-col gap-stack-lg">
+<!-- Section: App Lock -->
+<section class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card flex items-start justify-between">
+<div class="flex-1 pr-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">lock</span>
+<h3 class="font-body-lg text-body-lg text-text-primary leading-tight">应用锁</h3>
+</div>
+<p class="font-label-md text-label-md text-text-muted">启用后，每次打开应用均需验证 (面容/指纹/密码)。</p>
+</div>
+<div class="relative inline-block w-12 h-6 align-middle select-none mt-1">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-colors duration-300 ease-in-out border-surface-variant z-10" id="appLockToggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer transition-colors duration-300 ease-in-out" for="appLockToggle"></label>
+</div>
+</section>
+<!-- Section: Notification Privacy -->
+<section class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card flex items-start justify-between">
+<div class="flex-1 pr-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">notifications_off</span>
+<h3 class="font-body-lg text-body-lg text-text-primary leading-tight">锁屏隐藏内容</h3>
+</div>
+<p class="font-label-md text-label-md text-text-muted">锁屏通知仅显示“锚点”，不显示具体记录内容。</p>
+</div>
+<div class="relative inline-block w-12 h-6 align-middle select-none mt-1">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-colors duration-300 ease-in-out border-primary right-0 z-10" id="notificationToggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-primary cursor-pointer transition-colors duration-300 ease-in-out" for="notificationToggle"></label>
+</div>
+</section>
+<!-- Section: Data Management -->
+<section class="flex flex-col gap-stack-sm">
+<div class="flex items-center gap-2 mb-2 px-1">
+<span class="material-symbols-outlined text-text-muted text-[20px]">database</span>
+<h3 class="font-label-md text-label-md text-text-muted uppercase tracking-wider">数据管理</h3>
+</div>
+<!-- Export Data -->
+<div class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card">
+<button class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-outline text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-300 font-body-md text-body-md mb-3">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        导出所有数据
+                    </button>
+<p class="font-label-md text-label-md text-text-muted text-center">数据将以加密文件形式导出，建议妥善保管。</p>
+</div>
+<!-- Delete Data -->
+<div class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card mt-2">
+<button class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-error text-on-error hover:opacity-90 transition-opacity active:scale-95 duration-300 font-body-md text-body-md mb-3">
+<span class="material-symbols-outlined text-[20px]">delete_forever</span>
+                        彻底删除所有数据
+                    </button>
+<p class="font-label-md text-label-md text-error/80 text-center">此操作不可逆。一旦删除，所有本地记录将永久消失。</p>
+</div>
+</section>
+<!-- Trust / Architecture Badge -->
+<div class="mt-4 bg-surface-container-low rounded-xl p-4 flex items-start gap-3 border border-border-subtle/50">
+<span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">shield_person</span>
+<p class="font-label-md text-label-md text-text-muted">锚点采用纯本地存储架构，您的数据永远不会离开这台设备。</p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-background/80 backdrop-blur-xl rounded-t-xl border-t border-border-subtle/30 md:hidden">
+<!-- Today (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-500 ease-out gap-1 w-16" href="#">
+<span class="material-symbols-outlined">today</span>
+<span class="font-label-md text-label-md">Today</span>
+</a>
+<!-- Journal (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-500 ease-out gap-1 w-16" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-label-md text-label-md">Journal</span>
+</a>
+<!-- Insights (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-500 ease-out gap-1 w-16" href="#">
+<span class="material-symbols-outlined">auto_graph</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<!-- Me (Active context for settings/privacy) -->
+<a class="flex flex-col items-center justify-center text-primary bg-primary-container/20 rounded-full px-4 py-1 active:scale-90 transition-transform duration-500 ease-out gap-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-md text-label-md">Me</span>
+</a>
+</nav>
+</body></html>

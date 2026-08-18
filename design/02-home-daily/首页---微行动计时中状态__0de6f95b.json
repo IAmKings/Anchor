@@ -1,0 +1,20 @@
+{
+  "id": "0de6f95b50ba4f74bbb45f5f2d03c3a3",
+  "name": "projects/4724290021803215791/screens/0de6f95b50ba4f74bbb45f5f2d03c3a3",
+  "title": "首页 - 微行动计时中状态",
+  "category": "02-home-daily",
+  "categoryLabel": "首页与日常状态",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2052",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/0de6f95b50ba4f74bbb45f5f2d03c3a3/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/0de6f95b50ba4f74bbb45f5f2d03c3a3/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/02-home-daily/首页---微行动计时中状态__0de6f95b.png",
+    "html": "design/02-home-daily/首页---微行动计时中状态__0de6f95b.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

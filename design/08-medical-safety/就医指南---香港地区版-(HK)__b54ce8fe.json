@@ -1,0 +1,20 @@
+{
+  "id": "b54ce8fe30554e2787cba6329203e5fe",
+  "name": "projects/4724290021803215791/screens/b54ce8fe30554e2787cba6329203e5fe",
+  "title": "就医指南 - 香港地区版 (HK)",
+  "category": "08-medical-safety",
+  "categoryLabel": "就医、安全与浪潮等待",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2608",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/b54ce8fe30554e2787cba6329203e5fe/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/b54ce8fe30554e2787cba6329203e5fe/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/08-medical-safety/就医指南---香港地区版-(HK)__b54ce8fe.png",
+    "html": "design/08-medical-safety/就医指南---香港地区版-(HK)__b54ce8fe.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

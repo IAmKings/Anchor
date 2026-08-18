@@ -1,0 +1,20 @@
+{
+  "id": "63a31c9051694d4bbdb9be016c5d2ca0",
+  "name": "projects/4724290021803215791/screens/63a31c9051694d4bbdb9be016c5d2ca0",
+  "title": "首页 - 今天 (动作同步后)",
+  "category": "02-home-daily",
+  "categoryLabel": "首页与日常状态",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1964",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/63a31c9051694d4bbdb9be016c5d2ca0/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/63a31c9051694d4bbdb9be016c5d2ca0/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/02-home-daily/首页---今天-(动作同步后)__63a31c90.png",
+    "html": "design/02-home-daily/首页---今天-(动作同步后)__63a31c90.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

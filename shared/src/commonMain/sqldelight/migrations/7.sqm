@@ -1,0 +1,8 @@
+CREATE TABLE worry_card (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  content TEXT NOT NULL,
+  sealed_at INTEGER NOT NULL,
+  next_session_at INTEGER NOT NULL,
+  resolution TEXT NOT NULL,
+  action TEXT
+);

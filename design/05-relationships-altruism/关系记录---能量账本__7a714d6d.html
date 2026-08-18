@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>关系回血/抽干记录</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=manrope:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Smooth scrolling and anti-aliasing */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
+        }
+        
+        /* Hide scrollbar for clean aesthetic */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#9a9288",
+                        "on-tertiary-container": "#302b24",
+                        "on-secondary-fixed": "#380d00",
+                        "dark-bg": "#1C1B18",
+                        "primary-container": "#7a9b86",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "surface-dim": "#dcdad4",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#c8ebd3",
+                        "surface-card": "#FFFFFF",
+                        "surface-container-high": "#ebe8e2",
+                        "surface-tint": "#466552",
+                        "surface": "#fcf9f3",
+                        "text-primary": "#33302B",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-secondary-container": "#783c24",
+                        "dark-card": "#262521",
+                        "on-surface": "#1c1c18",
+                        "outline-variant": "#c2c8c1",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "inverse-surface": "#31312d",
+                        "secondary-fixed": "#ffdbcf",
+                        "on-surface-variant": "#424843",
+                        "tertiary-fixed": "#ebe1d6",
+                        "background": "#fcf9f3",
+                        "border-subtle": "#E3DDD3",
+                        "primary": "#466552",
+                        "on-primary-container": "#133222",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e5e2dc",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f6f3ed",
+                        "surface-container": "#f0eee8",
+                        "tertiary": "#645d55",
+                        "inverse-primary": "#accfb8",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "outline": "#727973",
+                        "secondary": "#8e4d34",
+                        "on-primary-fixed": "#012112",
+                        "on-error": "#ffffff",
+                        "text-muted": "#8A837A",
+                        "on-background": "#1c1c18",
+                        "primary-fixed-dim": "#accfb8",
+                        "inverse-on-surface": "#f3f0ea",
+                        "surface-bright": "#fcf9f3",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "secondary-container": "#feaa8b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "40px",
+                        "stack-sm": "8px",
+                        "unit": "4px",
+                        "gutter-card": "16px",
+                        "stack-md": "24px",
+                        "margin-page": "20px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["manrope"],
+                        "headline-lg": ["manrope"],
+                        "headline-lg-mobile": ["manrope"],
+                        "body-md": ["manrope"],
+                        "numeral-mono": ["jetbrainsMono"],
+                        "label-md": ["manrope"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-text-primary min-h-screen flex flex-col font-body-md antialiased pt-16 pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 flex items-center justify-between px-margin-page h-16 transition-transform duration-300">
+<button aria-label="Leading Action" class="w-10 h-10 flex items-center justify-center text-primary dark:text-primary-fixed hover:bg-surface-container-low transition-colors rounded-full active:scale-95">
+<span class="material-symbols-outlined" data-icon="anchor">anchor</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed tracking-tight truncate">Anchor</h1>
+<button aria-label="Trailing Action" class="w-10 h-10 flex items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-full active:scale-95">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-2xl mx-auto px-margin-page py-stack-md flex flex-col gap-stack-lg">
+<!-- Page Title & Intent -->
+<section class="flex flex-col gap-stack-sm text-center pt-unit">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary">关系回血/抽干记录</h2>
+<p class="font-body-md text-body-md text-text-muted">How did you feel after connecting?</p>
+</section>
+<!-- Quick Entry Section -->
+<section class="flex flex-col gap-stack-md bg-surface-card rounded-xl p-gutter-card border border-border-subtle">
+<!-- Name Input -->
+<div class="relative w-full">
+<input class="w-full bg-transparent border-0 border-b-2 border-border-subtle focus:border-primary focus:ring-0 px-2 py-3 font-body-lg text-body-lg text-text-primary placeholder:text-outline-variant transition-colors bg-surface-container-lowest" placeholder="Who did you meet?" type="text"/>
+</div>
+<!-- Binary Choice -->
+<div class="grid grid-cols-2 gap-unit">
+<!-- Filled Action -->
+<button class="flex flex-col items-center justify-center gap-2 p-stack-sm rounded-lg bg-primary-fixed-dim/20 hover:bg-primary-fixed-dim/30 border border-transparent active:border-primary/20 transition-all duration-300 active:scale-95">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined text-[28px]" data-icon="wb_sunny" data-weight="fill" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<span class="font-label-md text-label-md text-on-primary-fixed-variant">Filled (Charge)</span>
+</button>
+<!-- Drained Action -->
+<button class="flex flex-col items-center justify-center gap-2 p-stack-sm rounded-lg bg-surface-container/50 hover:bg-surface-container border border-transparent active:border-outline/20 transition-all duration-300 active:scale-95">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[28px]" data-icon="cloud">cloud</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Drained</span>
+</button>
+</div>
+</section>
+<!-- Relationship Ledger -->
+<section class="flex flex-col gap-stack-sm">
+<h3 class="font-label-md text-label-md text-text-muted px-2 uppercase tracking-wider">Relationship Ledger</h3>
+<div class="flex flex-col gap-unit">
+<!-- Ledger Item 1 -->
+<div class="flex items-center justify-between p-gutter-card bg-surface-card rounded-xl border border-border-subtle hover:bg-surface-container-lowest transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A serene, minimalist portrait photo of a person in soft, warm lighting against a neutral background. Earthy tones, gentle expression, high quality, light mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9p99aV0NZppHREQXJbLhtIy985QBh9LiNEP7MJjAly2jKFJzw-iW5qLkyq4rcaAmEMapVPDojtdWwh2RgJw9ANPsc1-U1d-e7mL13Nn7neiuspK59dEstSKFggmxde76ezHSPMNvocmNjMkDfCJqnfFbpu-8Ilce7uAKGZ5mCmwJbwnXnBKZLNAaWzQRViKpQx0RqpdAcm5PZpTFvOU3ej2xFIzVVwbIlbXhqf0a6eGY-4Yv2K-Jb"/>
+</div>
+<span class="font-body-md text-body-md text-text-primary">Alex Chen</span>
+</div>
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="wb_sunny" data-weight="fill" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="wb_sunny" data-weight="fill" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+<span class="material-symbols-outlined text-[20px] text-outline-variant" data-icon="cloud">cloud</span>
+</div>
+</div>
+<!-- Ledger Item 2 -->
+<div class="flex items-center justify-between p-gutter-card bg-surface-card rounded-xl border border-border-subtle hover:bg-surface-container-lowest transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed font-label-md">
+                             SJ
+                        </div>
+<span class="font-body-md text-body-md text-text-primary">Sarah Jenkins</span>
+</div>
+<div class="flex items-center gap-1 text-outline">
+<span class="material-symbols-outlined text-[20px]" data-icon="cloud">cloud</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="cloud">cloud</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="cloud">cloud</span>
+</div>
+</div>
+<!-- Ledger Item 3 -->
+<div class="flex items-center justify-between p-gutter-card bg-surface-card rounded-xl border border-border-subtle hover:bg-surface-container-lowest transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container font-label-md">
+                             MK
+                        </div>
+<span class="font-body-md text-body-md text-text-primary">Michael K.</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[20px] text-primary" data-icon="wb_sunny" data-weight="fill" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+<span class="material-symbols-outlined text-[20px] text-outline-variant" data-icon="cloud">cloud</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-t border-border-subtle/30 rounded-t-xl md:hidden">
+<!-- Inactive: Today -->
+<a aria-label="Today" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-500 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="today">today</span>
+<span class="font-label-md text-label-md text-[10px]">Today</span>
+</a>
+<!-- Active: Journal -->
+<a aria-label="Journal" class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed bg-primary-container/20 dark:bg-on-primary-fixed-variant/30 rounded-full px-4 py-1 active:scale-90 transition-transform duration-500 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="edit_note" data-weight="fill" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+<span class="font-label-md text-label-md text-[10px]">Journal</span>
+</a>
+<!-- Inactive: Insights -->
+<a aria-label="Insights" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-500 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="auto_graph">auto_graph</span>
+<span class="font-label-md text-label-md text-[10px]">Insights</span>
+</a>
+<!-- Inactive: Me -->
+<a aria-label="Me" class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-500 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-md text-label-md text-[10px]">Me</span>
+</a>
+</nav>
+</body></html>

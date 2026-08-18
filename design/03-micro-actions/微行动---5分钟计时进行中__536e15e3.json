@@ -1,0 +1,20 @@
+{
+  "id": "536e15e323ae407bbe0b536938c00a59",
+  "name": "projects/4724290021803215791/screens/536e15e323ae407bbe0b536938c00a59",
+  "title": "微行动 - 5分钟计时进行中",
+  "category": "03-micro-actions",
+  "categoryLabel": "微行动流程",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/536e15e323ae407bbe0b536938c00a59/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/536e15e323ae407bbe0b536938c00a59/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/03-micro-actions/微行动---5分钟计时进行中__536e15e3.png",
+    "html": "design/03-micro-actions/微行动---5分钟计时进行中__536e15e3.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

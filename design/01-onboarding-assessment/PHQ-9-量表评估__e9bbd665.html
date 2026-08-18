@@ -1,0 +1,466 @@
+<!DOCTYPE html><html class="light" lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Anchor - 评估评估</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface": "#fcf9f3",
+                      "surface-card": "#FFFFFF",
+                      "on-secondary-fixed": "#380d00",
+                      "on-secondary-container": "#783c24",
+                      "on-secondary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "outline-variant": "#c2c8c1",
+                      "surface-variant": "#e5e2dc",
+                      "on-primary": "#ffffff",
+                      "surface-container-highest": "#e5e2dc",
+                      "secondary-container": "#feaa8b",
+                      "text-primary": "#33302B",
+                      "inverse-surface": "#31312d",
+                      "text-muted": "#8A837A",
+                      "inverse-primary": "#accfb8",
+                      "surface-bright": "#fcf9f3",
+                      "on-primary-fixed": "#012112",
+                      "on-background": "#1c1c18",
+                      "surface-container-high": "#ebe8e2",
+                      "error-container": "#ffdad6",
+                      "on-primary-container": "#133222",
+                      "outline": "#727973",
+                      "on-tertiary-container": "#302b24",
+                      "tertiary-fixed-dim": "#cec5ba",
+                      "dark-bg": "#1C1B18",
+                      "surface-tint": "#466552",
+                      "primary-container": "#7a9b86",
+                      "border-subtle": "#E3DDD3",
+                      "surface-container-low": "#f6f3ed",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container": "#f0eee8",
+                      "on-surface": "#1c1c18",
+                      "error": "#ba1a1a",
+                      "tertiary-container": "#9a9288",
+                      "dark-card": "#262521",
+                      "background": "#fcf9f3",
+                      "on-primary-fixed-variant": "#2e4d3c",
+                      "on-tertiary-fixed-variant": "#4c463e",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#ebe1d6",
+                      "primary-fixed": "#c8ebd3",
+                      "secondary": "#8e4d34",
+                      "primary-fixed-dim": "#accfb8",
+                      "secondary-fixed": "#ffdbcf",
+                      "on-secondary-fixed-variant": "#71361f",
+                      "primary": "#466552",
+                      "on-tertiary-fixed": "#1f1b14",
+                      "on-surface-variant": "#424843",
+                      "secondary-fixed-dim": "#ffb59a",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#f3f0ea",
+                      "tertiary": "#645d55",
+                      "surface-dim": "#dcdad4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-md": "24px",
+                      "unit": "4px",
+                      "margin-page": "20px",
+                      "gutter-card": "16px",
+                      "stack-lg": "40px",
+                      "stack-sm": "8px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "manrope"
+                      ],
+                      "body-md": [
+                              "manrope"
+                      ],
+                      "headline-lg": [
+                              "manrope"
+                      ],
+                      "label-md": [
+                              "manrope"
+                      ],
+                      "headline-lg-mobile": [
+                              "manrope"
+                      ],
+                      "numeral-mono": [
+                              "jetbrainsMono"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "20px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "17px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "numeral-mono": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        /* Hide scrollbar for clean minimal look */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom radio button styling to align with warm minimalism */
+        .anchor-radio {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1px solid theme('colors.outline-variant');
+            border-radius: 50%;
+            background-color: transparent;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            position: relative;
+        }
+        .anchor-radio:checked {
+            border-color: theme('colors.primary');
+            background-color: theme('colors.primary');
+        }
+        .anchor-radio:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: theme('colors.surface-card');
+        }
+        .anchor-radio:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px theme('colors.primary-container');
+        }
+      </style>
+</head>
+<body class="bg-background text-text-primary font-body-md min-h-screen antialiased flex flex-col pt-16">
+<!-- TopAppBar Component -->
+<header class="bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 fixed top-0 w-full z-50 flex justify-between items-center px-margin-page h-16">
+<button aria-label="Emergency" class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 duration-300 flex items-center justify-center p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">emergency</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim tracking-tight">
+            评估评估
+        </h1>
+<button aria-label="Settings" class="text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-opacity active:scale-95 duration-300 flex items-center justify-center p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</header>
+<main class="flex-grow flex flex-col px-margin-page py-stack-md pb-32 max-w-2xl mx-auto w-full">
+<!-- Context Instruction -->
+<section class="mb-stack-lg animate-fade-in-up" style="animation-duration: 0.8s;">
+<p class="font-body-lg text-body-lg text-text-muted text-center max-w-md mx-auto">
+                过去两周，你有多少时间被以下问题困扰？请根据真实感受选择。
+            </p>
+</section>
+<!-- Form / Questionnaire -->
+<form class="flex flex-col gap-gutter-card w-full" id="phq9-form">
+<!-- Question 1 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+<p class="font-body-md text-body-md text-text-primary mb-4">1. 做事时提不起劲或没有兴趣</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q1" required="" type="radio" value="0">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">完全没有</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q1" type="radio" value="1">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">有几天</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q1" type="radio" value="2">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">一半以上</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q1" type="radio" value="3">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">几乎每天</span>
+</label>
+</div>
+</div>
+<!-- Question 2 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+<p class="font-body-md text-body-md text-text-primary mb-4">2. 感到心情低落、沮丧或绝望</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q2" required="" type="radio" value="0">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">完全没有</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q2" type="radio" value="1">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">有几天</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q2" type="radio" value="2">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">一半以上</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q2" type="radio" value="3">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">几乎每天</span>
+</label>
+</div>
+</div>
+<!-- Question 3 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+<p class="font-body-md text-body-md text-text-primary mb-4">3. 入睡困难、睡不安稳或睡眠过多</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q3" required="" type="radio" value="0">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">完全没有</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q3" type="radio" value="1">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">有几天</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q3" type="radio" value="2">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">一半以上</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q3" type="radio" value="3">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">几乎每天</span>
+</label>
+</div>
+</div>
+<!-- Question 4 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+<p class="font-body-md text-body-md text-text-primary mb-4">4. 感觉疲倦或没有活力</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q4" required="" type="radio" value="0">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">完全没有</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q4" type="radio" value="1">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">有几天</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q4" type="radio" value="2">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">一半以上</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q4" type="radio" value="3">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">几乎每天</span>
+</label>
+</div>
+</div>
+<!-- Question 5 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+<p class="font-body-md text-body-md text-text-primary mb-4">5. 食欲不振或吃得太多</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q5" required="" type="radio" value="0">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">完全没有</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q5" type="radio" value="1">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">有几天</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q5" type="radio" value="2">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">一半以上</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q5" type="radio" value="3">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">几乎每天</span>
+</label>
+</div>
+</div>
+<!-- Question 6 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+<p class="font-body-md text-body-md text-text-primary mb-4">6. 觉得自己很糟，或觉得自己很失败，或让自己或家人失望</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q6" required="" type="radio" value="0">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">完全没有</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q6" type="radio" value="1">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">有几天</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q6" type="radio" value="2">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">一半以上</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q6" type="radio" value="3">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">几乎每天</span>
+</label>
+</div>
+</div>
+<!-- Question 7 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+<p class="font-body-md text-body-md text-text-primary mb-4">7. 对事物专注有困难，例如阅读报纸或看电视时</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q7" required="" type="radio" value="0">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">完全没有</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q7" type="radio" value="1">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">有几天</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q7" type="radio" value="2">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">一半以上</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q7" type="radio" value="3">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">几乎每天</span>
+</label>
+</div>
+</div>
+<!-- Question 8 -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+<p class="font-body-md text-body-md text-text-primary mb-4">8. 动作或说话迟缓到别人都能察觉，或者正好相反，烦躁不安或坐立难安，到处走动</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q8" required="" type="radio" value="0">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">完全没有</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q8" type="radio" value="1">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">有几天</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q8" type="radio" value="2">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">一半以上</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q8" type="radio" value="3">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">几乎每天</span>
+</label>
+</div>
+</div>
+<!-- Question 9 - Specific Question Focus -->
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle relative overflow-hidden" style="opacity: 1; transform: translateY(0px); transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+<!-- Subtle indicator for importance without being alarming -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary-container/30"></div>
+<p class="font-body-md text-body-md text-text-primary mb-4 pl-2">9. 有不如死掉或伤害自己的念头</p>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pl-2">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q9" required="" type="radio" value="0">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">完全没有</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q9" type="radio" value="1">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">有几天</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q9" type="radio" value="2">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">一半以上</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="anchor-radio" name="q9" type="radio" value="3">
+<span class="font-label-md text-label-md text-text-muted group-hover:text-text-primary transition-colors">几乎每天</span>
+</label>
+</div>
+</div>
+<!-- Action Button Area -->
+<div class="mt-stack-lg flex flex-col items-center">
+<button class="w-full sm:w-auto px-8 py-4 bg-primary text-surface-card rounded-full font-headline-lg-mobile text-headline-lg-mobile hover:opacity-90 active:scale-95 transition-all duration-300 shadow-sm border border-primary-fixed-dim/20 active:scale-[0.98] active:opacity-90 duration-200" type="submit">
+                    提交评估
+                </button>
+<!-- Safety Note -->
+<p class="mt-stack-sm font-label-md text-label-md text-text-muted opacity-70 text-center max-w-xs">
+                    评估结果仅供参考，不作为医疗诊断依据。
+                </p>
+</div>
+</form>
+</main>
+<!-- Optional subtle background texture to enhance the warm minimal feel without bloating code -->
+<div class="fixed inset-0 pointer-events-none z-[-1] opacity-30" style="background-image: radial-gradient(circle at 50% 0%, theme('colors.surface-container') 0%, transparent 70%);"></div>
+<script>
+        // Simple form interaction script to handle the visual state of submission
+        document.getElementById('phq9-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // In a real app, this would process the score and potentially trigger the crisis flow
+            // For now, we just simulate a calm submission state
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-size: 24px;">progress_activity</span>';
+            btn.classList.add('opacity-80');
+            
+            setTimeout(() => {
+                btn.innerHTML = '已提交';
+                btn.classList.remove('bg-primary');
+                btn.classList.add('bg-primary-container', 'text-on-primary-container');
+            }, 1000);
+        });
+
+        // Add subtle animation classes for sequential rendering
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.bg-surface-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(10px)';
+                card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 + (index * 50)); // Staggered fade in
+            });
+        });
+    </script>
+
+
+</body></html>

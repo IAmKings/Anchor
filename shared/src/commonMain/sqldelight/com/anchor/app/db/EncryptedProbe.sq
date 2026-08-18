@@ -1,0 +1,335 @@
+CREATE TABLE encrypted_probe (
+  id INTEGER NOT NULL PRIMARY KEY CHECK (id = 1),
+  value TEXT NOT NULL,
+  migrated INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE assessment (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  completed_at INTEGER NOT NULL,
+  phq9_answers TEXT NOT NULL,
+  gad7_answers TEXT NOT NULL,
+  phq9_score INTEGER NOT NULL CHECK (phq9_score BETWEEN 0 AND 27),
+  phq9_band TEXT NOT NULL,
+  gad7_score INTEGER NOT NULL CHECK (gad7_score BETWEEN 0 AND 21),
+  gad7_band TEXT NOT NULL,
+  action TEXT NOT NULL
+);
+
+CREATE TABLE safety_state (
+  id INTEGER NOT NULL PRIMARY KEY CHECK (id = 1),
+  mode TEXT NOT NULL,
+  first_low_assessment_at INTEGER
+);
+
+CREATE TABLE user_profile (
+  id INTEGER NOT NULL PRIMARY KEY CHECK (id = 1),
+  age_group TEXT,
+  onboarding_complete INTEGER NOT NULL CHECK (onboarding_complete IN (0, 1)),
+  first_anchor TEXT,
+  crisis_region TEXT
+);
+
+CREATE TABLE emotion_card (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  emotion TEXT NOT NULL,
+  event TEXT NOT NULL,
+  hardest_part TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  passed_at INTEGER
+);
+
+CREATE TABLE camera_log (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  fact TEXT NOT NULL,
+  inference TEXT NOT NULL,
+  fact_needs_hint INTEGER NOT NULL CHECK (fact_needs_hint IN (0, 1)),
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE worry_card (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  content TEXT NOT NULL,
+  sealed_at INTEGER NOT NULL,
+  next_session_at INTEGER NOT NULL,
+  resolution TEXT NOT NULL,
+  action TEXT,
+  audio_file_name TEXT
+);
+
+CREATE TABLE micro_action (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  source_worry_id INTEGER UNIQUE,
+  created_at INTEGER NOT NULL,
+  predicted_difficulty INTEGER CHECK (predicted_difficulty BETWEEN 1 AND 10),
+  started_at INTEGER,
+  actual_difficulty INTEGER CHECK (actual_difficulty BETWEEN 1 AND 10),
+  completed_at INTEGER
+);
+
+CREATE TABLE rhythm_entry (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  wake_at INTEGER,
+  light_at INTEGER,
+  created_at INTEGER NOT NULL,
+  CHECK (wake_at IS NOT NULL OR light_at IS NOT NULL)
+);
+
+CREATE TABLE relation_contact (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  note TEXT,
+  monitors_self INTEGER CHECK (monitors_self IN (0, 1)),
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE relation_energy (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  contact_id INTEGER NOT NULL,
+  mark TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE altruism_draw (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  drawn_at INTEGER NOT NULL,
+  felt TEXT,
+  completed_at INTEGER
+);
+
+store:
+INSERT OR REPLACE INTO encrypted_probe(id, value)
+VALUES (1, ?);
+
+read:
+SELECT value
+FROM encrypted_probe
+WHERE id = 1;
+
+readMigrationMarker:
+SELECT migrated
+FROM encrypted_probe
+WHERE id = 1;
+
+clear:
+DELETE FROM encrypted_probe;
+
+insertAssessment:
+INSERT INTO assessment(
+  completed_at, phq9_answers, gad7_answers, phq9_score, phq9_band,
+  gad7_score, gad7_band, action
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+selectAssessments:
+SELECT completed_at, phq9_answers, gad7_answers, phq9_score, phq9_band,
+       gad7_score, gad7_band, action
+FROM assessment
+ORDER BY id ASC;
+
+assessmentCount:
+SELECT count(*) FROM assessment;
+
+upsertSafetyState:
+INSERT OR REPLACE INTO safety_state(id, mode, first_low_assessment_at)
+VALUES (1, ?, ?);
+
+readSafetyState:
+SELECT mode, first_low_assessment_at
+FROM safety_state
+WHERE id = 1;
+
+clearAssessments:
+DELETE FROM assessment;
+
+clearSafetyState:
+DELETE FROM safety_state;
+
+upsertUserProfile:
+INSERT OR REPLACE INTO user_profile(id, age_group, onboarding_complete, first_anchor, crisis_region)
+VALUES (1, ?, ?, ?, ?);
+
+readUserProfile:
+SELECT age_group, onboarding_complete, first_anchor, crisis_region
+FROM user_profile
+WHERE id = 1;
+
+clearUserProfile:
+DELETE FROM user_profile;
+
+insertEmotionCard:
+INSERT INTO emotion_card(emotion, event, hardest_part, created_at)
+VALUES (?, ?, ?, ?);
+
+selectEmotionCards:
+SELECT id, emotion, event, hardest_part, created_at, passed_at
+FROM emotion_card
+ORDER BY id DESC;
+
+markEmotionCardPassed:
+UPDATE emotion_card SET passed_at = ? WHERE id = ?;
+
+emotionCardExists:
+SELECT count(*) FROM emotion_card WHERE id = ?;
+
+clearEmotionCards:
+DELETE FROM emotion_card;
+
+insertCameraLog:
+INSERT INTO camera_log(fact, inference, fact_needs_hint, created_at)
+VALUES (?, ?, ?, ?);
+
+selectCameraLogs:
+SELECT id, fact, inference, fact_needs_hint, created_at
+FROM camera_log
+ORDER BY id DESC;
+
+clearCameraLogs:
+DELETE FROM camera_log;
+
+insertWorryCard:
+INSERT INTO worry_card(content, sealed_at, next_session_at, resolution, audio_file_name)
+VALUES (?, ?, ?, 'Pending', ?);
+
+selectWorryCards:
+SELECT id, content, sealed_at, next_session_at, resolution, action, audio_file_name
+FROM worry_card
+ORDER BY id DESC;
+
+selectWorryAudioFileName:
+SELECT audio_file_name FROM worry_card WHERE id = ?;
+
+resolveWorryCard:
+UPDATE worry_card SET resolution = ?, action = ?
+WHERE id = ? AND resolution = 'Pending';
+
+dismissWorryCard:
+DELETE FROM worry_card WHERE id = ?;
+
+pendingWorryCardExists:
+SELECT count(*) FROM worry_card WHERE id = ? AND resolution = 'Pending';
+
+worryCardExists:
+SELECT count(*) FROM worry_card WHERE id = ?;
+
+clearWorryCards:
+DELETE FROM worry_card;
+
+insertMicroAction:
+INSERT INTO micro_action(title, source_worry_id, created_at)
+VALUES (?, ?, ?);
+
+selectMicroActions:
+SELECT id, title, source_worry_id, created_at, predicted_difficulty, started_at, actual_difficulty, completed_at
+FROM micro_action
+ORDER BY id DESC;
+
+startMicroAction:
+UPDATE micro_action SET predicted_difficulty = ?, started_at = ?
+WHERE id = ? AND started_at IS NULL;
+
+completeMicroAction:
+UPDATE micro_action SET actual_difficulty = ?, completed_at = ?
+WHERE id = ? AND started_at IS NOT NULL AND completed_at IS NULL;
+
+microActionExists:
+SELECT count(*) FROM micro_action WHERE id = ?;
+
+clearMicroActions:
+DELETE FROM micro_action;
+
+insertRhythmEntry:
+INSERT INTO rhythm_entry(wake_at, light_at, created_at)
+VALUES (?, ?, ?);
+
+selectRhythmEntries:
+SELECT id, wake_at, light_at, created_at
+FROM rhythm_entry
+ORDER BY id DESC;
+
+clearRhythmEntries:
+DELETE FROM rhythm_entry;
+
+restoreAssessment:
+INSERT INTO assessment(completed_at, phq9_answers, gad7_answers, phq9_score, phq9_band, gad7_score, gad7_band, action)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+restoreEmotionCard:
+INSERT INTO emotion_card(id, emotion, event, hardest_part, created_at, passed_at)
+VALUES (?, ?, ?, ?, ?, ?);
+
+restoreCameraLog:
+INSERT INTO camera_log(id, fact, inference, fact_needs_hint, created_at)
+VALUES (?, ?, ?, ?, ?);
+
+restoreWorryCard:
+INSERT INTO worry_card(id, content, sealed_at, next_session_at, resolution, action, audio_file_name)
+VALUES (?, ?, ?, ?, ?, ?, NULL);
+
+restoreMicroAction:
+INSERT INTO micro_action(id, title, source_worry_id, created_at, predicted_difficulty, started_at, actual_difficulty, completed_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+restoreRhythmEntry:
+INSERT INTO rhythm_entry(id, wake_at, light_at, created_at)
+VALUES (?, ?, ?, ?);
+
+insertRelationContact:
+INSERT INTO relation_contact(name, note, created_at)
+VALUES (?, ?, ?);
+
+selectRelationContacts:
+SELECT id, name, note, monitors_self, created_at
+FROM relation_contact
+ORDER BY id DESC;
+
+setRelationMonitorsSelf:
+UPDATE relation_contact SET monitors_self = ? WHERE id = ?;
+
+relationContactExists:
+SELECT count(*) FROM relation_contact WHERE id = ?;
+
+clearRelationContacts:
+DELETE FROM relation_contact;
+
+insertRelationEnergy:
+INSERT INTO relation_energy(contact_id, mark, created_at)
+VALUES (?, ?, ?);
+
+selectRelationEnergy:
+SELECT id, contact_id, mark, created_at
+FROM relation_energy
+ORDER BY id DESC;
+
+clearRelationEnergy:
+DELETE FROM relation_energy;
+
+insertAltruismDraw:
+INSERT INTO altruism_draw(title, kind, drawn_at)
+VALUES (?, ?, ?);
+
+selectAltruismDraws:
+SELECT id, title, kind, drawn_at, felt, completed_at
+FROM altruism_draw
+ORDER BY id DESC;
+
+completeAltruismDraw:
+UPDATE altruism_draw SET felt = ?, completed_at = ?
+WHERE id = ? AND felt IS NULL;
+
+clearAltruismDraws:
+DELETE FROM altruism_draw;
+
+restoreRelationContact:
+INSERT INTO relation_contact(id, name, note, monitors_self, created_at)
+VALUES (?, ?, ?, ?, ?);
+
+restoreRelationEnergy:
+INSERT INTO relation_energy(id, contact_id, mark, created_at)
+VALUES (?, ?, ?, ?);
+
+restoreAltruismDraw:
+INSERT INTO altruism_draw(id, title, kind, drawn_at, felt, completed_at)
+VALUES (?, ?, ?, ?, ?, ?);

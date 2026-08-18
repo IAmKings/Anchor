@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Anchor - Medical Waiting Mode</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config injected from system prompt -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#accfb8",
+                    "on-secondary-container": "#783c24",
+                    "background": "#fcf9f3",
+                    "surface-container-highest": "#e5e2dc",
+                    "secondary-container": "#feaa8b",
+                    "error": "#ba1a1a",
+                    "secondary": "#8e4d34",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#466552",
+                    "on-primary-fixed-variant": "#2e4d3c",
+                    "inverse-primary": "#accfb8",
+                    "secondary-fixed": "#ffdbcf",
+                    "primary": "#466552",
+                    "outline": "#727973",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f6f3ed",
+                    "dark-bg": "#1C1B18",
+                    "on-primary-fixed": "#012112",
+                    "inverse-on-surface": "#f3f0ea",
+                    "primary-container": "#7a9b86",
+                    "tertiary": "#645d55",
+                    "outline-variant": "#c2c8c1",
+                    "surface-card": "#FFFFFF",
+                    "on-secondary-fixed": "#380d00",
+                    "on-background": "#1c1c18",
+                    "inverse-surface": "#31312d",
+                    "on-secondary": "#ffffff",
+                    "text-primary": "#33302B",
+                    "on-primary-container": "#133222",
+                    "surface-dim": "#dcdad4",
+                    "on-secondary-fixed-variant": "#71361f",
+                    "surface-bright": "#fcf9f3",
+                    "on-tertiary-container": "#302b24",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#1c1c18",
+                    "border-subtle": "#E3DDD3",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#4c463e",
+                    "text-muted": "#8A837A",
+                    "on-surface-variant": "#424843",
+                    "surface": "#fcf9f3",
+                    "dark-card": "#262521",
+                    "surface-variant": "#e5e2dc",
+                    "surface-container": "#f0eee8",
+                    "on-tertiary-fixed": "#1f1b14",
+                    "tertiary-fixed-dim": "#cec5ba",
+                    "tertiary-container": "#9a9288",
+                    "primary-fixed": "#c8ebd3",
+                    "secondary-fixed-dim": "#ffb59a",
+                    "tertiary-fixed": "#ebe1d6",
+                    "surface-container-high": "#ebe8e2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "20px",
+                    "stack-md": "24px",
+                    "unit": "4px",
+                    "stack-lg": "40px",
+                    "gutter-card": "16px",
+                    "stack-sm": "8px",
+                    "safe": "env(safe-area-inset-bottom)"
+            },
+            "fontFamily": {
+                    "label-md": [
+                            "Manrope", "sans-serif"
+                    ],
+                    "headline-lg": [
+                            "Manrope", "sans-serif"
+                    ],
+                    "body-lg": [
+                            "Manrope", "sans-serif"
+                    ],
+                    "headline-lg-mobile": [
+                            "Manrope", "sans-serif"
+                    ],
+                    "numeral-mono": [
+                            "JetBrains Mono", "monospace"
+                    ],
+                    "body-md": [
+                            "Manrope", "sans-serif"
+                    ]
+            },
+            "fontSize": {
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "0.02em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-lg": [
+                            "22px",
+                            {
+                                    "lineHeight": "32px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "20px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "numeral-mono": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-md": [
+                            "17px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.text-primary');
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+        
+        /* Hide scrollbar for cleaner look but keep functionality */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid theme('colors.border-subtle');
+        }
+        
+        /* Custom animation for the pulsing SOS/Emergency indication without being alarming */
+        @keyframes gentle-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(178, 106, 79, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(178, 106, 79, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(178, 106, 79, 0); }
+        }
+        .pulse-terracotta {
+            animation: gentle-pulse 3s infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col pt-16 pb-24 md:pb-0">
+<!-- TopAppBar (from JSON) -->
+<header class="bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16">
+<button aria-label="Menu" class="text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-opacity active:scale-95 duration-300 flex items-center justify-center p-2 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">anchor</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-semibold text-primary dark:text-primary-fixed-dim text-center flex-1">Anchor</h1>
+<button aria-label="Emergency" class="text-error hover:opacity-80 transition-opacity active:scale-95 duration-300 flex items-center justify-center p-2 rounded-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-2xl mx-auto px-margin-page py-stack-md flex flex-col gap-stack-lg">
+<!-- Medical Waiting Banner -->
+<section class="w-full">
+<div class="bg-surface-container-high rounded-xl p-gutter-card border border-border-subtle flex flex-col gap-stack-sm items-start relative overflow-hidden">
+<!-- Subtle decorative element to make it feel deliberate, not broken -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-fixed/20 rounded-full -translate-y-1/2 translate-x-1/4 blur-2xl"></div>
+<div class="flex items-center gap-2 text-primary font-label-md text-label-md bg-primary-fixed/30 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-[18px]">pause_circle</span>
+<span>医疗等待期</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mt-2">
+                    休息即是当下的练习
+                </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                    由于你当前的状态，练习已暂时停用。这并非惩罚，而是为了在缺乏专业支持的情况下避免过度消耗。请将精力集中在寻求专业帮助和基础休养上。
+                </p>
+</div>
+</section>
+<!-- Primary Action: Seek Professional Support -->
+<section class="w-full">
+<div class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle flex flex-col items-center text-center gap-stack-md shadow-sm">
+<div class="w-16 h-16 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+</div>
+<div class="flex flex-col gap-2">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary">寻求专业支持</h3>
+<p class="font-body-md text-body-md text-text-muted max-w-sm mx-auto">
+                        你的状态需要专业的评估与帮助，这很正常。
+                    </p>
+</div>
+<button class="w-full py-4 px-6 bg-primary text-surface-card font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-[0.98]">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+                    查看就医指南
+                </button>
+</div>
+</section>
+<!-- Retained Low-Risk Entries -->
+<section class="w-full flex flex-col gap-stack-md">
+<h4 class="font-label-md text-label-md text-text-muted uppercase tracking-wider px-2">可用工具</h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-card">
+<!-- Physical Check-list -->
+<button class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle flex items-start gap-4 text-left hover:bg-surface-container-lowest transition-colors active:scale-[0.99]">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">fact_check</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-base text-text-primary">就医准备清单</span>
+<span class="font-body-md text-body-md text-sm text-text-muted">为下一次医生问诊做准备，记录近期的身体感受。</span>
+</div>
+</button>
+<!-- Dual-column Journal -->
+<button class="bg-surface-card rounded-xl p-gutter-card border border-border-subtle flex items-start gap-4 text-left hover:bg-surface-container-lowest transition-colors active:scale-[0.99]">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">splitscreen</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-base text-text-primary">事实记录</span>
+<span class="font-body-md text-body-md text-sm text-text-muted">记录此刻的感受，暂不进行分析与反思。</span>
+</div>
+</button>
+</div>
+</section>
+<!-- Decorative whitespace filler to ensure scrollability and breathing room -->
+<div class="h-24 w-full flex items-center justify-center opacity-30">
+<span class="material-symbols-outlined text-border-subtle text-[48px]">all_inclusive</span>
+</div>
+</main>
+<!-- Fixed Emergency Footer Area (Above Bottom Nav on mobile) -->
+<div class="fixed bottom-[80px] md:bottom-0 left-0 w-full px-margin-page pb-stack-md z-40 pointer-events-none flex justify-end">
+<!-- Floating SOS / Emergency Access -->
+<button aria-label="Emergency Contacts" class="pointer-events-auto w-14 h-14 bg-[#B26A4F] text-white rounded-full flex items-center justify-center shadow-lg pulse-terracotta hover:scale-105 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">phone_in_talk</span>
+</button>
+</div>
+<!-- BottomNavBar (from JSON) - Mobile Only -->
+<nav class="md:hidden bg-surface-container-low/90 dark:bg-dark-card/90 backdrop-blur-2xl fixed bottom-0 w-full rounded-t-xl z-50 border-t border-border-subtle/50 flex justify-around items-center pb-safe pt-stack-sm px-2 h-20">
+<!-- Active Tab: Today -->
+<button aria-current="page" class="flex flex-col items-center justify-center bg-primary-container/40 dark:bg-primary-container text-on-primary-container rounded-full px-5 py-1.5 transition-all duration-500 group active:scale-90 ease-out">
+<span class="material-symbols-outlined group-hover:text-primary dark:group-hover:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">today</span>
+<span class="font-label-md text-label-md text-[12px] mt-1 text-primary font-bold">今天</span>
+</button>
+<!-- Inactive Tab: Journal -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1.5 group hover:text-primary dark:hover:text-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-label-md text-label-md text-[12px] mt-1">记录</span>
+</button>
+<!-- Inactive Tab: Insights -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1.5 group hover:text-primary dark:hover:text-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined">auto_graph</span>
+<span class="font-label-md text-label-md text-[12px] mt-1">洞察</span>
+</button>
+<!-- Inactive Tab: Me -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1.5 group hover:text-primary dark:hover:text-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md text-[12px] mt-1">我的</span>
+</button>
+</nav>
+<!-- SideNav placeholder for Web (Hidden on mobile) -->
+<aside class="hidden md:flex flex-col fixed left-0 top-16 bottom-0 w-64 border-r border-border-subtle bg-surface px-4 py-8 gap-2">
+<button class="flex items-center gap-3 bg-primary-container/40 text-on-primary-container rounded-lg px-4 py-3 transition-all duration-300 font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">today</span>
+            今天
+        </button>
+<button class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg px-4 py-3 transition-all duration-300 font-label-md text-label-md">
+<span class="material-symbols-outlined">edit_note</span>
+            记录
+        </button>
+<button class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg px-4 py-3 transition-all duration-300 font-label-md text-label-md">
+<span class="material-symbols-outlined">auto_graph</span>
+            洞察
+        </button>
+<button class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg px-4 py-3 transition-all duration-300 font-label-md text-label-md">
+<span class="material-symbols-outlined">person</span>
+            我的
+        </button>
+</aside>
+</body></html>

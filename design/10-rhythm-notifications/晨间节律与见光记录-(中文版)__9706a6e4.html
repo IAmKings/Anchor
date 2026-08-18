@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wake Up &amp; Light Exposure</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-variant": "#e5e2dc",
+                        "tertiary-container": "#9a9288",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "background": "#fcf9f3",
+                        "outline-variant": "#c2c8c1",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#424843",
+                        "inverse-on-surface": "#f3f0ea",
+                        "secondary-container": "#feaa8b",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#c8ebd3",
+                        "primary-container": "#7a9b86",
+                        "outline": "#727973",
+                        "on-tertiary-container": "#302b24",
+                        "secondary": "#8e4d34",
+                        "on-error": "#ffffff",
+                        "on-surface": "#1c1c18",
+                        "primary": "#466552",
+                        "tertiary": "#645d55",
+                        "text-primary": "#33302B",
+                        "surface-bright": "#fcf9f3",
+                        "surface-container-high": "#ebe8e2",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "surface-card": "#FFFFFF",
+                        "on-primary-fixed": "#012112",
+                        "surface-container": "#f0eee8",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#ffdbcf",
+                        "surface-dim": "#dcdad4",
+                        "on-error-container": "#93000a",
+                        "text-muted": "#8A837A",
+                        "on-primary-container": "#133222",
+                        "dark-card": "#262521",
+                        "tertiary-fixed": "#ebe1d6",
+                        "inverse-surface": "#31312d",
+                        "surface-tint": "#466552",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#783c24",
+                        "inverse-primary": "#accfb8",
+                        "on-background": "#1c1c18",
+                        "surface": "#fcf9f3",
+                        "dark-bg": "#1C1B18",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f6f3ed",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "primary-fixed-dim": "#accfb8",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "error-container": "#ffdad6",
+                        "border-subtle": "#E3DDD3",
+                        "on-secondary-fixed": "#380d00"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "gutter-card": "16px",
+                        "stack-md": "24px",
+                        "unit": "4px",
+                        "stack-sm": "8px",
+                        "stack-lg": "40px",
+                        "margin-page": "20px",
+                        "safe": "env(safe-area-inset-bottom)"
+                    },
+                    fontFamily: {
+                        "headline-lg-mobile": ["Manrope", "sans-serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "numeral-mono": ["JetBrains Mono", "monospace"],
+                        "body-md": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"]
+                    },
+                    fontSize: {
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E3DDD3;
+            border-radius: 4px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16 active:scale-95 transition-transform duration-300">
+<button class="hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="emergency">emergency</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim tracking-tight">锚点 Anchor</h1>
+<button class="hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-on-surface-variant dark:text-outline-variant" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[88px] pb-[100px] px-margin-page flex flex-col gap-stack-lg md:max-w-2xl md:mx-auto w-full">
+<!-- Header Section -->
+<section class="flex flex-col gap-stack-sm">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary">晨间节律</h2>
+<p class="font-body-md text-body-md text-text-muted">温和的开始，为这一天定下锚点。</p>
+</section>
+<!-- Check-in Cards (Bento style) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 gap-gutter-card">
+<!-- Wake Up Time Card -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex flex-col gap-stack-md">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-text-primary">起床时间</span>
+<span class="material-symbols-outlined text-primary" data-icon="bed">bed</span>
+</div>
+<div class="flex items-end justify-between">
+<div class="flex flex-col">
+<span class="font-numeral-mono text-numeral-mono text-text-primary">06:45</span>
+<span class="font-label-md text-label-md text-text-muted">今天</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center hover:bg-primary-container transition-colors group">
+<span class="material-symbols-outlined text-on-primary-container group-hover:text-on-primary fill-icon" data-icon="check">check</span>
+</button>
+</div>
+</div>
+<!-- Light Exposure Card -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex flex-col gap-stack-md">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-text-primary">见光时间</span>
+<span class="material-symbols-outlined text-secondary" data-icon="light_mode">light_mode</span>
+</div>
+<div class="flex items-end justify-between">
+<div class="flex flex-col">
+<span class="font-numeral-mono text-numeral-mono text-text-primary">07:15</span>
+<span class="font-label-md text-label-md text-text-muted">起床后 1 小时内</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-variant transition-colors border border-border-subtle">
+<span class="material-symbols-outlined text-text-primary" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 30-Day Stability Chart -->
+<section class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex flex-col gap-stack-md">
+<div class="flex flex-col gap-unit">
+<h3 class="font-label-md text-label-md text-text-primary">30 日稳定度</h3>
+<p class="font-body-md text-body-md text-text-muted text-sm">起床时间的温和波动。</p>
+</div>
+<!-- Minimalist Chart Placeholder -->
+<div class="h-32 w-full relative flex items-end justify-between pt-4 pb-2">
+<!-- SVG Curve simulating gentle variance -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<path class="opacity-70" d="M0 50 Q 10 40 20 50 T 40 60 T 60 45 T 80 55 T 100 50" fill="none" stroke="#7A9B86" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<path class="opacity-20" d="M0 50 Q 10 40 20 50 T 40 60 T 60 45 T 80 55 T 100 50 L 100 100 L 0 100 Z" fill="url(#grad)"></path>
+<defs>
+<lineargradient id="grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#7A9B86" stop-opacity="0.5"></stop>
+<stop offset="100%" stop-color="#fcf9f3" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Y-axis rough indicators -->
+<div class="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-text-muted py-2">
+<span>8点</span>
+<span>6点</span>
+</div>
+</div>
+</section>
+<!-- Educational Snippet -->
+<section class="bg-surface-container-low rounded-xl p-gutter-card flex gap-stack-md items-start">
+<span class="material-symbols-outlined text-tertiary-container mt-1" data-icon="psychology">psychology</span>
+<div class="flex flex-col gap-stack-sm">
+<p class="font-body-md text-body-md text-text-primary italic">"Sleep poorly but don't nap - hard day but good night."</p>
+<p class="font-body-md text-body-md text-text-muted text-sm">If you can't sleep in 20 mins, get up and do something boring. The bed is for rest, not for trying.</p>
+</div>
+</section>
+<!-- Historical Data (Last 7 Days) -->
+<section class="flex flex-col gap-stack-sm">
+<h3 class="font-label-md text-label-md text-text-primary px-1">近期记录</h3>
+<div class="flex flex-col gap-unit">
+<!-- Log Item -->
+<div class="flex justify-between items-center py-3 px-2 border-b border-border-subtle/50">
+<span class="font-body-md text-body-md text-text-primary">昨天</span>
+<div class="flex gap-stack-md text-text-muted">
+<span class="font-numeral-mono text-numeral-mono text-sm">06:30</span>
+<span class="material-symbols-outlined text-primary-container fill-icon text-sm" data-icon="light_mode">light_mode</span>
+</div>
+</div>
+<!-- Log Item -->
+<div class="flex justify-between items-center py-3 px-2 border-b border-border-subtle/50">
+<span class="font-body-md text-body-md text-text-primary">周二</span>
+<div class="flex gap-stack-md text-text-muted">
+<span class="font-numeral-mono text-numeral-mono text-sm">07:00</span>
+<span class="material-symbols-outlined text-outline-variant text-sm" data-icon="light_mode">light_mode</span>
+</div>
+</div>
+<!-- Log Item -->
+<div class="flex justify-between items-center py-3 px-2 border-b border-border-subtle/50">
+<span class="font-body-md text-body-md text-text-primary">周一</span>
+<div class="flex gap-stack-md text-text-muted">
+<span class="font-numeral-mono text-numeral-mono text-sm">06:45</span>
+<span class="material-symbols-outlined text-primary-container fill-icon text-sm" data-icon="light_mode">light_mode</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/90 dark:bg-dark-bg/90 backdrop-blur-2xl border-t border-border-subtle/50 md:hidden block">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-safe px-4 active:scale-90 transition-transform duration-200">
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors p-2 rounded-lg min-w-[64px]">
+<span class="material-symbols-outlined" data-icon="home_app_logo">home_app_logo</span>
+<span class="font-label-md text-label-md mt-1">今天</span>
+</button>
+<!-- Active (Semantic match: "记录" -> "Records/Tracking") -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors p-2 rounded-lg min-w-[64px]">
+<span class="material-symbols-outlined fill-icon" data-icon="edit_note" data-weight="fill">edit_note</span>
+<span class="font-label-md text-label-md mt-1">记录</span>
+</button>
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors p-2 rounded-lg min-w-[64px]">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-label-md text-label-md mt-1">洞察</span>
+</button>
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 dark:text-outline-variant/60 hover:bg-surface-container-low dark:hover:bg-surface-container-highest/10 transition-colors p-2 rounded-lg min-w-[64px]">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-md text-label-md mt-1">我的</span>
+</button>
+</div>
+</nav>
+<!-- Navigation Drawer (Hidden on mobile, block on md screens) -->
+<aside class="hidden md:flex flex-col p-stack-md w-72 h-full bg-surface-container-lowest dark:bg-dark-card rounded-r-xl border-r border-border-subtle/50 fixed left-0 top-0 z-40">
+<div class="h-16 flex items-center mb-stack-lg mt-4">
+<h1 class="font-headline-lg text-headline-lg text-primary">宁静空间</h1>
+</div>
+<nav class="flex flex-col gap-2">
+<!-- Active Item -->
+<button class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg tap-highlight-none w-full text-left">
+<span class="material-symbols-outlined fill-icon" data-icon="edit_note">edit_note</span>
+<span class="font-body-md text-body-md">记录</span>
+</button>
+<!-- Inactive Items -->
+<button class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg tap-highlight-none w-full text-left transition-colors">
+<span class="material-symbols-outlined" data-icon="home_app_logo">home_app_logo</span>
+<span class="font-body-md text-body-md">今天</span>
+</button>
+<button class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg tap-highlight-none w-full text-left transition-colors">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-body-md text-body-md">洞察</span>
+</button>
+<button class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg tap-highlight-none w-full text-left transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-body-md text-body-md">我的</span>
+</button>
+</nav>
+<div class="mt-auto">
+<button class="flex items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg tap-highlight-none w-full text-left transition-colors">
+<span class="material-symbols-outlined" data-icon="sos">sos</span>
+<span class="font-body-md text-body-md">紧急求助</span>
+</button>
+</div>
+</aside>
+</body></html>

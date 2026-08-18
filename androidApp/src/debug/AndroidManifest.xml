@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <receiver
+            android:name="com.anchor.app.timer.BackgroundTimerProbeReceiver"
+            android:exported="true" />
+        <receiver
+            android:name="com.anchor.app.reminder.ReminderSchedulerProbeReceiver"
+            android:exported="true" />
+        <receiver
+            android:name="com.anchor.app.SpeechProbeReceiver"
+            android:exported="true" />
+    </application>
+</manifest>

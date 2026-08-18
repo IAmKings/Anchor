@@ -1,0 +1,20 @@
+{
+  "id": "03f9314a31f342729517f757158b99b4",
+  "name": "projects/4724290021803215791/screens/03f9314a31f342729517f757158b99b4",
+  "title": "导出设置 - 加密分享流程",
+  "category": "09-settings-export",
+  "categoryLabel": "设置、隐私与导出",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2356",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/03f9314a31f342729517f757158b99b4/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/03f9314a31f342729517f757158b99b4/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/09-settings-export/导出设置---加密分享流程__03f9314a.png",
+    "html": "design/09-settings-export/导出设置---加密分享流程__03f9314a.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

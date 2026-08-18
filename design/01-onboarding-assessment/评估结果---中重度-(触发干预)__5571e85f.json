@@ -1,0 +1,20 @@
+{
+  "id": "5571e85fc92d4906975e65f7fa730ad8",
+  "name": "projects/4724290021803215791/screens/5571e85fc92d4906975e65f7fa730ad8",
+  "title": "评估结果 - 中重度 (触发干预)",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2730",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/5571e85fc92d4906975e65f7fa730ad8/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/5571e85fc92d4906975e65f7fa730ad8/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/评估结果---中重度-(触发干预)__5571e85f.png",
+    "html": "design/01-onboarding-assessment/评估结果---中重度-(触发干预)__5571e85f.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

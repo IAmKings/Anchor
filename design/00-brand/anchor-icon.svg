@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Anchor app icon</title>
+  <desc id="desc">A muted sage anchor on a warm ivory background.</desc>
+  <rect width="512" height="512" rx="104" fill="#F7F3E9"/>
+  <g fill="#7E9E87">
+    <path fill-rule="evenodd" d="M256 105a42 42 0 1 1 0 84 42 42 0 0 1 0-84Zm0 23a19 19 0 1 0 0 38 19 19 0 0 0 0-38Z"/>
+    <path d="M244 178h24v132c0 15-12 27-27 27h-6v-23h6c2 0 3-2 3-4V178Z"/>
+    <rect x="193" y="194" width="126" height="24" rx="12"/>
+    <path d="M165 254c-5-3-11 1-10 7 7 48 32 83 67 94 29 9 55 1 72-10 32-8 57-39 63-84 1-6-5-10-10-7l-42 21c-8 4-11 13-7 21 4 8 13 11 21 7l12-6c-11 24-29 39-52 44-11 3-22 3-33 1-27-5-49-21-61-45l13 6c8 4 17 1 21-7 4-8 1-17-7-21l-47-21Z"/>
+  </g>
+</svg>

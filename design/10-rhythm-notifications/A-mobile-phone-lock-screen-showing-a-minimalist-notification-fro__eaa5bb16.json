@@ -1,0 +1,22 @@
+{
+  "id": "eaa5bb16c4334053bfd237755bdd1b13",
+  "name": "projects/4724290021803215791/screens/eaa5bb16c4334053bfd237755bdd1b13",
+  "title": "A mobile phone lock screen showing a minimalist notification from an app named 'Anchor'. The notification text is blurred or generic like 'Morning Rhythm' to ensure privacy, following desensitization rules. Background is a soft, out-of-focus morning light through a window, calming and serene. Warm earth tones. 4k, high quality.",
+  "category": "10-rhythm-notifications",
+  "categoryLabel": "晨间节律与通知",
+  "deviceType": null,
+  "width": "768",
+  "height": "1376",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/eaa5bb16c4334053bfd237755bdd1b13/fileEntries/screenshot",
+    "htmlCode": null
+  },
+  "local": {
+    "screenshot": "design/10-rhythm-notifications/A-mobile-phone-lock-screen-showing-a-minimalist-notification-fro__eaa5bb16.png",
+    "html": null
+  },
+  "errors": {},
+  "unavailable": [
+    "html"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "698ed3adfd6941b08e6a9c70a1633e80",
+  "name": "projects/4724290021803215791/screens/698ed3adfd6941b08e6a9c70a1633e80",
+  "title": "评估结果 - 轻度引导 (中文版)",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2186",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/698ed3adfd6941b08e6a9c70a1633e80/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/698ed3adfd6941b08e6a9c70a1633e80/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/评估结果---轻度引导-(中文版)__698ed3ad.png",
+    "html": "design/01-onboarding-assessment/评估结果---轻度引导-(中文版)__698ed3ad.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

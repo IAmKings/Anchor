@@ -1,0 +1,20 @@
+{
+  "id": "35e038ffac9d4d4b9c8ae23de6e5228b",
+  "name": "projects/4724290021803215791/screens/35e038ffac9d4d4b9c8ae23de6e5228b",
+  "title": "洞察 - 利他任务周期反馈",
+  "category": "06-insights",
+  "categoryLabel": "洞察与趋势",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1980",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/35e038ffac9d4d4b9c8ae23de6e5228b/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/35e038ffac9d4d4b9c8ae23de6e5228b/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/06-insights/洞察---利他任务周期反馈__35e038ff.png",
+    "html": "design/06-insights/洞察---利他任务周期反馈__35e038ff.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

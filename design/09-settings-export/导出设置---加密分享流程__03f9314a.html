@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>导出数据给医生</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-background": "#1c1c18",
+                        "surface-container-highest": "#e5e2dc",
+                        "surface-card": "#FFFFFF",
+                        "primary-container": "#7a9b86",
+                        "secondary-fixed": "#ffdbcf",
+                        "outline-variant": "#c2c8c1",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "on-secondary-fixed": "#380d00",
+                        "surface-bright": "#fcf9f3",
+                        "on-error-container": "#93000a",
+                        "secondary": "#8e4d34",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "on-surface-variant": "#424843",
+                        "outline": "#727973",
+                        "tertiary": "#645d55",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "inverse-on-surface": "#f3f0ea",
+                        "primary-fixed-dim": "#accfb8",
+                        "primary-fixed": "#c8ebd3",
+                        "on-primary-container": "#133222",
+                        "secondary-container": "#feaa8b",
+                        "text-primary": "#33302B",
+                        "surface-container-low": "#f6f3ed",
+                        "surface": "#fcf9f3",
+                        "text-muted": "#8A837A",
+                        "dark-card": "#262521",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#466552",
+                        "on-primary-fixed": "#012112",
+                        "inverse-primary": "#accfb8",
+                        "surface-variant": "#e5e2dc",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "primary": "#466552",
+                        "surface-container": "#f0eee8",
+                        "dark-bg": "#1C1B18",
+                        "tertiary-fixed": "#ebe1d6",
+                        "tertiary-container": "#9a9288",
+                        "on-surface": "#1c1c18",
+                        "background": "#fcf9f3",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#ebe8e2",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dcdad4",
+                        "border-subtle": "#E3DDD3",
+                        "on-tertiary-container": "#302b24",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#783c24",
+                        "inverse-surface": "#31312d"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "margin-page": "20px",
+                        "unit": "4px",
+                        "stack-sm": "8px",
+                        "stack-md": "24px",
+                        "stack-lg": "40px",
+                        "gutter-card": "16px"
+                    },
+                    fontFamily: {
+                        "label-md": ["manrope"],
+                        "numeral-mono": ["jetbrainsMono"],
+                        "body-md": ["manrope"],
+                        "headline-lg": ["manrope"],
+                        "headline-lg-mobile": ["manrope"],
+                        "body-lg": ["manrope"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "500" }],
+                        "numeral-mono": ["24px", { lineHeight: "32px", fontWeight: "400" }],
+                        "body-md": ["17px", { lineHeight: "28px", fontWeight: "400" }],
+                        "headline-lg": ["22px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "headline-lg-mobile": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "body-lg": ["20px", { lineHeight: "32px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        /* Custom toggle switch styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: theme('colors.primary');
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: theme('colors.primary');
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-32">
+<!-- Top App Bar (Modified to act as a back navigation for this transactional page) -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16">
+<button aria-label="返回" class="flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-surface-container transition-colors text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">导出数据给医生</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 px-margin-page max-w-2xl mx-auto space-y-stack-lg">
+<!-- Header Image Area (Atmospheric) -->
+<section class="rounded-xl overflow-hidden mb-stack-md h-40 relative">
+<div class="bg-cover bg-center w-full h-full absolute inset-0" data-alt="A tranquil, minimalist workspace setting. A clean desk surface with a soft, warm light casting gentle shadows. There are subtle, abstract geometric forms representing data and documents, rendered in soft sage greens and warm off-whites. The mood is calm, organized, and secure, conveying a sense of safety and professional care." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCQQ2lUxtIt2XP6kb8zgG_hBSrU3kaeKMOYneFhuZtcWiuRGbRrLjRg77dim36GAWM1aLYgjL37dknyM5lnFIynZzl3XKHCwJo_AVkkV6RXZCPVrb8sC-MKtnzY9-hHYZY-M37j0xYjBJk2-nMKRp7hoGjBvD-VapaEvFY8qMwH8ceEpjDXip-WiyBJzjitk_X7pgi4q70Z8l8XNiIaDSOpbV6hFxzjSCHiP2vEsV4Ytwk_EyZ59uAa')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
+</section>
+<!-- Section: Data Range Selection -->
+<section class="space-y-stack-sm">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2">选择导出范围</h2>
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 space-y-4">
+<!-- Option 1 -->
+<label class="flex items-start space-x-3 cursor-pointer group">
+<div class="flex-shrink-0 mt-1">
+<input checked="" class="form-checkbox h-5 w-5 text-primary border-outline-variant rounded focus:ring-primary focus:ring-opacity-50 transition-colors" type="checkbox"/>
+</div>
+<div>
+<p class="font-body-md text-body-md text-text-primary">最近两周记录</p>
+<p class="font-label-md text-label-md text-text-muted mt-1">包含这段时间内的所有关键数据，适合常规复诊。</p>
+</div>
+</label>
+<div class="h-px bg-border-subtle w-full"></div>
+<!-- Option 2 -->
+<label class="flex items-start space-x-3 cursor-pointer group">
+<div class="flex-shrink-0 mt-1">
+<input checked="" class="form-checkbox h-5 w-5 text-primary border-outline-variant rounded focus:ring-primary focus:ring-opacity-50 transition-colors" type="checkbox"/>
+</div>
+<div>
+<p class="font-body-md text-body-md text-text-primary">所有情绪卡片</p>
+<p class="font-label-md text-label-md text-text-muted mt-1">导出所有的情绪波动和触发事件记录。</p>
+</div>
+</label>
+<div class="h-px bg-border-subtle w-full"></div>
+<!-- Option 3 -->
+<label class="flex items-start space-x-3 cursor-pointer group">
+<div class="flex-shrink-0 mt-1">
+<input checked="" class="form-checkbox h-5 w-5 text-primary border-outline-variant rounded focus:ring-primary focus:ring-opacity-50 transition-colors" type="checkbox"/>
+</div>
+<div>
+<p class="font-body-md text-body-md text-text-primary">双栏日志事实记录</p>
+<p class="font-label-md text-label-md text-text-muted mt-1">只包含客观事实部分，隐去主观情绪评价，便于理性分析。</p>
+</div>
+</label>
+</div>
+</section>
+<!-- Section: Security & Encryption -->
+<section class="space-y-stack-sm">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2">安全设置</h2>
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 space-y-4">
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-2 text-text-primary">
+<span class="material-symbols-outlined text-primary">lock</span>
+<span class="font-body-md text-body-md">导出文件加密</span>
+</div>
+<!-- Toggle Switch -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-surface-container appearance-none cursor-pointer z-10 top-0 transition-all duration-300" id="encryption-toggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-container cursor-pointer transition-colors duration-300" for="encryption-toggle"></label>
+</div>
+</div>
+<div class="transition-all duration-300 overflow-hidden mt-4" id="password-container">
+<p class="font-label-md text-label-md text-text-muted mb-3 flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] mt-0.5">info</span>
+                        加密文件可保护隐私，请务必将密码口头告知您的医生。
+                    </p>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 px-0 py-2 font-body-md text-body-md text-text-primary placeholder-text-muted transition-colors" placeholder="设置访问密码" type="password"/>
+<button aria-label="显示密码" class="absolute right-0 top-2 text-text-muted hover:text-primary transition-colors" onclick="togglePasswordVisibility(this)" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Export Format -->
+<section class="space-y-stack-sm">
+<h2 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-2">导出格式</h2>
+<div class="grid grid-cols-2 gap-4">
+<!-- Format Option: PDF -->
+<label class="relative cursor-pointer">
+<input checked="" class="peer sr-only" name="format" type="radio" value="pdf"/>
+<div class="p-4 rounded-xl border border-border-subtle bg-surface-card peer-checked:border-primary peer-checked:bg-primary-fixed/30 transition-all text-center space-y-2">
+<span class="material-symbols-outlined text-4xl text-primary block mx-auto">picture_as_pdf</span>
+<div class="font-body-md text-body-md text-text-primary">PDF 文件</div>
+<div class="font-label-md text-label-md text-text-muted">适合打印和阅读</div>
+</div>
+</label>
+<!-- Format Option: JSON -->
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="format" type="radio" value="json"/>
+<div class="p-4 rounded-xl border border-border-subtle bg-surface-card peer-checked:border-primary peer-checked:bg-primary-fixed/30 transition-all text-center space-y-2">
+<span class="material-symbols-outlined text-4xl text-outline block mx-auto peer-checked:text-primary transition-colors">data_object</span>
+<div class="font-body-md text-body-md text-text-primary">JSON 数据</div>
+<div class="font-label-md text-label-md text-text-muted">适合系统导入</div>
+</div>
+</label>
+</div>
+</section>
+</main>
+<!-- Bottom Action Area (Fixed) -->
+<div class="fixed bottom-0 left-0 w-full bg-background/90 backdrop-blur-xl border-t border-border-subtle/30 pt-4 pb-safe px-margin-page z-40 pb-8">
+<div class="max-w-2xl mx-auto flex flex-col items-center">
+<button class="w-full bg-primary hover:bg-primary/90 text-surface-card font-headline-lg-mobile text-headline-lg-mobile py-4 rounded-xl shadow-none active:scale-[0.98] transition-all flex justify-center items-center gap-2">
+<span class="material-symbols-outlined fill">ios_share</span>
+                生成并分享加密文件
+            </button>
+<p class="mt-4 font-label-md text-label-md text-text-muted flex items-center justify-center gap-1 text-center">
+<span class="material-symbols-outlined text-[14px]">shield</span>
+                数据仅保存在本地，导出过程不经过任何云端。
+            </p>
+</div>
+</div>
+<!-- Navigation Drawer & BottomNavBar are SUPPRESSED because this is a Transactional/Linear task focused page. -->
+<script>
+        // Toggle password visibility
+        function togglePasswordVisibility(button) {
+            const input = button.previousElementSibling;
+            const icon = button.querySelector('span');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
+        // Toggle encryption section visibility based on switch
+        document.getElementById('encryption-toggle').addEventListener('change', function(e) {
+            const container = document.getElementById('password-container');
+            const input = container.querySelector('input');
+            if (e.target.checked) {
+                container.style.opacity = '1';
+                container.style.height = container.scrollHeight + 'px';
+                container.style.marginTop = '1rem';
+                input.disabled = false;
+            } else {
+                container.style.opacity = '0';
+                container.style.height = '0';
+                container.style.marginTop = '0';
+                input.disabled = true;
+            }
+        });
+        
+        // Initial setup for the animation height
+        window.addEventListener('DOMContentLoaded', () => {
+             const container = document.getElementById('password-container');
+             if(document.getElementById('encryption-toggle').checked) {
+                 container.style.height = container.scrollHeight + 'px';
+             }
+        });
+    </script>
+</body></html>

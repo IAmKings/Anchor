@@ -1,0 +1,20 @@
+{
+  "id": "32e196b08c454b41a596a72a96967096",
+  "name": "projects/4724290021803215791/screens/32e196b08c454b41a596a72a96967096",
+  "title": "首页 - 回归练习模式 (解锁后)",
+  "category": "02-home-daily",
+  "categoryLabel": "首页与日常状态",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2236",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/32e196b08c454b41a596a72a96967096/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/32e196b08c454b41a596a72a96967096/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/02-home-daily/首页---回归练习模式-(解锁后)__32e196b0.png",
+    "html": "design/02-home-daily/首页---回归练习模式-(解锁后)__32e196b0.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

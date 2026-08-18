@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Altruism Insights</title>
+<!-- Google Fonts: Manrope & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Custom Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-bright": "#fcf9f3",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#645d55",
+                        "on-primary-container": "#133222",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f3f0ea",
+                        "on-secondary-fixed": "#380d00",
+                        "text-muted": "#8A837A",
+                        "inverse-surface": "#31312d",
+                        "secondary-fixed": "#ffdbcf",
+                        "background": "#fcf9f3",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#783c24",
+                        "surface-container-high": "#ebe8e2",
+                        "primary-container": "#7a9b86",
+                        "primary-fixed-dim": "#accfb8",
+                        "border-subtle": "#E3DDD3",
+                        "surface-dim": "#dcdad4",
+                        "on-surface": "#1c1c18",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "on-surface-variant": "#424843",
+                        "on-background": "#1c1c18",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "dark-bg": "#1C1B18",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#466552",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#feaa8b",
+                        "inverse-primary": "#accfb8",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ebe1d6",
+                        "surface": "#fcf9f3",
+                        "outline": "#727973",
+                        "outline-variant": "#c2c8c1",
+                        "surface-container-low": "#f6f3ed",
+                        "error-container": "#ffdad6",
+                        "surface-card": "#FFFFFF",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "primary-fixed": "#c8ebd3",
+                        "surface-container": "#f0eee8",
+                        "surface-variant": "#e5e2dc",
+                        "primary": "#466552",
+                        "tertiary-container": "#9a9288",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "text-primary": "#33302B",
+                        "on-primary-fixed": "#012112",
+                        "on-tertiary-container": "#302b24",
+                        "secondary": "#8e4d34",
+                        "dark-card": "#262521",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#e5e2dc"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.25rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "gutter-card": "16px",
+                        "margin-page": "20px",
+                        "stack-md": "24px",
+                        "stack-sm": "8px",
+                        "stack-lg": "40px",
+                        "unit": "4px"
+                    },
+                    fontFamily: {
+                        "body-md": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "numeral-mono": ["JetBrains Mono", "monospace"],
+                        "headline-lg-mobile": ["Manrope", "sans-serif"]
+                    },
+                    fontSize: {
+                        "body-md": ["17px", { lineHeight: "28px", fontWeight: "400" }],
+                        "headline-lg": ["22px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "500" }],
+                        "body-lg": ["20px", { lineHeight: "32px", fontWeight: "400" }],
+                        "numeral-mono": ["24px", { lineHeight: "32px", fontWeight: "400" }],
+                        "headline-lg-mobile": ["20px", { lineHeight: "28px", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright text-on-surface font-body-md text-body-md antialiased md:bg-surface-container-low min-h-screen">
+<!-- Mobile Constrained Container for Layout Integrity -->
+<div class="max-w-md mx-auto min-h-screen bg-surface-bright relative shadow-sm border-x border-border-subtle md:hidden flex flex-col">
+<!-- TopAppBar (from JSON) -->
+<header class="bg-surface-bright dark:bg-dark-bg border-b border-border-subtle flex justify-between items-center w-full px-margin-page h-16 sticky top-0 z-40 scale-95 duration-200 ease-in-out hover:bg-surface-container-low transition-colors">
+<button aria-label="Leading Action" class="text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined" data-icon="waves">waves</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-semibold text-primary dark:text-primary-fixed-dim">
+                Anchor
+            </h1>
+<button aria-label="Trailing Action" class="text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-margin-page py-6 space-y-stack-lg pb-32">
+<!-- Contextual Header -->
+<div class="space-y-1">
+<p class="font-label-md text-label-md text-text-muted">洞察 Insights</p>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">利他反馈</h2>
+</div>
+<!-- Core Metric Card -->
+<section class="bg-surface-card rounded-2xl p-gutter-card border border-border-subtle relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary-container rounded-full opacity-20 blur-xl"></div>
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined filled">favorite</span>
+</div>
+<h3 class="font-headline-lg-mobile text-[18px] font-semibold text-on-surface">利他回血效果</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                    过去 30 天内，<strong class="text-primary font-medium">75%</strong> 的微小利他行动让你感到<span class="inline-flex items-center gap-1 mx-1 px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed text-sm">更轻松</span>。
+                </p>
+</section>
+<!-- Energy Feedback Chart -->
+<section class="space-y-4">
+<h3 class="font-label-md text-label-md text-text-muted">能量反馈对比</h3>
+<div class="space-y-stack-sm">
+<!-- Gain Bar -->
+<div>
+<div class="flex justify-between font-label-md text-label-md mb-1">
+<span class="text-on-surface">回血 / 更轻松</span>
+<span class="font-numeral-mono text-primary">75%</span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-1000 ease-out" style="width: 75%;"></div>
+</div>
+</div>
+<!-- Drain Bar -->
+<div>
+<div class="flex justify-between font-label-md text-label-md mb-1">
+<span class="text-text-muted">耗竭 / 更紧绷</span>
+<span class="font-numeral-mono text-tertiary">25%</span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full opacity-60 transition-all duration-1000 ease-out" style="width: 25%;"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- "People Pleasing" Alert -->
+<section class="bg-secondary-fixed rounded-2xl p-gutter-card border border-secondary-fixed-dim shadow-sm flex items-start gap-4">
+<div class="text-on-secondary-fixed mt-1">
+<span class="material-symbols-outlined filled">warning</span>
+</div>
+<div class="space-y-2">
+<h4 class="font-label-md text-label-md font-semibold text-on-secondary-fixed">反讨好警示</h4>
+<p class="font-body-md text-[15px] leading-relaxed text-on-secondary-fixed-variant">
+                        如果持续感到“更紧”，这可能是讨好而非利他。暂停也是一种自保。
+                    </p>
+</div>
+</section>
+<!-- Action Pattern Analysis -->
+<section class="space-y-4">
+<h3 class="font-label-md text-label-md text-text-muted">模式分析</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Non-social Card -->
+<div class="bg-surface-container-low rounded-xl p-4 border border-border-subtle flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-primary text-3xl">nature_people</span>
+<span class="font-label-md text-label-md text-on-surface">非社交型</span>
+<span class="text-xs text-text-muted">如：捐款、顺手捡垃圾</span>
+<div class="mt-2 px-3 py-1 bg-primary-container text-on-primary-container rounded-full text-xs font-medium">
+                            高回血率
+                        </div>
+</div>
+<!-- Social Card -->
+<div class="bg-surface-container-low rounded-xl p-4 border border-border-subtle flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-tertiary text-3xl">diversity_1</span>
+<span class="font-label-md text-label-md text-on-surface">社交型</span>
+<span class="text-xs text-text-muted">如：解答问题、倾听</span>
+<div class="mt-2 px-3 py-1 bg-surface-variant text-on-surface-variant rounded-full text-xs font-medium">
+                            易耗竭
+                        </div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (from JSON) -->
+<!-- ACTIVE LOGIC: Page intent is "Insights" -> Match: label_texts[2] "Insights" -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-6 max-w-md backdrop-blur-xl border-t border-border-subtle bg-surface-bright/80 scale-90 transition-transform duration-300">
+<!-- Inactive: Today -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform mb-1" data-icon="today">today</span>
+<span class="font-label-md text-[11px]">Today</span>
+</button>
+<!-- Inactive: Journal -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform mb-1" data-icon="auto_stories">auto_stories</span>
+<span class="font-label-md text-[11px]">Journal</span>
+</button>
+<!-- Active: Insights -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1">
+<span class="material-symbols-outlined filled mb-1" data-icon="analytics">analytics</span>
+<span class="font-label-md text-[11px] font-semibold">Insights</span>
+</button>
+<!-- Inactive: Me -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-all group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform mb-1" data-icon="person">person</span>
+<span class="font-label-md text-[11px]">Me</span>
+</button>
+</nav>
+</div>
+</body></html>

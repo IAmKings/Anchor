@@ -1,0 +1,20 @@
+{
+  "id": "aa12ee4bef024d3aaa04e95248d370f8",
+  "name": "projects/4724290021803215791/screens/aa12ee4bef024d3aaa04e95248d370f8",
+  "title": "首启欢迎 - 年龄确认与基线评估入口",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/aa12ee4bef024d3aaa04e95248d370f8/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/aa12ee4bef024d3aaa04e95248d370f8/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/首启欢迎---年龄确认与基线评估入口__aa12ee4b.png",
+    "html": "design/01-onboarding-assessment/首启欢迎---年龄确认与基线评估入口__aa12ee4b.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

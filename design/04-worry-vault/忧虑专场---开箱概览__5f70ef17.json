@@ -1,0 +1,20 @@
+{
+  "id": "5f70ef17076047c0b6fbfd4e4b25e1eb",
+  "name": "projects/4724290021803215791/screens/5f70ef17076047c0b6fbfd4e4b25e1eb",
+  "title": "忧虑专场 - 开箱概览",
+  "category": "04-worry-vault",
+  "categoryLabel": "忧虑保险箱与忧虑专场",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2028",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/5f70ef17076047c0b6fbfd4e4b25e1eb/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/5f70ef17076047c0b6fbfd4e4b25e1eb/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/04-worry-vault/忧虑专场---开箱概览__5f70ef17.png",
+    "html": "design/04-worry-vault/忧虑专场---开箱概览__5f70ef17.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

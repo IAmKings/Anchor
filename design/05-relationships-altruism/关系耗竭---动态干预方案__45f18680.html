@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>关系调节 - 宁静空间</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#fcf9f3",
+                      "surface-container-high": "#ebe8e2",
+                      "primary-fixed": "#c8ebd3",
+                      "tertiary-fixed": "#ebe1d6",
+                      "surface-dim": "#dcdad4",
+                      "inverse-on-surface": "#f3f0ea",
+                      "text-muted": "#8A837A",
+                      "surface-bright": "#fcf9f3",
+                      "on-secondary-fixed-variant": "#71361f",
+                      "outline": "#727973",
+                      "surface-container-lowest": "#ffffff",
+                      "dark-bg": "#1C1B18",
+                      "secondary": "#8e4d34",
+                      "surface": "#fcf9f3",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#2e4d3c",
+                      "border-subtle": "#E3DDD3",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#4c463e",
+                      "on-tertiary-fixed": "#1f1b14",
+                      "on-surface-variant": "#424843",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-container": "#302b24",
+                      "secondary-fixed": "#ffdbcf",
+                      "on-background": "#1c1c18",
+                      "on-secondary-container": "#783c24",
+                      "surface-container": "#f0eee8",
+                      "on-surface": "#1c1c18",
+                      "error": "#ba1a1a",
+                      "inverse-primary": "#accfb8",
+                      "on-primary-container": "#133222",
+                      "inverse-surface": "#31312d",
+                      "surface-container-low": "#f6f3ed",
+                      "dark-card": "#262521",
+                      "text-primary": "#33302B",
+                      "primary": "#466552",
+                      "tertiary-fixed-dim": "#cec5ba",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed": "#012112",
+                      "secondary-container": "#feaa8b",
+                      "primary-fixed-dim": "#accfb8",
+                      "tertiary-container": "#9a9288",
+                      "on-secondary-fixed": "#380d00",
+                      "outline-variant": "#c2c8c1",
+                      "tertiary": "#645d55",
+                      "on-tertiary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "primary-container": "#7a9b86",
+                      "surface-card": "#FFFFFF",
+                      "surface-variant": "#e5e2dc",
+                      "secondary-fixed-dim": "#ffb59a",
+                      "surface-tint": "#466552",
+                      "surface-container-highest": "#e5e2dc"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-sm": "8px",
+                      "unit": "4px",
+                      "stack-md": "24px",
+                      "margin-page": "20px",
+                      "stack-lg": "40px",
+                      "gutter-card": "16px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Manrope", "sans-serif"],
+                      "numeral-mono": ["JetBrains Mono", "monospace"],
+                      "headline-lg": ["Manrope", "sans-serif"],
+                      "headline-lg-mobile": ["Manrope", "sans-serif"],
+                      "label-md": ["Manrope", "sans-serif"],
+                      "body-md": ["Manrope", "sans-serif"]
+              },
+              "fontSize": {
+                      "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}],
+                      "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                      "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #fcf9f3;
+            color: #1c1c18;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Slow breathing animation for grounding elements */
+        @keyframes gentle-pulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.02); }
+        }
+        .animate-breathe {
+            animation: gentle-pulse 6s ease-in-out infinite;
+        }
+
+        /* Subtle entrance animations */
+        @keyframes fade-up {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fade-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen flex flex-col font-body-md text-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16 transition-all duration-300">
+<button aria-label="返回" class="flex items-center justify-center p-2 -ml-2 text-primary hover:opacity-80 transition-opacity active:scale-95 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight md:font-headline-lg md:text-headline-lg">
+            关系调节
+        </h1>
+<button aria-label="设置" class="flex items-center justify-center p-2 -mr-2 text-on-surface-variant hover:opacity-80 transition-opacity active:scale-95 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-2xl mx-auto px-margin-page pt-24 pb-32 flex flex-col gap-stack-lg">
+<!-- Context Card (Assessment Result) -->
+<section class="animate-fade-up">
+<div class="bg-surface-container-lowest rounded-xl border border-border-subtle p-gutter-card flex flex-col gap-stack-sm relative overflow-hidden">
+<!-- Decorative subtle wave background -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-fixed/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+<div class="flex items-start gap-4 relative z-10">
+<div class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary">psychology</span>
+</div>
+<div>
+<p class="text-on-surface-variant leading-relaxed">
+                            系统注意到您最近在某些社交互动中表现出较高的<strong class="font-medium text-on-surface">情绪耗竭（表现型社交）</strong>。这很正常，您的能量池需要一点时间来重新蓄水。
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Intervention Strategy: De-escalation -->
+<section class="animate-fade-up delay-100 flex flex-col gap-stack-md">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary md:font-headline-lg md:text-headline-lg">关系减负建议</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- De-escalation Note -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex flex-col gap-stack-sm md:col-span-2">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary icon-fill">tune</span>
+<h3 class="font-label-md text-label-md text-on-surface font-semibold">调整频次，而非切断</h3>
+</div>
+<p class="text-on-surface-variant text-sm mb-4">
+                        将互动的频率稍微拉长。例如，将每周的聚会调整为每月一次。这并不是冷漠，而是为了在您有能量时，能提供更高质量的陪伴。
+                    </p>
+<!-- Boundary Setting Tip -->
+<div class="bg-surface-container-low rounded-lg p-4 border-l-4 border-primary">
+<p class="text-on-surface text-sm italic font-medium">
+                            "暂时对非必要的社交邀请说『不』是完全可以的。您的首要任务是照顾好自己。"
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Altruistic Micro-task Integration -->
+<section class="animate-fade-up delay-200 flex flex-col gap-stack-md">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary md:font-headline-lg md:text-headline-lg">将注意力转移到物</h2>
+<span class="material-symbols-outlined text-tertiary-container animate-breathe">spa</span>
+</div>
+<div class="bg-surface-card rounded-xl border border-border-subtle overflow-hidden flex flex-col">
+<!-- Task Header -->
+<div class="bg-primary-fixed/30 p-gutter-card border-b border-border-subtle flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed-variant text-[28px]">potted_plant</span>
+<div>
+<h3 class="font-label-md text-label-md text-on-primary-container font-semibold">非社交专注时刻</h3>
+<p class="text-xs text-on-surface-variant mt-1">选一件无需言语的小事，慢慢做完。</p>
+</div>
+</div>
+<!-- Task Options (Simulated Radio Group) -->
+<div class="p-gutter-card flex flex-col gap-3">
+<label class="flex items-center gap-3 p-3 rounded-lg border border-border-subtle hover:bg-surface-container-lowest cursor-pointer transition-colors">
+<input checked="" class="text-primary focus:ring-primary w-5 h-5 border-outline-variant bg-surface-container-lowest" name="micro_task" type="radio"/>
+<span class="text-on-surface">给一盆植物浇水，观察水渗入泥土的过程。</span>
+</label>
+<label class="flex items-center gap-3 p-3 rounded-lg border border-border-subtle hover:bg-surface-container-lowest cursor-pointer transition-colors">
+<input class="text-primary focus:ring-primary w-5 h-5 border-outline-variant bg-surface-container-lowest" name="micro_task" type="radio"/>
+<span class="text-on-surface">整理电脑桌面上的一处杂乱文件或一个文件夹。</span>
+</label>
+<label class="flex items-center gap-3 p-3 rounded-lg border border-border-subtle hover:bg-surface-container-lowest cursor-pointer transition-colors">
+<input class="text-primary focus:ring-primary w-5 h-5 border-outline-variant bg-surface-container-lowest" name="micro_task" type="radio"/>
+<span class="text-on-surface">静静地叠好一件衣服，感受布料的质感。</span>
+</label>
+</div>
+<!-- Check-in / Guardrail -->
+<div class="bg-surface-container p-gutter-card mt-2">
+<p class="text-on-surface font-medium mb-3 text-center">做完这件事后，您的感觉是更轻松了，还是更紧绷了？</p>
+<div class="flex justify-center gap-4 mb-4">
+<button class="px-6 py-2 rounded-full border border-border-subtle bg-surface-card text-on-surface hover:bg-surface-container-lowest transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">air</span>
+                            更轻松
+                        </button>
+<button class="px-6 py-2 rounded-full border border-border-subtle bg-surface-card text-on-surface hover:bg-surface-container-lowest transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-tertiary">compress</span>
+                            没变化 / 更紧绷
+                        </button>
+</div>
+<p class="text-xs text-text-muted text-center max-w-sm mx-auto">
+<strong class="font-semibold text-secondary">反讨好提醒：</strong> 如果您做这件事觉得是在完成任务或感到负担，请立即停止。现在不是要求完美的时刻。
+                    </p>
+</div>
+</div>
+</section>
+<!-- Action Area -->
+<section class="animate-fade-up delay-300 flex justify-center pt-stack-md">
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-label-md text-label-md font-semibold hover:opacity-90 active:scale-95 transition-all shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">check</span>
+                我已经了解
+            </button>
+</section>
+</main>
+<!-- Navigation Drawer Content (Hidden, required by Anchor but omitted from canvas to keep focus as requested by context rules) -->
+<!-- SOS Button (Persistently reachable but separated) -->
+<button aria-label="紧急求助" class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#ba1a1a] text-white shadow-lg flex items-center justify-center hover:opacity-90 active:scale-90 transition-all z-50 md:bottom-10 md:right-10">
+<span class="material-symbols-outlined text-[28px] icon-fill">sos</span>
+</button>
+</body></html>

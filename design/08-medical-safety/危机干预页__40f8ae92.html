@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>危机干预 - 宁静空间</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#727973",
+                        "secondary-fixed": "#ffdbcf",
+                        "tertiary-fixed": "#ebe1d6",
+                        "outline-variant": "#c2c8c1",
+                        "primary-container": "#7a9b86",
+                        "primary-fixed": "#c8ebd3",
+                        "tertiary": "#645d55",
+                        "on-background": "#1c1c18",
+                        "surface-container-high": "#ebe8e2",
+                        "background": "#fcf9f3",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "inverse-on-surface": "#f3f0ea",
+                        "secondary-container": "#feaa8b",
+                        "on-surface": "#1c1c18",
+                        "on-primary-container": "#133222",
+                        "on-tertiary-container": "#302b24",
+                        "dark-bg": "#1C1B18",
+                        "primary-fixed-dim": "#accfb8",
+                        "surface-card": "#FFFFFF",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "dark-card": "#262521",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#012112",
+                        "on-secondary-container": "#783c24",
+                        "text-primary": "#33302B",
+                        "surface-container-highest": "#e5e2dc",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "on-secondary-fixed": "#380d00",
+                        "surface": "#fcf9f3",
+                        "on-surface-variant": "#424843",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#f0eee8",
+                        "surface-container-low": "#f6f3ed",
+                        "surface-variant": "#e5e2dc",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "surface-bright": "#fcf9f3",
+                        "inverse-surface": "#31312d",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "inverse-primary": "#accfb8",
+                        "tertiary-container": "#9a9288",
+                        "error-container": "#ffdad6",
+                        "text-muted": "#8A837A",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "on-error-container": "#93000a",
+                        "secondary": "#8e4d34",
+                        "border-subtle": "#E3DDD3",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dcdad4",
+                        "surface-tint": "#466552",
+                        "primary": "#466552",
+                        "status-emergency": "#ba1a1a" // added for specific emergency needs while keeping it within the theme
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "margin-page": "20px",
+                        "unit": "4px",
+                        "stack-lg": "40px",
+                        "stack-md": "24px",
+                        "gutter-card": "16px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "label-md": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "numeral-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid theme('colors.border-subtle');
+        }
+
+        .emergency-pulse {
+            animation: soft-pulse 4s infinite ease-in-out;
+        }
+
+        @keyframes soft-pulse {
+            0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(186, 26, 26, 0.2); }
+            50% { transform: scale(1.02); opacity: 0.95; box-shadow: 0 0 0 20px rgba(186, 26, 26, 0); }
+            100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(186, 26, 26, 0); }
+        }
+
+        .slow-fade-in {
+            animation: fade-in 1.5s ease-out forwards;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col relative pb-safe overflow-x-hidden selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopAppBar Component: Adjusted for intent (Task-focused/Dead end -> minimal canvas) -->
+<header class="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-xl border-b border-border-subtle/30 flat no shadows flex justify-between items-center px-margin-page h-16">
+<button aria-label="返回" class="flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-surface-container-highest/20 active:scale-95 transition-all text-on-surface-variant" onclick="history.back()">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary tracking-tight">
+            紧急求助
+        </h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow pt-24 px-margin-page pb-32 flex flex-col gap-stack-lg max-w-2xl mx-auto w-full">
+<!-- Hero Section: Empathetic & Grounding -->
+<section class="slow-fade-in flex flex-col items-center text-center mt-4 mb-2">
+<div class="w-20 h-20 rounded-full bg-error-container/50 flex items-center justify-center mb-6 emergency-pulse">
+<span class="material-symbols-outlined text-4xl text-error" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-text-primary mb-2">你现在不是一个人。</h2>
+<p class="font-body-md text-body-md text-text-muted max-w-xs">
+                深呼吸，事情可能会好起来的。请允许我们为你提供一些帮助。
+            </p>
+</section>
+<!-- Immediate Action Steps (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter-card slow-fade-in" style="animation-delay: 0.2s;">
+<!-- Step 1: Hotline -->
+<div class="glass-panel rounded-3xl p-6 flex flex-col h-full hover:bg-surface-card transition-colors md:col-span-2">
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">call</span>
+</div>
+<div>
+<span class="font-label-md text-label-md text-error font-bold uppercase tracking-wider block mb-0.5">第一步</span>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary">拨打心理援助热线</h3>
+</div>
+</div>
+</div>
+<p class="font-body-md text-body-md text-text-muted mb-6">专业的接线员随时在线，他们受过训练，能听你说并提供支持。</p>
+<a class="mt-auto w-full bg-error text-on-error font-label-md text-label-md py-4 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform" href="tel:12356">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">phone_in_talk</span>
+                    拨打 12356 (希望24热线)
+                </a>
+</div>
+<!-- Step 2: ER/Psychiatry -->
+<div class="glass-panel rounded-3xl p-6 flex flex-col h-full hover:bg-surface-card transition-colors">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-text-primary" style="font-variation-settings: 'FILL' 1;">local_hospital</span>
+</div>
+<div>
+<span class="font-label-md text-label-md text-text-muted font-bold uppercase tracking-wider block mb-0.5">第二步</span>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary">前往医院</h3>
+</div>
+</div>
+<p class="font-body-md text-body-md text-text-muted mb-4">去最近的医院急诊科，或直接前往精神科门诊寻求专业医疗干预。</p>
+<button class="mt-auto w-full bg-surface-container-high text-text-primary font-label-md text-label-md py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform hover:bg-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">navigation</span>
+                    寻找附近急诊
+                </button>
+</div>
+<!-- Step 3: Trusted Person -->
+<div class="glass-panel rounded-3xl p-6 flex flex-col h-full hover:bg-surface-card transition-colors">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-text-primary" style="font-variation-settings: 'FILL' 1;">group</span>
+</div>
+<div>
+<span class="font-label-md text-label-md text-text-muted font-bold uppercase tracking-wider block mb-0.5">第三步</span>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary">联系可信的人</h3>
+</div>
+</div>
+<p class="font-body-md text-body-md text-text-muted mb-4">找一个觉得安全的朋友或家人，告诉他们你现在的感受。</p>
+<button class="mt-auto w-full bg-surface-container-high text-text-primary font-label-md text-label-md py-3 rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform hover:bg-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person_search</span>
+                    从通讯录选择
+                </button>
+</div>
+</section>
+<!-- Physical Check Reminder (Subtle, Grounding) -->
+<section class="glass-panel rounded-2xl p-5 border border-border-subtle bg-surface/50 slow-fade-in" style="animation-delay: 0.4s;">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-tertiary mt-1" style="font-variation-settings: 'FILL' 0;">info</span>
+<div>
+<h4 class="font-label-md text-label-md text-text-primary font-bold mb-1">躯体因素排查建议</h4>
+<p class="font-body-md text-body-md text-text-muted text-sm leading-relaxed">
+                        强烈的情绪波动有时与生理状况有关。建议在情况稳定后，进行甲状腺功能、维生素D水平等常规内分泌及躯体检查。
+                    </p>
+</div>
+</div>
+</section>
+</main>
+<!-- Critical Emergency Bottom Action (Thumb Zone, High Priority) -->
+<div class="fixed bottom-0 left-0 w-full z-50 bg-background/90 backdrop-blur-2xl border-t border-error-container/50 p-4 pb-safe slow-fade-in" style="animation-delay: 0.6s;">
+<div class="max-w-2xl mx-auto flex flex-col gap-3">
+<p class="font-label-md text-label-md text-error text-center font-bold">
+                如果面临立即的生命危险，请立刻拨打报警或急救电话。
+            </p>
+<div class="flex gap-3">
+<a class="flex-1 bg-surface-card border-2 border-error text-error font-headline-lg-mobile text-headline-lg-mobile py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-sm" href="tel:120">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+                    120 急救
+                </a>
+<a class="flex-1 bg-error text-on-error font-headline-lg-mobile text-headline-lg-mobile py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-transform shadow-sm" href="tel:110">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">local_police</span>
+                    110 报警
+                </a>
+</div>
+</div>
+</div>
+<script>
+        // Simple subtle interaction for buttons to feel responsive but grounded
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('touchstart', function() {
+                this.style.opacity = '0.8';
+            }, {passive: true});
+            el.addEventListener('touchend', function() {
+                this.style.opacity = '1';
+            }, {passive: true});
+        });
+    </script>
+</body></html>

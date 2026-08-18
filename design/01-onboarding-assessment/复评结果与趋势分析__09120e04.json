@@ -1,0 +1,20 @@
+{
+  "id": "09120e044e4f43afbc132596693129dc",
+  "name": "projects/4724290021803215791/screens/09120e044e4f43afbc132596693129dc",
+  "title": "复评结果与趋势分析",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2256",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/09120e044e4f43afbc132596693129dc/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/09120e044e4f43afbc132596693129dc/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/复评结果与趋势分析__09120e04.png",
+    "html": "design/01-onboarding-assessment/复评结果与趋势分析__09120e04.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

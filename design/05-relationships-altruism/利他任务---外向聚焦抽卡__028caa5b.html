@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>每日微小利他任务</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts for Manrope & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#9a9288",
+                        "on-tertiary-container": "#302b24",
+                        "on-secondary-fixed": "#380d00",
+                        "dark-bg": "#1C1B18",
+                        "primary-container": "#7a9b86",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "surface-dim": "#dcdad4",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#c8ebd3",
+                        "surface-card": "#FFFFFF",
+                        "surface-container-high": "#ebe8e2",
+                        "surface-tint": "#466552",
+                        "surface": "#fcf9f3",
+                        "text-primary": "#33302B",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-secondary-container": "#783c24",
+                        "dark-card": "#262521",
+                        "on-surface": "#1c1c18",
+                        "outline-variant": "#c2c8c1",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "inverse-surface": "#31312d",
+                        "secondary-fixed": "#ffdbcf",
+                        "on-surface-variant": "#424843",
+                        "tertiary-fixed": "#ebe1d6",
+                        "background": "#fcf9f3",
+                        "border-subtle": "#E3DDD3",
+                        "primary": "#466552",
+                        "on-primary-container": "#133222",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e5e2dc",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f6f3ed",
+                        "surface-container": "#f0eee8",
+                        "tertiary": "#645d55",
+                        "inverse-primary": "#accfb8",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "outline": "#727973",
+                        "secondary": "#8e4d34",
+                        "on-primary-fixed": "#012112",
+                        "on-error": "#ffffff",
+                        "text-muted": "#8A837A",
+                        "on-background": "#1c1c18",
+                        "primary-fixed-dim": "#accfb8",
+                        "inverse-on-surface": "#f3f0ea",
+                        "surface-bright": "#fcf9f3",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "secondary-container": "#feaa8b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "40px",
+                        "stack-sm": "8px",
+                        "unit": "4px",
+                        "gutter-card": "16px",
+                        "stack-md": "24px",
+                        "margin-page": "20px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"],
+                        "headline-lg-mobile": ["Manrope", "sans-serif"],
+                        "body-md": ["Manrope", "sans-serif"],
+                        "numeral-mono": ["JetBrains Mono", "monospace"],
+                        "label-md": ["Manrope", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean minimalist look */
+        ::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Slow breathing animation for the background element */
+        @keyframes gentle-pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.02); }
+        }
+        .breathing-bg {
+            animation: gentle-pulse 6s ease-in-out infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md antialiased pb-[100px] md:pb-0 flex flex-col items-center">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-border-subtle/30 flex items-center justify-between px-margin-page h-16 transition-colors max-w-md md:max-w-none md:justify-center md:px-8">
+<button class="md:absolute md:left-4 text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-300 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">anchor</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary tracking-tight">每日微小利他任务</h1>
+<button class="md:absolute md:right-4 text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 duration-300 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-md px-margin-page pt-28 flex flex-col items-center flex-grow">
+<!-- Category Segmented Control -->
+<div class="flex justify-center mb-stack-lg w-full">
+<div class="bg-surface-container p-1 rounded-full flex space-x-1 border border-border-subtle/50 w-full max-w-[280px]">
+<button class="flex-1 py-2 rounded-full font-label-md text-label-md bg-surface-card text-text-primary shadow-sm border border-border-subtle/30 transition-all duration-300" id="btn-nonsocial">
+                    非社交
+                </button>
+<button class="flex-1 py-2 rounded-full font-label-md text-label-md text-text-muted hover:text-text-primary transition-all duration-300" id="btn-social">
+                    社交
+                </button>
+</div>
+</div>
+<!-- The Draw Card Container (Bento / Glassmorphism inspired) -->
+<div class="relative w-full bg-surface-card border border-border-subtle rounded-[24px] p-6 sm:p-8 flex flex-col items-center justify-center min-h-[420px] shadow-sm transition-all duration-500 overflow-hidden group" id="card-container">
+<!-- Soft gradient background element indicating 'low arousal' -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary-container/10 to-surface pointer-events-none breathing-bg rounded-[24px]"></div>
+<!-- ================= STATE 1: DRAW ================= -->
+<div class="flex flex-col items-center text-center z-10 w-full transition-opacity duration-300" id="state-draw">
+<div class="w-20 h-20 rounded-full bg-surface-container-highest border border-border-subtle flex items-center justify-center mb-stack-md text-primary shadow-sm">
+<span class="material-symbols-outlined text-[40px] font-light">filter_vintage</span>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mb-2">抽取今日小事</h2>
+<p class="font-body-md text-body-md text-text-muted mb-stack-lg px-4">
+                    随手可做，不增加认知负担。<br/>完成后，放下它。
+                </p>
+<button class="w-full bg-primary text-on-primary rounded-full py-[18px] font-label-md text-label-md hover:bg-surface-tint active:scale-[0.98] transition-all duration-300 flex justify-center items-center" onclick="drawTask()">
+                    开始抽取
+                </button>
+</div>
+<!-- ================= STATE 2: TASK & GUARDRAIL ================= -->
+<div class="hidden flex-col items-center text-center z-10 w-full transition-opacity duration-300 opacity-0 h-full justify-between py-2" id="state-task">
+<div class="flex flex-col items-center mb-stack-md">
+<span class="material-symbols-outlined text-primary mb-3 text-3xl" id="task-icon">water_drop</span>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary leading-tight" id="task-text">给桌上的植物浇点水</h3>
+</div>
+<!-- Anti-Pleasing Guardrail (PRD §5.6.4) -->
+<div class="w-full bg-surface-container-low rounded-xl p-5 mb-stack-md border border-border-subtle text-left">
+<div class="flex items-center mb-3">
+<span class="material-symbols-outlined text-[18px] mr-2 text-secondary">psychology</span>
+<span class="font-label-md text-label-md text-on-surface-variant">防讨好护栏</span>
+</div>
+<p class="font-body-md text-body-md text-text-primary mb-4">
+                        在开始前请确认：我是否期待因此得到回应或感激？
+                    </p>
+<label class="flex items-start space-x-3 cursor-pointer group/label">
+<div class="relative flex items-center justify-center mt-1">
+<input class="peer appearance-none w-5 h-5 border border-outline-variant rounded-sm checked:bg-primary checked:border-primary transition-colors cursor-pointer" id="guardrail-check" onchange="toggleStartBtn()" type="checkbox"/>
+<span class="material-symbols-outlined absolute text-on-primary text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
+</div>
+<span class="font-body-md text-body-md text-text-muted group-hover/label:text-text-primary transition-colors text-left pt-[2px]">
+                            我已知晓，且不期待任何回应。
+                        </span>
+</label>
+</div>
+<button class="w-full bg-surface-container-highest text-outline rounded-full py-[18px] font-label-md text-label-md transition-all duration-300 cursor-not-allowed" disabled="" id="btn-start" onclick="startTask()">
+                    准备好了，去执行
+                </button>
+</div>
+<!-- ================= STATE 3: POST-TASK EVALUATION ================= -->
+<div class="hidden flex-col items-center text-center z-10 w-full transition-opacity duration-300 opacity-0 h-full justify-center" id="state-evaluate">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-stack-md text-primary">
+<span class="material-symbols-outlined text-3xl">self_improvement</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mb-2">任务完成</h3>
+<p class="font-body-md text-body-md text-text-muted mb-stack-lg px-2">
+                    诚实地感受一下：<br/>完成这件事后，你是怎样的状态？
+                </p>
+<div class="flex flex-col w-full space-y-3">
+<button class="w-full border border-border-subtle bg-surface-card text-text-primary rounded-full py-[16px] font-label-md text-label-md hover:bg-surface-container-low active:scale-[0.98] transition-all flex items-center justify-center" onclick="finishTask('light')">
+<span class="material-symbols-outlined mr-2 text-primary font-light">air</span> 轻盈、自然
+                    </button>
+<button class="w-full border border-border-subtle bg-surface-card text-text-primary rounded-full py-[16px] font-label-md text-label-md hover:bg-surface-container-low active:scale-[0.98] transition-all flex items-center justify-center" onclick="finishTask('tense')">
+<span class="material-symbols-outlined mr-2 text-secondary font-light">compress</span> 紧绷、内耗
+                    </button>
+</div>
+</div>
+<!-- ================= STATE 4: FEEDBACK ================= -->
+<div class="hidden flex-col items-center text-center z-10 w-full transition-opacity duration-300 opacity-0 h-full justify-center" id="state-feedback">
+<div class="w-20 h-20 rounded-full flex items-center justify-center mb-stack-md transition-colors" id="feedback-icon">
+<!-- Icon injected via JS -->
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mb-3" id="feedback-title"></h3>
+<p class="font-body-md text-body-md text-text-muted mb-stack-lg px-2" id="feedback-text"></p>
+<button class="w-full bg-surface-container border border-border-subtle text-text-primary rounded-full py-[16px] font-label-md text-label-md hover:bg-surface-container-high transition-all" onclick="resetApp()">
+                    返回
+                </button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) - Active state on "Today" -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-background/80 backdrop-blur-xl border-t border-border-subtle/30 rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-primary bg-primary-container/20 rounded-full px-4 py-1 active:scale-90 transition-transform duration-500 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">today</span>
+<span class="font-label-md text-label-md">Today</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-500 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">edit_note</span>
+<span class="font-label-md text-label-md">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-500 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">auto_graph</span>
+<span class="font-label-md text-label-md">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-70 hover:opacity-100 transition-opacity active:scale-90 duration-500 ease-out" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-label-md text-label-md">Me</span>
+</a>
+</nav>
+<!-- Interactions Logic -->
+<script>
+        // Task Database
+        const taskDB = {
+            nonsocial: [
+                { text: "给桌上的植物浇点水", icon: "water_drop" },
+                { text: "整理一下面前的桌面", icon: "desk" },
+                { text: "删掉手机里5张不需要的截图", icon: "delete_sweep" },
+                { text: "倒掉积攒的垃圾", icon: "delete" },
+                { text: "去接一杯温水给自己", icon: "local_cafe" }
+            ],
+            social: [
+                { text: "对帮你开门的人微笑", icon: "sentiment_satisfied" },
+                { text: "顺手帮同事带走垃圾", icon: "volunteer_activism" },
+                { text: "发一条简单的感谢信息", icon: "send" },
+                { text: "在心里默祝路过的人开心", icon: "favorite_border" }
+            ]
+        };
+
+        let currentCategory = 'nonsocial';
+
+        // UI Elements
+        const stateDraw = document.getElementById('state-draw');
+        const stateTask = document.getElementById('state-task');
+        const stateEval = document.getElementById('state-evaluate');
+        const stateFeedback = document.getElementById('state-feedback');
+        const btnStart = document.getElementById('btn-start');
+        const checkGuardrail = document.getElementById('guardrail-check');
+
+        function switchState(hideEl, showEl) {
+            hideEl.classList.add('opacity-0');
+            setTimeout(() => {
+                hideEl.classList.add('hidden');
+                showEl.classList.remove('hidden');
+                // Force reflow
+                void showEl.offsetWidth;
+                showEl.classList.remove('opacity-0');
+            }, 300);
+        }
+
+        // Category Selection
+        function setCategory(cat) {
+            currentCategory = cat;
+            const btnNon = document.getElementById('btn-nonsocial');
+            const btnSoc = document.getElementById('btn-social');
+
+            const activeClass = "flex-1 py-2 rounded-full font-label-md text-label-md bg-surface-card text-text-primary shadow-sm border border-border-subtle/30 transition-all duration-300";
+            const inactiveClass = "flex-1 py-2 rounded-full font-label-md text-label-md text-text-muted hover:text-text-primary transition-all duration-300 border border-transparent";
+
+            if(cat === 'nonsocial') {
+                btnNon.className = activeClass;
+                btnSoc.className = inactiveClass;
+            } else {
+                btnSoc.className = activeClass;
+                btnNon.className = inactiveClass;
+            }
+        }
+
+        document.getElementById('btn-nonsocial').addEventListener('click', () => setCategory('nonsocial'));
+        document.getElementById('btn-social').addEventListener('click', () => setCategory('social'));
+
+        // Draw Card
+        function drawTask() {
+            const list = taskDB[currentCategory];
+            const task = list[Math.floor(Math.random() * list.length)];
+            
+            document.getElementById('task-text').innerText = task.text;
+            document.getElementById('task-icon').innerText = task.icon;
+
+            // Reset guardrail
+            checkGuardrail.checked = false;
+            toggleStartBtn();
+
+            switchState(stateDraw, stateTask);
+        }
+
+        // Guardrail Toggle
+        function toggleStartBtn() {
+            if (checkGuardrail.checked) {
+                btnStart.disabled = false;
+                btnStart.className = "w-full bg-primary text-on-primary rounded-full py-[18px] font-label-md text-label-md hover:bg-surface-tint active:scale-[0.98] transition-all duration-300 cursor-pointer shadow-sm";
+            } else {
+                btnStart.disabled = true;
+                btnStart.className = "w-full bg-surface-container-highest text-outline rounded-full py-[18px] font-label-md text-label-md transition-all duration-300 cursor-not-allowed";
+            }
+        }
+
+        // Start Task
+        function startTask() {
+            switchState(stateTask, stateEval);
+        }
+
+        // Finish & Evaluate
+        function finishTask(feeling) {
+            const title = document.getElementById('feedback-title');
+            const text = document.getElementById('feedback-text');
+            const iconContainer = document.getElementById('feedback-icon');
+
+            if (feeling === 'tense') {
+                iconContainer.className = "w-20 h-20 rounded-full bg-surface-container-high border border-border-subtle flex items-center justify-center mb-stack-md text-secondary transition-colors";
+                iconContainer.innerHTML = '<span class="material-symbols-outlined text-[40px] font-light">pause_circle</span>';
+                title.innerText = "允许紧绷存在";
+                text.innerHTML = "感觉到紧绷，说明潜意识里仍然带有期待。<br><br>没关系，建议近期降低利他频率，或只做<strong class='text-text-primary'>非社交类</strong>小事，把关注点拉回自己。";
+            } else {
+                iconContainer.className = "w-20 h-20 rounded-full bg-primary-container/20 border border-primary-container flex items-center justify-center mb-stack-md text-primary transition-colors";
+                iconContainer.innerHTML = '<span class="material-symbols-outlined text-[40px] font-light">spa</span>';
+                title.innerText = "如呼吸般轻盈";
+                text.innerText = "一次没有负担的举动。感受此刻的平静，然后放下它，继续你的一天。";
+            }
+
+            switchState(stateEval, stateFeedback);
+        }
+
+        // Reset
+        function resetApp() {
+            switchState(stateFeedback, stateDraw);
+        }
+    </script>
+</body></html>

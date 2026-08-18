@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Anchor - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#accfb8",
+                      "on-secondary-container": "#783c24",
+                      "background": "#fcf9f3",
+                      "surface-container-highest": "#e5e2dc",
+                      "secondary-container": "#feaa8b",
+                      "error": "#ba1a1a",
+                      "secondary": "#8e4d34",
+                      "error-container": "#ffdad6",
+                      "surface-tint": "#466552",
+                      "on-primary-fixed-variant": "#2e4d3c",
+                      "inverse-primary": "#accfb8",
+                      "secondary-fixed": "#ffdbcf",
+                      "primary": "#466552",
+                      "outline": "#727973",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-low": "#f6f3ed",
+                      "dark-bg": "#1C1B18",
+                      "on-primary-fixed": "#012112",
+                      "inverse-on-surface": "#f3f0ea",
+                      "primary-container": "#7a9b86",
+                      "tertiary": "#645d55",
+                      "outline-variant": "#c2c8c1",
+                      "surface-card": "#FFFFFF",
+                      "on-secondary-fixed": "#380d00",
+                      "on-background": "#1c1c18",
+                      "inverse-surface": "#31312d",
+                      "on-secondary": "#ffffff",
+                      "text-primary": "#33302B",
+                      "on-primary-container": "#133222",
+                      "surface-dim": "#dcdad4",
+                      "on-secondary-fixed-variant": "#71361f",
+                      "surface-bright": "#fcf9f3",
+                      "on-tertiary-container": "#302b24",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#1c1c18",
+                      "border-subtle": "#E3DDD3",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#4c463e",
+                      "text-muted": "#8A837A",
+                      "on-surface-variant": "#424843",
+                      "surface": "#fcf9f3",
+                      "dark-card": "#262521",
+                      "surface-variant": "#e5e2dc",
+                      "surface-container": "#f0eee8",
+                      "on-tertiary-fixed": "#1f1b14",
+                      "tertiary-fixed-dim": "#cec5ba",
+                      "tertiary-container": "#9a9288",
+                      "primary-fixed": "#c8ebd3",
+                      "secondary-fixed-dim": "#ffb59a",
+                      "tertiary-fixed": "#ebe1d6",
+                      "surface-container-high": "#ebe8e2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-page": "20px",
+                      "stack-md": "24px",
+                      "unit": "4px",
+                      "stack-lg": "40px",
+                      "gutter-card": "16px",
+                      "stack-sm": "8px"
+              },
+              "fontFamily": {
+                      "label-md": ["Manrope", "sans-serif"],
+                      "headline-lg": ["Manrope", "sans-serif"],
+                      "body-lg": ["Manrope", "sans-serif"],
+                      "headline-lg-mobile": ["Manrope", "sans-serif"],
+                      "numeral-mono": ["JetBrains Mono", "monospace"],
+                      "body-md": ["Manrope", "sans-serif"]
+              },
+              "fontSize": {
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                      "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .wave-animation {
+            animation: slow-pulse 6s ease-in-out infinite;
+        }
+
+        .wave-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            border: 1px solid theme('colors.primary-container');
+            animation: ripple 6s ease-out infinite;
+        }
+
+        .wave-ring:nth-child(2) {
+            animation-delay: 2s;
+        }
+
+        @keyframes slow-pulse {
+            0%, 100% { transform: scale(1); background-color: theme('colors.primary-container'); }
+            50% { transform: scale(1.02); background-color: theme('colors.primary-fixed'); }
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-text-primary min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar from JSON -->
+<header class="fixed top-0 w-full z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16">
+<button aria-label="Menu" class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 duration-300 flex items-center justify-center p-2 -ml-2">
+<span class="material-symbols-outlined" data-icon="anchor">anchor</span>
+</button>
+<div class="font-headline-lg-mobile text-headline-lg-mobile font-semibold text-primary dark:text-primary-fixed-dim text-center">
+            Anchor
+        </div>
+<button aria-label="Help right now" class="text-error dark:text-error hover:opacity-80 transition-opacity active:scale-95 duration-300 flex items-center justify-center p-2 -mr-2 bg-error-container/30 rounded-full">
+<span class="material-symbols-outlined" data-icon="emergency">emergency</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 pt-20 pb-32 flex flex-col relative overflow-x-hidden">
+<!-- Disclaimer -->
+<div class="px-margin-page text-center mb-stack-lg">
+<p class="font-label-md text-label-md text-text-muted">应用仅适用于轻度调节</p>
+</div>
+<!-- The Wave (Central Grounding Feature) -->
+<section class="flex flex-col items-center justify-center px-margin-page mb-stack-lg relative py-8">
+<div class="relative w-48 h-48 flex items-center justify-center cursor-pointer active:scale-95 transition-transform duration-700 ease-out">
+<div class="wave-ring"></div>
+<div class="wave-ring"></div>
+<button aria-label="Start emotional grounding" class="wave-animation w-full h-full rounded-full flex flex-col items-center justify-center text-on-primary-container z-10 shadow-sm border border-border-subtle/20">
+<span class="material-symbols-outlined text-4xl mb-2 opacity-80" style="font-variation-settings: 'FILL' 0;">water_drop</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile">浪潮等待</span>
+<span class="font-label-md text-label-md opacity-80 mt-1">等待中</span>
+</button>
+</div>
+<p class="font-body-md text-body-md text-text-muted mt-6 text-center max-w-[240px]">
+                难受的时候点这里
+            </p>
+</section>
+<!-- Daily Flow Bento Grid -->
+<section class="px-margin-page grid grid-cols-2 gap-gutter-card relative z-10">
+<!-- Morning Rhythm (Full Width) -->
+<div class="col-span-2 bg-surface-card border border-border-subtle rounded-xl p-5 flex flex-col relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-tr from-surface-card to-primary-fixed/20 opacity-50 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div>
+<h3 class="font-label-md text-label-md text-text-muted mb-1 uppercase tracking-wider">晨间节律</h3>
+<p class="font-body-md text-body-md text-text-primary">见光记录</p>
+</div>
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<div class="flex items-center gap-3 relative z-10 mt-2">
+<div class="flex-1 h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full w-1/3 transition-all duration-1000 ease-out"></div>
+</div>
+<span class="font-label-md text-label-md text-text-muted">温和开始</span>
+</div>
+</div>
+<!-- Micro-action -->
+<div class="col-span-1 bg-surface-card border border-border-subtle rounded-xl p-5 flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-secondary-container mb-3" style="font-variation-settings: 'FILL' 0;">directions_walk</span>
+<p class="font-body-md text-body-md text-text-primary mb-4 leading-snug">穿好鞋走到楼下</p>
+</div>
+<button class="text-left font-label-md text-label-md text-primary flex items-center group">
+                    开始 5 分钟
+                    <span class="material-symbols-outlined ml-1 text-[18px] group-hover:translate-x-1 transition-transform">arrow_right_alt</span>
+</button>
+</div>
+<!-- Worry Safe Box -->
+<div class="col-span-1 bg-surface-card border border-border-subtle rounded-xl p-5 flex flex-col justify-between">
+<div>
+<span class="material-symbols-outlined text-tertiary-container mb-3" style="font-variation-settings: 'FILL' 0;">inventory_2</span>
+<h3 class="font-label-md text-label-md text-text-muted mb-1">忧虑保险箱</h3>
+<p class="font-numeral-mono text-numeral-mono text-text-primary">3 <span class="font-body-md text-body-md text-text-muted">张卡</span></p>
+</div>
+<div class="mt-4 pt-4 border-t border-border-subtle/50">
+<p class="font-label-md text-label-md text-text-muted flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-1">lock_clock</span>
+                        20:00 解锁
+                    </p>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB for Quick Note -->
+<button aria-label="Quick Note" class="fixed bottom-24 right-margin-page bg-primary text-on-primary w-14 h-14 rounded-full flex items-center justify-center z-40 hover:opacity-90 active:scale-95 transition-all duration-300 outline-none">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit</span>
+</button>
+<!-- BottomNavBar from JSON -->
+<nav class="fixed bottom-0 w-full rounded-t-xl z-50 bg-surface-container-low/90 dark:bg-dark-card/90 backdrop-blur-2xl border-t border-border-subtle/50 flex justify-around items-center pb-safe pt-stack-sm px-2 md:hidden">
+<!-- Active: Today -->
+<a class="flex flex-col items-center justify-center bg-primary-container/40 dark:bg-primary-container text-on-primary-container rounded-full px-5 py-1.5 transition-all duration-500 hover:text-primary dark:hover:text-primary-fixed-dim active:scale-90 ease-out" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">today</span>
+<span class="font-label-md text-label-md">今天</span>
+</a>
+<!-- Inactive: Journal -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="edit_note">edit_note</span>
+<span class="font-label-md text-label-md">记录</span>
+</a>
+<!-- Inactive: Insights -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="auto_graph">auto_graph</span>
+<span class="font-label-md text-label-md">洞察</span>
+</a>
+<!-- Inactive: Me -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim transition-all duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-md text-label-md">我的</span>
+</a>
+</nav>
+</body></html>

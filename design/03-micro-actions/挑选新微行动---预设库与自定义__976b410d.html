@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html lang="zh"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>挑选一个微小行动</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#133222",
+                        "text-primary": "#33302B",
+                        "surface-tint": "#466552",
+                        "on-primary-fixed": "#012112",
+                        "surface-variant": "#e5e2dc",
+                        "on-tertiary-container": "#302b24",
+                        "tertiary": "#645d55",
+                        "border-subtle": "#E3DDD3",
+                        "surface": "#fcf9f3",
+                        "inverse-primary": "#accfb8",
+                        "surface-card": "#FFFFFF",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#accfb8",
+                        "tertiary-container": "#9a9288",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#feaa8b",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "surface-bright": "#fcf9f3",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#f3f0ea",
+                        "surface-container-high": "#ebe8e2",
+                        "secondary": "#8e4d34",
+                        "dark-bg": "#1C1B18",
+                        "on-surface-variant": "#424843",
+                        "background": "#fcf9f3",
+                        "on-surface": "#1c1c18",
+                        "on-secondary-fixed": "#380d00",
+                        "surface-container-low": "#f6f3ed",
+                        "surface-container": "#f0eee8",
+                        "secondary-fixed": "#ffdbcf",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "inverse-surface": "#31312d",
+                        "outline": "#727973",
+                        "on-secondary-container": "#783c24",
+                        "primary": "#466552",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "surface-dim": "#dcdad4",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c2c8c1",
+                        "tertiary-fixed": "#ebe1d6",
+                        "dark-card": "#262521",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#c8ebd3",
+                        "text-muted": "#8A837A",
+                        "on-background": "#1c1c18",
+                        "primary-container": "#7a9b86",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#71361f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "24px",
+                        "margin-page": "20px",
+                        "stack-lg": "40px",
+                        "gutter-card": "16px",
+                        "stack-sm": "8px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["manrope"],
+                        "body-lg": ["manrope"],
+                        "headline-lg": ["manrope"],
+                        "label-md": ["manrope"],
+                        "headline-lg-mobile": ["manrope"],
+                        "numeral-mono": ["jetbrainsMono"]
+                    },
+                    "fontSize": {
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: theme('colors.background');
+            color: theme('colors.text-primary');
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .action-card {
+            transition: all 0.2s ease;
+        }
+        .action-card:active {
+            transform: scale(0.98);
+            background-color: theme('colors.surface-container-high');
+        }
+
+        /* Modal Transitions */
+        .modal-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: theme('colors.primary');
+            cursor: pointer;
+            margin-top: -10px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: theme('colors.surface-dim');
+            border-radius: 2px;
+        }
+        input[type="range"]:focus {
+            outline: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-[100px] flex flex-col md:hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16">
+<button class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-300" onclick="history.back()">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim tracking-tight">挑选一个微小行动</h1>
+<div class="w-6 h-6"></div> <!-- Placeholder for balance -->
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-[88px] px-margin-page space-y-stack-lg overflow-y-auto">
+<!-- Header Text -->
+<section class="text-center space-y-stack-sm max-w-md mx-auto">
+<p class="font-body-md text-body-md text-text-muted">门槛要低到不需要说服自己。</p>
+</section>
+<!-- Bento Grid / Action Categories -->
+<div class="space-y-stack-md">
+<!-- Category: 生活起居 -->
+<section class="space-y-stack-sm">
+<h2 class="font-label-md text-label-md text-tertiary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="coffee">coffee</span>
+                    生活起居
+                </h2>
+<div class="grid grid-cols-1 gap-gutter-card">
+<div class="action-card bg-surface-card rounded-xl p-4 border border-border-subtle flex items-center justify-between cursor-pointer" onclick="openModal('穿好鞋走到楼下')">
+<span class="font-body-md text-body-md text-text-primary">穿好鞋走到楼下</span>
+<span class="material-symbols-outlined text-surface-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="action-card bg-surface-card rounded-xl p-4 border border-border-subtle flex items-center justify-between cursor-pointer" onclick="openModal('给植物浇水')">
+<span class="font-body-md text-body-md text-text-primary">给植物浇水</span>
+<span class="material-symbols-outlined text-surface-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="action-card bg-surface-card rounded-xl p-4 border border-border-subtle flex items-center justify-between cursor-pointer" onclick="openModal('整理书桌 5 分钟')">
+<span class="font-body-md text-body-md text-text-primary">整理书桌 5 分钟</span>
+<span class="material-symbols-outlined text-surface-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Category: 工作学习 -->
+<section class="space-y-stack-sm">
+<h2 class="font-label-md text-label-md text-tertiary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="laptop_mac">laptop_mac</span>
+                    工作学习
+                </h2>
+<div class="grid grid-cols-1 gap-gutter-card">
+<div class="action-card bg-surface-card rounded-xl p-4 border border-border-subtle flex items-center justify-between cursor-pointer" onclick="openModal('打开文档写 1 句话')">
+<span class="font-body-md text-body-md text-text-primary">打开文档写 1 句话</span>
+<span class="material-symbols-outlined text-surface-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="action-card bg-surface-card rounded-xl p-4 border border-border-subtle flex items-center justify-between cursor-pointer" onclick="openModal('打开 PDF 看第一段')">
+<span class="font-body-md text-body-md text-text-primary">打开 PDF 看第一段</span>
+<span class="material-symbols-outlined text-surface-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="action-card bg-surface-card rounded-xl p-4 border border-border-subtle flex items-center justify-between cursor-pointer" onclick="openModal('清理 5 封邮件')">
+<span class="font-body-md text-body-md text-text-primary">清理 5 封邮件</span>
+<span class="material-symbols-outlined text-surface-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Category: 身体活动 -->
+<section class="space-y-stack-sm">
+<h2 class="font-label-md text-label-md text-tertiary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="directions_walk">directions_walk</span>
+                    身体活动
+                </h2>
+<div class="grid grid-cols-1 gap-gutter-card">
+<div class="action-card bg-surface-card rounded-xl p-4 border border-border-subtle flex items-center justify-between cursor-pointer" onclick="openModal('下楼走 10 分钟')">
+<span class="font-body-md text-body-md text-text-primary">下楼走 10 分钟</span>
+<span class="material-symbols-outlined text-surface-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="action-card bg-surface-card rounded-xl p-4 border border-border-subtle flex items-center justify-between cursor-pointer" onclick="openModal('做 5 个深呼吸')">
+<span class="font-body-md text-body-md text-text-primary">做 5 个深呼吸</span>
+<span class="material-symbols-outlined text-surface-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="action-card bg-surface-card rounded-xl p-4 border border-border-subtle flex items-center justify-between cursor-pointer" onclick="openModal('站起来伸个懒腰')">
+<span class="font-body-md text-body-md text-text-primary">站起来伸个懒腰</span>
+<span class="material-symbols-outlined text-surface-dim" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Custom Input -->
+<section class="bg-surface-container-low rounded-xl p-4 border border-border-subtle">
+<h2 class="font-label-md text-label-md text-tertiary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+                自定义微小行动
+            </h2>
+<div class="relative">
+<input class="w-full bg-surface-card border-none border-b-2 border-transparent focus:border-primary focus:ring-0 rounded-t-md px-4 py-3 font-body-md text-body-md text-text-primary placeholder-surface-dim transition-colors" id="customActionInput" placeholder="输入你想做的事..." type="text"/>
+</div>
+<p class="font-label-md text-label-md text-text-muted mt-2 text-sm italic">
+                提示：这个动作需要你做心理建设吗？需要就再降。
+            </p>
+<button class="mt-4 w-full bg-surface-card border border-border-subtle text-primary font-body-md text-body-md py-3 rounded-lg flex items-center justify-center gap-2 active:scale-95 transition-transform" onclick="submitCustomAction()">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                确认自定义行动
+            </button>
+</section>
+</main>
+<!-- Bottom Sheet Modal (Resistance Evaluation) -->
+<div class="modal-overlay fixed inset-0 z-[60] flex flex-col justify-end bg-black/40 backdrop-blur-sm" id="evaluationModal">
+<div class="modal-content bg-surface-card w-full rounded-t-3xl p-6 pb-safe space-y-6 flex flex-col items-center">
+<!-- Handle -->
+<div class="w-12 h-1.5 bg-surface-dim rounded-full mb-2"></div>
+<div class="text-center w-full space-y-2">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary">准备开始</h3>
+<p class="font-body-md text-body-md text-primary font-medium bg-primary-container/20 py-2 px-4 rounded-lg inline-block w-full text-center" id="selectedActionDisplay"></p>
+</div>
+<div class="w-full space-y-6">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-text-primary block text-center">
+                        感受一下，做这件事的阻力有多大？(1-10)
+                    </label>
+<div class="flex items-center gap-4">
+<span class="font-numeral-mono text-numeral-mono text-tertiary text-sm">1</span>
+<input class="flex-grow" id="resistanceSlider" max="10" min="1" oninput="updateSliderValue(this.value)" type="range" value="5"/>
+<span class="font-numeral-mono text-numeral-mono text-tertiary text-sm">10</span>
+</div>
+<div class="text-center mt-2">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary" id="sliderValueDisplay">5</span>
+</div>
+</div>
+<div class="font-body-md text-body-md text-text-muted text-center italic min-h-[28px]" id="feedbackMessage">
+                    适中。如果你觉得可以，我们就开始。
+                </div>
+</div>
+<div class="w-full space-y-4 pt-4 border-t border-border-subtle">
+<p class="font-label-md text-label-md text-tertiary text-center">本阶段只专注这一件事</p>
+<button class="w-full bg-primary text-surface-card font-body-md text-body-md py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform" onclick="confirmAction()">
+                    确认并开始
+                </button>
+<button class="w-full bg-transparent text-text-primary border border-border-subtle font-body-md text-body-md py-3 rounded-xl active:scale-95 transition-transform" onclick="closeModal()">
+                    重新选择
+                </button>
+</div>
+</div>
+</div>
+<script>
+        const modal = document.getElementById('evaluationModal');
+        const actionDisplay = document.getElementById('selectedActionDisplay');
+        const slider = document.getElementById('resistanceSlider');
+        const sliderDisplay = document.getElementById('sliderValueDisplay');
+        const feedbackMsg = document.getElementById('feedbackMessage');
+        const customInput = document.getElementById('customActionInput');
+
+        let currentAction = "";
+
+        function openModal(actionName) {
+            currentAction = actionName;
+            actionDisplay.textContent = currentAction;
+            modal.classList.add('active');
+            // Reset slider
+            slider.value = 5;
+            updateSliderValue(5);
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function submitCustomAction() {
+            const val = customInput.value.trim();
+            if(val) {
+                openModal(val);
+                customInput.value = '';
+            } else {
+                // simple visual shake or focus
+                customInput.focus();
+            }
+        }
+
+        function updateSliderValue(val) {
+            sliderDisplay.textContent = val;
+            
+            // Simple logic for feedback
+            if (val <= 3) {
+                feedbackMsg.textContent = "很棒，看起来这几乎不需要消耗你的能量。";
+                feedbackMsg.className = "font-body-md text-body-md text-primary text-center italic min-h-[28px]";
+            } else if (val <= 7) {
+                feedbackMsg.textContent = "适中。慢慢来，只需踏出第一步。";
+                 feedbackMsg.className = "font-body-md text-body-md text-text-muted text-center italic min-h-[28px]";
+            } else {
+                feedbackMsg.textContent = "阻力有点大？或许我们需要再把它拆小一点。";
+                feedbackMsg.className = "font-body-md text-body-md text-secondary text-center italic min-h-[28px]";
+            }
+        }
+
+        function confirmAction() {
+            const resistance = slider.value;
+            if (resistance > 7) {
+                alert("阻力较高，建议点击'重新选择'将任务进一步拆解哦。");
+                return;
+            }
+            // Proceed to focus mode
+            // window.location.href = '/focus?action=' + encodeURIComponent(currentAction);
+            alert(`已确认行动: ${currentAction}\n阻力评估: ${resistance}\n\n即将进入专注模式...`);
+            closeModal();
+        }
+        
+        // Close modal on clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body></html>

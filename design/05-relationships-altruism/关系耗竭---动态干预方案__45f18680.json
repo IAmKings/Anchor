@@ -1,0 +1,20 @@
+{
+  "id": "45f18680f0194a42896682f15ae2f058",
+  "name": "projects/4724290021803215791/screens/45f18680f0194a42896682f15ae2f058",
+  "title": "关系耗竭 - 动态干预方案",
+  "category": "05-relationships-altruism",
+  "categoryLabel": "关系能量、表演耗竭与利他任务",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2996",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/45f18680f0194a42896682f15ae2f058/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/45f18680f0194a42896682f15ae2f058/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/05-relationships-altruism/关系耗竭---动态干预方案__45f18680.png",
+    "html": "design/05-relationships-altruism/关系耗竭---动态干预方案__45f18680.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

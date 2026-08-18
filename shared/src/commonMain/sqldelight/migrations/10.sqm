@@ -1,0 +1,7 @@
+CREATE TABLE rhythm_entry (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  wake_at INTEGER,
+  light_at INTEGER,
+  created_at INTEGER NOT NULL,
+  CHECK (wake_at IS NOT NULL OR light_at IS NOT NULL)
+);

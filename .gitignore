@@ -1,0 +1,50 @@
+# Gradle / Kotlin
+.gradle/
+.kotlin/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+local.properties
+*.iml
+
+# Android
+captures/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# iOS / Xcode
+DerivedData/
+iosApp/Pods/
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+xcuserdata/
+*.hmap
+*.ipa
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Local tooling / session state
+.reasonix/
+*.log
+
+# Secrets
+*.jks
+*.keystore
+*.p12
+.env
+.env.*
+!.env.example
+
+# Python (Trellis scripts)
+**/__pycache__/
+**/*.pyc
+.venv/

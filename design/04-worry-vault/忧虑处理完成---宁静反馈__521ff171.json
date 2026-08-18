@@ -1,0 +1,20 @@
+{
+  "id": "521ff171983449ae97e186988a0eb6b7",
+  "name": "projects/4724290021803215791/screens/521ff171983449ae97e186988a0eb6b7",
+  "title": "忧虑处理完成 - 宁静反馈",
+  "category": "04-worry-vault",
+  "categoryLabel": "忧虑保险箱与忧虑专场",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/521ff171983449ae97e186988a0eb6b7/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/521ff171983449ae97e186988a0eb6b7/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/04-worry-vault/忧虑处理完成---宁静反馈__521ff171.png",
+    "html": "design/04-worry-vault/忧虑处理完成---宁静反馈__521ff171.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

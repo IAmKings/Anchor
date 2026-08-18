@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>浪潮等待模式 - 宁静空间</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#727973",
+                    "secondary-fixed": "#ffdbcf",
+                    "tertiary-fixed": "#ebe1d6",
+                    "outline-variant": "#c2c8c1",
+                    "primary-container": "#7a9b86",
+                    "primary-fixed": "#c8ebd3",
+                    "tertiary": "#645d55",
+                    "on-background": "#1c1c18",
+                    "surface-container-high": "#ebe8e2",
+                    "background": "#fcf9f3",
+                    "on-secondary-fixed-variant": "#71361f",
+                    "inverse-on-surface": "#f3f0ea",
+                    "secondary-container": "#feaa8b",
+                    "on-surface": "#1c1c18",
+                    "on-primary-container": "#133222",
+                    "on-tertiary-container": "#302b24",
+                    "dark-bg": "#1C1B18",
+                    "primary-fixed-dim": "#accfb8",
+                    "surface-card": "#FFFFFF",
+                    "on-tertiary-fixed-variant": "#4c463e",
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "dark-card": "#262521",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#012112",
+                    "on-secondary-container": "#783c24",
+                    "text-primary": "#33302B",
+                    "surface-container-highest": "#e5e2dc",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-fixed-dim": "#ffb59a",
+                    "on-secondary-fixed": "#380d00",
+                    "surface": "#fcf9f3",
+                    "on-surface-variant": "#424843",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#f0eee8",
+                    "surface-container-low": "#f6f3ed",
+                    "surface-variant": "#e5e2dc",
+                    "on-tertiary-fixed": "#1f1b14",
+                    "surface-bright": "#fcf9f3",
+                    "inverse-surface": "#31312d",
+                    "on-primary-fixed-variant": "#2e4d3c",
+                    "inverse-primary": "#accfb8",
+                    "tertiary-container": "#9a9288",
+                    "error-container": "#ffdad6",
+                    "text-muted": "#8A837A",
+                    "tertiary-fixed-dim": "#cec5ba",
+                    "on-error-container": "#93000a",
+                    "secondary": "#8e4d34",
+                    "border-subtle": "#E3DDD3",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#dcdad4",
+                    "surface-tint": "#466552",
+                    "primary": "#466552"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "20px",
+                    "unit": "4px",
+                    "stack-lg": "40px",
+                    "stack-md": "24px",
+                    "gutter-card": "16px",
+                    "stack-sm": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Manrope"],
+                    "body-md": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "headline-lg": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "numeral-mono": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Breathing Animation */
+        @keyframes breathe {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+        
+        .wave-circle {
+            animation: breathe 8s ease-in-out infinite;
+            transform-origin: center center;
+        }
+
+        .wave-circle-inner {
+            animation: breathe 8s ease-in-out infinite;
+            animation-delay: -2s;
+            transform-origin: center center;
+        }
+
+        .wave-circle-outer {
+            animation: breathe 8s ease-in-out infinite;
+            animation-delay: -4s;
+            transform-origin: center center;
+        }
+
+        /* Smooth Transitions */
+        .step-transition {
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+        
+        .step-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            position: absolute;
+        }
+        
+        .step-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            position: relative;
+        }
+        
+        /* Disable text selection */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center overflow-hidden font-body-md no-select">
+<!-- Ambient Background / Breathing Wave -->
+<div class="fixed inset-0 z-0 flex items-center justify-center pointer-events-none opacity-40">
+<div class="absolute w-[80vw] max-w-[500px] aspect-square rounded-full bg-primary-fixed-dim/20 wave-circle-outer blur-3xl"></div>
+<div class="absolute w-[60vw] max-w-[400px] aspect-square rounded-full bg-primary-container/30 wave-circle blur-2xl"></div>
+<div class="absolute w-[40vw] max-w-[300px] aspect-square rounded-full bg-primary/20 wave-circle-inner blur-xl"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="relative z-10 w-full max-w-md px-margin-page flex flex-col items-center justify-center min-h-[707px]">
+<!-- Step 1: Acknowledge (认) -->
+<div class="step-transition step-visible flex flex-col items-center text-center w-full" id="step-1">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mb-stack-md tracking-wide">
+                我现在很难受，这是真的
+            </h1>
+<p class="font-body-md text-body-md text-text-muted mb-stack-lg max-w-[280px]">
+                承认这种感觉。不需要对抗，只需要看见它。
+            </p>
+<button class="mt-stack-lg px-8 py-4 bg-primary text-surface-card rounded-full font-label-md text-label-md tracking-widest active:scale-95 transition-transform duration-300" onclick="nextStep(2)">
+                我看见了
+            </button>
+</div>
+<!-- Step 2: Locate (定位) -->
+<div class="step-transition step-hidden flex flex-col items-center text-center w-full" id="step-2">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mb-stack-md tracking-wide">
+                这种感觉，停在哪里？
+            </h2>
+<p class="font-body-md text-body-md text-text-muted mb-stack-lg max-w-[280px]">
+                深呼吸，感受身体的哪个部位最沉重。
+            </p>
+<div class="grid grid-cols-2 gap-gutter-card w-full mb-stack-lg">
+<!-- Location Cards -->
+<button class="location-btn bg-surface-card border border-border-subtle rounded-xl p-stack-sm flex flex-col items-center justify-center gap-2 h-24 hover:bg-surface-container-low transition-colors active:scale-95" onclick="selectLocation(this)">
+<span class="material-symbols-outlined text-tertiary">favorite</span>
+<span class="font-label-md text-label-md text-on-surface-variant">胸口</span>
+</button>
+<button class="location-btn bg-surface-card border border-border-subtle rounded-xl p-stack-sm flex flex-col items-center justify-center gap-2 h-24 hover:bg-surface-container-low transition-colors active:scale-95" onclick="selectLocation(this)">
+<span class="material-symbols-outlined text-tertiary">air</span>
+<span class="font-label-md text-label-md text-on-surface-variant">喉咙</span>
+</button>
+<button class="location-btn bg-surface-card border border-border-subtle rounded-xl p-stack-sm flex flex-col items-center justify-center gap-2 h-24 hover:bg-surface-container-low transition-colors active:scale-95" onclick="selectLocation(this)">
+<span class="material-symbols-outlined text-tertiary">pan_tool</span>
+<span class="font-label-md text-label-md text-on-surface-variant">手心</span>
+</button>
+<button class="location-btn bg-surface-card border border-border-subtle rounded-xl p-stack-sm flex flex-col items-center justify-center gap-2 h-24 hover:bg-surface-container-low transition-colors active:scale-95" onclick="selectLocation(this)">
+<span class="material-symbols-outlined text-tertiary">restaurant</span>
+<span class="font-label-md text-label-md text-on-surface-variant">胃部</span>
+</button>
+</div>
+<button class="opacity-0 pointer-events-none mt-stack-md px-8 py-4 bg-primary text-surface-card rounded-full font-label-md text-label-md tracking-widest transition-opacity duration-500" id="btn-to-step-3" onclick="startTimer()">
+                继续
+            </button>
+</div>
+<!-- Step 3: Wait (等) - Timer -->
+<div class="step-transition step-hidden flex flex-col items-center text-center w-full" id="step-3">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mb-stack-lg tracking-wide">
+                我们一起等浪潮过去
+            </h2>
+<div class="relative flex items-center justify-center w-64 h-64 mb-stack-lg">
+<!-- Inner Timer Ring (Decorative) -->
+<svg class="absolute inset-0 w-full h-full transform -rotate-90 text-surface-container-low" viewbox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="48" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-primary transition-all duration-1000 ease-linear" cx="50" cy="50" fill="none" id="timer-progress" r="48" stroke="currentColor" stroke-dasharray="301.59" stroke-dashoffset="0" stroke-width="2"></circle>
+</svg>
+<!-- Time Display -->
+<div class="font-numeral-mono text-[40px] leading-none text-text-primary tracking-tighter">
+<span id="time-display">10:00</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-text-muted mb-stack-lg max-w-[280px]">
+                什么都不用做，只是呼吸。
+            </p>
+<button class="mt-stack-md px-6 py-3 border border-border-subtle text-text-primary rounded-full font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container-low active:scale-95 transition-all" onclick="addTime()">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                再加 10 分钟
+            </button>
+</div>
+</main>
+<script>
+        // State Management
+        let currentStep = 1;
+        let timerInterval;
+        let timeLeft = 600; // 10 minutes in seconds
+        const totalTimeInitial = 600;
+        
+        // Navigation Functions
+        function nextStep(step) {
+            document.getElementById(`step-${currentStep}`).classList.remove('step-visible');
+            document.getElementById(`step-${currentStep}`).classList.add('step-hidden');
+            
+            currentStep = step;
+            
+            setTimeout(() => {
+                document.getElementById(`step-${currentStep}`).classList.remove('step-hidden');
+                document.getElementById(`step-${currentStep}`).classList.add('step-visible');
+            }, 50); // slight delay to allow display:none to swap before opacity transition
+        }
+
+        // Step 2 Logic
+        function selectLocation(element) {
+            // Reset all
+            document.querySelectorAll('.location-btn').forEach(btn => {
+                btn.classList.remove('border-primary', 'bg-primary-fixed/20');
+                btn.classList.add('border-border-subtle', 'bg-surface-card');
+                btn.querySelector('.material-symbols-outlined').classList.remove('filled', 'text-primary');
+                btn.querySelector('.material-symbols-outlined').classList.add('text-tertiary');
+            });
+
+            // Highlight selected
+            element.classList.remove('border-border-subtle', 'bg-surface-card');
+            element.classList.add('border-primary', 'bg-primary-fixed/20');
+            element.querySelector('.material-symbols-outlined').classList.add('filled', 'text-primary');
+            element.querySelector('.material-symbols-outlined').classList.remove('text-tertiary');
+
+            // Show next button
+            const nextBtn = document.getElementById('btn-to-step-3');
+            nextBtn.classList.remove('opacity-0', 'pointer-events-none');
+            nextBtn.classList.add('opacity-100', 'pointer-events-auto');
+        }
+
+        // Step 3 Logic (Timer)
+        function startTimer() {
+            nextStep(3);
+            updateTimerDisplay();
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    updateTimerProgress();
+                } else {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('time-display').innerText = display;
+        }
+
+        function updateTimerProgress() {
+            const circle = document.getElementById('timer-progress');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            
+            // Assuming total time is the current session total (could be > 10m if added)
+            // For visual simplicity, we base it on a 10m cycle or total remaining
+            const offset = circumference - (timeLeft / totalTimeInitial) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }
+
+        function addTime() {
+            timeLeft += 600; // Add 10 minutes
+            updateTimerDisplay();
+            // Reset visual circle roughly
+            document.getElementById('timer-progress').style.strokeDashoffset = 0;
+        }
+    </script>
+</body></html>

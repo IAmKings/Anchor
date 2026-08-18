@@ -1,0 +1,22 @@
+{
+  "id": "405461ee4c9b43b08a907aeaa8ce5082",
+  "name": "projects/4724290021803215791/screens/405461ee4c9b43b08a907aeaa8ce5082",
+  "title": "Anchor App Icon",
+  "category": "00-brand-assets",
+  "categoryLabel": "品牌与技术素材",
+  "deviceType": null,
+  "width": "1024",
+  "height": "1024",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/405461ee4c9b43b08a907aeaa8ce5082/fileEntries/screenshot",
+    "htmlCode": null
+  },
+  "local": {
+    "screenshot": "design/00-brand-assets/Anchor-App-Icon__405461ee.png",
+    "html": null
+  },
+  "errors": {},
+  "unavailable": [
+    "html"
+  ]
+}

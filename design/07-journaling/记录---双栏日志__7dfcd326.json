@@ -1,0 +1,20 @@
+{
+  "id": "7dfcd326ff0840698b7e421c76ad33a7",
+  "name": "projects/4724290021803215791/screens/7dfcd326ff0840698b7e421c76ad33a7",
+  "title": "记录 - 双栏日志",
+  "category": "07-journaling",
+  "categoryLabel": "记录与双栏日志",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "2596",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/7dfcd326ff0840698b7e421c76ad33a7/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/7dfcd326ff0840698b7e421c76ad33a7/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/07-journaling/记录---双栏日志__7dfcd326.png",
+    "html": "design/07-journaling/记录---双栏日志__7dfcd326.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

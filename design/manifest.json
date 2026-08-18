@@ -1,0 +1,1487 @@
+{
+  "project": {
+    "id": "4724290021803215791",
+    "name": "projects/4724290021803215791",
+    "title": "Anchor",
+    "updateTime": "2026-08-15T12:49:48.717502Z"
+  },
+  "resourceCount": 73,
+  "resources": [
+    {
+      "id": "405461ee4c9b43b08a907aeaa8ce5082",
+      "name": "projects/4724290021803215791/screens/405461ee4c9b43b08a907aeaa8ce5082",
+      "title": "Anchor App Icon",
+      "category": "00-brand-assets",
+      "categoryLabel": "品牌与技术素材",
+      "deviceType": null,
+      "width": "1024",
+      "height": "1024",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/405461ee4c9b43b08a907aeaa8ce5082/fileEntries/screenshot",
+        "htmlCode": null
+      },
+      "local": {
+        "screenshot": "design/00-brand-assets/Anchor-App-Icon__405461ee.png",
+        "html": null
+      },
+      "errors": {},
+      "unavailable": [
+        "html"
+      ]
+    },
+    {
+      "id": "9585b03ddb9141aaa7b5f928a1512bdb",
+      "name": "projects/4724290021803215791/screens/9585b03ddb9141aaa7b5f928a1512bdb",
+      "title": "Animated SVG",
+      "category": "00-brand-assets",
+      "categoryLabel": "品牌与技术素材",
+      "deviceType": null,
+      "width": "512",
+      "height": "512",
+      "source": {
+        "screenshot": null,
+        "htmlCode": "projects/4724290021803215791/screens/9585b03ddb9141aaa7b5f928a1512bdb/fileEntries/html"
+      },
+      "local": {
+        "screenshot": null,
+        "html": "design/00-brand-assets/Animated-SVG__9585b03d.html"
+      },
+      "errors": {},
+      "unavailable": [
+        "screenshot"
+      ]
+    },
+    {
+      "id": "5b8612e3bc0743f9b215429777839777",
+      "name": "projects/4724290021803215791/screens/5b8612e3bc0743f9b215429777839777",
+      "title": "Shader",
+      "category": "00-brand-assets",
+      "categoryLabel": "品牌与技术素材",
+      "deviceType": null,
+      "width": "512",
+      "height": "512",
+      "source": {
+        "screenshot": null,
+        "htmlCode": "projects/4724290021803215791/screens/5b8612e3bc0743f9b215429777839777/fileEntries/html"
+      },
+      "local": {
+        "screenshot": null,
+        "html": "design/00-brand-assets/Shader__5b8612e3.html"
+      },
+      "errors": {},
+      "unavailable": [
+        "screenshot"
+      ]
+    },
+    {
+      "id": "a80ba06220b542bbbb880eca2903babc",
+      "name": "projects/4724290021803215791/screens/a80ba06220b542bbbb880eca2903babc",
+      "title": "Shader",
+      "category": "00-brand-assets",
+      "categoryLabel": "品牌与技术素材",
+      "deviceType": null,
+      "width": "512",
+      "height": "512",
+      "source": {
+        "screenshot": null,
+        "htmlCode": "projects/4724290021803215791/screens/a80ba06220b542bbbb880eca2903babc/fileEntries/html"
+      },
+      "local": {
+        "screenshot": null,
+        "html": "design/00-brand-assets/Shader__a80ba062.html"
+      },
+      "errors": {},
+      "unavailable": [
+        "screenshot"
+      ]
+    },
+    {
+      "id": "a9a4b477ce044e708242a281a9aa34df",
+      "name": "projects/4724290021803215791/screens/a9a4b477ce044e708242a281a9aa34df",
+      "title": "Shader",
+      "category": "00-brand-assets",
+      "categoryLabel": "品牌与技术素材",
+      "deviceType": null,
+      "width": "512",
+      "height": "512",
+      "source": {
+        "screenshot": null,
+        "htmlCode": "projects/4724290021803215791/screens/a9a4b477ce044e708242a281a9aa34df/fileEntries/html"
+      },
+      "local": {
+        "screenshot": null,
+        "html": "design/00-brand-assets/Shader__a9a4b477.html"
+      },
+      "errors": {},
+      "unavailable": [
+        "screenshot"
+      ]
+    },
+    {
+      "id": "c4106d1eb3be4d2eac6cbca04626f656",
+      "name": "projects/4724290021803215791/screens/c4106d1eb3be4d2eac6cbca04626f656",
+      "title": "Shader",
+      "category": "00-brand-assets",
+      "categoryLabel": "品牌与技术素材",
+      "deviceType": null,
+      "width": "512",
+      "height": "512",
+      "source": {
+        "screenshot": null,
+        "htmlCode": "projects/4724290021803215791/screens/c4106d1eb3be4d2eac6cbca04626f656/fileEntries/html"
+      },
+      "local": {
+        "screenshot": null,
+        "html": "design/00-brand-assets/Shader__c4106d1e.html"
+      },
+      "errors": {},
+      "unavailable": [
+        "screenshot"
+      ]
+    },
+    {
+      "id": "b100228f85c94b109d812fd62868b3d7",
+      "name": "projects/4724290021803215791/screens/b100228f85c94b109d812fd62868b3d7",
+      "title": "GAD-7 广泛焦虑评估",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3452",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/b100228f85c94b109d812fd62868b3d7/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/b100228f85c94b109d812fd62868b3d7/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/GAD-7-广泛焦虑评估__b100228f.png",
+        "html": "design/01-onboarding-assessment/GAD-7-广泛焦虑评估__b100228f.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "e9bbd6650ebb48cdaf2c504e8f798523",
+      "name": "projects/4724290021803215791/screens/e9bbd6650ebb48cdaf2c504e8f798523",
+      "title": "PHQ-9 量表评估",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3824",
+      "source": {
+        "screenshot": "projects/4724290021803215791/files/7667718933869362508",
+        "htmlCode": "projects/4724290021803215791/files/1790391911046444084"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/PHQ-9-量表评估__e9bbd665.png",
+        "html": "design/01-onboarding-assessment/PHQ-9-量表评估__e9bbd665.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "a77c3bc778c5492cb94978351ffc38e8",
+      "name": "projects/4724290021803215791/screens/a77c3bc778c5492cb94978351ffc38e8",
+      "title": "PHQ-9 量表评估 (带跳转逻辑)",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3824",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/a77c3bc778c5492cb94978351ffc38e8/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/a77c3bc778c5492cb94978351ffc38e8/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/PHQ-9-量表评估-(带跳转逻辑)__a77c3bc7.png",
+        "html": "design/01-onboarding-assessment/PHQ-9-量表评估-(带跳转逻辑)__a77c3bc7.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "09120e044e4f43afbc132596693129dc",
+      "name": "projects/4724290021803215791/screens/09120e044e4f43afbc132596693129dc",
+      "title": "复评结果与趋势分析",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2256",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/09120e044e4f43afbc132596693129dc/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/09120e044e4f43afbc132596693129dc/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/复评结果与趋势分析__09120e04.png",
+        "html": "design/01-onboarding-assessment/复评结果与趋势分析__09120e04.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "384b9cd4f0e44103bfbf6c839627e295",
+      "name": "projects/4724290021803215791/screens/384b9cd4f0e44103bfbf6c839627e295",
+      "title": "评估提交中 - 缓冲页",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/384b9cd4f0e44103bfbf6c839627e295/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/384b9cd4f0e44103bfbf6c839627e295/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/评估提交中---缓冲页__384b9cd4.png",
+        "html": "design/01-onboarding-assessment/评估提交中---缓冲页__384b9cd4.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "5bdd9c345dc94371b39332eb9fd4e508",
+      "name": "projects/4724290021803215791/screens/5bdd9c345dc94371b39332eb9fd4e508",
+      "title": "评估提交中 - 自动跳转缓冲页",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/5bdd9c345dc94371b39332eb9fd4e508/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/5bdd9c345dc94371b39332eb9fd4e508/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/评估提交中---自动跳转缓冲页__5bdd9c34.png",
+        "html": "design/01-onboarding-assessment/评估提交中---自动跳转缓冲页__5bdd9c34.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "5571e85fc92d4906975e65f7fa730ad8",
+      "name": "projects/4724290021803215791/screens/5571e85fc92d4906975e65f7fa730ad8",
+      "title": "评估结果 - 中重度 (触发干预)",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2730",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/5571e85fc92d4906975e65f7fa730ad8/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/5571e85fc92d4906975e65f7fa730ad8/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/评估结果---中重度-(触发干预)__5571e85f.png",
+        "html": "design/01-onboarding-assessment/评估结果---中重度-(触发干预)__5571e85f.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "327359684c4f4223aa1349a6fe7a8b30",
+      "name": "projects/4724290021803215791/screens/327359684c4f4223aa1349a6fe7a8b30",
+      "title": "评估结果 - 轻度 (引导练习)",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1772",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/327359684c4f4223aa1349a6fe7a8b30/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/327359684c4f4223aa1349a6fe7a8b30/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/评估结果---轻度-(引导练习)__32735968.png",
+        "html": "design/01-onboarding-assessment/评估结果---轻度-(引导练习)__32735968.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "698ed3adfd6941b08e6a9c70a1633e80",
+      "name": "projects/4724290021803215791/screens/698ed3adfd6941b08e6a9c70a1633e80",
+      "title": "评估结果 - 轻度引导 (中文版)",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2186",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/698ed3adfd6941b08e6a9c70a1633e80/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/698ed3adfd6941b08e6a9c70a1633e80/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/评估结果---轻度引导-(中文版)__698ed3ad.png",
+        "html": "design/01-onboarding-assessment/评估结果---轻度引导-(中文版)__698ed3ad.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "59d53b5409f5462cbb5644720e4b4080",
+      "name": "projects/4724290021803215791/screens/59d53b5409f5462cbb5644720e4b4080",
+      "title": "评估结果展示页",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2916",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/59d53b5409f5462cbb5644720e4b4080/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/59d53b5409f5462cbb5644720e4b4080/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/评估结果展示页__59d53b54.png",
+        "html": "design/01-onboarding-assessment/评估结果展示页__59d53b54.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "bb047f265a274aaca3aa0efab05c281b",
+      "name": "projects/4724290021803215791/screens/bb047f265a274aaca3aa0efab05c281b",
+      "title": "首启引导 - 挑选第一个锚点动作",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2488",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/bb047f265a274aaca3aa0efab05c281b/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/bb047f265a274aaca3aa0efab05c281b/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/首启引导---挑选第一个锚点动作__bb047f26.png",
+        "html": "design/01-onboarding-assessment/首启引导---挑选第一个锚点动作__bb047f26.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "aa12ee4bef024d3aaa04e95248d370f8",
+      "name": "projects/4724290021803215791/screens/aa12ee4bef024d3aaa04e95248d370f8",
+      "title": "首启欢迎 - 年龄确认与基线评估入口",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/aa12ee4bef024d3aaa04e95248d370f8/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/aa12ee4bef024d3aaa04e95248d370f8/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/首启欢迎---年龄确认与基线评估入口__aa12ee4b.png",
+        "html": "design/01-onboarding-assessment/首启欢迎---年龄确认与基线评估入口__aa12ee4b.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "99d0bbfb7f55477b9e7a9bfbbc741139",
+      "name": "projects/4724290021803215791/screens/99d0bbfb7f55477b9e7a9bfbbc741139",
+      "title": "首启评估 - PHQ-9 基线测评",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/99d0bbfb7f55477b9e7a9bfbbc741139/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/99d0bbfb7f55477b9e7a9bfbbc741139/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/首启评估---PHQ-9-基线测评__99d0bbfb.png",
+        "html": "design/01-onboarding-assessment/首启评估---PHQ-9-基线测评__99d0bbfb.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "66dae04b1fb54769bb986009e488e46b",
+      "name": "projects/4724290021803215791/screens/66dae04b1fb54769bb986009e488e46b",
+      "title": "首次复评邀请与进度对比",
+      "category": "01-onboarding-assessment",
+      "categoryLabel": "首启、量表与复评",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2784",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/66dae04b1fb54769bb986009e488e46b/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/66dae04b1fb54769bb986009e488e46b/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/01-onboarding-assessment/首次复评邀请与进度对比__66dae04b.png",
+        "html": "design/01-onboarding-assessment/首次复评邀请与进度对比__66dae04b.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "40c9003b8cb94e78b521533c7017a0cf",
+      "name": "projects/4724290021803215791/screens/40c9003b8cb94e78b521533c7017a0cf",
+      "title": "首页 - 今天",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1964",
+      "source": {
+        "screenshot": "projects/4724290021803215791/files/1078603383510299318",
+        "htmlCode": "projects/4724290021803215791/files/5981387347704705902"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---今天__40c9003b.png",
+        "html": "design/02-home-daily/首页---今天__40c9003b.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "17100cc46a0440e2afba93ee062e1c68",
+      "name": "projects/4724290021803215791/screens/17100cc46a0440e2afba93ee062e1c68",
+      "title": "首页 - 今天 (中文版)",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1914",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/17100cc46a0440e2afba93ee062e1c68/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/17100cc46a0440e2afba93ee062e1c68/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---今天-(中文版)__17100cc4.png",
+        "html": "design/02-home-daily/首页---今天-(中文版)__17100cc4.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "2f7990bc48f54b7bb44746a1b133563f",
+      "name": "projects/4724290021803215791/screens/2f7990bc48f54b7bb44746a1b133563f",
+      "title": "首页 - 今天 (优化版)",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1964",
+      "source": {
+        "screenshot": "projects/4724290021803215791/files/5244504849627547375",
+        "htmlCode": "projects/4724290021803215791/files/10622806008126009593"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---今天-(优化版)__2f7990bc.png",
+        "html": "design/02-home-daily/首页---今天-(优化版)__2f7990bc.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "63a31c9051694d4bbdb9be016c5d2ca0",
+      "name": "projects/4724290021803215791/screens/63a31c9051694d4bbdb9be016c5d2ca0",
+      "title": "首页 - 今天 (动作同步后)",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1964",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/63a31c9051694d4bbdb9be016c5d2ca0/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/63a31c9051694d4bbdb9be016c5d2ca0/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---今天-(动作同步后)__63a31c90.png",
+        "html": "design/02-home-daily/首页---今天-(动作同步后)__63a31c90.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "96946593729c4e79bee30b024d0ea849",
+      "name": "projects/4724290021803215791/screens/96946593729c4e79bee30b024d0ea849",
+      "title": "首页 - 今天 (能量回血反馈)",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2448",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/96946593729c4e79bee30b024d0ea849/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/96946593729c4e79bee30b024d0ea849/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---今天-(能量回血反馈)__96946593.png",
+        "html": "design/02-home-daily/首页---今天-(能量回血反馈)__96946593.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "3549f618836e4dbf9af635ab8dce276c",
+      "name": "projects/4724290021803215791/screens/3549f618836e4dbf9af635ab8dce276c",
+      "title": "首页 - 今天 (能量抽干反馈)",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2442",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/3549f618836e4dbf9af635ab8dce276c/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/3549f618836e4dbf9af635ab8dce276c/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---今天-(能量抽干反馈)__3549f618.png",
+        "html": "design/02-home-daily/首页---今天-(能量抽干反馈)__3549f618.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "faf2fb76ee9d41e1a1dbe4dd77462ab1",
+      "name": "projects/4724290021803215791/screens/faf2fb76ee9d41e1a1dbe4dd77462ab1",
+      "title": "首页 - 利他任务动态优化 (社交耗竭态 - 深度版)",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2672",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/faf2fb76ee9d41e1a1dbe4dd77462ab1/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/faf2fb76ee9d41e1a1dbe4dd77462ab1/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---利他任务动态优化-(社交耗竭态---深度版)__faf2fb76.png",
+        "html": "design/02-home-daily/首页---利他任务动态优化-(社交耗竭态---深度版)__faf2fb76.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "ae0f26bbba5f408cbfa8745268f4e3f5",
+      "name": "projects/4724290021803215791/screens/ae0f26bbba5f408cbfa8745268f4e3f5",
+      "title": "首页 - 利他任务动态优化 (社交耗竭态)",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2672",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/ae0f26bbba5f408cbfa8745268f4e3f5/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/ae0f26bbba5f408cbfa8745268f4e3f5/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---利他任务动态优化-(社交耗竭态)__ae0f26bb.png",
+        "html": "design/02-home-daily/首页---利他任务动态优化-(社交耗竭态)__ae0f26bb.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "32e196b08c454b41a596a72a96967096",
+      "name": "projects/4724290021803215791/screens/32e196b08c454b41a596a72a96967096",
+      "title": "首页 - 回归练习模式 (解锁后)",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2236",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/32e196b08c454b41a596a72a96967096/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/32e196b08c454b41a596a72a96967096/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---回归练习模式-(解锁后)__32e196b0.png",
+        "html": "design/02-home-daily/首页---回归练习模式-(解锁后)__32e196b0.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "230f079b653e4cb18442d0cf1e3f5cad",
+      "name": "projects/4724290021803215791/screens/230f079b653e4cb18442d0cf1e3f5cad",
+      "title": "首页 - 就医等待期模式",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2778",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/230f079b653e4cb18442d0cf1e3f5cad/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/230f079b653e4cb18442d0cf1e3f5cad/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---就医等待期模式__230f079b.png",
+        "html": "design/02-home-daily/首页---就医等待期模式__230f079b.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "b7b22d9ffbc842fdabedf3259e4d66f1",
+      "name": "projects/4724290021803215791/screens/b7b22d9ffbc842fdabedf3259e4d66f1",
+      "title": "首页 - 就医等待期模式 (中文版)",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2408",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/b7b22d9ffbc842fdabedf3259e4d66f1/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/b7b22d9ffbc842fdabedf3259e4d66f1/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---就医等待期模式-(中文版)__b7b22d9f.png",
+        "html": "design/02-home-daily/首页---就医等待期模式-(中文版)__b7b22d9f.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "0de6f95b50ba4f74bbb45f5f2d03c3a3",
+      "name": "projects/4724290021803215791/screens/0de6f95b50ba4f74bbb45f5f2d03c3a3",
+      "title": "首页 - 微行动计时中状态",
+      "category": "02-home-daily",
+      "categoryLabel": "首页与日常状态",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2052",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/0de6f95b50ba4f74bbb45f5f2d03c3a3/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/0de6f95b50ba4f74bbb45f5f2d03c3a3/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/02-home-daily/首页---微行动计时中状态__0de6f95b.png",
+        "html": "design/02-home-daily/首页---微行动计时中状态__0de6f95b.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "536e15e323ae407bbe0b536938c00a59",
+      "name": "projects/4724290021803215791/screens/536e15e323ae407bbe0b536938c00a59",
+      "title": "微行动 - 5分钟计时进行中",
+      "category": "03-micro-actions",
+      "categoryLabel": "微行动流程",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/536e15e323ae407bbe0b536938c00a59/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/536e15e323ae407bbe0b536938c00a59/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/03-micro-actions/微行动---5分钟计时进行中__536e15e3.png",
+        "html": "design/03-micro-actions/微行动---5分钟计时进行中__536e15e3.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "8dcb8d9b79a743d39e6b8b129450d387",
+      "name": "projects/4724290021803215791/screens/8dcb8d9b79a743d39e6b8b129450d387",
+      "title": "微行动完成 - 历史证据记录",
+      "category": "03-micro-actions",
+      "categoryLabel": "微行动流程",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3980",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/8dcb8d9b79a743d39e6b8b129450d387/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/8dcb8d9b79a743d39e6b8b129450d387/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/03-micro-actions/微行动完成---历史证据记录__8dcb8d9b.png",
+        "html": "design/03-micro-actions/微行动完成---历史证据记录__8dcb8d9b.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "c97a69be06674c75a9e478e0453bacde",
+      "name": "projects/4724290021803215791/screens/c97a69be06674c75a9e478e0453bacde",
+      "title": "微行动完成 - 历史证据记录 (中文版)",
+      "category": "03-micro-actions",
+      "categoryLabel": "微行动流程",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3892",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/c97a69be06674c75a9e478e0453bacde/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/c97a69be06674c75a9e478e0453bacde/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/03-micro-actions/微行动完成---历史证据记录-(中文版)__c97a69be.png",
+        "html": "design/03-micro-actions/微行动完成---历史证据记录-(中文版)__c97a69be.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "0b2a6df3aa23440e955203f2d341ff8e",
+      "name": "projects/4724290021803215791/screens/0b2a6df3aa23440e955203f2d341ff8e",
+      "title": "微行动完成 - 预测 vs 实际对比",
+      "category": "03-micro-actions",
+      "categoryLabel": "微行动流程",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2772",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/0b2a6df3aa23440e955203f2d341ff8e/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/0b2a6df3aa23440e955203f2d341ff8e/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/03-micro-actions/微行动完成---预测-vs-实际对比__0b2a6df3.png",
+        "html": "design/03-micro-actions/微行动完成---预测-vs-实际对比__0b2a6df3.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "35e051c69c984c00abc4dcbcd0e6959f",
+      "name": "projects/4724290021803215791/screens/35e051c69c984c00abc4dcbcd0e6959f",
+      "title": "微行动完成 - 预测 vs 实际对比 (优化版)",
+      "category": "03-micro-actions",
+      "categoryLabel": "微行动流程",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2230",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/35e051c69c984c00abc4dcbcd0e6959f/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/35e051c69c984c00abc4dcbcd0e6959f/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/03-micro-actions/微行动完成---预测-vs-实际对比-(优化版)__35e051c6.png",
+        "html": "design/03-micro-actions/微行动完成---预测-vs-实际对比-(优化版)__35e051c6.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "bc1c981cb2b24facb7027895028ea85d",
+      "name": "projects/4724290021803215791/screens/bc1c981cb2b24facb7027895028ea85d",
+      "title": "微行动完成 - 预测 vs 实际对比 (深度优化版)",
+      "category": "03-micro-actions",
+      "categoryLabel": "微行动流程",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2546",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/bc1c981cb2b24facb7027895028ea85d/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/bc1c981cb2b24facb7027895028ea85d/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/03-micro-actions/微行动完成---预测-vs-实际对比-(深度优化版)__bc1c981c.png",
+        "html": "design/03-micro-actions/微行动完成---预测-vs-实际对比-(深度优化版)__bc1c981c.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "400adf4ca0344f89935cf9c5179d4f06",
+      "name": "projects/4724290021803215791/screens/400adf4ca0344f89935cf9c5179d4f06",
+      "title": "挑选微行动 - 个性化推荐 (中文版)",
+      "category": "03-micro-actions",
+      "categoryLabel": "微行动流程",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2502",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/400adf4ca0344f89935cf9c5179d4f06/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/400adf4ca0344f89935cf9c5179d4f06/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/03-micro-actions/挑选微行动---个性化推荐-(中文版)__400adf4c.png",
+        "html": "design/03-micro-actions/挑选微行动---个性化推荐-(中文版)__400adf4c.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "976b410dbdc540188d9e50cf3f5d5836",
+      "name": "projects/4724290021803215791/screens/976b410dbdc540188d9e50cf3f5d5836",
+      "title": "挑选新微行动 - 预设库与自定义",
+      "category": "03-micro-actions",
+      "categoryLabel": "微行动流程",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2790",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/976b410dbdc540188d9e50cf3f5d5836/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/976b410dbdc540188d9e50cf3f5d5836/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/03-micro-actions/挑选新微行动---预设库与自定义__976b410d.png",
+        "html": "design/03-micro-actions/挑选新微行动---预设库与自定义__976b410d.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "5f70ef17076047c0b6fbfd4e4b25e1eb",
+      "name": "projects/4724290021803215791/screens/5f70ef17076047c0b6fbfd4e4b25e1eb",
+      "title": "忧虑专场 - 开箱概览",
+      "category": "04-worry-vault",
+      "categoryLabel": "忧虑保险箱与忧虑专场",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2028",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/5f70ef17076047c0b6fbfd4e4b25e1eb/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/5f70ef17076047c0b6fbfd4e4b25e1eb/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/04-worry-vault/忧虑专场---开箱概览__5f70ef17.png",
+        "html": "design/04-worry-vault/忧虑专场---开箱概览__5f70ef17.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "8d5e6f676be5401a8f454c09dfdd61bf",
+      "name": "projects/4724290021803215791/screens/8d5e6f676be5401a8f454c09dfdd61bf",
+      "title": "忧虑专场 - 开箱概览",
+      "category": "04-worry-vault",
+      "categoryLabel": "忧虑保险箱与忧虑专场",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2028",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/8d5e6f676be5401a8f454c09dfdd61bf/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/8d5e6f676be5401a8f454c09dfdd61bf/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/04-worry-vault/忧虑专场---开箱概览__8d5e6f67.png",
+        "html": "design/04-worry-vault/忧虑专场---开箱概览__8d5e6f67.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "274214f33e5f44268a769c36cbc89e1c",
+      "name": "projects/4724290021803215791/screens/274214f33e5f44268a769c36cbc89e1c",
+      "title": "忧虑处理 - 三选一交互",
+      "category": "04-worry-vault",
+      "categoryLabel": "忧虑保险箱与忧虑专场",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/274214f33e5f44268a769c36cbc89e1c/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/274214f33e5f44268a769c36cbc89e1c/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/04-worry-vault/忧虑处理---三选一交互__274214f3.png",
+        "html": "design/04-worry-vault/忧虑处理---三选一交互__274214f3.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "3dc367bd739e486da2202e56ed9a0918",
+      "name": "projects/4724290021803215791/screens/3dc367bd739e486da2202e56ed9a0918",
+      "title": "忧虑处理 - 归档动效增强版",
+      "category": "04-worry-vault",
+      "categoryLabel": "忧虑保险箱与忧虑专场",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2028",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/3dc367bd739e486da2202e56ed9a0918/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/3dc367bd739e486da2202e56ed9a0918/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/04-worry-vault/忧虑处理---归档动效增强版__3dc367bd.png",
+        "html": "design/04-worry-vault/忧虑处理---归档动效增强版__3dc367bd.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "521ff171983449ae97e186988a0eb6b7",
+      "name": "projects/4724290021803215791/screens/521ff171983449ae97e186988a0eb6b7",
+      "title": "忧虑处理完成 - 宁静反馈",
+      "category": "04-worry-vault",
+      "categoryLabel": "忧虑保险箱与忧虑专场",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/521ff171983449ae97e186988a0eb6b7/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/521ff171983449ae97e186988a0eb6b7/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/04-worry-vault/忧虑处理完成---宁静反馈__521ff171.png",
+        "html": "design/04-worry-vault/忧虑处理完成---宁静反馈__521ff171.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "5b752ae7e6114e58819761564eee3c23",
+      "name": "projects/4724290021803215791/screens/5b752ae7e6114e58819761564eee3c23",
+      "title": "忧虑处理完成反馈",
+      "category": "04-worry-vault",
+      "categoryLabel": "忧虑保险箱与忧虑专场",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/5b752ae7e6114e58819761564eee3c23/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/5b752ae7e6114e58819761564eee3c23/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/04-worry-vault/忧虑处理完成反馈__5b752ae7.png",
+        "html": "design/04-worry-vault/忧虑处理完成反馈__5b752ae7.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "4e54b9dfe7824b3cb4cf98bc6f040c26",
+      "name": "projects/4724290021803215791/screens/4e54b9dfe7824b3cb4cf98bc6f040c26",
+      "title": "忧虑转化 - 确定微行动",
+      "category": "04-worry-vault",
+      "categoryLabel": "忧虑保险箱与忧虑专场",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/4e54b9dfe7824b3cb4cf98bc6f040c26/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/4e54b9dfe7824b3cb4cf98bc6f040c26/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/04-worry-vault/忧虑转化---确定微行动__4e54b9df.png",
+        "html": "design/04-worry-vault/忧虑转化---确定微行动__4e54b9df.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "45f18680f0194a42896682f15ae2f058",
+      "name": "projects/4724290021803215791/screens/45f18680f0194a42896682f15ae2f058",
+      "title": "关系耗竭 - 动态干预方案",
+      "category": "05-relationships-altruism",
+      "categoryLabel": "关系能量、表演耗竭与利他任务",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2996",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/45f18680f0194a42896682f15ae2f058/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/45f18680f0194a42896682f15ae2f058/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/05-relationships-altruism/关系耗竭---动态干预方案__45f18680.png",
+        "html": "design/05-relationships-altruism/关系耗竭---动态干预方案__45f18680.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "1d634aaa4c7d4e91891fa86effc0de95",
+      "name": "projects/4724290021803215791/screens/1d634aaa4c7d4e91891fa86effc0de95",
+      "title": "关系耗竭自测 - 表演盘点",
+      "category": "05-relationships-altruism",
+      "categoryLabel": "关系能量、表演耗竭与利他任务",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3058",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/1d634aaa4c7d4e91891fa86effc0de95/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/1d634aaa4c7d4e91891fa86effc0de95/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/05-relationships-altruism/关系耗竭自测---表演盘点__1d634aaa.png",
+        "html": "design/05-relationships-altruism/关系耗竭自测---表演盘点__1d634aaa.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "7a714d6d93f342f28fa31c6473a52351",
+      "name": "projects/4724290021803215791/screens/7a714d6d93f342f28fa31c6473a52351",
+      "title": "关系记录 - 能量账本",
+      "category": "05-relationships-altruism",
+      "categoryLabel": "关系能量、表演耗竭与利他任务",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/7a714d6d93f342f28fa31c6473a52351/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/7a714d6d93f342f28fa31c6473a52351/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/05-relationships-altruism/关系记录---能量账本__7a714d6d.png",
+        "html": "design/05-relationships-altruism/关系记录---能量账本__7a714d6d.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "028caa5baafb4dbba5731f73908b65d7",
+      "name": "projects/4724290021803215791/screens/028caa5baafb4dbba5731f73908b65d7",
+      "title": "利他任务 - 外向聚焦抽卡",
+      "category": "05-relationships-altruism",
+      "categoryLabel": "关系能量、表演耗竭与利他任务",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/028caa5baafb4dbba5731f73908b65d7/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/028caa5baafb4dbba5731f73908b65d7/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/05-relationships-altruism/利他任务---外向聚焦抽卡__028caa5b.png",
+        "html": "design/05-relationships-altruism/利他任务---外向聚焦抽卡__028caa5b.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "0201776e1ded4f3eab64eb51c249dfa8",
+      "name": "projects/4724290021803215791/screens/0201776e1ded4f3eab64eb51c249dfa8",
+      "title": "洞察 - 3个月移动平均趋势统计",
+      "category": "06-insights",
+      "categoryLabel": "洞察与趋势",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2070",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/0201776e1ded4f3eab64eb51c249dfa8/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/0201776e1ded4f3eab64eb51c249dfa8/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/06-insights/洞察---3个月移动平均趋势统计__0201776e.png",
+        "html": "design/06-insights/洞察---3个月移动平均趋势统计__0201776e.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "9ae6f84f29fd41588723f372253ff510",
+      "name": "projects/4724290021803215791/screens/9ae6f84f29fd41588723f372253ff510",
+      "title": "洞察 - 关系能量统计",
+      "category": "06-insights",
+      "categoryLabel": "洞察与趋势",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2358",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/9ae6f84f29fd41588723f372253ff510/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/9ae6f84f29fd41588723f372253ff510/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/06-insights/洞察---关系能量统计__9ae6f84f.png",
+        "html": "design/06-insights/洞察---关系能量统计__9ae6f84f.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "35e038ffac9d4d4b9c8ae23de6e5228b",
+      "name": "projects/4724290021803215791/screens/35e038ffac9d4d4b9c8ae23de6e5228b",
+      "title": "洞察 - 利他任务周期反馈",
+      "category": "06-insights",
+      "categoryLabel": "洞察与趋势",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1980",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/35e038ffac9d4d4b9c8ae23de6e5228b/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/35e038ffac9d4d4b9c8ae23de6e5228b/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/06-insights/洞察---利他任务周期反馈__35e038ff.png",
+        "html": "design/06-insights/洞察---利他任务周期反馈__35e038ff.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "1820ffe5bb4044ca8c2535ddf67ae1bc",
+      "name": "projects/4724290021803215791/screens/1820ffe5bb4044ca8c2535ddf67ae1bc",
+      "title": "洞察 - 忧虑保险箱统计",
+      "category": "06-insights",
+      "categoryLabel": "洞察与趋势",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3382",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/1820ffe5bb4044ca8c2535ddf67ae1bc/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/1820ffe5bb4044ca8c2535ddf67ae1bc/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/06-insights/洞察---忧虑保险箱统计__1820ffe5.png",
+        "html": "design/06-insights/洞察---忧虑保险箱统计__1820ffe5.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "f9c3e89ab81a4544b3150b148ed7ae2a",
+      "name": "projects/4724290021803215791/screens/f9c3e89ab81a4544b3150b148ed7ae2a",
+      "title": "洞察 - 忧虑保险箱统计 (优化版)",
+      "category": "06-insights",
+      "categoryLabel": "洞察与趋势",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2834",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/f9c3e89ab81a4544b3150b148ed7ae2a/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/f9c3e89ab81a4544b3150b148ed7ae2a/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/06-insights/洞察---忧虑保险箱统计-(优化版)__f9c3e89a.png",
+        "html": "design/06-insights/洞察---忧虑保险箱统计-(优化版)__f9c3e89a.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "7dfcd326ff0840698b7e421c76ad33a7",
+      "name": "projects/4724290021803215791/screens/7dfcd326ff0840698b7e421c76ad33a7",
+      "title": "记录 - 双栏日志",
+      "category": "07-journaling",
+      "categoryLabel": "记录与双栏日志",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2596",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/7dfcd326ff0840698b7e421c76ad33a7/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/7dfcd326ff0840698b7e421c76ad33a7/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/07-journaling/记录---双栏日志__7dfcd326.png",
+        "html": "design/07-journaling/记录---双栏日志__7dfcd326.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "85fa4986378b47129df3a8283a7cf17c",
+      "name": "projects/4724290021803215791/screens/85fa4986378b47129df3a8283a7cf17c",
+      "title": "Medical Guide - USA Version",
+      "category": "08-medical-safety",
+      "categoryLabel": "就医、安全与浪潮等待",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3098",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/85fa4986378b47129df3a8283a7cf17c/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/85fa4986378b47129df3a8283a7cf17c/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/08-medical-safety/Medical-Guide---USA-Version__85fa4986.png",
+        "html": "design/08-medical-safety/Medical-Guide---USA-Version__85fa4986.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "40f8ae926057442f98bdc63ffd531150",
+      "name": "projects/4724290021803215791/screens/40f8ae926057442f98bdc63ffd531150",
+      "title": "危机干预页",
+      "category": "08-medical-safety",
+      "categoryLabel": "就医、安全与浪潮等待",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2824",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/40f8ae926057442f98bdc63ffd531150/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/40f8ae926057442f98bdc63ffd531150/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/08-medical-safety/危机干预页__40f8ae92.png",
+        "html": "design/08-medical-safety/危机干预页__40f8ae92.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "176d77b8a8e144f89279489e076d6b13",
+      "name": "projects/4724290021803215791/screens/176d77b8a8e144f89279489e076d6b13",
+      "title": "就医指南 - 台湾地区版 (TW)",
+      "category": "08-medical-safety",
+      "categoryLabel": "就医、安全与浪潮等待",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2386",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/176d77b8a8e144f89279489e076d6b13/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/176d77b8a8e144f89279489e076d6b13/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/08-medical-safety/就医指南---台湾地区版-(TW)__176d77b8.png",
+        "html": "design/08-medical-safety/就医指南---台湾地区版-(TW)__176d77b8.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "b54ce8fe30554e2787cba6329203e5fe",
+      "name": "projects/4724290021803215791/screens/b54ce8fe30554e2787cba6329203e5fe",
+      "title": "就医指南 - 香港地区版 (HK)",
+      "category": "08-medical-safety",
+      "categoryLabel": "就医、安全与浪潮等待",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2608",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/b54ce8fe30554e2787cba6329203e5fe/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/b54ce8fe30554e2787cba6329203e5fe/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/08-medical-safety/就医指南---香港地区版-(HK)__b54ce8fe.png",
+        "html": "design/08-medical-safety/就医指南---香港地区版-(HK)__b54ce8fe.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "0083cbda31bc4cf683df866e17d34dfb",
+      "name": "projects/4724290021803215791/screens/0083cbda31bc4cf683df866e17d34dfb",
+      "title": "查看就医指南 - 详细引导",
+      "category": "08-medical-safety",
+      "categoryLabel": "就医、安全与浪潮等待",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2470",
+      "source": {
+        "screenshot": "projects/4724290021803215791/files/16993815351923095496",
+        "htmlCode": "projects/4724290021803215791/files/1724326419833943538"
+      },
+      "local": {
+        "screenshot": "design/08-medical-safety/查看就医指南---详细引导__0083cbda.png",
+        "html": "design/08-medical-safety/查看就医指南---详细引导__0083cbda.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "805a53f82b9b4e8aae16d5c0fe2c6276",
+      "name": "projects/4724290021803215791/screens/805a53f82b9b4e8aae16d5c0fe2c6276",
+      "title": "查看就医指南 - 躯体检查清单",
+      "category": "08-medical-safety",
+      "categoryLabel": "就医、安全与浪潮等待",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "3100",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/805a53f82b9b4e8aae16d5c0fe2c6276/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/805a53f82b9b4e8aae16d5c0fe2c6276/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/08-medical-safety/查看就医指南---躯体检查清单__805a53f8.png",
+        "html": "design/08-medical-safety/查看就医指南---躯体检查清单__805a53f8.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "d9c14e9b48c6485cad6cc9e09f258fba",
+      "name": "projects/4724290021803215791/screens/d9c14e9b48c6485cad6cc9e09f258fba",
+      "title": "浪潮等待模式",
+      "category": "08-medical-safety",
+      "categoryLabel": "就医、安全与浪潮等待",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/d9c14e9b48c6485cad6cc9e09f258fba/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/d9c14e9b48c6485cad6cc9e09f258fba/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/08-medical-safety/浪潮等待模式__d9c14e9b.png",
+        "html": "design/08-medical-safety/浪潮等待模式__d9c14e9b.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "e87f691297664ce9944ca0d4c8d554ca",
+      "name": "projects/4724290021803215791/screens/e87f691297664ce9944ca0d4c8d554ca",
+      "title": "导出完成 - 安全分享反馈",
+      "category": "09-settings-export",
+      "categoryLabel": "设置、隐私与导出",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/e87f691297664ce9944ca0d4c8d554ca/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/e87f691297664ce9944ca0d4c8d554ca/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/09-settings-export/导出完成---安全分享反馈__e87f6912.png",
+        "html": "design/09-settings-export/导出完成---安全分享反馈__e87f6912.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "1a56bdeb39fe41c9b0b82be8fd130d33",
+      "name": "projects/4724290021803215791/screens/1a56bdeb39fe41c9b0b82be8fd130d33",
+      "title": "导出报告样例 - 医生视角 (PDF)",
+      "category": "09-settings-export",
+      "categoryLabel": "设置、隐私与导出",
+      "deviceType": "DESKTOP",
+      "width": "2560",
+      "height": "3606",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/1a56bdeb39fe41c9b0b82be8fd130d33/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/1a56bdeb39fe41c9b0b82be8fd130d33/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/09-settings-export/导出报告样例---医生视角-(PDF)__1a56bdeb.png",
+        "html": "design/09-settings-export/导出报告样例---医生视角-(PDF)__1a56bdeb.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "03f9314a31f342729517f757158b99b4",
+      "name": "projects/4724290021803215791/screens/03f9314a31f342729517f757158b99b4",
+      "title": "导出设置 - 加密分享流程",
+      "category": "09-settings-export",
+      "categoryLabel": "设置、隐私与导出",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2356",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/03f9314a31f342729517f757158b99b4/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/03f9314a31f342729517f757158b99b4/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/09-settings-export/导出设置---加密分享流程__03f9314a.png",
+        "html": "design/09-settings-export/导出设置---加密分享流程__03f9314a.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "bf65a3e047304b8d8cafebad7a902303",
+      "name": "projects/4724290021803215791/screens/bf65a3e047304b8d8cafebad7a902303",
+      "title": "设置 - 隐私与数据管理",
+      "category": "09-settings-export",
+      "categoryLabel": "设置、隐私与导出",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2068",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/bf65a3e047304b8d8cafebad7a902303/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/bf65a3e047304b8d8cafebad7a902303/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/09-settings-export/设置---隐私与数据管理__bf65a3e0.png",
+        "html": "design/09-settings-export/设置---隐私与数据管理__bf65a3e0.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "eaa5bb16c4334053bfd237755bdd1b13",
+      "name": "projects/4724290021803215791/screens/eaa5bb16c4334053bfd237755bdd1b13",
+      "title": "A mobile phone lock screen showing a minimalist notification from an app named 'Anchor'. The notification text is blurred or generic like 'Morning Rhythm' to ensure privacy, following desensitization rules. Background is a soft, out-of-focus morning light through a window, calming and serene. Warm earth tones. 4k, high quality.",
+      "category": "10-rhythm-notifications",
+      "categoryLabel": "晨间节律与通知",
+      "deviceType": null,
+      "width": "768",
+      "height": "1376",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/eaa5bb16c4334053bfd237755bdd1b13/fileEntries/screenshot",
+        "htmlCode": null
+      },
+      "local": {
+        "screenshot": "design/10-rhythm-notifications/A-mobile-phone-lock-screen-showing-a-minimalist-notification-fro__eaa5bb16.png",
+        "html": null
+      },
+      "errors": {},
+      "unavailable": [
+        "html"
+      ]
+    },
+    {
+      "id": "9706a6e44de04ff3ab0c204c523bf5fb",
+      "name": "projects/4724290021803215791/screens/9706a6e44de04ff3ab0c204c523bf5fb",
+      "title": "晨间节律与见光记录 (中文版)",
+      "category": "10-rhythm-notifications",
+      "categoryLabel": "晨间节律与通知",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2554",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/9706a6e44de04ff3ab0c204c523bf5fb/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/9706a6e44de04ff3ab0c204c523bf5fb/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/10-rhythm-notifications/晨间节律与见光记录-(中文版)__9706a6e4.png",
+        "html": "design/10-rhythm-notifications/晨间节律与见光记录-(中文版)__9706a6e4.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "acc1498fed6e443b8e5fbb4c984f9f7e",
+      "name": "projects/4724290021803215791/screens/acc1498fed6e443b8e5fbb4c984f9f7e",
+      "title": "解锁通知 - 状态平稳回归练习",
+      "category": "10-rhythm-notifications",
+      "categoryLabel": "晨间节律与通知",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/acc1498fed6e443b8e5fbb4c984f9f7e/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/acc1498fed6e443b8e5fbb4c984f9f7e/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/10-rhythm-notifications/解锁通知---状态平稳回归练习__acc1498f.png",
+        "html": "design/10-rhythm-notifications/解锁通知---状态平稳回归练习__acc1498f.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "7f47e918131641fab086c03287940fa5",
+      "name": "projects/4724290021803215791/screens/7f47e918131641fab086c03287940fa5",
+      "title": "设置 - 晨间节律提醒",
+      "category": "10-rhythm-notifications",
+      "categoryLabel": "晨间节律与通知",
+      "deviceType": "MOBILE",
+      "width": "780",
+      "height": "2160",
+      "source": {
+        "screenshot": "projects/4724290021803215791/screens/7f47e918131641fab086c03287940fa5/fileEntries/screenshot",
+        "htmlCode": "projects/4724290021803215791/screens/7f47e918131641fab086c03287940fa5/fileEntries/html"
+      },
+      "local": {
+        "screenshot": "design/10-rhythm-notifications/设置---晨间节律提醒__7f47e918.png",
+        "html": "design/10-rhythm-notifications/设置---晨间节律提醒__7f47e918.html"
+      },
+      "errors": {},
+      "unavailable": []
+    },
+    {
+      "id": "13176535337604446064",
+      "name": "projects/4724290021803215791/screens/13176535337604446064",
+      "title": "PRD.md",
+      "category": "11-reference",
+      "categoryLabel": "产品参考资料",
+      "deviceType": null,
+      "width": "780",
+      "height": "1768",
+      "source": {
+        "screenshot": null,
+        "htmlCode": "projects/4724290021803215791/files/13176535337604446197"
+      },
+      "local": {
+        "screenshot": null,
+        "html": "design/11-reference/PRD.md__13176535.html"
+      },
+      "errors": {},
+      "unavailable": [
+        "screenshot"
+      ]
+    }
+  ]
+}

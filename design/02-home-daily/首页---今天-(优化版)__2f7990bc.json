@@ -1,0 +1,20 @@
+{
+  "id": "2f7990bc48f54b7bb44746a1b133563f",
+  "name": "projects/4724290021803215791/screens/2f7990bc48f54b7bb44746a1b133563f",
+  "title": "首页 - 今天 (优化版)",
+  "category": "02-home-daily",
+  "categoryLabel": "首页与日常状态",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1964",
+  "source": {
+    "screenshot": "projects/4724290021803215791/files/5244504849627547375",
+    "htmlCode": "projects/4724290021803215791/files/10622806008126009593"
+  },
+  "local": {
+    "screenshot": "design/02-home-daily/首页---今天-(优化版)__2f7990bc.png",
+    "html": "design/02-home-daily/首页---今天-(优化版)__2f7990bc.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

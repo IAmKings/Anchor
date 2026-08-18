@@ -1,0 +1,20 @@
+{
+  "id": "805a53f82b9b4e8aae16d5c0fe2c6276",
+  "name": "projects/4724290021803215791/screens/805a53f82b9b4e8aae16d5c0fe2c6276",
+  "title": "查看就医指南 - 躯体检查清单",
+  "category": "08-medical-safety",
+  "categoryLabel": "就医、安全与浪潮等待",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "3100",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/805a53f82b9b4e8aae16d5c0fe2c6276/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/805a53f82b9b4e8aae16d5c0fe2c6276/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/08-medical-safety/查看就医指南---躯体检查清单__805a53f8.png",
+    "html": "design/08-medical-safety/查看就医指南---躯体检查清单__805a53f8.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

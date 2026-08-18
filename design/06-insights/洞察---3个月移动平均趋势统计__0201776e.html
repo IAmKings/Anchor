@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>洞察 - Anchor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#012112",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "surface-container-low": "#f6f3ed",
+                        "surface-variant": "#e5e2dc",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f3f0ea",
+                        "inverse-primary": "#accfb8",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#c8ebd3",
+                        "tertiary-fixed": "#ebe1d6",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "outline": "#727973",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "on-surface-variant": "#424843",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dcdad4",
+                        "on-primary-container": "#133222",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#380d00",
+                        "on-secondary-container": "#783c24",
+                        "secondary": "#8e4d34",
+                        "inverse-surface": "#31312d",
+                        "on-error-container": "#93000a",
+                        "surface-card": "#FFFFFF",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#ebe8e2",
+                        "surface-container": "#f0eee8",
+                        "on-background": "#1c1c18",
+                        "on-tertiary-container": "#302b24",
+                        "dark-card": "#262521",
+                        "tertiary": "#645d55",
+                        "surface-bright": "#fcf9f3",
+                        "border-subtle": "#E3DDD3",
+                        "secondary-fixed": "#ffdbcf",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#accfb8",
+                        "outline-variant": "#c2c8c1",
+                        "background": "#fcf9f3",
+                        "on-surface": "#1c1c18",
+                        "surface-container-highest": "#e5e2dc",
+                        "secondary-container": "#feaa8b",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "surface-tint": "#466552",
+                        "tertiary-container": "#9a9288",
+                        "dark-bg": "#1C1B18",
+                        "primary": "#466552",
+                        "primary-container": "#7a9b86",
+                        "surface": "#fcf9f3",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "text-muted": "#8A837A",
+                        "text-primary": "#33302B",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#ffb59a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "20px",
+                        "stack-lg": "40px",
+                        "unit": "4px",
+                        "stack-sm": "8px",
+                        "stack-md": "24px",
+                        "gutter-card": "16px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "headline-lg": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "numeral-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-surface');
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 220px;
+            width: 100%;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .chart-grid {
+            stroke: theme('colors.surface-container-high');
+            stroke-dasharray: 4;
+        }
+
+        .chart-area {
+            fill: theme('colors.surface-variant');
+            opacity: 0.5;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: theme('colors.primary-container');
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .chart-point {
+            fill: theme('colors.surface-card');
+            stroke: theme('colors.primary');
+            stroke-width: 2;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="pb-24 pt-16">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16">
+<button class="text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="anchor">anchor</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-semibold text-primary dark:text-primary-fixed-dim">Anchor</h1>
+<button class="text-on-surface-variant dark:text-outline-variant hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="emergency">emergency</span>
+</button>
+</header>
+<main class="px-margin-page max-w-2xl mx-auto space-y-stack-lg mt-stack-md">
+<!-- Header Section -->
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mb-stack-sm">洞察 (Insights)</h2>
+<p class="font-body-md text-body-md text-text-muted">长期趋势，非单日波动。</p>
+</div>
+<!-- Trend Chart Section -->
+<section class="bg-surface-card rounded-xl border border-border-subtle p-4">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="font-label-md text-label-md text-text-primary mb-1">3个月移动平均 (稳定性)</h3>
+<div class="flex items-baseline gap-2">
+<span class="font-numeral-mono text-numeral-mono text-primary">15%</span>
+<span class="font-label-md text-label-md text-primary-container">提升</span>
+</div>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-surface-container rounded-full font-label-md text-label-md text-text-muted text-xs">90天</span>
+</div>
+</div>
+<!-- Chart -->
+<div class="chart-container mb-4">
+<svg class="chart-svg" preserveaspectratio="none" viewbox="0 0 400 200">
+<!-- Grid Lines -->
+<line class="chart-grid" x1="0" x2="400" y1="50" y2="50"></line>
+<line class="chart-grid" x1="0" x2="400" y1="100" y2="100"></line>
+<line class="chart-grid" x1="0" x2="400" y1="150" y2="150"></line>
+<!-- Daily Fluctuation Area (Background) -->
+<path class="chart-area" d="M0 180 Q 20 120, 50 160 T 100 130 T 150 150 T 200 110 T 250 140 T 300 90 T 350 120 T 400 80 L 400 200 L 0 200 Z"></path>
+<!-- Moving Average Line (Smooth) -->
+<path class="chart-line" d="M0 160 Q 50 155, 100 140 T 200 120 T 300 100 T 400 85"></path>
+<!-- Current Point -->
+<circle class="chart-point" cx="400" cy="85" r="4"></circle>
+</svg>
+</div>
+<div class="flex justify-between text-xs font-label-md text-text-muted px-2">
+<span>9月</span>
+<span>10月</span>
+<span>11月</span>
+</div>
+</section>
+<!-- Insight Card -->
+<section class="bg-surface-container-low rounded-xl border border-border-subtle p-6 flex gap-4 items-start">
+<div class="bg-primary-container/20 p-2 rounded-full flex-shrink-0 text-primary">
+<span class="material-symbols-outlined" data-icon="insights" style="font-variation-settings: 'FILL' 1;">insights</span>
+</div>
+<div>
+<p class="font-body-md text-body-md text-text-primary">过去三个月，你的起床节律稳定性提升了 15%。别看某一天的值，看三个月的移动平均。</p>
+</div>
+</section>
+<!-- Secondary Metrics Grid (Bento style) -->
+<div class="grid grid-cols-2 gap-gutter-card">
+<!-- Prediction Bias Correction Rate -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 flex flex-col justify-between aspect-square">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-tertiary-container" data-icon="tune">tune</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-text-muted mb-1">预测偏差纠正率</h4>
+<div class="flex items-baseline gap-1">
+<span class="font-numeral-mono text-numeral-mono text-text-primary">82</span>
+<span class="font-label-md text-label-md text-text-muted">%</span>
+</div>
+</div>
+</div>
+<!-- Worry Safe Box Statistics -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-4 flex flex-col justify-between aspect-square">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-secondary-container" data-icon="lock">lock</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-text-muted mb-1">忧虑处理情况</h4>
+<div class="flex items-baseline gap-1">
+<span class="font-numeral-mono text-numeral-mono text-text-primary">4</span>
+<span class="font-label-md text-label-md text-text-muted">个已搁置</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full rounded-t-xl z-50 bg-surface-container-low/90 dark:bg-dark-card/90 backdrop-blur-2xl border-t border-border-subtle/50 flex justify-around items-center pb-safe pt-stack-sm px-2 md:hidden">
+<!-- Today (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="today">today</span>
+<span class="font-label-md text-label-md text-xs">Today</span>
+</a>
+<!-- Journal (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="edit_note">edit_note</span>
+<span class="font-label-md text-label-md text-xs">Journal</span>
+</a>
+<!-- Insights (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container/40 dark:bg-primary-container text-on-primary-container rounded-full px-5 py-1.5 transition-all duration-500 scale-90" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="auto_graph" style="font-variation-settings: 'FILL' 1;">auto_graph</span>
+<span class="font-label-md text-label-md text-xs font-bold text-primary">Insights</span>
+</a>
+<!-- Me (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-5 py-1.5 hover:text-primary dark:hover:text-primary-fixed-dim" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-md text-label-md text-xs">Me</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>忧虑保险箱统计 - Anchor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface": "#fcf9f3",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "surface-card": "#FFFFFF",
+                        "text-primary": "#33302B",
+                        "on-secondary-container": "#783c24",
+                        "on-primary-fixed": "#012112",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "inverse-surface": "#31312d",
+                        "primary": "#466552",
+                        "tertiary": "#645d55",
+                        "inverse-on-surface": "#f3f0ea",
+                        "primary-fixed": "#c8ebd3",
+                        "on-secondary-fixed": "#380d00",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "secondary-fixed": "#ffdbcf",
+                        "dark-card": "#262521",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#302b24",
+                        "surface-dim": "#dcdad4",
+                        "border-subtle": "#E3DDD3",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#727973",
+                        "surface-bright": "#fcf9f3",
+                        "background": "#fcf9f3",
+                        "tertiary-fixed": "#ebe1d6",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f6f3ed",
+                        "on-background": "#1c1c18",
+                        "primary-fixed-dim": "#accfb8",
+                        "dark-bg": "#1C1B18",
+                        "text-muted": "#8A837A",
+                        "secondary": "#8e4d34",
+                        "tertiary-container": "#9a9288",
+                        "primary-container": "#7a9b86",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#466552",
+                        "surface-variant": "#e5e2dc",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "on-surface": "#1c1c18",
+                        "secondary-container": "#feaa8b",
+                        "surface-container-high": "#ebe8e2",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "surface-container": "#f0eee8",
+                        "on-primary-container": "#133222",
+                        "inverse-primary": "#accfb8",
+                        "outline-variant": "#c2c8c1",
+                        "on-surface-variant": "#424843",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "40px",
+                        "stack-md": "24px",
+                        "stack-sm": "8px",
+                        "unit": "4px",
+                        "gutter-card": "16px",
+                        "margin-page": "20px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Manrope", "sans-serif"],
+                        "headline-lg-mobile": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "numeral-mono": ["JetBrains Mono", "monospace"],
+                        "body-md": ["Manrope", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.text-primary');
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .glass-nav {
+            background: rgba(252, 249, 243, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Simple chart styles using HTML/CSS */
+        .chart-bar-container {
+            display: flex;
+            height: 12px;
+            border-radius: 9999px;
+            overflow: hidden;
+            background-color: theme('colors.surface-variant');
+        }
+        .chart-bar-segment {
+            height: 100%;
+        }
+        
+        .trend-chart-area {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            overflow: hidden;
+            border-bottom: 1px solid theme('colors.border-subtle');
+        }
+        .trend-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(122, 155, 134, 0.2) 0%, rgba(122, 155, 134, 0) 100%);
+            clip-path: polygon(0 100%, 0 60%, 10% 65%, 20% 50%, 30% 70%, 40% 55%, 50% 60%, 60% 40%, 70% 50%, 80% 30%, 90% 45%, 100% 20%, 100% 100%);
+        }
+        .trend-stroke {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-top: 2px solid theme('colors.primary');
+            border-radius: 50%;
+            transform: translateY(50%) scaleX(1.2);
+            opacity: 0.5;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-[100px] md:pb-0">
+<!-- TopAppBar (Web & Mobile) -->
+<header class="fixed top-0 w-full z-50 glass-nav border-b border-border-subtle hidden md:flex items-center justify-between px-margin-page h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary font-headline-lg" data-icon="waves">waves</span>
+<span class="font-headline-lg text-headline-lg text-primary tracking-tight">Anchor</span>
+</div>
+<nav class="flex gap-8">
+<a class="font-label-md text-label-md text-text-muted hover:bg-surface-container-low transition-colors px-4 py-2 rounded-full flex items-center gap-2" href="#">
+<span class="material-symbols-outlined" data-icon="wb_sunny">wb_sunny</span>
+                Today
+            </a>
+<a class="font-label-md text-label-md text-text-muted hover:bg-surface-container-low transition-colors px-4 py-2 rounded-full flex items-center gap-2" href="#">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+                Journal
+            </a>
+<a class="font-label-md text-label-md text-primary bg-primary-container/20 font-bold transition-colors px-4 py-2 rounded-full flex items-center gap-2" href="#">
+<span class="material-symbols-outlined" data-icon="auto_graph" style="font-variation-settings: 'FILL' 1;">auto_graph</span>
+                Insights
+            </a>
+<a class="font-label-md text-label-md text-text-muted hover:bg-surface-container-low transition-colors px-4 py-2 rounded-full flex items-center gap-2" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+                Me
+            </a>
+</nav>
+</header>
+<!-- Mobile TopAppBar -->
+<header class="fixed top-0 w-full z-50 glass-nav border-b border-border-subtle md:hidden flex items-center justify-between px-margin-page h-16 w-full">
+<span class="material-symbols-outlined text-primary font-headline-lg-mobile" data-icon="waves">waves</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">Anchor</span>
+<div class="w-6"></div> <!-- Spacer -->
+</header>
+<!-- Main Canvas -->
+<main class="pt-[88px] md:pt-[104px] px-margin-page max-w-2xl mx-auto space-y-stack-lg">
+<!-- Page Title -->
+<div class="space-y-stack-sm text-center md:text-left">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-text-primary">忧虑保险箱统计</h1>
+<p class="font-body-md text-body-md text-text-muted">A quiet space to observe your thoughts.</p>
+</div>
+<!-- Summary Card -->
+<section class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card space-y-stack-md relative overflow-hidden">
+<!-- Decorative background element -->
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-surface-container-low rounded-full opacity-50 blur-2xl"></div>
+<div class="relative z-10 space-y-stack-sm">
+<h2 class="font-label-md text-label-md text-text-muted uppercase tracking-wider">累计受理</h2>
+<div class="flex items-baseline gap-2">
+<span class="font-numeral-mono text-numeral-mono text-4xl text-primary">124</span>
+<span class="font-body-md text-body-md text-text-muted">个念头</span>
+</div>
+</div>
+<div class="relative z-10 pt-4 border-t border-border-subtle">
+<p class="font-body-lg text-body-lg text-tertiary italic">"落在纸上的每一笔，都是在给大脑减负。"</p>
+</div>
+</section>
+<!-- Disposal Pattern -->
+<section class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card space-y-stack-md">
+<h2 class="font-label-md text-label-md text-text-muted uppercase tracking-wider">处理模式分布</h2>
+<!-- Simple Horizontal Bar Chart -->
+<div class="space-y-6">
+<!-- Chart Bar -->
+<div class="chart-bar-container">
+<div class="chart-bar-segment bg-primary" style="width: 45%;" title="转化为行动 (45%)"></div>
+<div class="chart-bar-segment bg-tertiary" style="width: 35%;" title="暂时无解 (35%)"></div>
+<div class="chart-bar-segment bg-surface-dim" style="width: 20%;" title="已不再重要 (20%)"></div>
+</div>
+<!-- Legend -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-primary flex-shrink-0"></div>
+<div>
+<p class="font-body-md text-body-md text-text-primary leading-tight">转化为行动</p>
+<p class="font-label-md text-label-md text-text-muted">45% (56项)</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-tertiary flex-shrink-0"></div>
+<div>
+<p class="font-body-md text-body-md text-text-primary leading-tight">暂时无解</p>
+<p class="font-label-md text-label-md text-text-muted">35% (43项)</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-3 h-3 rounded-full bg-surface-dim flex-shrink-0"></div>
+<div>
+<p class="font-body-md text-body-md text-text-primary leading-tight">已不再重要</p>
+<p class="font-label-md text-label-md text-text-muted">20% (25项)</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Unsolvable Trend -->
+<section class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card space-y-stack-md">
+<div class="flex justify-between items-end">
+<h2 class="font-label-md text-label-md text-text-muted uppercase tracking-wider">无解念头趋势 (30天)</h2>
+<span class="font-label-md text-label-md text-text-muted">滚动平均</span>
+</div>
+<div class="trend-chart-area">
+<div class="trend-line"></div>
+<!-- Simulated line with SVG -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<path class="text-primary opacity-80" d="M0,60 L10,65 L20,50 L30,70 L40,55 L50,60 L60,40 L70,50 L80,30 L90,45 L100,20" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+</svg>
+</div>
+<div class="bg-surface-container-low rounded-lg p-4 flex gap-4 items-start">
+<span class="material-symbols-outlined text-tertiary mt-1" data-icon="lightbulb">lightbulb</span>
+<div>
+<p class="font-body-md text-body-md text-text-primary">80% 的夜间忧虑通常是暂时无解的。</p>
+<p class="font-body-md text-body-md text-text-muted mt-1">这很正常，请允许它们存在，无需急于解决。</p>
+</div>
+</div>
+</section>
+<!-- Pattern Detection -->
+<section class="bg-surface-card border border-border-subtle rounded-xl p-gutter-card space-y-stack-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="radar">radar</span>
+<h2 class="font-label-md text-label-md text-text-muted uppercase tracking-wider">模式识别</h2>
+</div>
+<div class="space-y-4">
+<div class="bg-surface rounded-lg p-4 border border-border-subtle flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+<div class="flex-grow">
+<p class="font-label-md text-label-md text-text-muted mb-1">高频模式</p>
+<p class="font-body-lg text-body-lg text-text-primary">对未来的不确定感</p>
+</div>
+<div class="bg-surface-variant px-3 py-1 rounded-full">
+<span class="font-numeral-mono text-numeral-mono text-sm text-tertiary">出现 18 次</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-text-muted italic px-2 border-l-2 border-border-subtle">
+                    系统在您最近的记录中识别到了相似的主题。记录本身就是一种看见。
+                </p>
+</div>
+</section>
+<!-- Footer Note -->
+<footer class="pt-stack-md pb-stack-lg text-center">
+<p class="font-label-md text-label-md text-text-muted opacity-60">基于本地数据的统计，仅供参考。</p>
+</footer>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full glass-nav border-t border-border-subtle md:hidden flex justify-around items-center pt-2 pb-safe px-4 z-50 rounded-t-xl" style="padding-bottom: env(safe-area-inset-bottom, 20px);">
+<a class="flex flex-col items-center justify-center text-text-muted transition-all active:scale-90 duration-300 w-16" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="wb_sunny">wb_sunny</span>
+<span class="font-label-md text-[10px] leading-none">Today</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-muted transition-all active:scale-90 duration-300 w-16" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="edit_note">edit_note</span>
+<span class="font-label-md text-[10px] leading-none">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-bold bg-primary-container/20 rounded-full px-4 py-1 transition-all active:scale-90 duration-300 w-20" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="auto_graph" style="font-variation-settings: 'FILL' 1;">auto_graph</span>
+<span class="font-label-md text-[10px] leading-none">Insights</span>
+</a>
+<a class="flex flex-col items-center justify-center text-text-muted transition-all active:scale-90 duration-300 w-16" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-md text-[10px] leading-none">Me</span>
+</a>
+</nav>
+</body></html>

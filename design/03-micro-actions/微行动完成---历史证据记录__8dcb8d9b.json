@@ -1,0 +1,20 @@
+{
+  "id": "8dcb8d9b79a743d39e6b8b129450d387",
+  "name": "projects/4724290021803215791/screens/8dcb8d9b79a743d39e6b8b129450d387",
+  "title": "微行动完成 - 历史证据记录",
+  "category": "03-micro-actions",
+  "categoryLabel": "微行动流程",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "3980",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/8dcb8d9b79a743d39e6b8b129450d387/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/8dcb8d9b79a743d39e6b8b129450d387/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/03-micro-actions/微行动完成---历史证据记录__8dcb8d9b.png",
+    "html": "design/03-micro-actions/微行动完成---历史证据记录__8dcb8d9b.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

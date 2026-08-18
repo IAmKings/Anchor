@@ -1,0 +1,20 @@
+{
+  "id": "1a56bdeb39fe41c9b0b82be8fd130d33",
+  "name": "projects/4724290021803215791/screens/1a56bdeb39fe41c9b0b82be8fd130d33",
+  "title": "导出报告样例 - 医生视角 (PDF)",
+  "category": "09-settings-export",
+  "categoryLabel": "设置、隐私与导出",
+  "deviceType": "DESKTOP",
+  "width": "2560",
+  "height": "3606",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/1a56bdeb39fe41c9b0b82be8fd130d33/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/1a56bdeb39fe41c9b0b82be8fd130d33/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/09-settings-export/导出报告样例---医生视角-(PDF)__1a56bdeb.png",
+    "html": "design/09-settings-export/导出报告样例---医生视角-(PDF)__1a56bdeb.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

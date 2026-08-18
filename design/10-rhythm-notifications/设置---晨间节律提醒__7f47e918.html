@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>起床见光提醒 - 静谧节律</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#dcdad4",
+                    "dark-bg": "#1C1B18",
+                    "primary-fixed-dim": "#accfb8",
+                    "on-tertiary-fixed": "#1f1b14",
+                    "error-container": "#ffdad6",
+                    "surface-card": "#FFFFFF",
+                    "on-surface-variant": "#424843",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#f3f0ea",
+                    "text-primary": "#33302B",
+                    "on-secondary-container": "#783c24",
+                    "outline": "#727973",
+                    "dark-card": "#262521",
+                    "primary-fixed": "#c8ebd3",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#ebe1d6",
+                    "on-primary-fixed-variant": "#2e4d3c",
+                    "surface-container": "#f0eee8",
+                    "secondary": "#8e4d34",
+                    "surface-container-highest": "#e5e2dc",
+                    "on-surface": "#1c1c18",
+                    "surface-container-low": "#f6f3ed",
+                    "primary-container": "#7a9b86",
+                    "error": "#ba1a1a",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#c2c8c1",
+                    "tertiary-container": "#9a9288",
+                    "surface-variant": "#e5e2dc",
+                    "surface": "#fcf9f3",
+                    "border-subtle": "#E3DDD3",
+                    "secondary-fixed-dim": "#ffb59a",
+                    "background": "#fcf9f3",
+                    "inverse-surface": "#31312d",
+                    "surface-container-high": "#ebe8e2",
+                    "inverse-primary": "#accfb8",
+                    "on-tertiary-container": "#302b24",
+                    "secondary-fixed": "#ffdbcf",
+                    "surface-tint": "#466552",
+                    "secondary-container": "#feaa8b",
+                    "primary": "#466552",
+                    "tertiary-fixed-dim": "#cec5ba",
+                    "on-background": "#1c1c18",
+                    "surface-bright": "#fcf9f3",
+                    "tertiary": "#645d55",
+                    "on-secondary-fixed": "#380d00",
+                    "on-tertiary-fixed-variant": "#4c463e",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed-variant": "#71361f",
+                    "on-primary-container": "#133222",
+                    "text-muted": "#8A837A",
+                    "on-primary-fixed": "#012112",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "gutter-card": "16px",
+                    "margin-page": "20px",
+                    "stack-sm": "8px",
+                    "stack-lg": "40px",
+                    "stack-md": "24px"
+            },
+            "fontFamily": {
+                    "body-md": ["Manrope"],
+                    "numeral-mono": ["JetBrains Mono"],
+                    "body-lg": ["Manrope"],
+                    "label-md": ["Manrope"],
+                    "headline-lg": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"]
+            },
+            "fontSize": {
+                    "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: theme('colors.background');
+            color: theme('colors.text-primary');
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: theme('colors.primary');
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: theme('colors.primary');
+        }
+        .toggle-checkbox {
+            right: 0;
+            z-index: 1;
+            border-color: theme('colors.outline-variant');
+            transition: all 0.3s;
+        }
+        .toggle-label {
+            width: 3rem;
+            height: 1.5rem;
+            background-color: theme('colors.surface-variant');
+            border-radius: 9999px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .toggle-label::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 1.25rem;
+            height: 1.25rem;
+            background-color: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .toggle-checkbox:checked + .toggle-label::after {
+            transform: translateX(1.5rem);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col pt-16 pb-safe">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-dark-bg/80 backdrop-blur-xl border-b border-border-subtle dark:border-outline-variant flex items-center justify-between px-margin-page h-16 transition-colors">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low dark:hover:bg-dark-card transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-text-muted dark:text-on-surface-variant">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim tracking-tight">晨间节律</h1>
+<div class="w-10 h-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-page py-stack-md flex flex-col gap-stack-lg max-w-2xl mx-auto w-full mt-4">
+<!-- Intro Section -->
+<section class="flex flex-col gap-stack-sm text-center">
+<div class="w-16 h-16 mx-auto bg-primary-container/20 rounded-full flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<p class="font-body-lg text-body-lg text-text-primary text-opacity-90">建立属于你的自然醒节律</p>
+<p class="font-body-md text-body-md text-text-muted">温和的提醒，帮助身体顺应光线，而非被闹钟强行唤醒。</p>
+</section>
+<!-- Time Picker Section -->
+<section class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex flex-col gap-stack-md">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary mb-1">预期起床时间</h2>
+<p class="font-body-md text-body-md text-text-muted text-sm">在此时间前后30分钟内醒来均为良好节律。</p>
+</div>
+</div>
+<div class="flex items-center justify-center py-6 bg-surface-container-low rounded-lg relative overflow-hidden">
+<div class="absolute inset-x-0 h-10 bg-primary/5 top-1/2 -translate-y-1/2 pointer-events-none"></div>
+<div class="font-numeral-mono text-numeral-mono text-5xl text-primary tracking-widest flex items-center gap-2">
+<span class="opacity-40 text-3xl">06</span>
+<span class="opacity-70 text-4xl">07</span>
+<span class="text-text-primary">08</span>
+<span class="opacity-70 text-4xl">09</span>
+<span class="opacity-40 text-3xl">10</span>
+</div>
+<span class="font-body-lg text-body-lg text-text-primary ml-2 mb-2 self-end">:</span>
+<div class="font-numeral-mono text-numeral-mono text-5xl text-primary tracking-widest flex items-center gap-2 ml-2">
+<span class="opacity-40 text-3xl">15</span>
+<span class="opacity-70 text-4xl">20</span>
+<span class="text-text-primary">30</span>
+<span class="opacity-70 text-4xl">40</span>
+<span class="opacity-40 text-3xl">45</span>
+</div>
+</div>
+</section>
+<!-- Toggles Section -->
+<section class="flex flex-col gap-4">
+<!-- Wake Up Reminder Toggle -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex items-center justify-between">
+<div class="flex-1 pr-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-xl">alarm</span>
+<h3 class="font-body-lg text-body-lg text-text-primary">晨间温和提醒</h3>
+</div>
+<p class="font-body-md text-body-md text-text-muted text-sm">在设定时间播放舒缓白噪音，引导自然苏醒。</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="toggle-wake" name="toggle-wake" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-wake"></label>
+</div>
+</div>
+<!-- Light Exposure Reminder Toggle -->
+<div class="bg-surface-card rounded-xl border border-border-subtle p-gutter-card flex items-center justify-between">
+<div class="flex-1 pr-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-secondary text-xl">light_mode</span>
+<h3 class="font-body-lg text-body-lg text-text-primary">见光建议提醒</h3>
+</div>
+<p class="font-body-md text-body-md text-text-muted text-sm">起床后1小时内，适时提醒接触自然光，重置生物钟。</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" id="toggle-light" name="toggle-light" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer" for="toggle-light"></label>
+</div>
+</div>
+</section>
+<!-- Info Card -->
+<div class="bg-surface-container-low rounded-xl p-gutter-card flex gap-4 items-start border border-border-subtle/50">
+<span class="material-symbols-outlined text-tertiary mt-1">info</span>
+<p class="font-body-md text-body-md text-tertiary text-sm leading-relaxed">
+                研究表明，早晨固定时间醒来并在1小时内接触阳光，能有效稳定皮质醇节律。我们不鼓励强迫打卡，允许自己有弹性地调整。
+            </p>
+</div>
+<div class="h-20"></div> <!-- Bottom Spacer -->
+</main>
+<!-- BottomNavBar (Hidden as this is a task-focused screen, adhering to "Shell Visibility & Relevance" rule) -->
+<!-- Navigation shell suppressed for linear/settings intent -->
+</body></html>

@@ -1,0 +1,20 @@
+{
+  "id": "274214f33e5f44268a769c36cbc89e1c",
+  "name": "projects/4724290021803215791/screens/274214f33e5f44268a769c36cbc89e1c",
+  "title": "忧虑处理 - 三选一交互",
+  "category": "04-worry-vault",
+  "categoryLabel": "忧虑保险箱与忧虑专场",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/274214f33e5f44268a769c36cbc89e1c/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/274214f33e5f44268a769c36cbc89e1c/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/04-worry-vault/忧虑处理---三选一交互__274214f3.png",
+    "html": "design/04-worry-vault/忧虑处理---三选一交互__274214f3.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

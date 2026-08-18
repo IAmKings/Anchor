@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>锚点 Anchor - 微行动计时</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "border-subtle": "#E3DDD3",
+                        "text-primary": "#33302B",
+                        "tertiary": "#645d55",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#9a9288",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "background": "#fcf9f3",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "outline": "#727973",
+                        "primary-fixed-dim": "#accfb8",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#424843",
+                        "on-primary-container": "#133222",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#ebe8e2",
+                        "surface-container-low": "#f6f3ed",
+                        "secondary-fixed": "#ffdbcf",
+                        "dark-card": "#262521",
+                        "surface": "#fcf9f3",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "on-tertiary-container": "#302b24",
+                        "tertiary-fixed": "#ebe1d6",
+                        "outline-variant": "#c2c8c1",
+                        "on-primary-fixed": "#012112",
+                        "surface-container": "#f0eee8",
+                        "on-background": "#1c1c18",
+                        "surface-card": "#FFFFFF",
+                        "primary-fixed": "#c8ebd3",
+                        "surface-variant": "#e5e2dc",
+                        "surface-bright": "#fcf9f3",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "on-secondary-container": "#783c24",
+                        "surface-tint": "#466552",
+                        "on-surface": "#1c1c18",
+                        "dark-bg": "#1C1B18",
+                        "primary-container": "#7a9b86",
+                        "surface-dim": "#dcdad4",
+                        "secondary": "#8e4d34",
+                        "inverse-surface": "#31312d",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "secondary-container": "#feaa8b",
+                        "primary": "#466552",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "inverse-primary": "#accfb8",
+                        "inverse-on-surface": "#f3f0ea",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#380d00",
+                        "text-muted": "#8A837A",
+                        "surface-container-highest": "#e5e2dc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "20px",
+                        "gutter-card": "16px",
+                        "unit": "4px",
+                        "stack-md": "24px",
+                        "stack-sm": "8px",
+                        "stack-lg": "40px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Manrope", "sans-serif"],
+                        "headline-lg": ["Manrope", "sans-serif"],
+                        "headline-lg-mobile": ["Manrope", "sans-serif"],
+                        "label-md": ["Manrope", "sans-serif"],
+                        "numeral-mono": ["JetBrains Mono", "monospace"],
+                        "body-lg": ["Manrope", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "body-md": ["17px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["22px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "numeral-mono": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                        "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "400"}]
+                    },
+                    "animation": {
+                        'breathe': 'breathe 6s ease-in-out infinite',
+                        'dash': 'dash 300s linear forwards'
+                    },
+                    "keyframes": {
+                        'breathe': {
+                            '0%, 100%': { transform: 'scale(0.95)', opacity: '0.4' },
+                            '50%': { transform: 'scale(1.05)', opacity: '0.8' },
+                        },
+                        'dash': {
+                            'to': { strokeDashoffset: '301.59' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-text-primary antialiased h-screen w-full overflow-hidden select-none">
+<div class="relative h-full w-full flex flex-col items-center justify-between">
+<!-- STITCH_SHADER_START:ANIMATION_28 class="absolute inset-0 w-full h-full z-0 opacity-40 mix-blend-multiply" -->
+<div class="absolute inset-0 w-full h-full z-0 opacity-40 mix-blend-multiply" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_28" style="display:block;width:100%;height:100%"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_28');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+uniform float u_time;
+uniform vec2 u_resolution;
+varying vec2 v_texCoord;
+
+// Simplified noise for organic movement
+float hash(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+}
+
+float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+}
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Wave movement
+    float wave = noise(uv * 3.0 + u_time * 0.2);
+    float wave2 = noise(uv * 2.0 - u_time * 0.15);
+    
+    // Colors from Anchor Grounding System
+    vec3 color1 = vec3(0.478, 0.608, 0.525); // #7a9b86 (Sage)
+    vec3 color2 = vec3(0.988, 0.976, 0.953); // #fcf9f3 (Surface)
+    
+    float mask = smoothstep(0.4, 0.6, uv.y + (wave - 0.5) * 0.2);
+    vec3 finalColor = mix(color1, color2, mask + wave2 * 0.1);
+    
+    // Subtle circular vignetting for a grounded feel
+    float dist = distance(uv, vec2(0.5));
+    finalColor *= (1.0 - dist * 0.3);
+
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_28 -->
+<div class="relative z-10 w-full pt-16 px-margin-page flex flex-col items-center text-center">
+<div class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-surface-container-high/60 backdrop-blur-md mb-stack-md border border-border-subtle/50">
+<span class="font-label-md text-label-md text-text-muted">预测困难度：8/10</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary max-w-[280px]">穿好鞋走到楼下</h1>
+</div>
+<div class="relative z-10 flex-1 flex flex-col items-center justify-center w-full">
+<div class="relative w-72 h-72 flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full" viewbox="0 0 100 100">
+<circle class="stroke-primary-container/20 animate-breathe" cx="50" cy="50" fill="none" r="40" stroke-width="20" style="transform-origin: center;"></circle>
+</svg>
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<circle class="stroke-surface-container-highest" cx="50" cy="50" fill="none" r="48" stroke-width="1.5"></circle>
+<circle class="stroke-primary transition-all duration-1000 ease-linear" cx="50" cy="50" fill="none" id="progress-ring" r="48" stroke-dasharray="301.59" stroke-dashoffset="0" stroke-linecap="round" stroke-width="2"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center pointer-events-none">
+<span class="font-numeral-mono text-[64px] leading-[64px] text-text-primary tracking-tighter" id="timer-display" style="font-feature-settings: 'tnum';">04:59</span>
+</div>
+</div>
+</div>
+<div class="relative z-10 w-full px-margin-page pb-12 flex flex-col items-center">
+<p class="font-body-md text-body-md text-text-muted mb-stack-lg opacity-80">不评估想不想。启动 5 分钟。</p>
+<div class="w-full max-w-sm flex flex-col items-center gap-stack-md">
+<button class="w-full py-4 rounded-xl font-label-md text-label-md bg-surface-container-highest text-text-muted transition-all duration-500 ease-in-out active:scale-[0.98]" id="finish-btn">
+                    我已完成
+                </button>
+<button class="flex items-center justify-center gap-2 py-2 px-4 rounded-full font-label-md text-label-md text-text-muted opacity-60 hover:opacity-100 transition-opacity active:scale-95">
+<span class="material-symbols-outlined text-[18px]">close</span>
+                    暂停 / 退出
+                </button>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timerDisplay = document.getElementById('timer-display');
+            const progressRing = document.getElementById('progress-ring');
+            const finishBtn = document.getElementById('finish-btn');
+            
+            const totalSeconds = 5 * 60;
+            let remainingSeconds = totalSeconds - 1; 
+            const circumference = 2 * Math.PI * 48;
+
+            const formatTime = (seconds) => {
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                return `${m}:${s}`;
+            };
+
+            const updateTimer = () => {
+                if (remainingSeconds < 0) return;
+
+                timerDisplay.textContent = formatTime(remainingSeconds);
+                
+                const offset = circumference - (remainingSeconds / totalSeconds) * circumference;
+                progressRing.style.strokeDashoffset = offset;
+
+                if (remainingSeconds <= totalSeconds / 2) {
+                    finishBtn.classList.remove('bg-surface-container-highest', 'text-text-muted');
+                    finishBtn.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+                }
+
+                remainingSeconds--;
+            };
+
+            setInterval(updateTimer, 1000);
+        });
+    </script>
+</body></html>

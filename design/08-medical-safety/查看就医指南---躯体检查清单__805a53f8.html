@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>躯体检查清单 - 锚点 Anchor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=manrope:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined', sans-serif;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Custom Checkbox Styles */
+        .checkup-checkbox:checked + div {
+            background-color: #7a9b86; /* primary-container */
+            border-color: #7a9b86;
+        }
+        
+        .checkup-checkbox:checked + div svg {
+            opacity: 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed": "#012112",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "primary": "#466552",
+                        "primary-fixed": "#c8ebd3",
+                        "on-secondary": "#ffffff",
+                        "surface": "#fcf9f3",
+                        "inverse-surface": "#31312d",
+                        "inverse-primary": "#accfb8",
+                        "tertiary-container": "#9a9288",
+                        "primary-container": "#7a9b86",
+                        "surface-container-high": "#ebe8e2",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-surface": "#1c1c18",
+                        "tertiary": "#645d55",
+                        "on-primary": "#ffffff",
+                        "surface-card": "#FFFFFF",
+                        "on-tertiary-fixed": "#1f1b14",
+                        "dark-card": "#262521",
+                        "surface-variant": "#e5e2dc",
+                        "on-secondary-fixed-variant": "#71361f",
+                        "on-tertiary-fixed-variant": "#4c463e",
+                        "on-primary-container": "#133222",
+                        "background": "#fcf9f3",
+                        "on-secondary-fixed": "#380d00",
+                        "secondary": "#8e4d34",
+                        "border-subtle": "#E3DDD3",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#424843",
+                        "tertiary-fixed": "#ebe1d6",
+                        "tertiary-fixed-dim": "#cec5ba",
+                        "secondary-fixed": "#ffdbcf",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#fcf9f3",
+                        "surface-tint": "#466552",
+                        "dark-bg": "#1C1B18",
+                        "primary-fixed-dim": "#accfb8",
+                        "on-primary-fixed-variant": "#2e4d3c",
+                        "surface-container": "#f0eee8",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c2c8c1",
+                        "inverse-on-surface": "#f3f0ea",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#dcdad4",
+                        "secondary-container": "#feaa8b",
+                        "on-background": "#1c1c18",
+                        "text-primary": "#33302B",
+                        "surface-container-low": "#f6f3ed",
+                        "text-muted": "#8A837A",
+                        "on-secondary-container": "#783c24",
+                        "on-tertiary-container": "#302b24",
+                        "outline": "#727973"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "unit": "4px",
+                        "stack-sm": "8px",
+                        "stack-lg": "40px",
+                        "gutter-card": "16px",
+                        "margin-page": "20px",
+                        "stack-md": "24px"
+                    },
+                    fontFamily: {
+                        "body-md": ["manrope"],
+                        "body-lg": ["manrope"],
+                        "numeral-mono": ["jetbrainsMono"],
+                        "label-md": ["manrope"],
+                        "headline-lg-mobile": ["manrope"],
+                        "headline-lg": ["manrope"]
+                    },
+                    fontSize: {
+                        "body-md": ["17px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-lg": ["20px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "numeral-mono": ["24px", { "lineHeight": "32px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["22px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-text-primary font-body-md antialiased min-h-screen pb-stack-lg">
+<!-- TopAppBar -->
+<header class="bg-background/80 dark:bg-dark-bg/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-border-subtle/30 flex justify-between items-center px-margin-page h-16">
+<button aria-label="返回" class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-300 w-10 h-10 flex items-center justify-center rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary dark:text-primary-fixed-dim tracking-tight">躯体检查清单</h1>
+<div class="w-10 h-10"></div> <!-- Spacer for centering -->
+</header>
+<main class="pt-24 px-margin-page max-w-2xl mx-auto">
+<!-- Intro Section -->
+<section class="mb-stack-lg animate-fade-in-up">
+<div class="bg-surface-container-low rounded-xl p-gutter-card border border-border-subtle flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary-container mt-1" data-icon="info">info</span>
+<div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        躯体问题（如甲状腺异常、贫血等）有时会伪装成情绪症状。这份清单旨在帮助您在就医时，与医生探讨可能导致情绪波动的生理因素。
+                    </p>
+</div>
+</div>
+</section>
+<!-- Categories -->
+<div class="space-y-stack-md">
+<!-- Category 1: 内分泌系统 -->
+<section class="bg-surface-card rounded-xl border border-border-subtle overflow-hidden">
+<div class="bg-surface-container px-gutter-card py-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="science">science</span>
+<h2 class="font-label-md text-label-md text-on-surface">内分泌系统 (Endocrine)</h2>
+</div>
+<div class="p-gutter-card space-y-4">
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex-shrink-0 mt-1">
+<input class="checkup-checkbox opacity-0 absolute w-0 h-0" type="checkbox"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded bg-surface flex items-center justify-center transition-colors group-hover:border-primary-container">
+<svg class="w-3 h-3 text-on-primary-container opacity-0 transition-opacity pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<div>
+<span class="block font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">甲状腺功能 (Thyroid)</span>
+<span class="block font-label-md text-label-md text-text-muted mt-1">甲亢常引起类似焦虑的心悸、出汗；甲减常导致类似抑郁的疲惫和情绪低落。建议检查 TSH, FT3, FT4。</span>
+</div>
+</label>
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex-shrink-0 mt-1">
+<input class="checkup-checkbox opacity-0 absolute w-0 h-0" type="checkbox"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded bg-surface flex items-center justify-center transition-colors group-hover:border-primary-container">
+<svg class="w-3 h-3 text-on-primary-container opacity-0 transition-opacity pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<div>
+<span class="block font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">血糖 (Blood Sugar)</span>
+<span class="block font-label-md text-label-md text-text-muted mt-1">血糖波动（尤其是低血糖）会导致突然的心慌、手抖和强烈的焦虑感。建议检查空腹血糖或糖化血红蛋白。</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Category 2: 营养与代谢 -->
+<section class="bg-surface-card rounded-xl border border-border-subtle overflow-hidden">
+<div class="bg-surface-container px-gutter-card py-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="restaurant">restaurant</span>
+<h2 class="font-label-md text-label-md text-on-surface">营养与代谢 (Nutrition)</h2>
+</div>
+<div class="p-gutter-card space-y-4">
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex-shrink-0 mt-1">
+<input class="checkup-checkbox opacity-0 absolute w-0 h-0" type="checkbox"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded bg-surface flex items-center justify-center transition-colors group-hover:border-primary-container">
+<svg class="w-3 h-3 text-on-primary-container opacity-0 transition-opacity pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<div>
+<span class="block font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">维生素 D / B12 缺乏</span>
+<span class="block font-label-md text-label-md text-text-muted mt-1">缺乏维生素 D 与季节性抑郁高度相关；B12 缺乏常伴随认知下降和抑郁症状。</span>
+</div>
+</label>
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex-shrink-0 mt-1">
+<input class="checkup-checkbox opacity-0 absolute w-0 h-0" type="checkbox"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded bg-surface flex items-center justify-center transition-colors group-hover:border-primary-container">
+<svg class="w-3 h-3 text-on-primary-container opacity-0 transition-opacity pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<div>
+<span class="block font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">贫血 (Anemia/Iron)</span>
+<span class="block font-label-md text-label-md text-text-muted mt-1">缺铁性贫血会导致大脑供氧不足，引起慢性疲劳、注意力不集中和抑郁感。建议检查血常规及铁蛋白。</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Category 3: 生活方式与循环 -->
+<section class="bg-surface-card rounded-xl border border-border-subtle overflow-hidden">
+<div class="bg-surface-container px-gutter-card py-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="vital_signs">vital_signs</span>
+<h2 class="font-label-md text-label-md text-on-surface">生活方式与循环 (Lifestyle)</h2>
+</div>
+<div class="p-gutter-card space-y-4">
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex-shrink-0 mt-1">
+<input class="checkup-checkbox opacity-0 absolute w-0 h-0" type="checkbox"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded bg-surface flex items-center justify-center transition-colors group-hover:border-primary-container">
+<svg class="w-3 h-3 text-on-primary-container opacity-0 transition-opacity pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<div>
+<span class="block font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">睡眠呼吸暂停</span>
+<span class="block font-label-md text-label-md text-text-muted mt-1">夜间缺氧会导致早晨醒来极度疲惫，长期可能引发或加重抑郁症状。如果打呼噜严重且白天嗜睡，需特别注意。</span>
+</div>
+</label>
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex-shrink-0 mt-1">
+<input class="checkup-checkbox opacity-0 absolute w-0 h-0" type="checkbox"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded bg-surface flex items-center justify-center transition-colors group-hover:border-primary-container">
+<svg class="w-3 h-3 text-on-primary-container opacity-0 transition-opacity pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<div>
+<span class="block font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">慢性疼痛 / 药物副作用</span>
+<span class="block font-label-md text-label-md text-text-muted mt-1">持续的身体疼痛会消耗心理资源；某些降压药或激素类药物可能有引发抑郁的副作用。</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Category 4: 女性专项 -->
+<section class="bg-surface-card rounded-xl border border-border-subtle overflow-hidden">
+<div class="bg-surface-container px-gutter-card py-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="female">female</span>
+<h2 class="font-label-md text-label-md text-on-surface">女性专项 (Women's Health)</h2>
+</div>
+<div class="p-gutter-card space-y-4">
+<label class="flex items-start gap-3 cursor-pointer group">
+<div class="relative flex-shrink-0 mt-1">
+<input class="checkup-checkbox opacity-0 absolute w-0 h-0" type="checkbox"/>
+<div class="w-5 h-5 border-2 border-outline-variant rounded bg-surface flex items-center justify-center transition-colors group-hover:border-primary-container">
+<svg class="w-3 h-3 text-on-primary-container opacity-0 transition-opacity pointer-events-none" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<div>
+<span class="block font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">围产期 / 经期激素波动</span>
+<span class="block font-label-md text-label-md text-text-muted mt-1">孕期、产后或严重的经前期综合征（PMDD）都与剧烈的激素水平变化有关，直接影响情绪稳定性。</span>
+</div>
+</label>
+</div>
+</section>
+</div>
+<!-- Action Section -->
+<div class="mt-stack-lg flex flex-col items-center gap-4 pb-8">
+<button class="w-full sm:w-auto px-8 py-3 bg-primary text-on-primary rounded-full font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                保存或导出给医生
+            </button>
+<p class="font-label-md text-label-md text-text-muted text-center max-w-sm">
+                此清单仅供参考，不作为诊断依据。<br/>请务必寻求专业医生的建议。
+            </p>
+</div>
+</main>
+<script>
+        // Simple script to toggle checkbox visually (handled mostly by CSS, this is for any custom logic later)
+        document.querySelectorAll('.checkup-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                // Add any extra haptic feedback or logic here
+            });
+        });
+    </script>
+</body></html>

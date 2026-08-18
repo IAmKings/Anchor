@@ -1,0 +1,20 @@
+{
+  "id": "99d0bbfb7f55477b9e7a9bfbbc741139",
+  "name": "projects/4724290021803215791/screens/99d0bbfb7f55477b9e7a9bfbbc741139",
+  "title": "首启评估 - PHQ-9 基线测评",
+  "category": "01-onboarding-assessment",
+  "categoryLabel": "首启、量表与复评",
+  "deviceType": "MOBILE",
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": "projects/4724290021803215791/screens/99d0bbfb7f55477b9e7a9bfbbc741139/fileEntries/screenshot",
+    "htmlCode": "projects/4724290021803215791/screens/99d0bbfb7f55477b9e7a9bfbbc741139/fileEntries/html"
+  },
+  "local": {
+    "screenshot": "design/01-onboarding-assessment/首启评估---PHQ-9-基线测评__99d0bbfb.png",
+    "html": "design/01-onboarding-assessment/首启评估---PHQ-9-基线测评__99d0bbfb.html"
+  },
+  "errors": {},
+  "unavailable": []
+}

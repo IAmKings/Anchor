@@ -1,0 +1,22 @@
+{
+  "id": "9585b03ddb9141aaa7b5f928a1512bdb",
+  "name": "projects/4724290021803215791/screens/9585b03ddb9141aaa7b5f928a1512bdb",
+  "title": "Animated SVG",
+  "category": "00-brand-assets",
+  "categoryLabel": "品牌与技术素材",
+  "deviceType": null,
+  "width": "512",
+  "height": "512",
+  "source": {
+    "screenshot": null,
+    "htmlCode": "projects/4724290021803215791/screens/9585b03ddb9141aaa7b5f928a1512bdb/fileEntries/html"
+  },
+  "local": {
+    "screenshot": null,
+    "html": "design/00-brand-assets/Animated-SVG__9585b03d.html"
+  },
+  "errors": {},
+  "unavailable": [
+    "screenshot"
+  ]
+}

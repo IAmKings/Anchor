@@ -1,0 +1,22 @@
+{
+  "id": "13176535337604446064",
+  "name": "projects/4724290021803215791/screens/13176535337604446064",
+  "title": "PRD.md",
+  "category": "11-reference",
+  "categoryLabel": "产品参考资料",
+  "deviceType": null,
+  "width": "780",
+  "height": "1768",
+  "source": {
+    "screenshot": null,
+    "htmlCode": "projects/4724290021803215791/files/13176535337604446197"
+  },
+  "local": {
+    "screenshot": null,
+    "html": "design/11-reference/PRD.md__13176535.html"
+  },
+  "errors": {},
+  "unavailable": [
+    "screenshot"
+  ]
+}
