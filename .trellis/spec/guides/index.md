@@ -26,16 +26,28 @@ These guides help you **ask the right questions before coding**.
 
 ---
 
+## Anchor layers (this repo)
+
+There is no HTTP API. Map "cross-layer" onto:
+
+```
+Compose screen → copy / SafetyPolicy / LocalInsights → AnchorStore → SQLDelight/SQLCipher → androidApp host
+```
+
+Contracts that actually cross those seams: `SafetyOutcome`, `UserProfile`, SQL enum `name`s, export JSON `exportVersion`. Details: [`../shared/index.md`](../shared/index.md).
+
+---
+
 ## Quick Reference: Thinking Triggers
 
 ### When to Think About Cross-Layer Issues
 
-- [ ] Feature touches 3+ layers (API, Service, Component, Database)
-- [ ] Data format changes between layers
-- [ ] Multiple consumers need the same data
-- [ ] You're not sure where to put some logic
-- [ ] You are adding an event kind, JSONL record, RPC payload, or config field
-- [ ] UI / command code starts casting raw payload fields directly
+- [ ] Feature touches 3+ of: Compose screen, policy/copy, `AnchorStore`, SQLDelight, Android/iOS host
+- [ ] Data format changes between layers (enum ↔ SQL text, millis ↔ UI clock, JSON export)
+- [ ] Multiple consumers need the same data (home, insights, export, restore)
+- [ ] You're not sure where to put some logic (UI vs `SafetyPolicy` vs `validate*`)
+- [ ] You are adding a store field, SQL column, or export JSON key
+- [ ] A composable starts parsing SQL/JSON or rescoring PHQ/GAD
 
 → Read [Cross-Layer Thinking Guide](./cross-layer-thinking-guide.md)
 

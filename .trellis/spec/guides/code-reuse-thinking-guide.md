@@ -27,6 +27,16 @@ grep -r "functionName" .
 grep -r "keyword" .
 ```
 
+Search these first in this repo:
+
+- `validate*` and `emotionVocabulary` in `AnchorStore.kt` before writing new input checks
+- `SafetyPolicy.evaluate` before any score / crisis / waiting branch
+- `crisisResource` / `medicalGuideContent` before adding a phone number
+- `*Copy.kt` before putting a Chinese string in a composable
+- `buildLocalExport` / restore parser before adding a persisted field
+
+---
+
 ### Step 2: Ask These Questions
 
 | Question | If Yes... |

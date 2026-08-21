@@ -21,8 +21,9 @@
   "children": [],
   "parent": null,
   "relatedFiles": [
-    ".trellis/spec/backend/"
+    ".trellis/spec/shared/",
+    ".trellis/spec/guides/"
   ],
-  "notes": "First-time setup task created by trellis init (backend project)",
+  "notes": "Init labelled the repo backend; specs rewritten for the CMP shared module (no server).",
   "meta": {}
 }

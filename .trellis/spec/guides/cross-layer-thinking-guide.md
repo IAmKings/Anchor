@@ -10,9 +10,9 @@
 
 Common cross-layer bugs:
 
-- API returns format A, frontend expects format B
-- Database stores X, service transforms to Y, but loses data
-- Multiple layers implement the same logic differently
+- A composable rescores PHQ/GAD instead of using `SafetyOutcome`
+- SQL stores enum `name`s, export JSON uses a different spelling, restore rejects the file
+- `validate*` in memory store diverges from `SqlDelightAnchorStore`
 
 ---
 
@@ -26,6 +26,12 @@ Draw out how data moves:
 Source → Transform → Store → Retrieve → Transform → Display
 ```
 
+In this repo that is usually:
+
+```
+User input → validate* / SafetyPolicy → AnchorStore → EncryptedProbe.sq → screen / export JSON
+```
+
 For each arrow, ask:
 
 - What format is the data in?
@@ -34,12 +40,15 @@ For each arrow, ask:
 
 ### Step 2: Identify Boundaries
 
-| Boundary              | Common Issues                     |
-| --------------------- | --------------------------------- |
-| API ↔ Service         | Type mismatches, missing fields   |
-| Service ↔ Database    | Format conversions, null handling |
-| Backend ↔ Frontend    | Serialization, date formats       |
-| Component ↔ Component | Props shape changes               |
+| Boundary | Common issues |
+| -------- | ------------- |
+| Compose ↔ copy/policy | Screen rescoring PHQ/GAD; crisis copy drifting from `SafetyPolicy` |
+| Policy ↔ `AnchorStore` | `evaluateAndStore` not transactional; waiting mode written from UI |
+| Store ↔ SQLDelight | Enum `name` vs `toString()`; missing `.sqm`; answer lists as CSV |
+| Store ↔ host | `InMemoryAnchorStore` in production; shared timer IDs; export paths |
+| Store ↔ export JSON | `exportVersion`; audio paths leaked; restore writes before validate |
+
+Generic server names (API, Service) do not apply. Do not add those layers to "match the template".
 
 ### Step 3: Define Contracts
 
