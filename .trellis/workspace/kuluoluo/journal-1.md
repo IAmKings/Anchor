@@ -40,3 +40,24 @@
 
 - 明确不做：医生 PDF、第5类晨间节律提醒、锁屏通知素材
 - 若要继续：另开任务。Trellis 里 00-bootstrap-guidelines 仍是 in_progress，与本轮产品工作无关
+
+
+## Session 2: 完成 Trellis 00-bootstrap-guidelines：shared 层规范
+
+**Date**: 2026-08-22
+**Task**: 完成 Trellis 00-bootstrap-guidelines：shared 层规范
+**Branch**: `main`
+
+### Summary
+
+用仓库真实约定替换 backend 空模板：SafetyPolicy、AnchorStore/SQLCipher、copy 测试、无网络/无日志。未改产品代码。工作区仍留有上一轮未提交的 UI 打磨。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `7418e42` | (see git log) |
+
+### Status
+
+[OK] **Completed**
