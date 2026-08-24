@@ -166,3 +166,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 8: 首启欢迎页对照 Stitch
+
+**Date**: 2026-08-24
+**Task**: 首启欢迎页对照 Stitch
+**Branch**: `main`
+
+### Summary
+
+协议行内链；年龄芯片 52.dp。自报说明和地区选择保留。BaselineAssessmentTest 与 shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `ddedbde` | (see git log) |
+
+### Status
+
+[OK] **Completed**
