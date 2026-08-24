@@ -52,6 +52,7 @@ M6 raised small captions toward **14sp**. User-visible text must not ship at 12s
 - Wave locate chips show `shortLabel` and set `contentDescription` to `fullLabel`. Keep all eight PRD sites plus custom; do not shrink to the Stitch four-cell mock.
 - Respect system font scale; pages that grow (first-run welcome, settings) must scroll
 - First-run welcome: age chips `heightIn(min = 52.dp)`; legal links are inline (用户协议 / 隐私政策). Keep 18+ / 14–17 chips and crisis-region picker even though the Stitch welcome mock omits them. Keep `ageDisclaimer` self-report wording; do not use the mock's 「专业、理性的辅助支持」.
+- First-anchor picker: radio cards with a Chinese glyph well (not ✓ prefixes, not Material icons). Sticky bottom bar holds the 14-day hint and 「确认选择」. Option list is `p0FirstAnchors + p1FirstAnchors`, never the Stitch habit mock (正念呼吸 / 数字睡前).
 - Semantics: `heading()`, `contentDescription` on icon-only controls (`"此刻需要帮助"`), `Role.Tab` on the bottom bar
 
 TalkBack / 200% font regressions are Android-device checks, not JVM unit tests. Do not remove `verticalScroll` from first-run or settings to "match the mock".

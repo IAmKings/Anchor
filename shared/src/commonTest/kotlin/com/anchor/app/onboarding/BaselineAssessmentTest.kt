@@ -23,6 +23,12 @@ class BaselineAssessmentTest {
         assertEquals(setOf(FirstAnchor.SocialEnergy, FirstAnchor.AltruisticTask), p1FirstAnchors.map { it.anchor }.toSet())
         assertTrue(FirstAnchor.EmotionLabel in p0FirstAnchors.map { it.anchor })
         assertTrue(FirstAnchor.WaveWaiting in p0FirstAnchors.map { it.anchor })
+        assertEquals("确认选择", confirmFirstAnchorLabel)
+        assertEquals("选定后我们将固定练习 14 天", firstAnchorCommitHint)
+        assertFalse(p0FirstAnchors.any { it.title.startsWith("✓") })
+        assertEquals("情", firstAnchorGlyph(FirstAnchor.EmotionLabel))
+        assertEquals("步", firstAnchorGlyph(FirstAnchor.MicroAction))
+        assertEquals("植", firstAnchorGlyph(FirstAnchor.AltruisticTask))
     }
 
     @Test

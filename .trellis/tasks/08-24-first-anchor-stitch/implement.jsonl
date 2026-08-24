@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Pre-dev checklist; Compose onboarding first-anchor picker."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "52.dp primary action, copy extraction, Stitch is layout-only."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "Keep first-anchor option tests; no streak language."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Reuse FirstAnchorOption titles instead of inventing Stitch habit names."}

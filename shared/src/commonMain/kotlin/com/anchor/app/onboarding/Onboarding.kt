@@ -22,7 +22,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
@@ -35,6 +37,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -727,41 +730,121 @@ private fun ScoreRing(score: Int, max: Int, caption: String) {
 @Composable
 fun FirstAnchorChoice(onConfirm: (FirstAnchor) -> Unit, onBack: (() -> Unit)? = null) {
     var selected by remember { mutableStateOf<FirstAnchor?>(null) }
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        if (onBack != null) {
-            TextButton(onClick = onBack) { Text("返回") }
-        }
-        Text(firstAnchorHeadline, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold, lineHeight = 32.sp)
-        Text(firstAnchorBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
-        (p0FirstAnchors + p1FirstAnchors).forEach { option ->
-            val checked = selected == option.anchor
-            Surface(
-                onClick = { selected = option.anchor },
-                color = if (checked) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f) else MaterialTheme.colorScheme.surface,
-                shape = CardShape,
-                border = BorderStroke(1.dp, if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-                modifier = Modifier.selectable(selected = checked, role = Role.RadioButton, onClick = { selected = option.anchor }),
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            if (onBack != null) {
+                TextButton(
+                    onClick = onBack,
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(horizontal = 8.dp),
+                ) { Text("返回") }
+            }
+        },
+        bottomBar = {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(if (checked) "✓  ${option.title}" else option.title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-                    Text(option.description, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
+                Text(
+                    firstAnchorCommitHint,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                )
+                Button(
+                    onClick = { onConfirm(selected!!) },
+                    enabled = selected != null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .widthIn(max = 300.dp)
+                        .heightIn(min = 52.dp),
+                    shape = PillShape,
+                ) { Text(confirmFirstAnchorLabel, fontSize = 17.sp) }
+            }
+        },
+    ) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .then(if (onBack == null) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Text(
+                firstAnchorHeadline,
+                Modifier.semantics { heading() },
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 32.sp,
+            )
+            Text(firstAnchorBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            (p0FirstAnchors + p1FirstAnchors).forEach { option ->
+                val checked = selected == option.anchor
+                Surface(
+                    onClick = { selected = option.anchor },
+                    color = if (checked) {
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
+                    } else {
+                        MaterialTheme.colorScheme.surface
+                    },
+                    shape = CardShape,
+                    border = BorderStroke(
+                        1.dp,
+                        if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f),
+                    ),
+                    modifier = Modifier.selectable(
+                        selected = checked,
+                        role = Role.RadioButton,
+                        onClick = { selected = option.anchor },
+                    ),
+                ) {
+                    Row(
+                        Modifier.fillMaxWidth().padding(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.Top,
+                    ) {
+                        Surface(
+                            color = if (checked) {
+                                MaterialTheme.colorScheme.onPrimaryContainer
+                            } else {
+                                MaterialTheme.colorScheme.surfaceVariant
+                            },
+                            shape = CircleShape,
+                            modifier = Modifier.size(32.dp),
+                        ) {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                Text(
+                                    firstAnchorGlyph(option.anchor),
+                                    color = if (checked) {
+                                        MaterialTheme.colorScheme.primaryContainer
+                                    } else {
+                                        MaterialTheme.colorScheme.primary
+                                    },
+                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 14.sp,
+                                )
+                            }
+                        }
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text(option.title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                            Text(
+                                option.description,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 14.sp,
+                                lineHeight = 20.sp,
+                            )
+                        }
+                    }
                 }
             }
         }
-        Text(firstAnchorCommitHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
-        Button(
-            onClick = { onConfirm(selected!!) },
-            enabled = selected != null,
-            modifier = Modifier.fillMaxWidth().height(56.dp),
-            shape = PillShape,
-        ) { Text("确认选择") }
-        Spacer(Modifier.height(16.dp))
     }
 }

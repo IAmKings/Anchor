@@ -1,0 +1,31 @@
+{
+  "id": "first-anchor-stitch",
+  "name": "first-anchor-stitch",
+  "title": "挑选第一个锚点页对照 Stitch",
+  "description": "Align FirstAnchorChoice layout with Stitch. Keep one-thing 14-day lock and P0+P1 options.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-24",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/Onboarding.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/OnboardingCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/onboarding/BaselineAssessmentTest.kt",
+    "design/01-onboarding-assessment/首启引导---挑选第一个锚点动作__bb047f26.html"
+  ],
+  "notes": "",
+  "meta": {}
+}

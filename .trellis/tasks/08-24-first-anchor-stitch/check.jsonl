@@ -1,0 +1,3 @@
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "No Material icons; scrollable list; confirm ≥52.dp."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "p0+p1 anchors must remain; 14-day lock copy unchanged."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "Picker only; do not touch SafetyPolicy."}

@@ -54,7 +54,19 @@ internal const val medicalWaitingBody = "日常练习已暂时隐去，请优先
 internal const val firstAnchorHeadline = "感谢你的诚实。目前你可以通过行为来进行日常调节。"
 internal const val firstAnchorBody = "建议从最轻微的动作开始，请在下方列表里只选一个。"
 internal const val firstAnchorCommitHint = "选定后我们将固定练习 14 天"
+internal const val confirmFirstAnchorLabel = "确认选择"
 internal const val oneThingLockNote = "这 14 天只练这一件。不是任务。"
+
+internal fun firstAnchorGlyph(anchor: FirstAnchor): String = when (anchor) {
+    FirstAnchor.EmotionLabel -> "情"
+    FirstAnchor.MicroAction -> "步"
+    FirstAnchor.FactsJournal -> "记"
+    FirstAnchor.WorryVault -> "箱"
+    FirstAnchor.Rhythm -> "光"
+    FirstAnchor.WaveWaiting -> "浪"
+    FirstAnchor.SocialEnergy -> "他"
+    FirstAnchor.AltruisticTask -> "植"
+}
 
 internal fun additionalPracticeUnlocked(firstAnchorAtMillis: Long?, nowMillis: Long): Boolean =
     firstAnchorAtMillis == null || nowMillis - firstAnchorAtMillis >= REASSESSMENT_INTERVAL_MILLIS
