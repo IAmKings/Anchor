@@ -1,0 +1,31 @@
+{
+  "id": "welcome-stitch",
+  "name": "welcome-stitch",
+  "title": "首启欢迎页对照 Stitch",
+  "description": "Align first-run Welcome layout with Stitch; keep age chips, region, and self-report age copy required by PRD.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-24",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/Onboarding.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/OnboardingCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/onboarding/BaselineAssessmentTest.kt",
+    "design/01-onboarding-assessment/首启欢迎---年龄确认与基线评估入口__aa12ee4b.html"
+  ],
+  "notes": "",
+  "meta": {}
+}

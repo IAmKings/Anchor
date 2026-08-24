@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -50,6 +52,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
@@ -249,18 +252,18 @@ private fun Welcome(
                     }
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text("年龄确认", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                    Text(ageConfirmTitle, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
                     Text(ageDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
                 }
             }
         }
         Spacer(Modifier.height(12.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            AgeChip("18 岁以上", ageGroup == AgeGroup.Adult18Plus, Modifier.weight(1f)) { onAgeGroup(AgeGroup.Adult18Plus) }
-            AgeChip("14–17 岁", ageGroup == AgeGroup.Youth14To17, Modifier.weight(1f)) { onAgeGroup(AgeGroup.Youth14To17) }
+            AgeChip(adultAgeLabel, ageGroup == AgeGroup.Adult18Plus, Modifier.weight(1f)) { onAgeGroup(AgeGroup.Adult18Plus) }
+            AgeChip(youthAgeLabel, ageGroup == AgeGroup.Youth14To17, Modifier.weight(1f)) { onAgeGroup(AgeGroup.Youth14To17) }
         }
         Spacer(Modifier.height(16.dp))
-        Text("危机资源地区", Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+        Text(crisisRegionLabel, Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
         Spacer(Modifier.height(8.dp))
         FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
             CrisisRegion.entries.forEach { region ->
@@ -277,25 +280,45 @@ private fun Welcome(
         }
         Spacer(Modifier.height(20.dp))
         Row(
-            Modifier
-                .fillMaxWidth()
-                .toggleable(value = agreed, role = Role.Checkbox, onValueChange = onAgreed)
-                .padding(vertical = 4.dp),
+            Modifier.fillMaxWidth().padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Checkbox(checked = agreed, onCheckedChange = onAgreed)
-            Text(
-                agreementLabel,
-                modifier = Modifier.weight(1f),
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            Checkbox(
+                checked = agreed,
+                onCheckedChange = onAgreed,
+                modifier = Modifier.semantics { contentDescription = agreementLabel },
             )
-        }
-        Row(Modifier.fillMaxWidth().padding(start = 40.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            TextButton(onClick = { legal = termsTitle to termsBody }) { Text("用户协议", fontSize = 14.sp) }
-            TextButton(onClick = { legal = privacyTitle to privacyBody }) { Text("隐私政策", fontSize = 14.sp) }
+            FlowRow(
+                Modifier.weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    agreementPrefix,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                TextButton(
+                    onClick = { legal = termsTitle to termsBody },
+                    contentPadding = PaddingValues(0.dp),
+                ) {
+                    Text(termsTitle, fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
+                }
+                Text(
+                    agreementAnd,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                TextButton(
+                    onClick = { legal = privacyTitle to privacyBody },
+                    contentPadding = PaddingValues(0.dp),
+                ) {
+                    Text(privacyTitle, fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
+                }
+            }
         }
         Spacer(Modifier.height(12.dp))
         Button(
@@ -325,12 +348,14 @@ private fun Welcome(
 private fun AgeChip(text: String, selected: Boolean, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.heightIn(min = 52.dp),
         color = if (selected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f) else MaterialTheme.colorScheme.surface,
         shape = CardShape,
         border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
-        Text(text, Modifier.fillMaxWidth().padding(vertical = 14.dp), textAlign = TextAlign.Center, fontWeight = FontWeight.Medium)
+        Box(Modifier.fillMaxWidth().heightIn(min = 52.dp), contentAlignment = Alignment.Center) {
+            Text(text, textAlign = TextAlign.Center, fontWeight = FontWeight.Medium, fontSize = 17.sp)
+        }
     }
 }
 

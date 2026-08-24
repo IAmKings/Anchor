@@ -1,0 +1,3 @@
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "Welcome stays scrollable; no 12sp; no remote logo."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "Age group still drives youth hotline; region still selected before baseline."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "BaselineAssessmentTest canStartBaseline must stay."}

@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Pre-dev checklist; Compose onboarding welcome."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "52.dp taps, 14sp, keep verticalScroll on first-run welcome."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "Youth vs adult hotlines depend on age chip; do not drop 14–17."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Reuse OnboardingCopy terms/privacy titles."}

@@ -34,6 +34,17 @@ class BaselineAssessmentTest {
     }
 
     @Test
+    fun welcomeKeepsSelfReportAgeAndInlineLegalLinks() {
+        assertTrue(ageDisclaimer.contains("自报"))
+        assertTrue(ageDisclaimer.contains("不会尝试检测"))
+        assertEquals("18 岁以上", adultAgeLabel)
+        assertEquals("14–17 岁", youthAgeLabel)
+        assertEquals("我已阅读并同意用户协议与隐私政策", agreementLabel)
+        assertEquals("用户协议", termsTitle)
+        assertEquals("隐私政策", privacyTitle)
+    }
+
+    @Test
     fun phq9Item9SkipsGad7() {
         assertFalse(shouldSkipGad7(0))
         assertFalse(shouldSkipGad7(null))
