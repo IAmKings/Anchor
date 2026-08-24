@@ -1,0 +1,3 @@
+{"file": ".trellis/spec/shared/safety.md", "reason": "crisisResource mapping unchanged; no SafetyState writes."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "Sticky emergency bar; 17sp/52.dp; no pep-talk."}
+{"file": ".trellis/spec/shared/privacy.md", "reason": "No INTERNET, maps SDK, or contacts permission."}

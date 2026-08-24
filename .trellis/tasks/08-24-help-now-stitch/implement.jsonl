@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Pre-dev checklist; safety Compose screen."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "52.dp actions, no terracotta hex, Stitch is layout-only."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "Hotlines from CrisisResources/PRD §10.4, never Stitch 希望24."}
+{"file": ".trellis/spec/shared/privacy.md", "reason": "No maps, no contacts, no network for nearby ER."}

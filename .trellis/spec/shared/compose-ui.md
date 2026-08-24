@@ -65,6 +65,8 @@ Practice home vs waiting home is selected from `store.safetyState().mode`, not f
 
 Waiting-home chrome: badge is **就医等待期** (not 医疗等待期). Body must include PRD §10.2 「暂停练习不是惩罚…过度自我要求」. Camera-log tool copy is facts, never 「感受」. Stitch waiting-mode HTML is layout reference only.
 
+Help-now / crisis page: numbered glyph wells and a sticky emergency bar. Numbers come from `crisisResource`, never Stitch 「希望24」 or hardcoded 120/110. Do not add maps, contacts, or pep-talk (「好起来」). Primary/emergency buttons use `heightIn(min = 52.dp)`.
+
 Settings includes preview controls for relation banners, waiting, and one-thing lock. Previews **must not** call `evaluateAndStore` or `enterCrisisWaiting()`. After closing settings, the real `SafetyState` is unchanged.
 
 ---

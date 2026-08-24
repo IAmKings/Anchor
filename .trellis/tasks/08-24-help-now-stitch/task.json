@@ -1,0 +1,30 @@
+{
+  "id": "help-now-stitch",
+  "name": "help-now-stitch",
+  "title": "危机帮助页对照 Stitch 版式",
+  "description": "Align HelpNowScreen hierarchy with Stitch crisis page. Keep PRD hotlines; no 希望24, maps, contacts, or pep-talk.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-24",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/safety/HelpNowScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/safety/CrisisResources.kt",
+    "design/08-medical-safety/危机干预页__40f8ae92.html"
+  ],
+  "notes": "",
+  "meta": {}
+}
