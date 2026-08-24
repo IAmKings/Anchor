@@ -271,3 +271,24 @@ MedicalResult 复用 homeWaitingBody、工具卡文案、HelpNow 三步；底部
 ### Status
 
 [OK] **Completed**
+
+
+## Session 13: 轻度评估结果页底部固定选锚点
+
+**Date**: 2026-08-25
+**Task**: 轻度评估结果页底部固定选锚点
+**Branch**: `main`
+
+### Summary
+
+MildResult 底部固定选择第一个锚点；页内一次一件/14 天提示。不用稿子微行动单选。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `5ade545` | (see git log) |
+
+### Status
+
+[OK] **Completed**
