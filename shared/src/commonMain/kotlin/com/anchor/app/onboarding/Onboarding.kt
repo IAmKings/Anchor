@@ -68,6 +68,12 @@ import com.anchor.app.safety.SafetyAction
 import com.anchor.app.safety.SafetyOutcome
 import com.anchor.app.safety.SafetyPolicy
 import com.anchor.app.safety.SafetyState
+import com.anchor.app.home.enterMedicalWaitingLabel
+import com.anchor.app.home.homeWaitingBody
+import com.anchor.app.home.homeWaitingChecklistBody
+import com.anchor.app.home.homeWaitingChecklistTitle
+import com.anchor.app.home.homeWaitingGuideDetail
+import com.anchor.app.home.homeWaitingGuideTitle
 import com.anchor.app.safety.HelpNowStepCard
 import com.anchor.app.safety.crisisResource
 import com.anchor.app.safety.helpNowCallEmergency
@@ -552,30 +558,49 @@ private fun MedicalResult(
     onFinish: () -> Unit,
 ) {
     val resource = crisisResource(region, youth)
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-        Surface(color = MaterialTheme.colorScheme.surface, shape = CircleShape, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))) {
-            Box(Modifier.size(168.dp), contentAlignment = Alignment.Center) {
-                Text("${outcome.assessment.phq9Score}", color = MaterialTheme.colorScheme.secondary, fontFamily = FontFamily.Monospace, fontSize = 64.sp)
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+            ) {
+                Button(
+                    onClick = onFinish,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                    shape = CardShape,
+                ) { Text(enterMedicalWaitingLabel, fontSize = 17.sp) }
             }
+        },
+    ) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+            Surface(color = MaterialTheme.colorScheme.surface, shape = CircleShape, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))) {
+                Box(Modifier.size(168.dp), contentAlignment = Alignment.Center) {
+                    Text("${outcome.assessment.phq9Score}", color = MaterialTheme.colorScheme.secondary, fontFamily = FontFamily.Monospace, fontSize = 64.sp)
+                }
+            }
+            Surface(color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(999.dp)) {
+                Text(resultBadge(outcome.action), Modifier.padding(horizontal = 16.dp, vertical = 6.dp), color = MaterialTheme.colorScheme.onSecondary, fontSize = 14.sp)
+            }
+            QuoteCard()
+            WaitingActions(onOpenGuide, onOpenChecklist)
+            HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline)
+            HelpNowStepCard(2, helpNowStep2Label, helpNowStep2Title, helpNowStep2Body)
+            HelpNowStepCard(3, helpNowStep3Label, helpNowStep3Title, helpNowStep3Body)
+            Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
         }
-        Surface(color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(999.dp)) {
-            Text(resultBadge(outcome.action), Modifier.padding(horizontal = 16.dp, vertical = 6.dp), color = MaterialTheme.colorScheme.onSecondary, fontSize = 14.sp)
-        }
-        QuoteCard()
-        WaitingActions(onOpenGuide, onOpenChecklist)
-        CrisisSteps(resource.hotline, resource.emergency)
-        Button(onClick = onFinish, modifier = Modifier.fillMaxWidth().height(52.dp), shape = CardShape) { Text("进入就医等待期") }
-        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(16.dp))
     }
 }
 
@@ -659,7 +684,7 @@ private fun QuoteCard() {
             Box(Modifier.size(width = 4.dp, height = 88.dp)) {
                 Surface(color = MaterialTheme.colorScheme.primaryContainer, modifier = Modifier.fillMaxSize()) {}
             }
-            Text(medicalQuote, Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            Text(helpNowMedicalQuote, Modifier.padding(16.dp), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
         }
     }
 }
@@ -671,7 +696,7 @@ private fun WaitingActions(onOpenGuide: () -> Unit, onOpenChecklist: () -> Unit)
             Surface(color = MaterialTheme.colorScheme.secondary, shape = CircleShape, modifier = Modifier.size(8.dp)) {}
             Text(medicalWaitingTitle, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
         }
-        Text(medicalWaitingBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
+        Text(homeWaitingBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Surface(
                 onClick = onOpenGuide,
@@ -681,8 +706,8 @@ private fun WaitingActions(onOpenGuide: () -> Unit, onOpenChecklist: () -> Unit)
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
             ) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("就医指南", fontWeight = FontWeight.SemiBold)
-                    Text("了解看诊流程与准备", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 18.sp)
+                    Text(homeWaitingGuideTitle, fontWeight = FontWeight.SemiBold)
+                    Text(homeWaitingGuideDetail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 18.sp)
                 }
             }
             Surface(
@@ -693,41 +718,10 @@ private fun WaitingActions(onOpenGuide: () -> Unit, onOpenChecklist: () -> Unit)
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
             ) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("躯体检查清单", fontWeight = FontWeight.SemiBold)
-                    Text("排除生理因素干扰", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 18.sp)
+                    Text(homeWaitingChecklistTitle, fontWeight = FontWeight.SemiBold)
+                    Text(homeWaitingChecklistBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun CrisisSteps(hotline: String, emergency: String) {
-    Surface(
-        color = MaterialTheme.colorScheme.surface,
-        shape = CardShape,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-    ) {
-        Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Text("危机干预 1-2-3", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-            StepRow("1", "拨打心理援助热线", hotline)
-            StepRow("2", "前往精神科或急诊", "去最近的医院急诊，或直接预约精神科。")
-            StepRow("3", "告诉一位身边可信的人", "找一个你信得过的朋友或家人。立即危险请拨 $emergency。")
-        }
-    }
-}
-
-@Composable
-private fun StepRow(number: String, title: String, body: String) {
-    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape) {
-            Box(Modifier.size(32.dp), contentAlignment = Alignment.Center) {
-                Text(number, fontFamily = FontFamily.Monospace, fontSize = 14.sp)
-            }
-        }
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(title, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
-            Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
         }
     }
 }

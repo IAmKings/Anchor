@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Reuse existing waiting-home and help-now copy."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "Waiting-home pause line; help-now steps; 52.dp CTA."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "crisisResource; no SafetyPolicy change."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Do not duplicate pause/crisis strings."}

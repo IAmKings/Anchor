@@ -52,6 +52,9 @@ class HomeCopyTest {
         assertEquals("记录此刻能被看见的事实，暂不进行分析。", homeWaitingJournalBody)
         assertFalse(homeWaitingJournalBody.contains("感受"))
         assertTrue(homeWaitingChecklistBody.contains("身体感受"))
+        assertEquals("进入就医等待期", enterMedicalWaitingLabel)
+        assertEquals("就医指南", homeWaitingGuideTitle)
+        assertEquals("就医准备清单", homeWaitingChecklistTitle)
     }
 
     @Test

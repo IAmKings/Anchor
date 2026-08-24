@@ -1,0 +1,30 @@
+{
+  "id": "medical-result-align",
+  "name": "medical-result-align",
+  "title": "首启就医等待结果页对齐等待首页",
+  "description": "Reuse waiting-home copy, HelpNow steps, and sticky enter-waiting CTA on MedicalResult. Keep PRD pause line and regional hotlines.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/Onboarding.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/home/HomeCopy.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/safety/HelpNowCopy.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
