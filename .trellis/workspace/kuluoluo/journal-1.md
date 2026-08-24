@@ -61,3 +61,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 3: 首页顶栏助入口、14sp 与危险按钮语义色
+
+**Date**: 2026-08-24
+**Task**: 首页顶栏助入口、14sp 与危险按钮语义色
+**Branch**: `main`
+
+### Summary
+
+落地 Stitch 首发首页顶栏与浪潮入口；触及页 14sp；危机/删除按钮改 secondary。shared 70 项单测通过。真机 TalkBack/大字号未在本轮验证。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `36b4de5` | (see git log) |
+
+### Status
+
+[OK] **Completed**
