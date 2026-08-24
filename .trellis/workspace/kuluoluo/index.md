@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 5
+- **Total Sessions**: 6
 - **Last Active**: 2026-08-24
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~126 | Active |
+| `journal-1.md` | ~147 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 6 | 2026-08-24 | 就医等待期首页对照 Stitch 中文稿 | `246589f` | `main` |
 | 5 | 2026-08-24 | 首页今日卡片对照 Stitch 首发 bento | `075fb16` | `main` |
 | 4 | 2026-08-24 | 其余页面 14sp 与 terracotta 改主题色 | `c488b83` | `main` |
 | 3 | 2026-08-24 | 首页顶栏助入口、14sp 与危险按钮语义色 | `36b4de5` | `main` |

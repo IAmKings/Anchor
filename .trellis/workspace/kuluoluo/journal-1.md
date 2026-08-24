@@ -124,3 +124,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 6: 就医等待期首页对照 Stitch 中文稿
+
+**Date**: 2026-08-24
+**Task**: 就医等待期首页对照 Stitch 中文稿
+**Branch**: `main`
+
+### Summary
+
+徽章改为就医等待期；说明含 PRD 惩罚句；事实记录副文案不含感受。HomeCopyTest 覆盖。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `246589f` | (see git log) |
+
+### Status
+
+[OK] **Completed**
