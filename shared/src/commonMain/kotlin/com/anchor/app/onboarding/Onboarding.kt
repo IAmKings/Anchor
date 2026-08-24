@@ -251,7 +251,7 @@ private fun Welcome(
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text("年龄确认", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
-                    Text(ageDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, lineHeight = 20.sp)
+                    Text(ageDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
                 }
             }
         }
@@ -272,7 +272,7 @@ private fun Welcome(
                     shape = RoundedCornerShape(999.dp),
                     border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
                 ) {
-                    Text(region.label(), Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontSize = 13.sp)
+                    Text(region.label(), Modifier.padding(horizontal = 12.dp, vertical = 8.dp), fontSize = 14.sp)
                 }
             }
         }
@@ -295,8 +295,8 @@ private fun Welcome(
             )
         }
         Row(Modifier.fillMaxWidth().padding(start = 40.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            TextButton(onClick = { legal = termsTitle to termsBody }) { Text("用户协议", fontSize = 13.sp) }
-            TextButton(onClick = { legal = privacyTitle to privacyBody }) { Text("隐私政策", fontSize = 13.sp) }
+            TextButton(onClick = { legal = termsTitle to termsBody }) { Text("用户协议", fontSize = 14.sp) }
+            TextButton(onClick = { legal = privacyTitle to privacyBody }) { Text("隐私政策", fontSize = 14.sp) }
         }
         Spacer(Modifier.height(12.dp))
         Button(
@@ -307,7 +307,7 @@ private fun Welcome(
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(startBaselineLabel, fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
-                Text(startBaselineHint, fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f))
+                Text(startBaselineHint, fontSize = 14.sp, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f))
             }
         }
         Spacer(Modifier.height(24.dp))
@@ -373,7 +373,7 @@ internal fun ScaleForm(
                 Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text("${index + 1}. $question", fontSize = 16.sp, lineHeight = 24.sp)
                     if (crisis) {
-                        Text(item9CrisisNote, color = Terracotta, fontSize = 13.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium)
+                        Text(item9CrisisNote, color = Terracotta, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium)
                     }
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         assessmentChoices.chunked(2).forEachIndexed { rowIndex, row ->
@@ -392,7 +392,7 @@ internal fun ScaleForm(
                                             choice,
                                             Modifier.fillMaxWidth().padding(vertical = 10.dp),
                                             color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                                            fontSize = 13.sp,
+                                            fontSize = 14.sp,
                                             textAlign = TextAlign.Center,
                                         )
                                     }
@@ -409,8 +409,8 @@ internal fun ScaleForm(
             modifier = Modifier.fillMaxWidth().height(56.dp),
             shape = PillShape,
         ) { Text(submitAssessmentLabel, fontSize = 17.sp) }
-        Text(scaleDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, textAlign = TextAlign.Center)
-        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, textAlign = TextAlign.Center)
+        Text(scaleDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
+        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
     }
 }
@@ -490,12 +490,12 @@ private fun MildResult(outcome: SafetyOutcome, onChooseAnchor: () -> Unit) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 14.sp,
         )
-        Text(scaleDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, textAlign = TextAlign.Center)
+        Text(scaleDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
         Spacer(Modifier.height(8.dp))
         Button(onClick = onChooseAnchor, modifier = Modifier.fillMaxWidth().height(56.dp), shape = PillShape) {
             Text(chooseFirstAnchorLabel, fontSize = 17.sp)
         }
-        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, textAlign = TextAlign.Center)
+        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
     }
 }
@@ -525,14 +525,14 @@ private fun MedicalResult(
                 Text("${outcome.assessment.phq9Score}", color = Terracotta, fontFamily = FontFamily.Monospace, fontSize = 64.sp)
             }
         }
-        Surface(color = Terracotta, shape = RoundedCornerShape(999.dp)) {
-            Text(resultBadge(outcome.action), Modifier.padding(horizontal = 16.dp, vertical = 6.dp), color = Color.White, fontSize = 13.sp)
+        Surface(color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(999.dp)) {
+            Text(resultBadge(outcome.action), Modifier.padding(horizontal = 16.dp, vertical = 6.dp), color = MaterialTheme.colorScheme.onSecondary, fontSize = 14.sp)
         }
         QuoteCard()
         WaitingActions(onOpenGuide, onOpenChecklist)
         CrisisSteps(resource.hotline, resource.emergency)
         Button(onClick = onFinish, modifier = Modifier.fillMaxWidth().height(52.dp), shape = CardShape) { Text("进入就医等待期") }
-        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, textAlign = TextAlign.Center)
+        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
         Spacer(Modifier.height(16.dp))
     }
 }
@@ -574,10 +574,13 @@ private fun CrisisResult(
             onClick = onFinish,
             modifier = Modifier.fillMaxWidth().height(52.dp),
             shape = CardShape,
-            colors = ButtonDefaults.buttonColors(containerColor = Terracotta, contentColor = Color.White),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+            ),
         ) { Text("立即危险请拨 ${resource.emergency}") }
         TextButton(onClick = onFinish, modifier = Modifier.fillMaxWidth()) { Text("先进入就医等待期") }
-        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
+        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
         Spacer(Modifier.height(16.dp))
     }
 }
@@ -616,7 +619,7 @@ private fun WaitingActions(onOpenGuide: () -> Unit, onOpenChecklist: () -> Unit)
             ) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text("就医指南", fontWeight = FontWeight.SemiBold)
-                    Text("了解看诊流程与准备", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, lineHeight = 18.sp)
+                    Text("了解看诊流程与准备", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 18.sp)
                 }
             }
             Surface(
@@ -628,7 +631,7 @@ private fun WaitingActions(onOpenGuide: () -> Unit, onOpenChecklist: () -> Unit)
             ) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text("躯体检查清单", fontWeight = FontWeight.SemiBold)
-                    Text("排除生理因素干扰", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, lineHeight = 18.sp)
+                    Text("排除生理因素干扰", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 18.sp)
                 }
             }
         }
@@ -691,7 +694,7 @@ private fun ScoreRing(score: Int, max: Int, caption: String) {
                     Text("$score", color = MaterialTheme.colorScheme.primary, fontFamily = FontFamily.Monospace, fontSize = 36.sp)
                     Text("/$max", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 16.sp, modifier = Modifier.padding(bottom = 6.dp, start = 2.dp))
                 }
-                Text(caption, color = MaterialTheme.colorScheme.primary, fontSize = 13.sp)
+                Text(caption, color = MaterialTheme.colorScheme.primary, fontSize = 14.sp)
             }
         }
     }

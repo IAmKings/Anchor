@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Quality Check section after UI edits."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "Verify 14sp, semantic colors, copy tests, no nav-library drift."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "Confirm SafetyState and scoring were not mutated by chrome/preview work."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "Test gate: shared:testDebugUnitTest and make verify if copy/privacy touched."}

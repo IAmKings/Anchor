@@ -25,6 +25,11 @@ class HomeCopyTest {
     }
 
     @Test
+    fun disclaimerMatchesStitchFirstShipCopy() {
+        assertEquals("应用仅适用于轻度调节", homeMildUseDisclaimer)
+    }
+
+    @Test
     fun countdownPadsMinutesAndSeconds() {
         assertEquals("05:00", formatCountdown(5 * 60 * 1_000))
         assertEquals("04:58", formatCountdown(4 * 60 * 1_000 + 58 * 1_000))

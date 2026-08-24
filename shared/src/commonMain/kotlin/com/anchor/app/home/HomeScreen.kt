@@ -73,7 +73,6 @@ import kotlin.math.PI
 import kotlin.math.cos
 
 private val CardShape = RoundedCornerShape(16.dp)
-private val Terracotta = Color(0xFFB26A4F)
 
 @Composable
 fun HomeScreen(
@@ -113,7 +112,7 @@ fun HomeScreen(
     fun showPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, selectedAnchor, unlocked)
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { HomeTopBar(onHelp = onHelp, onSettings = onSettings) },
+        topBar = { HomeTopBar(onHelp = onHelp) },
         bottomBar = {
             HomeBottomBar(
                 selected = HomeTab.Today,
@@ -128,8 +127,8 @@ fun HomeScreen(
                 if (medicalWaiting) {
                     FloatingActionButton(
                         onClick = onHelp,
-                        containerColor = Terracotta,
-                        contentColor = Color.White,
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
                         shape = CircleShape,
                         modifier = Modifier.semantics { contentDescription = "此刻需要帮助" },
                     ) { Text("助", fontWeight = FontWeight.SemiBold, fontSize = 18.sp) }
@@ -208,30 +207,38 @@ fun HomeScreen(
 internal enum class HomeTab { Today, Records, Insights, Mine }
 
 @Composable
-internal fun HomeTopBar(onHelp: () -> Unit, onSettings: () -> Unit) {
+internal fun HomeTopBar(onHelp: () -> Unit) {
     Row(
         Modifier
             .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        TextButton(
-            onClick = onHelp,
-            modifier = Modifier.semantics { contentDescription = "此刻需要帮助" },
-        ) {
-            Text("SOS", color = Terracotta, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-        }
         Text(
-            "锚点 Anchor",
+            "锚",
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.semantics { contentDescription = "锚点" },
+        )
+        Text(
+            "锚点",
             Modifier.semantics { heading() },
             color = MaterialTheme.colorScheme.primary,
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
         )
-        TextButton(onClick = onSettings, modifier = Modifier.semantics { contentDescription = "设置" }) {
-            Text("设置", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+        Surface(
+            onClick = onHelp,
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f),
+            modifier = Modifier.size(40.dp).semantics { contentDescription = "此刻需要帮助" },
+        ) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("助", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+            }
         }
     }
 }
@@ -245,12 +252,12 @@ internal fun HomeBottomBar(
     onMine: () -> Unit,
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f),
         tonalElevation = 0.dp,
         shadowElevation = 0.dp,
     ) {
         Row(
-            Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 10.dp),
+            Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -264,9 +271,20 @@ internal fun HomeBottomBar(
 
 @Composable
 private fun BottomTab(label: String, selected: Boolean, onClick: () -> Unit) {
-    val color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-    TextButton(onClick = onClick, modifier = Modifier.semantics { role = Role.Tab }) {
-        Text(label, color = color, fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium, fontSize = 13.sp)
+    val color = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+    Surface(
+        onClick = onClick,
+        color = if (selected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f) else Color.Transparent,
+        shape = RoundedCornerShape(999.dp),
+        modifier = Modifier.semantics { role = Role.Tab },
+    ) {
+        Text(
+            label,
+            Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            color = color,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+            fontSize = 14.sp,
+        )
     }
 }
 
@@ -319,7 +337,7 @@ private fun PracticeHome(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Text("应用仅适用轻度调节", color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f), fontSize = 14.sp)
+            Text(homeMildUseDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f), fontSize = 14.sp)
         }
         lockNote?.let {
             Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 22.sp)
@@ -344,7 +362,7 @@ private fun PracticeHome(
             Text(
                 homeRelationPreviewNote,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp,
+                fontSize = 14.sp,
             )
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -535,41 +553,47 @@ private fun WaveEntry(onClick: () -> Unit) {
         ),
         label = "home-wave-scale",
     )
-    Box(
-        Modifier
-            .sizeIn(maxWidth = 280.dp, maxHeight = 280.dp)
-            .fillMaxWidth(0.72f)
-            .aspectRatio(1f)
-            .graphicsLayer { scaleX = scale; scaleY = scale },
-        contentAlignment = Alignment.Center,
-    ) {
-        Surface(
-            onClick = onClick,
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.primaryContainer,
-            modifier = Modifier
-                .fillMaxSize()
-                .semantics { contentDescription = "浪潮等待，难受的时候点这里" },
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Box(
+            Modifier
+                .size(192.dp)
+                .graphicsLayer { scaleX = scale; scaleY = scale },
+            contentAlignment = Alignment.Center,
         ) {
-            Column(
-                Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+            Surface(
+                onClick = onClick,
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .semantics { contentDescription = "浪潮等待，难受的时候点这里" },
             ) {
-                Text(
-                    "浪潮等待",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    "难受的时候点这里",
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f),
-                    fontSize = 17.sp,
-                )
+                Column(
+                    Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        "浪潮等待",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "等待中",
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                        fontSize = 14.sp,
+                    )
+                }
             }
         }
+        Text(
+            "难受的时候点这里",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 17.sp,
+            modifier = Modifier.padding(top = 24.dp),
+        )
     }
 }
 

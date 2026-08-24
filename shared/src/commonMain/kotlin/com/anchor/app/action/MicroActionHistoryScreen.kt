@@ -141,7 +141,7 @@ private fun SummaryCard(modifier: Modifier, label: String, value: String) {
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+            Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             Text(value, color = MaterialTheme.colorScheme.primary, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, lineHeight = 26.sp)
         }
     }
@@ -162,16 +162,16 @@ private fun EvidenceRow(title: String, stamp: String, predicted: Int?, actual: I
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(title, fontSize = 16.sp, fontWeight = FontWeight.Medium)
                 if (stamp.isNotEmpty()) {
-                    Text(stamp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+                    Text(stamp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 }
             }
             Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(historyPredictedLabel, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
+                Text(historyPredictedLabel, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 Text(historyScore(predicted), fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.outline, fontSize = 16.sp)
             }
             Text("→", color = MaterialTheme.colorScheme.outlineVariant)
             Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(historyActualLabel, color = MaterialTheme.colorScheme.primary, fontSize = 12.sp)
+                Text(historyActualLabel, color = MaterialTheme.colorScheme.primary, fontSize = 14.sp)
                 Text(
                     historyScore(actual),
                     fontFamily = FontFamily.Monospace,
@@ -188,7 +188,7 @@ private fun EvidenceRow(title: String, stamp: String, predicted: Int?, actual: I
 private fun LegendDot(color: Color, label: String) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         Surface(color = color, shape = CircleShape, modifier = Modifier.size(8.dp)) {}
-        Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+        Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
     }
 }
 

@@ -94,7 +94,10 @@ fun HelpNowScreen(
             onClick = onClose,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Terracotta, contentColor = Color.White),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+            ),
         ) { Text("立即危险请拨 ${resource.emergency}") }
         Spacer(Modifier.height(16.dp))
     }
@@ -108,7 +111,7 @@ private fun StepCard(step: String, title: String, body: String) {
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text(step, color = Terracotta, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+            Text(step, color = Terracotta, fontSize = 14.sp, fontWeight = FontWeight.Medium)
             Text(title, fontWeight = FontWeight.SemiBold, fontSize = 17.sp)
             Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
         }

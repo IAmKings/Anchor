@@ -67,9 +67,10 @@ Settings includes preview controls for relation banners, waiting, and one-thing 
 ## Layout habits
 
 - Card corner 16.dp, pill buttons ~28.dp / 999.dp
-- Bottom tabs: 今天 / 记录 / 洞察 / 我的 (`HomeTab`)
+- Bottom tabs: 今天 / 记录 / 洞察 / 我的 (`HomeTab`). Settings opens from **我的**, not the top bar.
+- Shared `HomeTopBar(onHelp)`: brand mark + 「锚点」 heading + circular 「助」 (`contentDescription = "此刻需要帮助"`). Do not put SOS/设置 back on the chrome.
 - Records hub is a dual-entry card page (emotion box + camera log), not a nested tab replace of the bottom bar
-- Wave entry is the home orb; keep it one-tap reachable in Normal mode
+- Wave entry is the 192.dp home orb (title + 「等待中」 inside, 「难受的时候点这里」 below); keep it one-tap reachable in Normal mode
 
 ---
 

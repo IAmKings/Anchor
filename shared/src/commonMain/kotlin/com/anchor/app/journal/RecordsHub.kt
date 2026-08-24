@@ -53,7 +53,7 @@ fun RecordsHub(
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { HomeTopBar(onHelp = onHelp, onSettings = onSettings) },
+        topBar = { HomeTopBar(onHelp = onHelp) },
         bottomBar = {
             HomeBottomBar(
                 selected = HomeTab.Records,

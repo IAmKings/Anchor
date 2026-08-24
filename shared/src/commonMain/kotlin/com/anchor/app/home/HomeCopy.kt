@@ -1,5 +1,7 @@
 package com.anchor.app.home
 
+internal const val homeMildUseDisclaimer = "应用仅适用于轻度调节"
+
 internal fun homeWorryBody(pendingCount: Int, sessionOpen: Boolean, nextLabel: String): String = when {
     pendingCount <= 0 -> "点这里把念头放进去"
     sessionOpen -> "${pendingCount}张卡，专场已开箱"

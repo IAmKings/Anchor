@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Pre-dev checklist and quality gate for shared Compose work."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "14sp floor, theme secondary for danger actions, copy extraction, home chrome."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "Forbidden KPI copy, test commands, review checklist."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Search-first before changing copy constants and font sizes."}

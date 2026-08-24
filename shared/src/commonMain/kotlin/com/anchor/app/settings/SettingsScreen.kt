@@ -149,7 +149,10 @@ fun SettingsScreen(
                     onClick = { confirmingDeletion = false; onDeleteAllData() },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Terracotta, contentColor = Color.White),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
+                    ),
                 ) { Text("确认彻底删除") }
                 TextButton(onClick = { confirmingDeletion = false }, modifier = Modifier.fillMaxWidth()) { Text("取消") }
             } else {
@@ -157,7 +160,10 @@ fun SettingsScreen(
                     onClick = { confirmingDeletion = true },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Terracotta, contentColor = Color.White),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
+                    ),
                 ) { Text("删除全部本地数据") }
             }
             deleteStatus?.let { Text(it, color = Terracotta, fontSize = 14.sp) }
