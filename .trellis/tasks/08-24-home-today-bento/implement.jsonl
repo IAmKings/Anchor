@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Pre-dev checklist; this is Compose UI on the home screen."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "14sp, copy extraction, anti-KPI, home chrome already defined; extend layout habits for bento."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "No streak/completion copy; HomeCopyTest style."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Search existing HomeCopy helpers before adding new strings."}

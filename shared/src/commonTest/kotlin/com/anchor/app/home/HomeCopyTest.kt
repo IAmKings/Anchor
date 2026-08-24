@@ -19,7 +19,7 @@ class HomeCopyTest {
         assertEquals("选一个低到无需说服自己的动作", homeMicroActionBody(null))
         assertEquals("穿好鞋走到楼下", homeMicroActionBody("穿好鞋走到楼下"))
         assertEquals("选择", homeMicroActionActionLabel(hasTitle = false, running = false, completed = false))
-        assertEquals("开始", homeMicroActionActionLabel(hasTitle = true, running = false, completed = false))
+        assertEquals("开始 5 分钟", homeMicroActionActionLabel(hasTitle = true, running = false, completed = false))
         assertEquals("已记下", homeMicroActionActionLabel(hasTitle = true, running = false, completed = true))
         assertEquals("", homeMicroActionActionLabel(hasTitle = true, running = true, completed = false))
     }
@@ -27,6 +27,18 @@ class HomeCopyTest {
     @Test
     fun disclaimerMatchesStitchFirstShipCopy() {
         assertEquals("应用仅适用于轻度调节", homeMildUseDisclaimer)
+        assertEquals("晨间节律", homeRhythmKicker)
+        assertEquals("见光记录", homeRhythmEmptyTitle)
+        assertEquals("忧虑保险箱", homeWorryLabel)
+        assertEquals("张卡", homeWorryCountUnit)
+    }
+
+    @Test
+    fun worryBentoSplitsCountAndUnlockLine() {
+        assertEquals(null, homeWorryCountText(0))
+        assertEquals("3", homeWorryCountText(3))
+        assertEquals("专场已开箱", homeWorryUnlockLine(sessionOpen = true, nextLabel = "今天 20:00"))
+        assertEquals("今天 20:00开箱", homeWorryUnlockLine(sessionOpen = false, nextLabel = "今天 20:00"))
     }
 
     @Test

@@ -13,14 +13,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -404,72 +404,60 @@ private fun PracticeHome(
         }
         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             if (showRhythm) {
-            StatusCard(
-                glyph = "光",
-                wellColor = MaterialTheme.colorScheme.surfaceVariant,
-                label = "今日起床见光打卡",
-                title = if (rhythm == null) "尚未记录" else null,
-                trailing = if (rhythm != null) "✓" else null,
-                onClick = onRhythm,
-            ) {
-                if (rhythm != null) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        MonoTime("起床", rhythm.wakeAtMillis?.let(formatLocalTime) ?: "--:--")
-                        MonoTime("见光", rhythm.lightAtMillis?.let(formatLocalTime) ?: "--:--")
+                RhythmBentoCard(
+                    wakeLabel = rhythm?.wakeAtMillis?.let(formatLocalTime) ?: "--:--",
+                    lightLabel = rhythm?.lightAtMillis?.let(formatLocalTime) ?: "--:--",
+                    recorded = rhythm != null,
+                    onClick = onRhythm,
+                )
+            }
+            if (showMicroAction || showWorry) {
+                Row(
+                    Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    if (showMicroAction) {
+                        MicroActionBentoCard(
+                            modifier = Modifier.weight(1f),
+                            body = homeMicroActionBody(featured?.title),
+                            running = remaining != null,
+                            countdown = remaining?.let(::formatCountdown),
+                            actionLabel = homeMicroActionActionLabel(
+                                hasTitle = featured?.title != null,
+                                running = remaining != null,
+                                completed = featured?.completedAtMillis != null && remaining == null,
+                            ),
+                            onClick = onMicroAction,
+                        )
+                    }
+                    if (showWorry) {
+                        WorryBentoCard(
+                            modifier = Modifier.weight(1f),
+                            pendingCount = pendingWorry,
+                            sessionOpen = isWorrySessionOpen(),
+                            nextLabel = nextWorrySessionLabel(),
+                            onClick = onWorryVault,
+                        )
                     }
                 }
             }
-            }
-            if (showMicroAction) {
-            StatusCard(
-                glyph = "步",
-                wellColor = MaterialTheme.colorScheme.secondaryContainer,
-                label = homeMicroActionTitle(running = remaining != null),
-                title = homeMicroActionBody(featured?.title),
-                trailing = remaining?.let(::formatCountdown),
-                actionLabel = homeMicroActionActionLabel(
-                    hasTitle = featured?.title != null,
-                    running = remaining != null,
-                    completed = featured?.completedAtMillis != null && remaining == null,
-                ),
-                onClick = onMicroAction,
-            ) {
-                if (remaining != null) {
-                    Text(
-                        "不评估想不想。启动 5 分钟。",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 14.sp,
-                    )
-                }
-            }
-            }
-            if (showWorry) {
-            StatusCard(
-                glyph = "箱",
-                wellColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f),
-                label = "忧虑保险箱",
-                title = homeWorryBody(pendingWorry, isWorrySessionOpen(), nextWorrySessionLabel()),
-                trailing = if (isWorrySessionOpen()) "开" else "锁",
-                onClick = onWorryVault,
-            )
-            }
             if (showRelation) {
-            StatusCard(
-                glyph = if (relationState.kind == HomeRelationKind.Exhausted) "植" else "他",
-                wellColor = when (relationState.kind) {
-                    HomeRelationKind.Filled -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f)
-                    HomeRelationKind.Drained -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f)
-                    HomeRelationKind.Exhausted -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.35f)
-                    else -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f)
-                },
-                label = relationState.cardLabel,
-                title = relationState.cardBody,
-                onClick = onRelation,
-            ) {
-                relationState.cardHint?.let { hint ->
-                    Text(hint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
+                StatusCard(
+                    glyph = if (relationState.kind == HomeRelationKind.Exhausted) "植" else "他",
+                    wellColor = when (relationState.kind) {
+                        HomeRelationKind.Filled -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f)
+                        HomeRelationKind.Drained -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f)
+                        HomeRelationKind.Exhausted -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.35f)
+                        else -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f)
+                    },
+                    label = relationState.cardLabel,
+                    title = relationState.cardBody,
+                    onClick = onRelation,
+                ) {
+                    relationState.cardHint?.let { hint ->
+                        Text(hint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
+                    }
                 }
-            }
             }
         }
     }
@@ -625,6 +613,158 @@ private fun RelationBanner(state: HomeRelationPresentation) {
             )
             state.bannerBody?.let { body ->
                 Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun RhythmBentoCard(
+    wakeLabel: String,
+    lightLabel: String,
+    recorded: Boolean,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        color = MaterialTheme.colorScheme.surface,
+        shape = CardShape,
+        border = cardBorder(),
+        modifier = Modifier.fillMaxWidth().semantics { contentDescription = homeRhythmKicker },
+    ) {
+        Row(
+            Modifier.fillMaxWidth().padding(20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top,
+        ) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(homeRhythmKicker, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                if (recorded) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        MonoTime("起床", wakeLabel)
+                        MonoTime("见光", lightLabel)
+                    }
+                } else {
+                    Text(homeRhythmEmptyTitle, fontSize = 17.sp, fontWeight = FontWeight.Medium)
+                }
+            }
+            IconWell("光", MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f))
+        }
+    }
+}
+
+@Composable
+private fun MicroActionBentoCard(
+    modifier: Modifier,
+    body: String,
+    running: Boolean,
+    countdown: String?,
+    actionLabel: String,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        color = MaterialTheme.colorScheme.surface,
+        shape = CardShape,
+        border = cardBorder(),
+        modifier = modifier.fillMaxHeight().semantics {
+            contentDescription = if (running) homeMicroActionTitle(true) else body
+        },
+    ) {
+        Column(
+            Modifier.fillMaxHeight().padding(20.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                IconWell("步", MaterialTheme.colorScheme.secondaryContainer)
+                if (running) {
+                    Text(
+                        homeMicroActionTitle(true),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                    )
+                }
+                Text(body, fontSize = 17.sp, fontWeight = FontWeight.Medium, lineHeight = 24.sp)
+            }
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                countdown?.let {
+                    Text(
+                        it,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    Text(
+                        "不评估想不想。启动 5 分钟。",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                    )
+                }
+                if (actionLabel.isNotEmpty()) {
+                    Text(
+                        actionLabel,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WorryBentoCard(
+    modifier: Modifier,
+    pendingCount: Int,
+    sessionOpen: Boolean,
+    nextLabel: String,
+    onClick: () -> Unit,
+) {
+    val count = homeWorryCountText(pendingCount)
+    Surface(
+        onClick = onClick,
+        color = MaterialTheme.colorScheme.surface,
+        shape = CardShape,
+        border = cardBorder(),
+        modifier = modifier.fillMaxHeight().semantics { contentDescription = homeWorryLabel },
+    ) {
+        Column(
+            Modifier.fillMaxHeight().padding(20.dp),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                IconWell("箱", MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f))
+                Text(homeWorryLabel, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                if (count == null) {
+                    Text(
+                        homeWorryBody(0, sessionOpen, nextLabel),
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 24.sp,
+                    )
+                } else {
+                    Row(
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    ) {
+                        Text(
+                            count,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Medium,
+                        )
+                        Text(homeWorryCountUnit, fontSize = 17.sp, modifier = Modifier.padding(bottom = 2.dp))
+                    }
+                }
+            }
+            if (count != null) {
+                Text(
+                    homeWorryUnlockLine(sessionOpen, nextLabel),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 14.sp,
+                )
             }
         }
     }
