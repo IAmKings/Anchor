@@ -250,3 +250,24 @@ CrisisResult 复用 HelpNowCopy 与编号步骤、底部急救条。保留进入
 ### Status
 
 [OK] **Completed**
+
+
+## Session 12: 首启就医等待结果页对齐等待首页
+
+**Date**: 2026-08-25
+**Task**: 首启就医等待结果页对齐等待首页
+**Branch**: `main`
+
+### Summary
+
+MedicalResult 复用 homeWaitingBody、工具卡文案、HelpNow 三步；底部进入等待期。不用稿子失控信号步骤。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `f41d1bd` | (see git log) |
+
+### Status
+
+[OK] **Completed**
