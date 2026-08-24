@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -61,6 +62,9 @@ import kotlin.math.PI
 import kotlin.math.sin
 
 private enum class WaveStep { Recognize, Locate, Wait }
+
+private val WaveActionMinHeight = 52.dp
+private val WaveLocationMinHeight = 96.dp
 
 @Composable
 fun WaveWaitingScreen(
@@ -171,9 +175,11 @@ private fun RecognizeStep(onSeen: () -> Unit) {
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
             ),
-            modifier = Modifier.padding(horizontal = 12.dp),
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .heightIn(min = WaveActionMinHeight),
         ) {
-            Text(waveRecognizeAction(), Modifier.padding(horizontal = 16.dp, vertical = 6.dp), fontSize = 14.sp)
+            Text(waveRecognizeAction(), Modifier.padding(horizontal = 16.dp), fontSize = 17.sp)
         }
     }
 }
@@ -225,9 +231,12 @@ private fun LocateStep(
                             1.dp,
                             if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
                         ),
-                        modifier = Modifier.weight(1f).height(88.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = WaveLocationMinHeight)
+                            .semantics { contentDescription = location.fullLabel },
                     ) {
-                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Box(Modifier.fillMaxSize().padding(12.dp), contentAlignment = Alignment.Center) {
                             Text(
                                 location.shortLabel,
                                 color = if (isSelected) {
@@ -254,9 +263,11 @@ private fun LocateStep(
             onClick = onContinue,
             enabled = selected != null,
             shape = RoundedCornerShape(999.dp),
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .heightIn(min = WaveActionMinHeight),
         ) {
-            Text(waveLocateContinue(), Modifier.padding(horizontal = 20.dp, vertical = 4.dp))
+            Text(waveLocateContinue(), Modifier.padding(horizontal = 20.dp), fontSize = 17.sp)
         }
     }
 }
@@ -316,12 +327,20 @@ private fun WaitStep(
             modifier = Modifier.fillMaxWidth(0.8f),
             lineHeight = 28.sp,
         )
-        OutlinedButton(onClick = onAddTen, shape = RoundedCornerShape(999.dp)) {
-            Text(waveAddTenMinutes())
+        OutlinedButton(
+            onClick = onAddTen,
+            shape = RoundedCornerShape(999.dp),
+            modifier = Modifier.heightIn(min = WaveActionMinHeight),
+        ) {
+            Text(waveAddTenMinutes(), fontSize = 17.sp)
         }
         if (done) {
-            Button(onClick = onClose, shape = RoundedCornerShape(999.dp)) {
-                Text(waveBackToToday(), Modifier.padding(horizontal = 12.dp))
+            Button(
+                onClick = onClose,
+                shape = RoundedCornerShape(999.dp),
+                modifier = Modifier.heightIn(min = WaveActionMinHeight),
+            ) {
+                Text(waveBackToToday(), Modifier.padding(horizontal = 12.dp), fontSize = 17.sp)
             }
         }
     }

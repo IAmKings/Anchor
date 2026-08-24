@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Pre-dev checklist; Compose UI on wave waiting."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "52–56.dp primary actions, 14sp+ copy, no celebration motion."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "WaveCopyTest is the trusted copy contract; do not weaken it."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Search WaveCopy helpers before adding strings."}

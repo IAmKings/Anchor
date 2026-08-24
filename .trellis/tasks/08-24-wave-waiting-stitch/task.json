@@ -1,0 +1,31 @@
+{
+  "id": "wave-waiting-stitch",
+  "name": "wave-waiting-stitch",
+  "title": "浪潮等待三步页对照 Stitch",
+  "description": "Align WaveWaitingScreen layout with Stitch wave-waiting mode. Do not change timer, alarms, or copy that PRD pins.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-24",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/wave/WaveScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/wave/WaveCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/wave/WaveCopyTest.kt",
+    "design/08-medical-safety/浪潮等待模式__d9c14e9b.html"
+  ],
+  "notes": "",
+  "meta": {}
+}

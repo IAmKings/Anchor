@@ -48,7 +48,8 @@ Design PNG/HTML under `design/` is a visual reference. If it conflicts with PRD 
 M6 raised small captions toward **14sp**. User-visible text must not ship at 12sp or 13sp.
 
 - Body / captions: ≥ 14sp
-- Primary actions: ~17sp, 52–56.dp tall pills
+- Primary actions: ~17sp, 52–56.dp tall pills. Wave waiting uses `heightIn(min = 52.dp)` on 我看见了 / 继续 / 再加 10 分钟 / 回到今天.
+- Wave locate chips show `shortLabel` and set `contentDescription` to `fullLabel`. Keep all eight PRD sites plus custom; do not shrink to the Stitch four-cell mock.
 - Respect system font scale; pages that grow (first-run welcome, settings) must scroll
 - Semantics: `heading()`, `contentDescription` on icon-only controls (`"此刻需要帮助"`), `Role.Tab` on the bottom bar
 
