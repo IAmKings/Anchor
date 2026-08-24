@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 3
+- **Total Sessions**: 4
 - **Last Active**: 2026-08-24
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~84 | Active |
+| `journal-1.md` | ~105 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 4 | 2026-08-24 | 其余页面 14sp 与 terracotta 改主题色 | `c488b83` | `main` |
 | 3 | 2026-08-24 | 首页顶栏助入口、14sp 与危险按钮语义色 | `36b4de5` | `main` |
 | 2 | 2026-08-22 | 完成 Trellis 00-bootstrap-guidelines：shared 层规范 | `7418e42` | `main` |
 | 1 | 2026-08-18 | Anchor P0 收尾 + P1 关系/地区指南/记录中心/历史证据/首页耗竭态 | - | `-` |

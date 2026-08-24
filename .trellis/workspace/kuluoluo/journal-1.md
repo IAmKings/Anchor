@@ -82,3 +82,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 4: 其余页面 14sp 与 terracotta 改主题色
+
+**Date**: 2026-08-24
+**Task**: 其余页面 14sp 与 terracotta 改主题色
+**Branch**: `main`
+
+### Summary
+
+全仓库用户可见 13sp 清零；危机/删除强调色统一 secondary。shared 单测通过。真机大字号未复测。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `c488b83` | (see git log) |
+
+### Status
+
+[OK] **Completed**
