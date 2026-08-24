@@ -145,3 +145,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 7: 浪潮等待三步页对照 Stitch
+
+**Date**: 2026-08-24
+**Task**: 浪潮等待三步页对照 Stitch
+**Branch**: `main`
+
+### Summary
+
+主按钮 ≥52.dp/17sp；定位卡 shortLabel + fullLabel 语义。8 个部位与 10 分钟计时未改。WaveCopyTest 与 shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `f2b9298` | (see git log) |
+
+### Status
+
+[OK] **Completed**
