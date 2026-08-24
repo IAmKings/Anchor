@@ -208,3 +208,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 10: 危机帮助页对照 Stitch 版式
+
+**Date**: 2026-08-24
+**Task**: 危机帮助页对照 Stitch 版式
+**Branch**: `main`
+
+### Summary
+
+编号步骤卡、底部固定急救按钮；热线仍 crisisResource。不用希望24。HelpNowCopyTest 与 shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `cdda22e` | (see git log) |
+
+### Status
+
+[OK] **Completed**
