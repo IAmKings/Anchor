@@ -3,6 +3,8 @@ package com.anchor.app.home
 import com.anchor.app.ui.formatCountdown
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class HomeCopyTest {
     @Test
@@ -39,6 +41,17 @@ class HomeCopyTest {
         assertEquals("3", homeWorryCountText(3))
         assertEquals("专场已开箱", homeWorryUnlockLine(sessionOpen = true, nextLabel = "今天 20:00"))
         assertEquals("今天 20:00开箱", homeWorryUnlockLine(sessionOpen = false, nextLabel = "今天 20:00"))
+    }
+
+    @Test
+    fun waitingHomeUsesDomainBadgeAndPrdPauseLine() {
+        assertEquals("就医等待期", homeWaitingBadge)
+        assertEquals("休息即是当下的练习", homeWaitingTitle)
+        assertTrue(homeWaitingBody.contains(homeWaitingPauseLine))
+        assertFalse(homeWaitingBody.contains("感受"))
+        assertEquals("记录此刻能被看见的事实，暂不进行分析。", homeWaitingJournalBody)
+        assertFalse(homeWaitingJournalBody.contains("感受"))
+        assertTrue(homeWaitingChecklistBody.contains("身体感受"))
     }
 
     @Test

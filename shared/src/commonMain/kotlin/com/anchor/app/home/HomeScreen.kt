@@ -481,16 +481,16 @@ private fun MedicalWaitingHome(
             Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Surface(color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f), shape = RoundedCornerShape(999.dp)) {
                     Text(
-                        "医疗等待期",
+                        homeWaitingBadge,
                         Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                     )
                 }
-                Text("休息即是当下的练习", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                Text(homeWaitingTitle, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                 Text(
-                    "暂停练习不是惩罚，是防止你在未获专业支持时过度自我要求。就医指南、躯体检查清单和仅记录的双栏日志仍然可用。",
+                    homeWaitingBody,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 15.sp,
                     lineHeight = 24.sp,
@@ -510,20 +510,20 @@ private fun MedicalWaitingHome(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 IconWell("医", MaterialTheme.colorScheme.secondaryContainer, 56.dp)
-                Text("寻求专业支持", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+                Text(homeWaitingSupportTitle, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                 Text(
-                    "你的状态需要专业的评估与帮助，这很正常。",
+                    homeWaitingSupportBody,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 15.sp,
                 )
-                Button(onClick = onGuide, modifier = Modifier.fillMaxWidth()) { Text("查看就医指南") }
+                Button(onClick = onGuide, modifier = Modifier.fillMaxWidth()) { Text(homeWaitingGuideAction) }
             }
         }
-        Text("可用工具", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
-        ToolRow("单", "就医准备清单", "为下一次医生问诊做准备，记下近期的身体感受。", onChecklist)
-        ToolRow("记", "事实记录", "记录此刻能被看见的事实，暂不进行分析。", onCameraLog)
+        Text(homeWaitingToolsLabel, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+        ToolRow("单", homeWaitingChecklistTitle, homeWaitingChecklistBody, onChecklist)
+        ToolRow("记", homeWaitingJournalTitle, homeWaitingJournalBody, onCameraLog)
         if (canReassessNow) {
-            ToolRow("评", "再次评估", "距上次评估已过 48 小时，可以再测一次以纠正误测。", onReassess)
+            ToolRow("评", homeWaitingReassessTitle, homeWaitingReassessBody, onReassess)
         }
     }
 }

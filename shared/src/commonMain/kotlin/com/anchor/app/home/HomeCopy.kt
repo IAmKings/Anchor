@@ -30,3 +30,19 @@ internal fun homeMicroActionActionLabel(hasTitle: Boolean, running: Boolean, com
     hasTitle -> "开始 5 分钟"
     else -> "选择"
 }
+
+internal const val homeWaitingBadge = "就医等待期"
+internal const val homeWaitingTitle = "休息即是当下的练习"
+internal const val homeWaitingPauseLine = "暂停练习不是惩罚，是防止你在未获专业支持时过度自我要求。"
+internal const val homeWaitingBody =
+    "暂停练习不是惩罚，是防止你在未获专业支持时过度自我要求。请把力气放在寻求专业帮助和基础休养上。"
+internal const val homeWaitingSupportTitle = "寻求专业支持"
+internal const val homeWaitingSupportBody = "你的状态需要专业的评估与帮助，这很正常。"
+internal const val homeWaitingGuideAction = "查看就医指南"
+internal const val homeWaitingToolsLabel = "可用工具"
+internal const val homeWaitingChecklistTitle = "就医准备清单"
+internal const val homeWaitingChecklistBody = "为下一次医生问诊做准备，记录近期的身体感受。"
+internal const val homeWaitingJournalTitle = "事实记录"
+internal const val homeWaitingJournalBody = "记录此刻能被看见的事实，暂不进行分析。"
+internal const val homeWaitingReassessTitle = "再次评估"
+internal const val homeWaitingReassessBody = "距上次评估已过 48 小时，可以再测一次以纠正误测。"

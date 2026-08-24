@@ -1,0 +1,31 @@
+{
+  "id": "medical-waiting-home",
+  "name": "medical-waiting-home",
+  "title": "就医等待期首页对照 Stitch 中文稿",
+  "description": "Align MedicalWaitingHome with the first-ship Stitch Chinese waiting-mode home. Keep camera-log copy as facts, not feelings.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-24",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/home/HomeScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/home/HomeCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/home/HomeCopyTest.kt",
+    "design/02-home-daily/首页---就医等待期模式-(中文版)__b7b22d9f.html"
+  ],
+  "notes": "",
+  "meta": {}
+}

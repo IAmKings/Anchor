@@ -60,6 +60,8 @@ TalkBack / 200% font regressions are Android-device checks, not JVM unit tests. 
 
 Practice home vs waiting home is selected from `store.safetyState().mode`, not from a remembered tab.
 
+Waiting-home chrome: badge is **就医等待期** (not 医疗等待期). Body must include PRD §10.2 「暂停练习不是惩罚…过度自我要求」. Camera-log tool copy is facts, never 「感受」. Stitch waiting-mode HTML is layout reference only.
+
 Settings includes preview controls for relation banners, waiting, and one-thing lock. Previews **must not** call `evaluateAndStore` or `enterCrisisWaiting()`. After closing settings, the real `SafetyState` is unchanged.
 
 ---

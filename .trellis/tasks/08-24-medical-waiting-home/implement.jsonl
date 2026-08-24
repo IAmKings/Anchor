@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Pre-dev checklist; Compose copy on the waiting-mode home."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "Copy extraction, 14sp, CONTEXT wins over Stitch when they conflict."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "Waiting mode is not punishment; do not persist preview or restyle as lock/punish."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Search existing medicalWaitingBody / HomeCopy before adding strings."}
