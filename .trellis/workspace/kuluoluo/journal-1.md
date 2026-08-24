@@ -229,3 +229,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 11: 首启危机结果页对齐帮助页
+
+**Date**: 2026-08-25
+**Task**: 首启危机结果页对齐帮助页
+**Branch**: `main`
+
+### Summary
+
+CrisisResult 复用 HelpNowCopy 与编号步骤、底部急救条。保留进入就医等待期。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e9bee9d` | (see git log) |
+
+### Status
+
+[OK] **Completed**
