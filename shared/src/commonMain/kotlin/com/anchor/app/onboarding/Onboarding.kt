@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.navigationBars
@@ -67,7 +68,21 @@ import com.anchor.app.safety.SafetyAction
 import com.anchor.app.safety.SafetyOutcome
 import com.anchor.app.safety.SafetyPolicy
 import com.anchor.app.safety.SafetyState
+import com.anchor.app.safety.HelpNowStepCard
 import com.anchor.app.safety.crisisResource
+import com.anchor.app.safety.helpNowCallEmergency
+import com.anchor.app.safety.helpNowEnterWaiting
+import com.anchor.app.safety.helpNowImmediateDanger
+import com.anchor.app.safety.helpNowMedicalQuote
+import com.anchor.app.safety.helpNowStep1Label
+import com.anchor.app.safety.helpNowStep1Title
+import com.anchor.app.safety.helpNowStep2Body
+import com.anchor.app.safety.helpNowStep2Label
+import com.anchor.app.safety.helpNowStep2Title
+import com.anchor.app.safety.helpNowStep3Body
+import com.anchor.app.safety.helpNowStep3Label
+import com.anchor.app.safety.helpNowStep3Title
+import com.anchor.app.safety.helpNowTitle
 import com.anchor.app.storage.AgeGroup
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.AssessmentInput
@@ -574,41 +589,62 @@ private fun CrisisResult(
     onFinish: () -> Unit,
 ) {
     val resource = crisisResource(region, youth)
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        Text("你现在不是一个人", Modifier.semantics { heading() }, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
-        Text(
-            "如果你现在处于立即危险中，请直接拨打 ${resource.emergency}。",
-            color = MaterialTheme.colorScheme.secondary,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 17.sp,
-            lineHeight = 26.sp,
-        )
-        CrisisSteps(resource.hotline, resource.emergency)
-        WaitingActions(onOpenGuide, onOpenChecklist)
-        Text(
-            "PHQ-9 ${outcome.assessment.phq9Score} · GAD-7 ${outcome.assessment.gad7Score} · ${resultBadge(outcome.action)}",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 14.sp,
-        )
-        Button(
-            onClick = onFinish,
-            modifier = Modifier.fillMaxWidth().height(52.dp),
-            shape = CardShape,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                contentColor = MaterialTheme.colorScheme.onSecondary,
-            ),
-        ) { Text("立即危险请拨 ${resource.emergency}") }
-        TextButton(onClick = onFinish, modifier = Modifier.fillMaxWidth()) { Text("先进入就医等待期") }
-        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
-        Spacer(Modifier.height(16.dp))
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(
+                    helpNowImmediateDanger(resource.emergency),
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Button(
+                    onClick = onFinish,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                    shape = CardShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary,
+                    ),
+                ) { Text(helpNowCallEmergency(resource.emergency), fontSize = 17.sp) }
+                TextButton(onClick = onFinish, modifier = Modifier.fillMaxWidth()) {
+                    Text(helpNowEnterWaiting)
+                }
+            }
+        },
+    ) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(helpNowTitle, Modifier.semantics { heading() }, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
+            HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline)
+            HelpNowStepCard(2, helpNowStep2Label, helpNowStep2Title, helpNowStep2Body)
+            HelpNowStepCard(3, helpNowStep3Label, helpNowStep3Title, helpNowStep3Body)
+            WaitingActions(onOpenGuide, onOpenChecklist)
+            Text(helpNowMedicalQuote, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            Text(
+                "PHQ-9 ${outcome.assessment.phq9Score} · GAD-7 ${outcome.assessment.gad7Score} · ${resultBadge(outcome.action)}",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 14.sp,
+            )
+            Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+        }
     }
 }
 

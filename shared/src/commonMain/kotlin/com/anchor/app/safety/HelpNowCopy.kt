@@ -20,3 +20,5 @@ internal fun helpNowImmediateDanger(emergency: String): String =
     "如果你现在处于立即危险中，请直接拨打 $emergency。"
 
 internal fun helpNowCallEmergency(emergency: String): String = "立即危险请拨 $emergency"
+
+internal const val helpNowEnterWaiting = "先进入就医等待期"

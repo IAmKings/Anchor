@@ -1,0 +1,30 @@
+{
+  "id": "crisis-result-align",
+  "name": "crisis-result-align",
+  "title": "首启危机结果页对齐帮助页",
+  "description": "Reuse HelpNow copy, numbered steps, and sticky emergency bar on first-run CrisisResult. Keep waiting-mode entry.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/Onboarding.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/safety/HelpNowScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/safety/HelpNowCopy.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}

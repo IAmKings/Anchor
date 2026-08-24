@@ -29,5 +29,6 @@ class HelpNowCopyTest {
             assertFalse(line.contains("附近急诊"))
         }
         assertTrue(helpNowMedicalQuote.contains("判断这个不是你的工作"))
+        assertEquals("先进入就医等待期", helpNowEnterWaiting)
     }
 }

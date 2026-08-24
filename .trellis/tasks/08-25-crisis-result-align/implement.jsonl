@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Pre-dev; safety Compose reuse."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "Help-now numbered wells and sticky emergency bar."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "crisisResource only; no SafetyState writes from this screen beyond existing onFinish."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Reuse HelpNowCopy instead of duplicating crisis strings."}

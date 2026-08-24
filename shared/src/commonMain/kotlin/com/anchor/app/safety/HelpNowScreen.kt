@@ -92,9 +92,9 @@ fun HelpNowScreen(
         ) {
             TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("返回") }
             Text(helpNowTitle, Modifier.semantics { heading() }, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
-            StepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline)
-            StepCard(2, helpNowStep2Label, helpNowStep2Title, helpNowStep2Body)
-            StepCard(3, helpNowStep3Label, helpNowStep3Title, helpNowStep3Body)
+            HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline)
+            HelpNowStepCard(2, helpNowStep2Label, helpNowStep2Title, helpNowStep2Body)
+            HelpNowStepCard(3, helpNowStep3Label, helpNowStep3Title, helpNowStep3Body)
             Surface(
                 color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.10f),
                 shape = CardShape,
@@ -127,7 +127,7 @@ fun HelpNowScreen(
 }
 
 @Composable
-private fun StepCard(index: Int, step: String, title: String, body: String) {
+internal fun HelpNowStepCard(index: Int, step: String, title: String, body: String) {
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
