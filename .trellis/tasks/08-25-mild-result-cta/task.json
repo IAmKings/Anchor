@@ -1,0 +1,29 @@
+{
+  "id": "mild-result-cta",
+  "name": "mild-result-cta",
+  "title": "轻度评估结果页底部固定选锚点",
+  "description": "Sticky choose-first-anchor CTA on MildResult. Do not add Stitch micro-action radios on the result page.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/Onboarding.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/OnboardingCopy.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}

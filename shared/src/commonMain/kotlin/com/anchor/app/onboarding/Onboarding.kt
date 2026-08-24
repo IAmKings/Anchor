@@ -521,30 +521,57 @@ internal fun ResultStep(
 @Composable
 private fun MildResult(outcome: SafetyOutcome, onChooseAnchor: () -> Unit) {
     val score = outcome.assessment.phq9Score
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-    ) {
-        Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-        ScoreRing(score = score, max = 27, caption = phqBandLabel(outcome.assessment.phq9Band))
-        Text(mildInsight, fontSize = 17.sp, textAlign = TextAlign.Center, lineHeight = 26.sp)
-        Text(
-            "PHQ-9 ${outcome.assessment.phq9Score} · GAD-7 ${outcome.assessment.gad7Score}",
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 14.sp,
-        )
-        Text(scaleDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(8.dp))
-        Button(onClick = onChooseAnchor, modifier = Modifier.fillMaxWidth().height(56.dp), shape = PillShape) {
-            Text(chooseFirstAnchorLabel, fontSize = 17.sp)
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Button(
+                    onClick = onChooseAnchor,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                    shape = PillShape,
+                ) { Text(chooseFirstAnchorLabel, fontSize = 17.sp) }
+            }
+        },
+    ) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+        ) {
+            Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+            ScoreRing(score = score, max = 27, caption = phqBandLabel(outcome.assessment.phq9Band))
+            Text(mildInsight, fontSize = 17.sp, textAlign = TextAlign.Center, lineHeight = 26.sp)
+            Text(
+                "PHQ-9 ${outcome.assessment.phq9Score} · GAD-7 ${outcome.assessment.gad7Score}",
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 14.sp,
+            )
+            Text(scaleDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
+            Surface(
+                color = MaterialTheme.colorScheme.surface,
+                shape = CardShape,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(oneThingKicker, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                    Text(firstAnchorBody, fontSize = 15.sp, lineHeight = 24.sp)
+                    Text(firstAnchorCommitHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                }
+            }
+            Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
         }
-        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(16.dp))
     }
 }
 

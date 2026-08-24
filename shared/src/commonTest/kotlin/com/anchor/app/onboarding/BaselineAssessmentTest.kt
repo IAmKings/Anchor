@@ -82,6 +82,9 @@ class BaselineAssessmentTest {
         assertEquals("需要立即支持", resultBadge(SafetyAction.CrisisGuidance))
         assertEquals("中度至重度", resultBadge(SafetyAction.MedicalWaiting))
         assertEquals("可以开始练习", resultBadge(SafetyAction.Continue))
+        assertEquals("一次一件", oneThingKicker)
+        assertEquals("选择第一个锚点", chooseFirstAnchorLabel)
+        assertFalse(oneThingKicker.contains("穿好鞋"))
     }
 
     @Test
