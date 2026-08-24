@@ -74,7 +74,6 @@ private enum class Step { Welcome, Phq9, Gad7, Buffer, Result, Anchor }
 
 private val CardShape = RoundedCornerShape(16.dp)
 private val PillShape = RoundedCornerShape(28.dp)
-private val Terracotta = Color(0xFFB26A4F)
 
 @Composable
 fun FirstRunAssessment(
@@ -367,13 +366,13 @@ internal fun ScaleForm(
                 shape = CardShape,
                 border = BorderStroke(
                     1.dp,
-                    if (crisis) Terracotta.copy(alpha = 0.55f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f),
+                    if (crisis) MaterialTheme.colorScheme.secondary.copy(alpha = 0.55f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f),
                 ),
             ) {
                 Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text("${index + 1}. $question", fontSize = 16.sp, lineHeight = 24.sp)
                     if (crisis) {
-                        Text(item9CrisisNote, color = Terracotta, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium)
+                        Text(item9CrisisNote, color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium)
                     }
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         assessmentChoices.chunked(2).forEachIndexed { rowIndex, row ->
@@ -522,7 +521,7 @@ private fun MedicalResult(
         Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
         Surface(color = MaterialTheme.colorScheme.surface, shape = CircleShape, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))) {
             Box(Modifier.size(168.dp), contentAlignment = Alignment.Center) {
-                Text("${outcome.assessment.phq9Score}", color = Terracotta, fontFamily = FontFamily.Monospace, fontSize = 64.sp)
+                Text("${outcome.assessment.phq9Score}", color = MaterialTheme.colorScheme.secondary, fontFamily = FontFamily.Monospace, fontSize = 64.sp)
             }
         }
         Surface(color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(999.dp)) {
@@ -558,7 +557,7 @@ private fun CrisisResult(
         Text("你现在不是一个人", Modifier.semantics { heading() }, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
         Text(
             "如果你现在处于立即危险中，请直接拨打 ${resource.emergency}。",
-            color = Terracotta,
+            color = MaterialTheme.colorScheme.secondary,
             fontWeight = FontWeight.SemiBold,
             fontSize = 17.sp,
             lineHeight = 26.sp,
@@ -605,7 +604,7 @@ private fun QuoteCard() {
 private fun WaitingActions(onOpenGuide: () -> Unit, onOpenChecklist: () -> Unit) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Surface(color = Terracotta, shape = CircleShape, modifier = Modifier.size(8.dp)) {}
+            Surface(color = MaterialTheme.colorScheme.secondary, shape = CircleShape, modifier = Modifier.size(8.dp)) {}
             Text(medicalWaitingTitle, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
         }
         Text(medicalWaitingBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)

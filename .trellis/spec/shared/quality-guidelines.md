@@ -12,7 +12,7 @@
 | Re-score PHQ/GAD in a composable | Diverges from `SafetyPolicy` | `store.evaluateAndStore` / `SafetyPolicy.evaluate` |
 | Streak, 完成率, 补卡, shame copy | Anti-KPI; CONTEXT.md | `"记录还不够"`, `"已记下"`, `"暂停很正常…"` |
 | Fuzzy emotion words (`难过`, `焦虑`) as stored labels | Vocabulary is 32 concrete words | `emotionVocabulary` + `validateEmotionCard` |
-| New hardcoded terracotta / random hex for the same role | Dark theme and contrast drift | `MaterialTheme.colorScheme.*` |
+| `Color(0xFFB26A4F)` / local `Terracotta` | Dark theme and contrast drift | `MaterialTheme.colorScheme.secondary` for crisis/delete |
 | Shared timer IDs for wave and micro-action | One alarm overwrites the other | `BackgroundTimerKind` |
 | Editing old `N.sqm` migrations | Breaks devices already upgraded | Add `N+1.sqm` |
 | Logging worry / scale answers | Privacy | No logger |

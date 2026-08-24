@@ -31,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -40,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 private val CardShape = RoundedCornerShape(16.dp)
-private val Terracotta = Color(0xFFB26A4F)
 
 @Composable
 fun SettingsScreen(
@@ -123,7 +121,7 @@ fun SettingsScreen(
                 Text("生成加密导出文件")
             }
             if (confirmingImport) {
-                Text("恢复会替换本机现有记录，确定继续吗？", color = Terracotta, fontWeight = FontWeight.SemiBold)
+                Text("恢复会替换本机现有记录，确定继续吗？", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.SemiBold)
                 Button(onClick = { confirmingImport = false; onImport() }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
                     Text("确认并选择备份")
                 }
@@ -141,10 +139,10 @@ fun SettingsScreen(
         }
 
         SettingsCard {
-            Text("彻底删除所有数据", fontWeight = FontWeight.SemiBold, color = Terracotta)
+            Text("彻底删除所有数据", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.secondary)
             Text("此操作不可逆。评估、记录、录音、提醒、计时、导出缓存和应用锁都会被清掉。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
             if (confirmingDeletion) {
-                Text("确定要彻底删除吗？删除后无法恢复。", color = Terracotta, fontWeight = FontWeight.SemiBold)
+                Text("确定要彻底删除吗？删除后无法恢复。", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.SemiBold)
                 Button(
                     onClick = { confirmingDeletion = false; onDeleteAllData() },
                     modifier = Modifier.fillMaxWidth(),
@@ -166,7 +164,7 @@ fun SettingsScreen(
                     ),
                 ) { Text("删除全部本地数据") }
             }
-            deleteStatus?.let { Text(it, color = Terracotta, fontSize = 14.sp) }
+            deleteStatus?.let { Text(it, color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp) }
         }
 
         Text("关于", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)

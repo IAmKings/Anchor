@@ -199,7 +199,7 @@ private fun ContactCard(contact: RelationContact, onMonitor: (Boolean) -> Unit) 
             }
             if (contact.monitorsSelf == true) {
                 Text(reliefAdvice(contact.name), color = MaterialTheme.colorScheme.primary, fontSize = 14.sp, lineHeight = 22.sp)
-                Text(notBreakingOffCopy(), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+                Text(notBreakingOffCopy(), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             }
         }
     }
@@ -324,7 +324,7 @@ private fun AltruismScreen(
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
             ) {
                 Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(if (open.kind == AltruismKind.NonSocial) "非社交" else "社交", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+                    Text(if (open.kind == AltruismKind.NonSocial) "非社交" else "社交", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                     Text(open.title, fontSize = 20.sp, fontWeight = FontWeight.SemiBold, lineHeight = 28.sp)
                 }
             }

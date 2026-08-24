@@ -188,7 +188,7 @@ internal fun ReassessmentInviteScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("关闭") }
-        Text(reassessmentKicker, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+        Text(reassessmentKicker, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         Text(inviteHeadline(due), Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold, lineHeight = 34.sp)
         Text(inviteBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
 
@@ -288,7 +288,7 @@ private fun InviteCard(title: String, value: String, detail: String, extra: (@Co
             Text(title, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
             Text(value, color = MaterialTheme.colorScheme.primary, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
             extra?.invoke()
-            Text(detail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, lineHeight = 20.sp)
+            Text(detail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
         }
     }
 }
@@ -296,7 +296,7 @@ private fun InviteCard(title: String, value: String, detail: String, extra: (@Co
 @Composable
 private fun CompareBlock(title: String, baseline: Int, current: Int, max: Int) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(title, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+        Text(title, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, fontWeight = FontWeight.Medium)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             ScoreTile(baselineLabel, baseline, max, accent = false, modifier = Modifier.weight(1f))
             ScoreTile(currentLabel, current, max, accent = true, modifier = Modifier.weight(1f))
@@ -313,7 +313,7 @@ private fun ScoreTile(label: String, score: Int, max: Int, accent: Boolean, modi
         border = BorderStroke(1.dp, if (accent) MaterialTheme.colorScheme.primary.copy(alpha = 0.45f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(label, color = if (accent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+            Text(label, color = if (accent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             Text("$score", fontFamily = FontFamily.Monospace, fontSize = 32.sp, color = if (accent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
             ScoreBar(score, max, if (accent) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary)
         }

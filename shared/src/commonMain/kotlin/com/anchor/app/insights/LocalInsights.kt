@@ -197,8 +197,8 @@ internal fun BiasChart(pairs: List<Pair<Int, Int>>) {
     val actualColor = MaterialTheme.colorScheme.primary
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("预测", color = predictedColor, fontSize = 13.sp)
-            Text("实际", color = actualColor, fontSize = 13.sp)
+            Text("预测", color = predictedColor, fontSize = 14.sp)
+            Text("实际", color = actualColor, fontSize = 14.sp)
         }
         pairs.forEach { (predicted, actual) ->
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {

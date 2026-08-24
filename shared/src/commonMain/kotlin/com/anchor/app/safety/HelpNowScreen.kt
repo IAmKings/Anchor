@@ -24,7 +24,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -33,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import com.anchor.app.storage.CrisisRegion
 
 private val CardShape = RoundedCornerShape(16.dp)
-private val Terracotta = Color(0xFFB26A4F)
 
 @Composable
 fun HelpNowScreen(
@@ -56,7 +54,7 @@ fun HelpNowScreen(
         Text("你现在不是一个人", Modifier.semantics { heading() }, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
         Text(
             "如果你现在处于立即危险中，请直接拨打 ${resource.emergency}。",
-            color = Terracotta,
+            color = MaterialTheme.colorScheme.secondary,
             fontWeight = FontWeight.SemiBold,
             fontSize = 17.sp,
             lineHeight = 26.sp,
@@ -111,7 +109,7 @@ private fun StepCard(step: String, title: String, body: String) {
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text(step, color = Terracotta, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            Text(step, color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp, fontWeight = FontWeight.Medium)
             Text(title, fontWeight = FontWeight.SemiBold, fontSize = 17.sp)
             Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
         }

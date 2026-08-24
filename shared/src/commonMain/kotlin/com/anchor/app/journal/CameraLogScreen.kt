@@ -289,7 +289,7 @@ private fun ColumnCard(
                 }
                 Column {
                     Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-                    Text(caption, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp)
+                    Text(caption, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 }
             }
             content()

@@ -18,10 +18,10 @@ Add a screen by extending those flags and callbacks. Do not introduce a nav libr
 Theme tokens:
 
 - Primary green `0xFF466552` (light) / `0xFFACCFB8` (dark)
-- Secondary terracotta-equivalent `secondary` / `onSecondary` — use these for help / delete / crisis actions
+- Secondary terracotta-equivalent `secondary` / `onSecondary` — use these for help / delete / crisis actions **and** the matching warning text (item 9 note, delete confirmations, step labels)
 - Background parchment `0xFFFCF9F3` / warm black `0xFF1C1B18`
 
-A local `val Terracotta = Color(0xFFB26A4F)` still exists on some older screens. **New** buttons and badges must use `MaterialTheme.colorScheme.secondary` (and containers), not a new hardcoded terracotta. Do not add more hex duplicates.
+Do not reintroduce `Color(0xFFB26A4F)` or a local `Terracotta`. Crisis emphasis is `secondary`, not Material `error`.
 
 ---
 
@@ -45,7 +45,7 @@ Design PNG/HTML under `design/` is a visual reference. If it conflicts with PRD 
 
 ## Accessibility
 
-M6 raised small captions toward **14sp**. New user-visible text must not ship at 12sp.
+M6 raised small captions toward **14sp**. User-visible text must not ship at 12sp or 13sp.
 
 - Body / captions: ≥ 14sp
 - Primary actions: ~17sp, 52–56.dp tall pills

@@ -70,7 +70,7 @@ fun ExportCompleteScreen(
             modifier = Modifier.padding(horizontal = 24.dp),
         )
         fileName?.let {
-            Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, textAlign = TextAlign.Center)
+            Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
         }
         Surface(
             color = MaterialTheme.colorScheme.surface,

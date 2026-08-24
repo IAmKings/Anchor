@@ -85,7 +85,7 @@ fun MedicalGuideScreen(
             shownRegion.label(),
             Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 13.sp,
+            fontSize = 14.sp,
             textAlign = TextAlign.Center,
         )
         if (previewing) {
@@ -93,7 +93,7 @@ fun MedicalGuideScreen(
                 "预览中，不会改设备地区。",
                 Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp,
+                fontSize = 14.sp,
                 textAlign = TextAlign.Center,
             )
             FlowRow(
@@ -312,7 +312,7 @@ private fun StepBadge(index: Int) {
         modifier = Modifier.size(32.dp),
     ) {
         Box(contentAlignment = Alignment.Center) {
-            Text("$index", fontSize = 13.sp, fontWeight = FontWeight.Medium)
+            Text("$index", fontSize = 14.sp, fontWeight = FontWeight.Medium)
         }
     }
 }
@@ -328,7 +328,7 @@ private fun SomaticChip(label: String) {
             label,
             Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 13.sp,
+            fontSize = 14.sp,
         )
     }
 }

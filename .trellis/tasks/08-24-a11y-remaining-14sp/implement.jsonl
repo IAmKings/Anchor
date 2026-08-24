@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Pre-dev checklist; Compose UI is the relevant layer."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "14sp floor and secondary for crisis/delete, no new terracotta hex."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "Forbidden hardcoded terracotta; test command."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Search-first before changing font-size and color constants."}
