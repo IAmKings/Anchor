@@ -103,3 +103,24 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 5: 首页今日卡片对照 Stitch 首发 bento
+
+**Date**: 2026-08-24
+**Task**: 首页今日卡片对照 Stitch 首发 bento
+**Branch**: `main`
+
+### Summary
+
+练习首页改为全宽节律 + 微行动/保险箱两列，无进度条。HomeCopyTest 覆盖 CTA 与张数/开箱分行。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `075fb16` | (see git log) |
+
+### Status
+
+[OK] **Completed**
