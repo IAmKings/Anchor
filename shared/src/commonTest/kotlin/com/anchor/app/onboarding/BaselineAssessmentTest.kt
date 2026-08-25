@@ -63,6 +63,7 @@ class BaselineAssessmentTest {
         assertFalse(allAnswered(List(9) { null }))
         assertFalse(allAnswered(List(9) { index -> if (index == 8) null else 0 }))
         assertTrue(allAnswered(List(9) { 0 }))
+        assertEquals("提交评估", submitAssessmentLabel)
     }
 
     @Test

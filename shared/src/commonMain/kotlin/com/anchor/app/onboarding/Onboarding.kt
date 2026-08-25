@@ -393,56 +393,87 @@ internal fun ScaleForm(
     onBack: (() -> Unit)? = null,
     onSubmit: () -> Unit,
 ) {
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        if (onBack != null) {
-            TextButton(onClick = onBack, modifier = Modifier.align(Alignment.Start)) { Text("返回") }
-        }
-        Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-        Text(title, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
-        Text(scalePrompt, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp, textAlign = TextAlign.Center)
-        questions.forEachIndexed { index, question ->
-            val crisis = highlightLast && index == questions.lastIndex
-            Surface(
-                color = MaterialTheme.colorScheme.surface,
-                shape = CardShape,
-                border = BorderStroke(
-                    1.dp,
-                    if (crisis) MaterialTheme.colorScheme.secondary.copy(alpha = 0.55f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f),
-                ),
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            if (onBack != null) {
+                TextButton(
+                    onClick = onBack,
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .padding(horizontal = 8.dp),
+                ) { Text("返回") }
+            }
+        },
+        bottomBar = {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.navigationBars)
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("${index + 1}. $question", fontSize = 16.sp, lineHeight = 24.sp)
-                    if (crisis) {
-                        Text(item9CrisisNote, color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium)
-                    }
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        assessmentChoices.chunked(2).forEachIndexed { rowIndex, row ->
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                row.forEachIndexed { colIndex, choice ->
-                                    val score = rowIndex * 2 + colIndex
-                                    val selected = answers[index] == score
-                                    Surface(
-                                        onClick = { onAnswer(index, score) },
-                                        modifier = Modifier.weight(1f),
-                                        color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                        shape = RoundedCornerShape(10.dp),
-                                        border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant),
-                                    ) {
-                                        Text(
-                                            choice,
-                                            Modifier.fillMaxWidth().padding(vertical = 10.dp),
-                                            color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                                            fontSize = 14.sp,
-                                            textAlign = TextAlign.Center,
-                                        )
+                Text(scaleDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
+                Button(
+                    onClick = onSubmit,
+                    enabled = allAnswered(answers),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                    shape = PillShape,
+                ) { Text(submitAssessmentLabel, fontSize = 17.sp) }
+            }
+        },
+    ) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .then(if (onBack == null) Modifier.windowInsetsPadding(WindowInsets.statusBars) else Modifier)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+            Text(title, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+            Text(scalePrompt, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp, textAlign = TextAlign.Center)
+            questions.forEachIndexed { index, question ->
+                val crisis = highlightLast && index == questions.lastIndex
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = CardShape,
+                    border = BorderStroke(
+                        1.dp,
+                        if (crisis) MaterialTheme.colorScheme.secondary.copy(alpha = 0.55f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f),
+                    ),
+                ) {
+                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text("${index + 1}. $question", fontSize = 16.sp, lineHeight = 24.sp)
+                        if (crisis) {
+                            Text(item9CrisisNote, color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight.Medium)
+                        }
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            assessmentChoices.chunked(2).forEachIndexed { rowIndex, row ->
+                                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    row.forEachIndexed { colIndex, choice ->
+                                        val score = rowIndex * 2 + colIndex
+                                        val selected = answers[index] == score
+                                        Surface(
+                                            onClick = { onAnswer(index, score) },
+                                            modifier = Modifier.weight(1f).heightIn(min = 52.dp),
+                                            color = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                            shape = RoundedCornerShape(10.dp),
+                                            border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant),
+                                        ) {
+                                            Box(Modifier.fillMaxWidth().heightIn(min = 52.dp), contentAlignment = Alignment.Center) {
+                                                Text(
+                                                    choice,
+                                                    color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                                    fontSize = 14.sp,
+                                                    textAlign = TextAlign.Center,
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -450,16 +481,8 @@ internal fun ScaleForm(
                     }
                 }
             }
+            Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
         }
-        Button(
-            onClick = onSubmit,
-            enabled = allAnswered(answers),
-            modifier = Modifier.fillMaxWidth().height(56.dp),
-            shape = PillShape,
-        ) { Text(submitAssessmentLabel, fontSize = 17.sp) }
-        Text(scaleDisclaimer, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
-        Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
-        Spacer(Modifier.height(16.dp))
     }
 }
 

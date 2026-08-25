@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Compose onboarding ScaleForm."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "52.dp taps; sticky primary action."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "Do not change item 9, scoring, or skip-GAD rules."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Reuse submitAssessmentLabel and allAnswered."}

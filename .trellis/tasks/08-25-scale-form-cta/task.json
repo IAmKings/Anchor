@@ -1,0 +1,30 @@
+{
+  "id": "scale-form-cta",
+  "name": "scale-form-cta",
+  "title": "量表页选项加高并固定提交",
+  "description": "ScaleForm: 52.dp answer chips and sticky submit. Do not change items, scoring, or SafetyPolicy.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/Onboarding.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/onboarding/OnboardingCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/onboarding/BaselineAssessmentTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}

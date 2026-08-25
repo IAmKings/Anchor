@@ -1,0 +1,3 @@
+{"file": ".trellis/spec/shared/safety.md", "reason": "PHQ item 9 and SafetyPolicy untouched."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "52.dp chips and sticky submit."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "BaselineAssessmentTest still pins items and choices."}
