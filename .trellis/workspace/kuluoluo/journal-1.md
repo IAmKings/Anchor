@@ -439,3 +439,24 @@ Pick/Predict/Run/Rate/Result 主按钮与 1–10 芯片 52.dp，文案抽出。�
 ### Status
 
 [OK] **Completed**
+
+
+## Session 21: 微行动历史证据行加高并守住文案
+
+**Date**: 2026-08-25
+**Task**: 微行动历史证据行加高并守住文案
+**Branch**: `main`
+
+### Summary
+
+证据行 52.dp。引语那张表，偏差不是百分比。不加查看历史记录套娃。洞察图未搬入。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `f602aa4` | (see git log) |
+
+### Status
+
+[OK] **Completed**
