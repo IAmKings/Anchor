@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -50,6 +51,7 @@ import com.anchor.app.storage.MicroAction
 import com.anchor.app.ui.formatCountdown
 
 private val CardShape = RoundedCornerShape(16.dp)
+private val ActionMinHeight = 52.dp
 
 private enum class ActionStep { Pick, Predict, Run, Rate, Result }
 
@@ -129,7 +131,7 @@ fun MicroActionScreen(
                     },
                     onBack = { step = ActionStep.Pick },
                 )
-            } ?: Text("请先选一个动作。")
+            } ?: Text(microActionNeedPick)
             ActionStep.Run -> active?.let { action ->
                 val remaining = (action.startedAtMillis!! + MICRO_ACTION_MILLIS - nowMillis()).coerceAtLeast(0)
                 RunStep(
@@ -139,7 +141,7 @@ fun MicroActionScreen(
                     onFinish = { step = ActionStep.Rate },
                     onLeave = onClose,
                 )
-            } ?: Text("计时已结束。")
+            } ?: Text(microActionTimerEnded)
             ActionStep.Rate -> (active ?: finished)?.let { action ->
                 RateStep(
                     title = action.title,
@@ -180,52 +182,38 @@ private fun PickStep(
     onPickPreset: (String) -> Unit,
     onOpenHistory: () -> Unit,
 ) {
-    Text("微行动", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-    Text("门槛低到不需要说服自己。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+    Text(microActionTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+    Text(microActionIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
     if (hasHistory) {
         TextButton(onClick = onOpenHistory) { Text(historyOpenLabel) }
     }
     if (ready.isNotEmpty()) {
-        Text("已挂上的动作", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+        Text(microActionReadyGroup, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
         ready.forEach { action ->
-            Surface(
-                onClick = { onPickExisting(action.id) },
-                color = MaterialTheme.colorScheme.surface,
-                shape = CardShape,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-            ) {
-                Text(action.title, Modifier.fillMaxWidth().padding(16.dp), fontSize = 17.sp)
-            }
+            ActionPickCard(action.title) { onPickExisting(action.id) }
         }
     }
     microActionPresets.groupBy { it.group }.forEach { (group, items) ->
         Text(group, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
         items.forEach { preset ->
-            Surface(
-                onClick = { onPickPreset(preset.title) },
-                color = MaterialTheme.colorScheme.surface,
-                shape = CardShape,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-            ) {
-                Text(preset.title, Modifier.fillMaxWidth().padding(16.dp), fontSize = 17.sp)
-            }
+            ActionPickCard(preset.title) { onPickPreset(preset.title) }
         }
     }
-    Text("自定义微小行动", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+    Text(microActionCustomGroup, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
     Text(microActionCustomHint(), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
     OutlinedTextField(
         value = custom,
         onValueChange = onCustom,
-        label = { Text("写一个再小一点的动作") },
+        label = { Text(microActionCustomFieldLabel) },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
     )
     Button(
         onClick = { onPickPreset(custom.trim()) },
         enabled = custom.isNotBlank(),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
         shape = RoundedCornerShape(12.dp),
-    ) { Text("确认自定义行动") }
+    ) { Text(microActionCustomConfirm, fontSize = 17.sp) }
 }
 
 @Composable
@@ -236,12 +224,16 @@ private fun PredictStep(
     onStart: () -> Unit,
     onBack: () -> Unit,
 ) {
-    TextButton(onClick = onBack) { Text("换一个") }
+    TextButton(onClick = onBack) { Text(microActionSwapLabel) }
     Text(title, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
-    Text("开始前，你预测它有多难？1 很轻，10 很难。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+    Text(microActionPredictPrompt, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
     ScoreRow(predicted, onPredicted)
-    Button(onClick = onStart, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-        Text("开始 5 分钟")
+    Button(
+        onClick = onStart,
+        modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        Text(microActionStartLabel, fontSize = 17.sp)
     }
 }
 
@@ -255,7 +247,7 @@ private fun RunStep(
 ) {
     predicted?.let {
         Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(999.dp)) {
-            Text("预测困难度 $it / 10", Modifier.padding(horizontal = 12.dp, vertical = 4.dp), fontSize = 14.sp)
+            Text(microActionPredictedBadge(it), Modifier.padding(horizontal = 12.dp, vertical = 4.dp), fontSize = 14.sp)
         }
     }
     Text(title, Modifier.fillMaxWidth().semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center)
@@ -284,11 +276,15 @@ private fun RunStep(
             )
         }
     }
-    Text("不评估想不想。启动 5 分钟。", color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-    Button(onClick = onFinish, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-        Text("我已完成")
+    Text(microActionWaitBody, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+    Button(
+        onClick = onFinish,
+        modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        Text(microActionFinishTimerLabel, fontSize = 17.sp)
     }
-    TextButton(onClick = onLeave, modifier = Modifier.fillMaxWidth()) { Text("暂停 / 退出") }
+    TextButton(onClick = onLeave, modifier = Modifier.fillMaxWidth()) { Text(microActionPauseLabel) }
 }
 
 @Composable
@@ -299,10 +295,14 @@ private fun RateStep(
     onSave: () -> Unit,
 ) {
     Text(title, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
-    Text("实际做起来有多难？", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+    Text(microActionRatePrompt, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
     ScoreRow(actual, onActual)
-    Button(onClick = onSave, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-        Text("记下这次体感")
+    Button(
+        onClick = onSave,
+        modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        Text(microActionSaveFeltLabel, fontSize = 17.sp)
     }
 }
 
@@ -314,26 +314,34 @@ private fun ResultStep(
     onAnother: () -> Unit,
     onOpenHistory: () -> Unit,
 ) {
-    Text("动作完成", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-    Text("你做到了「${action.title}」", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 16.sp)
+    Text(microActionResultTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+    Text(microActionDidCopy(action.title), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 16.sp)
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text("行动前 · 预测难度  ${action.predictedDifficulty ?: "—"}")
-            Text("行动后 · 实际体感  ${action.actualDifficulty ?: "—"}")
+            Text(microActionPredictLine(action.predictedDifficulty))
+            Text(microActionActualLine(action.actualDifficulty))
             Text(microActionBiasCopy(action.predictedDifficulty, action.actualDifficulty), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
         }
     }
     if (hasHistory) {
-        OutlinedButton(onClick = onOpenHistory, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-            Text(historyOpenLabel)
+        OutlinedButton(
+            onClick = onOpenHistory,
+            modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
+            shape = RoundedCornerShape(12.dp),
+        ) {
+            Text(historyOpenLabel, fontSize = 17.sp)
         }
     }
-    Button(onClick = onClose, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) { Text("回到今天") }
-    TextButton(onClick = onAnother, modifier = Modifier.fillMaxWidth()) { Text("再选一个") }
+    Button(
+        onClick = onClose,
+        modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
+        shape = RoundedCornerShape(12.dp),
+    ) { Text(microActionHomeLabel, fontSize = 17.sp) }
+    TextButton(onClick = onAnother, modifier = Modifier.fillMaxWidth()) { Text(microActionAnotherLabel) }
 }
 
 @Composable
@@ -348,18 +356,37 @@ private fun ScoreRow(value: Int, onSelect: (Int) -> Unit) {
                         shape = RoundedCornerShape(12.dp),
                         color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
                         border = BorderStroke(1.dp, if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant),
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).heightIn(min = ActionMinHeight),
                     ) {
-                        Text(
-                            "$score",
-                            Modifier.padding(vertical = 10.dp).fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
-                            fontSize = 16.sp,
-                        )
+                        Box(Modifier.fillMaxWidth().heightIn(min = ActionMinHeight), contentAlignment = Alignment.Center) {
+                            Text(
+                                "$score",
+                                textAlign = TextAlign.Center,
+                                color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
+                                fontSize = 16.sp,
+                            )
+                        }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ActionPickCard(title: String, onClick: () -> Unit) {
+    Surface(
+        onClick = onClick,
+        color = MaterialTheme.colorScheme.surface,
+        shape = CardShape,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+        modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
+    ) {
+        Box(
+            Modifier.fillMaxWidth().heightIn(min = ActionMinHeight).padding(horizontal = 16.dp),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            Text(title, fontSize = 17.sp)
         }
     }
 }
