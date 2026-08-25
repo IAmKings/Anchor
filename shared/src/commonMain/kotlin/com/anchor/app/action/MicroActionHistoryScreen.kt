@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -46,6 +47,7 @@ import com.anchor.app.onboarding.overestimateCount
 import com.anchor.app.storage.AnchorStore
 
 private val CardShape = RoundedCornerShape(16.dp)
+private val HistoryRowMinHeight = 52.dp
 
 @Composable
 fun MicroActionHistoryScreen(
@@ -64,7 +66,7 @@ fun MicroActionHistoryScreen(
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("返回") }
+        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text(historyBackLabel) }
         Text(
             historyEvidenceTitle,
             Modifier.fillMaxWidth().semantics { heading() },
@@ -120,7 +122,7 @@ fun MicroActionHistoryScreen(
             Text(historyEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
         }
         Text(
-            "“$historyEvidenceQuote”",
+            historyQuotedEvidence(),
             Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 16.sp,
@@ -153,9 +155,10 @@ private fun EvidenceRow(title: String, stamp: String, predicted: Int?, actual: I
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+        modifier = Modifier.fillMaxWidth().heightIn(min = HistoryRowMinHeight),
     ) {
         Row(
-            Modifier.fillMaxWidth().padding(16.dp),
+            Modifier.fillMaxWidth().heightIn(min = HistoryRowMinHeight).padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -169,7 +172,7 @@ private fun EvidenceRow(title: String, stamp: String, predicted: Int?, actual: I
                 Text(historyPredictedLabel, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 Text(historyScore(predicted), fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.outline, fontSize = 16.sp)
             }
-            Text("→", color = MaterialTheme.colorScheme.outlineVariant)
+            Text(historyArrow, color = MaterialTheme.colorScheme.outlineVariant)
             Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(historyActualLabel, color = MaterialTheme.colorScheme.primary, fontSize = 14.sp)
                 Text(

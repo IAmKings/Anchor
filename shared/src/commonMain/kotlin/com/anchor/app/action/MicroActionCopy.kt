@@ -70,6 +70,10 @@ internal const val historyListTitle = "近期记录"
 internal const val historyEmpty = "还没有可比较的记录。做完一次并记下体感后会出现在这里。"
 internal const val historyPredictedLabel = "预测"
 internal const val historyActualLabel = "实际"
+internal const val historyBackLabel = "返回"
+internal const val historyArrow = "→"
+
+internal fun historyQuotedEvidence(): String = "“$historyEvidenceQuote”"
 
 internal fun evidenceActions(actions: List<MicroAction>): List<MicroAction> =
     actions.filter { it.predictedDifficulty != null && it.actualDifficulty != null && it.completedAtMillis != null }

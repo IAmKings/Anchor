@@ -43,9 +43,14 @@ class MicroActionCopyTest {
             historyScore(8),
         )
         assertTrue(historyEvidenceQuote.contains("那张表"))
+        assertEquals("“$historyEvidenceQuote”", historyQuotedEvidence())
+        assertEquals("返回", historyBackLabel)
         assertEquals("8/10", historyScore(8))
         assertEquals("2 次", historyOverestimateValue(2))
         assertEquals("还没有", historyOverestimateValue(0))
+        assertTrue(!historyEvidenceQuote.contains("这张表"))
+        assertTrue(!historyEvidenceIntro.contains("启动通常是最难"))
+        assertTrue(!historyBiasLabel.contains("%"))
         assertTrue(texts.none { it.contains("%") || it.contains("完成率") || it.contains("streak") || it.contains("连续") })
         val scored = evidenceActions(
             listOf(
