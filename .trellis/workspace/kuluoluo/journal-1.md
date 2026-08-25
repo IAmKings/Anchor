@@ -355,3 +355,24 @@ Overview 现在就想处理/确认开箱/开始处理第一项 52.dp，文案抽
 ### Status
 
 [OK] **Completed**
+
+
+## Session 17: 忧虑三选一按钮加高并抽出文案
+
+**Date**: 2026-08-25
+**Task**: 忧虑三选一按钮加高并抽出文案
+**Branch**: `main`
+
+### Summary
+
+Process 三选一与播放录音 52.dp，文案抽出。暂时无解用下次专场提示。IMPLEMENTATION_PLAN §8 写入轨 A–D。Convert/Done 未改。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `38cb00e` | (see git log) |
+
+### Status
+
+[OK] **Completed**

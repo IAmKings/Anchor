@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 16
+- **Total Sessions**: 17
 - **Last Active**: 2026-08-25
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~357 | Active |
+| `journal-1.md` | ~378 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 17 | 2026-08-25 | 忧虑三选一按钮加高并抽出文案 | `38cb00e` | `main` |
 | 16 | 2026-08-25 | 忧虑专场开箱按钮加高并抽出文案 | `a9c3033` | `main` |
 | 15 | 2026-08-25 | 挂卡半屏语音与封存按钮加高 | `402b219` | `main` |
 | 14 | 2026-08-25 | 量表页选项加高并固定提交 | `1551a85` | `main` |
