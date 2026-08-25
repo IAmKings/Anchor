@@ -1,0 +1,30 @@
+{
+  "id": "vault-done-cta",
+  "name": "vault-done-cta",
+  "title": "忧虑完成页按钮加高并抽出文案",
+  "description": "DoneStep 回到今天 heightIn 52.dp. Extract done copy. Do not add 查看计划 or 完成率.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": "2026-08-25",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/worry/WorryVaultScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/worry/WorryCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/worry/WorryCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
