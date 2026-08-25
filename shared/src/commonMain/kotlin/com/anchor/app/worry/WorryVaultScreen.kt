@@ -111,6 +111,7 @@ fun WorryVaultScreen(
             step == VaultStep.Process && current != null && open -> ProcessStep(
                 card = current,
                 nowMillis = nowMillis(),
+                nextSessionLabel = nextSessionLabel(),
                 audioPlaybackStatus = audioPlaybackStatus,
                 onPlayAudio = onPlayAudio,
                 onAction = { step = VaultStep.Convert },
@@ -310,6 +311,7 @@ private fun PreviewCard(card: WorryCard, nowMillis: Long) {
 private fun ProcessStep(
     card: WorryCard,
     nowMillis: Long,
+    nextSessionLabel: String,
     audioPlaybackStatus: String?,
     onPlayAudio: (String) -> Unit,
     onAction: () -> Unit,
@@ -317,8 +319,8 @@ private fun ProcessStep(
     onDismiss: () -> Unit,
     onBack: () -> Unit,
 ) {
-    TextButton(onClick = onBack) { Text("回到开箱") }
-    Text("请选择处理方式", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+    TextButton(onClick = onBack) { Text(vaultBackToOverview) }
+    Text(vaultProcessPrompt, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
@@ -331,7 +333,7 @@ private fun ProcessStep(
         ) {
             StatusMark("念", null)
             Text(
-                if (card.content.isBlank()) "“语音挂卡”" else "“${card.content}”",
+                vaultQuotedCard(card.content),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
@@ -339,18 +341,45 @@ private fun ProcessStep(
             )
             Text(worryRecordedLabel(card.sealedAtMillis, nowMillis), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             card.audioFileName?.let { fileName ->
-                OutlinedButton(onClick = { onPlayAudio(fileName) }) { Text("播放本地录音") }
+                OutlinedButton(
+                    onClick = { onPlayAudio(fileName) },
+                    modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(vaultPlayAudioLabel, fontSize = 17.sp)
+                }
                 audioPlaybackStatus?.let { Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp) }
             }
         }
     }
-    Button(onClick = onAction, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-        Text("明天能做的一个动作")
+    Button(
+        onClick = onAction,
+        modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        Text(vaultChooseActionLabel, fontSize = 17.sp)
     }
-    OutlinedButton(onClick = onUnsolvable, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-        Text("暂时无解")
+    OutlinedButton(
+        onClick = onUnsolvable,
+        modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(vaultUnsolvableLabel, fontSize = 17.sp)
+            Text(
+                vaultUnsolvableHint(nextSessionLabel),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 14.sp,
+            )
+        }
     }
-    TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) { Text("已不再重要") }
+    OutlinedButton(
+        onClick = onDismiss,
+        modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
+        shape = RoundedCornerShape(12.dp),
+    ) {
+        Text(vaultDismissLabel, fontSize = 17.sp)
+    }
 }
 
 @Composable

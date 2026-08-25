@@ -41,6 +41,21 @@ class WorryCopyTest {
     }
 
     @Test
+    fun processCopyKeepsThreeChoicesAndDynamicUnsolvableHint() {
+        assertEquals("回到开箱", vaultBackToOverview)
+        assertEquals("请选择处理方式", vaultProcessPrompt)
+        assertEquals("明天能做的一个动作", vaultChooseActionLabel)
+        assertEquals("暂时无解", vaultUnsolvableLabel)
+        assertEquals("已不再重要", vaultDismissLabel)
+        assertEquals("播放本地录音", vaultPlayAudioLabel)
+        assertEquals("“语音挂卡”", vaultQuotedCard(""))
+        assertEquals("“担心汇报”", vaultQuotedCard("担心汇报"))
+        assertEquals("明天 20:00 前无需再想。", vaultUnsolvableHint("明天 20:00"))
+        assertFalse(vaultUnsolvableHint("明天 20:00").contains("今晚"))
+        assertFalse(vaultChooseActionLabel.contains("必须"))
+    }
+
+    @Test
     fun recordedLabelIsRelativeAndShameFree() {
         assertEquals("刚刚挂上", worryRecordedLabel(1_000, 1_000))
         assertEquals("记录于 2 分钟前", worryRecordedLabel(0, 2 * 60_000))

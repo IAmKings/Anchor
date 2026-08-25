@@ -20,6 +20,17 @@ internal const val vaultEmptyPending = "今天没有待处理卡片。"
 internal const val vaultAcceptedQuote = "在这里，忧虑是被受理的，而非被压抑。"
 internal const val vaultStartFirstLabel = "开始处理第一项"
 internal const val vaultAudioHangLabel = "语音挂卡"
+internal const val vaultBackToOverview = "回到开箱"
+internal const val vaultProcessPrompt = "请选择处理方式"
+internal const val vaultChooseActionLabel = "明天能做的一个动作"
+internal const val vaultUnsolvableLabel = "暂时无解"
+internal const val vaultDismissLabel = "已不再重要"
+internal const val vaultPlayAudioLabel = "播放本地录音"
+
+internal fun vaultQuotedCard(content: String): String =
+    if (content.isBlank()) "“$vaultAudioHangLabel”" else "“$content”"
+
+internal fun vaultUnsolvableHint(nextLabel: String): String = "${nextLabel} 前无需再想。"
 
 internal fun vaultSealedMessage(sessionOpen: Boolean, nextLabel: String): String =
     if (sessionOpen) "已存入保险箱，可以在当前专场处理。"
