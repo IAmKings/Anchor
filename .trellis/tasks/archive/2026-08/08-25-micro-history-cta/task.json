@@ -1,0 +1,30 @@
+{
+  "id": "micro-history-cta",
+  "name": "micro-history-cta",
+  "title": "微行动历史证据行加高并守住文案",
+  "description": "History evidence rows heightIn 52.dp. Extract remaining copy. Keep 那张表 and score-not-percent. Do not add Stitch 60% or nested 查看历史记录.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": "2026-08-25",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/action/MicroActionHistoryScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/action/MicroActionCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/action/MicroActionCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
