@@ -58,3 +58,21 @@ internal fun emotionCardSentence(emotion: String, event: String, hardestPart: St
 
 internal fun groupedWordsCoverVocabulary(): Boolean =
     emotionGroups.flatMap { it.words }.toSet() == emotionVocabulary.toSet()
+
+internal const val emotionBackLabel = "返回"
+internal const val emotionListTitle = "给情绪起一个准确的名字"
+internal const val emotionListIntro = "不是为了分析它，只是把模糊的难受变成一个可以看见的对象。"
+internal const val emotionWriteLabel = "写下这一张"
+internal const val emotionEmpty = "这里还没有卡片。暂停很正常。"
+internal const val emotionPassedAction = "它已经过去了"
+internal const val emotionPassedMark = "已过去"
+internal const val emotionCancelLabel = "取消"
+internal const val emotionPickTitle = "哪一个词更接近？"
+internal const val emotionPickIntro = "“很烦”“很难过”可以是入口，但请再具体一点。"
+internal const val emotionSearchLabel = "搜一个更接近的词"
+internal const val emotionVagueHint = "这个还太宽。请从下面挑一个更具体的词。"
+internal const val emotionUnmatchedHint = "词库里没有这个。请从下面挑一个具体的词。"
+internal const val emotionSwapWord = "换一个词"
+internal const val emotionEventLabel = "在什么事情中"
+internal const val emotionHardestLabel = "最让我难受的具体部分"
+internal const val emotionSaveLabel = "保存卡片"

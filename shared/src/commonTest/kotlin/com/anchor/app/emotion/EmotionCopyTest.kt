@@ -27,6 +27,19 @@ class EmotionCopyTest {
     }
 
     @Test
+    fun listAndComposerCopyAvoidsAnalysisAndShame() {
+        assertEquals("给情绪起一个准确的名字", emotionListTitle)
+        assertEquals("写下这一张", emotionWriteLabel)
+        assertEquals("它已经过去了", emotionPassedAction)
+        assertEquals("保存卡片", emotionSaveLabel)
+        assertEquals("这里还没有卡片。暂停很正常。", emotionEmpty)
+        assertTrue(emotionEmpty.contains("暂停很正常"))
+        assertFalse(emotionListIntro.contains("分析透"))
+        assertFalse(emotionWriteLabel.contains("打卡"))
+        assertFalse(emotionPassedMark.contains("完成率"))
+    }
+
+    @Test
     fun sentenceKeepsTheStructuredTemplate() {
         assertEquals(
             "在「今天开会」中，我感到被轻视；最让我难受的是「讲完没人接话」。",

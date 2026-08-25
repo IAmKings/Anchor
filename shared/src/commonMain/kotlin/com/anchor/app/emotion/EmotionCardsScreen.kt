@@ -2,6 +2,7 @@ package com.anchor.app.emotion
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -17,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -40,6 +43,7 @@ import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.EmotionCard
 
 private val CardShape = RoundedCornerShape(16.dp)
+private val EmotionActionMinHeight = 52.dp
 
 @Composable
 fun EmotionCardsScreen(
@@ -103,19 +107,23 @@ fun EmotionCardsScreen(
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("返回") }
-        Text("给情绪起一个准确的名字", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text(emotionBackLabel) }
+        Text(emotionListTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
         Text(
-            "不是为了分析它，只是把模糊的难受变成一个可以看见的对象。",
+            emotionListIntro,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 15.sp,
             lineHeight = 24.sp,
         )
-        Button(onClick = { composing = true }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-            Text("写下这一张")
+        Button(
+            onClick = { composing = true },
+            modifier = Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight),
+            shape = RoundedCornerShape(12.dp),
+        ) {
+            Text(emotionWriteLabel, fontSize = 17.sp)
         }
         if (cards.isEmpty()) {
-            Text("这里还没有卡片。暂停很正常。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+            Text(emotionEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
         }
         cards.forEach { card ->
             SavedEmotionCard(card, onPassed = {
@@ -149,9 +157,15 @@ private fun SavedEmotionCard(card: EmotionCard, onPassed: () -> Unit) {
             }
             Text(emotionCardSentence(card.emotion, card.event, card.hardestPart), fontSize = 16.sp, lineHeight = 26.sp)
             if (card.passedAtMillis == null) {
-                TextButton(onClick = onPassed) { Text("它已经过去了") }
+                OutlinedButton(
+                    onClick = onPassed,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(emotionPassedAction, fontSize = 17.sp)
+                }
             } else {
-                Text("已过去", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                Text(emotionPassedMark, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             }
         }
     }
@@ -173,11 +187,11 @@ private fun NewEmotionCard(onCancel: () -> Unit, onSave: (String, String, String
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        TextButton(onClick = onCancel, modifier = Modifier.align(Alignment.End)) { Text("取消") }
+        TextButton(onClick = onCancel, modifier = Modifier.align(Alignment.End)) { Text(emotionCancelLabel) }
         if (selected == null) {
-            Text("哪一个词更接近？", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Text(emotionPickTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(
-                "“很烦”“很难过”可以是入口，但请再具体一点。",
+                emotionPickIntro,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 15.sp,
                 lineHeight = 24.sp,
@@ -185,15 +199,15 @@ private fun NewEmotionCard(onCancel: () -> Unit, onSave: (String, String, String
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it },
-                label = { Text("搜一个更接近的词") },
+                label = { Text(emotionSearchLabel) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = CardShape,
             )
             if (search.vague) {
-                HintBanner("这个还太宽。请从下面挑一个更具体的词。")
+                HintBanner(emotionVagueHint)
             }
             if (search.unmatched) {
-                HintBanner("词库里没有这个。请从下面挑一个具体的词。")
+                HintBanner(emotionUnmatchedHint)
             }
             search.groups.forEach { group ->
                 Text(group.title, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, fontWeight = FontWeight.Medium)
@@ -205,13 +219,14 @@ private fun NewEmotionCard(onCancel: () -> Unit, onSave: (String, String, String
                                 shape = CardShape,
                                 color = MaterialTheme.colorScheme.surface,
                                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier.weight(1f).heightIn(min = EmotionActionMinHeight),
                             ) {
-                                Text(
-                                    word,
-                                    Modifier.padding(horizontal = 12.dp, vertical = 14.dp),
-                                    fontSize = 16.sp,
-                                )
+                                Box(
+                                    Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight).padding(horizontal = 12.dp),
+                                    contentAlignment = Alignment.CenterStart,
+                                ) {
+                                    Text(word, fontSize = 16.sp)
+                                }
                             }
                         }
                         if (row.size == 1) Spacer(Modifier.weight(1f))
@@ -231,11 +246,11 @@ private fun NewEmotionCard(onCancel: () -> Unit, onSave: (String, String, String
                     fontWeight = FontWeight.SemiBold,
                 )
             }
-            TextButton(onClick = { selected = null }) { Text("换一个词") }
+            TextButton(onClick = { selected = null }) { Text(emotionSwapWord) }
             OutlinedTextField(
                 value = event,
                 onValueChange = { event = it },
-                label = { Text("在什么事情中") },
+                label = { Text(emotionEventLabel) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = CardShape,
                 minLines = 2,
@@ -243,7 +258,7 @@ private fun NewEmotionCard(onCancel: () -> Unit, onSave: (String, String, String
             OutlinedTextField(
                 value = hardestPart,
                 onValueChange = { hardestPart = it },
-                label = { Text("最让我难受的具体部分") },
+                label = { Text(emotionHardestLabel) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = CardShape,
                 minLines = 2,
@@ -265,9 +280,9 @@ private fun NewEmotionCard(onCancel: () -> Unit, onSave: (String, String, String
             Button(
                 onClick = { onSave(selected!!, event, hardestPart) },
                 enabled = event.isNotBlank() && hardestPart.isNotBlank(),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight),
                 shape = RoundedCornerShape(12.dp),
-            ) { Text("保存卡片") }
+            ) { Text(emotionSaveLabel, fontSize = 17.sp) }
         }
         Spacer(Modifier.height(24.dp))
     }
