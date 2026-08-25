@@ -418,3 +418,24 @@ Done 回到今天 52.dp，文案抽出。摘要仍是受理张数。不加查看
 ### Status
 
 [OK] **Completed**
+
+
+## Session 20: 微行动流程按钮加高并抽出文案
+
+**Date**: 2026-08-25
+**Task**: 微行动流程按钮加高并抽出文案
+**Branch**: `main`
+
+### Summary
+
+Pick/Predict/Run/Rate/Result 主按钮与 1–10 芯片 52.dp，文案抽出。预设仍是深蹲不是深呼吸。历史页未改。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `07e1d7d` | (see git log) |
+
+### Status
+
+[OK] **Completed**
