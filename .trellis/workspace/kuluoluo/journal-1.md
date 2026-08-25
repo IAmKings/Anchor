@@ -292,3 +292,24 @@ MildResult 底部固定选择第一个锚点；页内一次一件/14 天提示�
 ### Status
 
 [OK] **Completed**
+
+
+## Session 14: 量表页选项加高并固定提交
+
+**Date**: 2026-08-25
+**Task**: 量表页选项加高并固定提交
+**Branch**: `main`
+
+### Summary
+
+ScaleForm 选项 52.dp、底部提交评估。题目/第9题/SafetyPolicy 未改。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `1551a85` | (see git log) |
+
+### Status
+
+[OK] **Completed**
