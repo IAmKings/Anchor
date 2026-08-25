@@ -391,8 +391,8 @@ private fun ConvertStep(
     onConfirm: () -> Unit,
     onBack: () -> Unit,
 ) {
-    TextButton(onClick = onBack) { Text("回到三选一") }
-    Text("转化动作", Modifier.semantics { heading() }, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+    TextButton(onClick = onBack) { Text(vaultBackToProcess) }
+    Text(vaultConvertTitle, Modifier.semantics { heading() }, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
@@ -400,7 +400,7 @@ private fun ConvertStep(
     ) {
         Column(Modifier.fillMaxWidth().padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(
-                if (card.content.isBlank()) "语音挂卡" else "“${card.content}”",
+                vaultQuotedCard(card.content),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
@@ -411,16 +411,16 @@ private fun ConvertStep(
     OutlinedTextField(
         value = action,
         onValueChange = onActionChange,
-        label = { Text("明天要做的微行动") },
+        label = { Text(vaultConvertFieldLabel) },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
     )
     Button(
         onClick = onConfirm,
         enabled = action.isNotBlank(),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
         shape = RoundedCornerShape(12.dp),
-    ) { Text("确认并同步到首页") }
+    ) { Text(vaultConvertConfirmLabel, fontSize = 17.sp) }
 }
 
 @Composable

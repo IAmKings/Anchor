@@ -56,6 +56,16 @@ class WorryCopyTest {
     }
 
     @Test
+    fun convertCopySyncsToHomeWithoutCheckInLanguage() {
+        assertEquals("回到三选一", vaultBackToProcess)
+        assertEquals("转化动作", vaultConvertTitle)
+        assertEquals("明天要做的微行动", vaultConvertFieldLabel)
+        assertEquals("确认并同步到首页", vaultConvertConfirmLabel)
+        assertFalse(vaultConvertConfirmLabel.contains("打卡"))
+        assertFalse(vaultConvertTitle.contains("完成率"))
+    }
+
+    @Test
     fun recordedLabelIsRelativeAndShameFree() {
         assertEquals("刚刚挂上", worryRecordedLabel(1_000, 1_000))
         assertEquals("记录于 2 分钟前", worryRecordedLabel(0, 2 * 60_000))

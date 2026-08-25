@@ -26,6 +26,10 @@ internal const val vaultChooseActionLabel = "明天能做的一个动作"
 internal const val vaultUnsolvableLabel = "暂时无解"
 internal const val vaultDismissLabel = "已不再重要"
 internal const val vaultPlayAudioLabel = "播放本地录音"
+internal const val vaultBackToProcess = "回到三选一"
+internal const val vaultConvertTitle = "转化动作"
+internal const val vaultConvertFieldLabel = "明天要做的微行动"
+internal const val vaultConvertConfirmLabel = "确认并同步到首页"
 
 internal fun vaultQuotedCard(content: String): String =
     if (content.isBlank()) "“$vaultAudioHangLabel”" else "“$content”"
