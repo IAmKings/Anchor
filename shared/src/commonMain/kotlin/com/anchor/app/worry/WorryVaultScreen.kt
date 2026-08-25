@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -47,6 +48,7 @@ import com.anchor.app.storage.WorryCard
 import com.anchor.app.storage.WorryResolution
 
 private val CardShape = RoundedCornerShape(16.dp)
+private val VaultActionMinHeight = 52.dp
 
 private enum class VaultStep { Overview, Process, Convert, Done }
 
@@ -212,7 +214,7 @@ private fun OverviewStep(
     onStartProcess: () -> Unit,
 ) {
     HangComposer(
-        title = "忧虑保险箱",
+        title = vaultTitle,
         fieldLabel = hangFieldHint,
         content = content,
         onContent = onContent,
@@ -223,7 +225,7 @@ private fun OverviewStep(
         onHang = onHang,
     )
     if (!open) {
-        StatusMark("锁", "念头已经在纸上了")
+        StatusMark("锁", vaultLockedCaption)
         Surface(
             color = MaterialTheme.colorScheme.surface,
             shape = CardShape,
@@ -232,7 +234,13 @@ private fun OverviewStep(
             Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(vaultRuminationMessage(nextSessionLabel), fontWeight = FontWeight.SemiBold, fontSize = 17.sp, lineHeight = 26.sp)
                 Text(vaultPendingSummary(pending.size), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
-                TextButton(onClick = onAskOpenNow) { Text("现在就想处理") }
+                OutlinedButton(
+                    onClick = onAskOpenNow,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(vaultAskOpenNowLabel, fontSize = 17.sp)
+                }
             }
         }
         if (confirmationVisible) {
@@ -241,30 +249,38 @@ private fun OverviewStep(
                 shape = CardShape,
             ) {
                 Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("现在开箱后，请尽量为每张卡做一个选择，优先找“明天能做的一个动作”。", fontSize = 15.sp, lineHeight = 24.sp)
-                    Button(onClick = onConfirmOpen, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-                        Text("确认开箱")
+                    Text(vaultConfirmOpenHint, fontSize = 15.sp, lineHeight = 24.sp)
+                    Button(
+                        onClick = onConfirmOpen,
+                        modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
+                        shape = RoundedCornerShape(12.dp),
+                    ) {
+                        Text(vaultConfirmOpenLabel, fontSize = 17.sp)
                     }
-                    TextButton(onClick = onWaitForSession) { Text("等到专场") }
+                    TextButton(onClick = onWaitForSession) { Text(vaultWaitForSessionLabel) }
                 }
             }
         }
     } else {
-        StatusMark("开", "专场已开启")
-        Text("深呼吸，我们开始整理。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+        StatusMark("开", vaultOpenCaption)
+        Text(vaultOpenBreath, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         if (pending.isEmpty()) {
-            Text("今天没有待处理卡片。", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(vaultEmptyPending, color = MaterialTheme.colorScheme.onSurfaceVariant)
         } else {
             pending.forEach { card -> PreviewCard(card, nowMillis) }
             Text(
-                "在这里，忧虑是被受理的，而非被压抑。",
+                vaultAcceptedQuote,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
-            Button(onClick = onStartProcess, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-                Text("开始处理第一项")
+            Button(
+                onClick = onStartProcess,
+                modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text(vaultStartFirstLabel, fontSize = 17.sp)
             }
         }
     }
@@ -282,7 +298,7 @@ private fun PreviewCard(card: WorryCard, nowMillis: Long) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(worryRecordedLabel(card.sealedAtMillis, nowMillis), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             Text(
-                if (card.content.isBlank()) "语音挂卡" else card.content,
+                if (card.content.isBlank()) vaultAudioHangLabel else card.content,
                 fontSize = 16.sp,
                 lineHeight = 26.sp,
             )

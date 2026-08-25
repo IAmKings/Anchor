@@ -25,6 +25,22 @@ class WorryCopyTest {
     }
 
     @Test
+    fun overviewCopyKeepsExemptionPathAndDoesNotPressure() {
+        assertEquals("忧虑保险箱", vaultTitle)
+        assertEquals("念头已经在纸上了", vaultLockedCaption)
+        assertEquals("现在就想处理", vaultAskOpenNowLabel)
+        assertEquals("确认开箱", vaultConfirmOpenLabel)
+        assertEquals("等到专场", vaultWaitForSessionLabel)
+        assertEquals("专场已开启", vaultOpenCaption)
+        assertEquals("开始处理第一项", vaultStartFirstLabel)
+        assertEquals("语音挂卡", vaultAudioHangLabel)
+        assertEquals("现在开箱后，请尽量为每张卡做一个选择，优先找“明天能做的一个动作”。", vaultConfirmOpenHint)
+        assertFalse(vaultConfirmOpenHint.contains("务必"))
+        assertFalse(vaultAcceptedQuote.contains("打卡"))
+        assertFalse(vaultOpenBreath.contains("今晚"))
+    }
+
+    @Test
     fun recordedLabelIsRelativeAndShameFree() {
         assertEquals("刚刚挂上", worryRecordedLabel(1_000, 1_000))
         assertEquals("记录于 2 分钟前", worryRecordedLabel(0, 2 * 60_000))
