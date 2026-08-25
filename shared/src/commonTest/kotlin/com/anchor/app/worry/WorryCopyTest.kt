@@ -75,7 +75,14 @@ class WorryCopyTest {
 
     @Test
     fun doneSummaryCountsAcceptedCardsNotStreaks() {
+        assertEquals("整理完毕", vaultDoneTitle)
+        assertEquals("这一刻，念头已在纸上。\n你可以放心地把它们留在这里。", vaultDoneBody)
+        assertEquals("回到今天", vaultDoneHomeLabel)
+        assertEquals("受理，而非压抑。", vaultDoneFooter)
         assertEquals("今日受理了 3 项忧虑", vaultDoneSummary(3))
         assertEquals("这一刻没有需要处理的卡片。", vaultDoneSummary(0))
+        assertFalse(vaultDoneSummary(3).contains("完成率"))
+        assertFalse(vaultDoneHomeLabel.contains("计划"))
+        assertFalse(vaultDoneBody.contains("打卡"))
     }
 }

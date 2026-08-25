@@ -30,6 +30,10 @@ internal const val vaultBackToProcess = "回到三选一"
 internal const val vaultConvertTitle = "转化动作"
 internal const val vaultConvertFieldLabel = "明天要做的微行动"
 internal const val vaultConvertConfirmLabel = "确认并同步到首页"
+internal const val vaultDoneTitle = "整理完毕"
+internal const val vaultDoneBody = "这一刻，念头已在纸上。\n你可以放心地把它们留在这里。"
+internal const val vaultDoneHomeLabel = "回到今天"
+internal const val vaultDoneFooter = "受理，而非压抑。"
 
 internal fun vaultQuotedCard(content: String): String =
     if (content.isBlank()) "“$vaultAudioHangLabel”" else "“$content”"

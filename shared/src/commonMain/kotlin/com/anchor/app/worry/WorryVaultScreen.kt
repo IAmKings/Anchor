@@ -431,8 +431,8 @@ private fun DoneStep(processedCount: Int, onClose: () -> Unit) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         StatusMark("完", null)
-        Text("整理完毕", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text("这一刻，念头已在纸上。\n你可以放心地把它们留在这里。", color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, fontSize = 16.sp, lineHeight = 26.sp)
+        Text(vaultDoneTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+        Text(vaultDoneBody, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, fontSize = 16.sp, lineHeight = 26.sp)
         Surface(
             color = MaterialTheme.colorScheme.surface,
             shape = CardShape,
@@ -440,10 +440,14 @@ private fun DoneStep(processedCount: Int, onClose: () -> Unit) {
         ) {
             Text(vaultDoneSummary(processedCount), Modifier.padding(16.dp), fontSize = 16.sp)
         }
-        Button(onClick = onClose, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-            Text("回到今天")
+        Button(
+            onClick = onClose,
+            modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
+            shape = RoundedCornerShape(12.dp),
+        ) {
+            Text(vaultDoneHomeLabel, fontSize = 17.sp)
         }
-        Text("受理，而非压抑。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+        Text(vaultDoneFooter, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
     }
 }
 
