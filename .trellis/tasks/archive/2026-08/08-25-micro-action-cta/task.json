@@ -1,0 +1,30 @@
+{
+  "id": "micro-action-cta",
+  "name": "micro-action-cta",
+  "title": "微行动流程按钮加高并抽出文案",
+  "description": "MicroAction Pick/Predict/Run/Rate/Result 52.dp CTAs and score chips. Extract copy. Keep presets and 5-minute timer. Do not add recommendation mock or HistoryScreen.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": "2026-08-25",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/action/MicroActionScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/action/MicroActionCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/action/MicroActionCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
