@@ -313,3 +313,24 @@ ScaleForm 选项 52.dp、底部提交评估。题目/第9题/SafetyPolicy 未改
 ### Status
 
 [OK] **Completed**
+
+
+## Session 15: 挂卡半屏语音与封存按钮加高
+
+**Date**: 2026-08-25
+**Task**: 挂卡半屏语音与封存按钮加高
+**Branch**: `main`
+
+### Summary
+
+语音/封存 52.dp，文案抽出。vaultSealedMessage 与澄清未改。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `402b219` | (see git log) |
+
+### Status
+
+[OK] **Completed**

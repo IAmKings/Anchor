@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 14
+- **Total Sessions**: 15
 - **Last Active**: 2026-08-25
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~315 | Active |
+| `journal-1.md` | ~336 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 15 | 2026-08-25 | 挂卡半屏语音与封存按钮加高 | `402b219` | `main` |
 | 14 | 2026-08-25 | 量表页选项加高并固定提交 | `1551a85` | `main` |
 | 13 | 2026-08-25 | 轻度评估结果页底部固定选锚点 | `5ade545` | `main` |
 | 12 | 2026-08-25 | 首启就医等待结果页对齐等待首页 | `f41d1bd` | `main` |
