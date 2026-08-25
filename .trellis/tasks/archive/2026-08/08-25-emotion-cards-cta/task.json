@@ -1,0 +1,30 @@
+{
+  "id": "emotion-cards-cta",
+  "name": "emotion-cards-cta",
+  "title": "情绪标签箱按钮加高并抽出文案",
+  "description": "Emotion list/pick/save 52.dp CTAs and word chips. Extract copy. Do not change 32-word vocabulary or crisis clarification.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": "2026-08-25",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/emotion/EmotionCardsScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/emotion/EmotionCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/emotion/EmotionCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
