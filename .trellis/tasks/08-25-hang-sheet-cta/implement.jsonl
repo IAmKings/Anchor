@@ -1,0 +1,4 @@
+{"file": ".trellis/spec/shared/index.md", "reason": "Compose HangComposer."}
+{"file": ".trellis/spec/shared/compose-ui.md", "reason": "52.dp primary actions."}
+{"file": ".trellis/spec/shared/safety.md", "reason": "Do not change crisis phrase clarification."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Reuse hangSealLabel and vaultSealedMessage."}

@@ -1,0 +1,30 @@
+{
+  "id": "hang-sheet-cta",
+  "name": "hang-sheet-cta",
+  "title": "挂卡半屏语音与封存按钮加高",
+  "description": "HangComposer speech and seal buttons heightIn 52.dp. Extract speech copy. Do not change crisis clarification or seal messages.",
+  "status": "in_progress",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/worry/HangSheet.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/worry/WorryCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/worry/WorryCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}

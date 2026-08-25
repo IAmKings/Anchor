@@ -3,6 +3,10 @@ package com.anchor.app.worry
 internal const val hangSheetTitle = "把这个念头放进保险箱"
 internal const val hangFieldHint = "说话，或写一句…"
 internal const val hangSealLabel = "封存"
+internal const val hangSpeechLabel = "语音速记"
+internal const val hangSpeechStopLabel = "停止并保存录音"
+internal const val hangDismissKnown = "知道了"
+internal const val hangDismissCancel = "取消"
 
 internal fun vaultSealedMessage(sessionOpen: Boolean, nextLabel: String): String =
     if (sessionOpen) "已存入保险箱，可以在当前专场处理。"

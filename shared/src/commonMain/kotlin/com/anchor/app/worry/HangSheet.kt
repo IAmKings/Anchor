@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
@@ -187,14 +188,18 @@ internal fun HangComposer(
             minLines = 2,
             maxLines = 4,
         )
-        OutlinedButton(onClick = onSpeech, modifier = Modifier.fillMaxWidth(), shape = FieldShape) {
-            Text(if (speechRecording) "停止并保存录音" else "语音速记")
+        OutlinedButton(
+            onClick = onSpeech,
+            modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+            shape = FieldShape,
+        ) {
+            Text(if (speechRecording) hangSpeechStopLabel else hangSpeechLabel, fontSize = 17.sp)
         }
         speechStatus?.let { Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp) }
         Button(
             onClick = onHang,
             enabled = content.isNotBlank(),
-            modifier = Modifier.fillMaxWidth().height(52.dp),
+            modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
             shape = FieldShape,
         ) { Text(hangSealLabel, fontSize = 17.sp) }
         savedMessage?.let {
@@ -202,7 +207,7 @@ internal fun HangComposer(
         }
         if (onDismiss != null) {
             TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
-                Text(if (showDismiss) "知道了" else "取消")
+                Text(if (showDismiss) hangDismissKnown else hangDismissCancel)
             }
         }
     }
