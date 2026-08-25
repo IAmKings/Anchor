@@ -1,0 +1,30 @@
+{
+  "id": "vault-overview-cta",
+  "name": "vault-overview-cta",
+  "title": "忧虑专场开箱按钮加高并抽出文案",
+  "description": "OverviewStep confirm/start/ask-open heightIn 52.dp. Extract overview copy. Do not change HangComposer, crisis clarification, or three-choice steps.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-25",
+  "completedAt": "2026-08-25",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/worry/WorryVaultScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/worry/WorryCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/worry/WorryCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
