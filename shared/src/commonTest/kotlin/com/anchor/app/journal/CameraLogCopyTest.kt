@@ -39,10 +39,32 @@ class CameraLogCopyTest {
     fun recordsHubCopyHasNoStreakOrPercent() {
         val intro = recordsHubIntro(medicalWaiting = false)
         val waiting = recordsHubIntro(medicalWaiting = true)
-        val texts = listOf(intro, waiting, recordsEmotionBody(), recordsJournalBody(), recordsCountLabel("张", 2).orEmpty())
+        val texts = listOf(
+            intro,
+            waiting,
+            recordsEmotionBody(),
+            recordsJournalBody(),
+            recordsWorryBody(),
+            recordsCountLabel("张", 2).orEmpty(),
+            recordsWorryCountLabel(3).orEmpty(),
+            journalWriteLabel,
+            journalSaveLabel,
+            journalHintTitle,
+            journalMoveLabel,
+            journalReflection,
+        )
         assertTrue(waiting.contains("双栏"))
         assertEquals("已记下 2 张", recordsCountLabel("张", 2))
         assertEquals(null, recordsCountLabel("条", 0))
+        assertEquals("忧虑保险箱", recordsWorryTitle)
+        assertEquals("3 张待处理", recordsWorryCountLabel(3))
+        assertEquals(null, recordsWorryCountLabel(0))
+        assertFalse(recordsWorryBody().contains("汇报"))
+        assertFalse(recordsWorryBody().contains("今晚"))
+        assertFalse(journalInferenceCaption.contains("感受"))
+        assertFalse(journalReflection.contains("平静"))
+        assertEquals("挪过去", journalMoveLabel)
+        assertTrue(journalHintDetail("故意").contains("仍然可以直接保存"))
         assertTrue(texts.none { it.contains("完成率") || it.contains("%") || it.contains("streak") || it.contains("连续") })
     }
 }

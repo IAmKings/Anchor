@@ -55,6 +55,7 @@ import com.anchor.app.safety.SomaticChecklistScreen
 import com.anchor.app.storage.AgeGroup
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.InMemoryAnchorStore
+import com.anchor.app.storage.WorryResolution
 import com.anchor.app.worry.HangSheet
 import com.anchor.app.worry.WorryVaultScreen
 import com.anchor.app.action.MicroActionHistoryScreen
@@ -467,14 +468,17 @@ fun App(
                     medicalWaiting = store.safetyState().mode == SafetyMode.MedicalWaiting,
                     emotionCount = store.emotionCards().size,
                     journalCount = store.cameraLogs().size,
+                    worryCount = store.worryCards().count { it.resolution == WorryResolution.Pending },
                     onEmotionCards = { emotionCardsVisible = true },
                     onCameraLog = { cameraLogVisible = true },
+                    onWorryVault = { if (canPractice(FirstAnchor.WorryVault)) worryVaultVisible = true },
                     onInsights = { recordsHubVisible = false; insightsVisible = true },
                     onSettings = { recordsHubVisible = false; settingsVisible = true },
                     onHelp = { recordsHubVisible = false; helpVisible = true },
                     onClose = { recordsHubVisible = false },
                     showEmotion = canPractice(FirstAnchor.EmotionLabel),
                     showJournal = canPractice(FirstAnchor.FactsJournal),
+                    showWorry = canPractice(FirstAnchor.WorryVault),
                     lockNote = oneThingNote,
                 )
                 return@Surface

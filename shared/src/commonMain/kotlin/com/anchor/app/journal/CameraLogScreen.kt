@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -45,6 +46,7 @@ import com.anchor.app.storage.CameraLog
 import com.anchor.app.storage.firstEvaluativeWord
 
 private val CardShape = RoundedCornerShape(16.dp)
+private val JournalActionMinHeight = 52.dp
 
 @Composable
 fun CameraLogScreen(
@@ -109,7 +111,7 @@ fun CameraLogScreen(
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("返回") }
+        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text(journalBackLabel) }
         JournalHeader()
         if (reflectionVisible) {
             Surface(
@@ -117,16 +119,20 @@ fun CameraLogScreen(
                 shape = CardShape,
             ) {
                 Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("右栏是你的大脑推断，并非已发生的事实。", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-                    TextButton(onClick = { reflectionVisible = false }) { Text("知道了") }
+                    Text(journalReflection, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                    TextButton(onClick = { reflectionVisible = false }) { Text(journalReflectionDismiss) }
                 }
             }
         }
-        Button(onClick = { composing = true }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
-            Text("写下这一栏")
+        Button(
+            onClick = { composing = true },
+            modifier = Modifier.fillMaxWidth().heightIn(min = JournalActionMinHeight),
+            shape = RoundedCornerShape(12.dp),
+        ) {
+            Text(journalWriteLabel, fontSize = 17.sp)
         }
         if (logs.isEmpty()) {
-            Text("还没有记录。只写一栏也可以。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+            Text(journalEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
         }
         logs.forEach { SavedCameraLog(it) }
         Spacer(Modifier.height(24.dp))
@@ -138,15 +144,15 @@ private fun JournalHeader() {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(999.dp)) {
             Text(
-                "隔离事实与大脑推断",
+                journalBadge,
                 Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 14.sp,
             )
         }
-        Text("双栏日志", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+        Text(recordsJournalTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
         Text(
-            "把摄像头拍到的事实和大脑自动补全的推断分开。",
+            recordsJournalBody(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 15.sp,
             lineHeight = 24.sp,
@@ -163,15 +169,15 @@ private fun SavedCameraLog(log: CameraLog) {
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             if (log.fact.isNotEmpty()) {
-                Text("摄像头拍到的事实", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                Text(journalFactTitle, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
                 Text(log.fact, fontSize = 16.sp, lineHeight = 26.sp)
             }
             if (log.inference.isNotEmpty()) {
-                Text("我的大脑推断", color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                Text(journalInferenceTitle, color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
                 Text(log.inference, fontSize = 16.sp, lineHeight = 26.sp)
             }
             if (log.factNeedsHint) {
-                Text("这条可能包含推断，需要的话可以放到右栏。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                Text(journalSavedHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             }
         }
     }
@@ -191,18 +197,18 @@ private fun NewCameraLog(onCancel: () -> Unit, onSave: (String, String) -> Unit)
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        TextButton(onClick = onCancel, modifier = Modifier.align(Alignment.End)) { Text("取消") }
+        TextButton(onClick = onCancel, modifier = Modifier.align(Alignment.End)) { Text(journalCancelLabel) }
         JournalHeader()
         ColumnCard(
             glyph = "摄",
-            title = "摄像头拍到的事实",
-            caption = "仅记录动作、时间、地点、话语。",
+            title = journalFactTitle,
+            caption = journalFactCaption,
             wellColor = MaterialTheme.colorScheme.surfaceVariant,
         ) {
             OutlinedTextField(
                 value = fact,
                 onValueChange = { fact = it },
-                placeholder = { Text("例如：早上 9 点，他发来一条信息说「我现在很忙」。") },
+                placeholder = { Text(journalFactPlaceholder) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 5,
                 shape = RoundedCornerShape(12.dp),
@@ -222,28 +228,31 @@ private fun NewCameraLog(onCancel: () -> Unit, onSave: (String, String) -> Unit)
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text("这条可能属于右栏", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
-                            Text("检测到「$detected」。仍然可以直接保存。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                            Text(journalHintTitle, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                            Text(journalHintDetail(detected), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                         }
-                        TextButton(onClick = {
-                            val moved = moveEvaluativeSentence(fact, inference, detected)
-                            fact = moved.first
-                            inference = moved.second
-                        }) { Text("挪过去") }
+                        TextButton(
+                            onClick = {
+                                val moved = moveEvaluativeSentence(fact, inference, detected)
+                                fact = moved.first
+                                inference = moved.second
+                            },
+                            modifier = Modifier.heightIn(min = JournalActionMinHeight),
+                        ) { Text(journalMoveLabel, fontSize = 17.sp) }
                     }
                 }
             }
         }
         ColumnCard(
             glyph = "脑",
-            title = "我的大脑推断",
-            caption = "记录你的猜测、评价和联想。",
+            title = journalInferenceTitle,
+            caption = journalInferenceCaption,
             wellColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f),
         ) {
             OutlinedTextField(
                 value = inference,
                 onValueChange = { inference = it },
-                placeholder = { Text("例如：我觉得他是在针对我。") },
+                placeholder = { Text(journalInferencePlaceholder) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 5,
                 shape = RoundedCornerShape(12.dp),
@@ -253,13 +262,13 @@ private fun NewCameraLog(onCancel: () -> Unit, onSave: (String, String) -> Unit)
                 ),
             )
         }
-        Text("低精力时只写一栏也可以。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+        Text(journalOneColumnHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
         Button(
             onClick = { onSave(fact, inference) },
             enabled = fact.isNotBlank() || inference.isNotBlank(),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().heightIn(min = JournalActionMinHeight),
             shape = RoundedCornerShape(12.dp),
-        ) { Text("保存记录") }
+        ) { Text(journalSaveLabel, fontSize = 17.sp) }
         Spacer(Modifier.height(24.dp))
     }
 }

@@ -76,7 +76,7 @@ Settings includes preview controls for relation banners, waiting, and one-thing 
 - Card corner 16.dp, pill buttons ~28.dp / 999.dp
 - Bottom tabs: 今天 / 记录 / 洞察 / 我的 (`HomeTab`). Settings opens from **我的**, not the top bar.
 - Shared `HomeTopBar(onHelp)`: brand mark + 「锚点」 heading + circular 「助」 (`contentDescription = "此刻需要帮助"`). Do not put SOS/设置 back on the chrome.
-- Records hub is a dual-entry card page (emotion box + camera log), not a nested tab replace of the bottom bar
+- Records hub is a card page (emotion box + camera log + worry vault), not a nested tab replace of the bottom bar. Hide emotion and worry in medical waiting; journal stays. Camera log write/save use `heightIn(min = 52.dp)`. Evaluative words stay a non-blocking hint with 「挪过去」; do not use Stitch 「感受 / 平静 / 移动」.
 - Wave entry is the 192.dp home orb (title + 「等待中」 inside, 「难受的时候点这里」 below); keep it one-tap reachable in Normal mode
 - Practice-home daily flow (Stitch first-ship Chinese home): full-width 晨间节律 card, then micro-action | worry-vault side by side (`weight(1f)`, `IntrinsicSize.Min`). One-thing lock showing a single card → that card is full width. Relation/altruism stays a full-width `StatusCard` **below** the bento. No rhythm progress bar, 「温和开始」, or checkmark streak.
 

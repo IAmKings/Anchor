@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -35,20 +36,24 @@ import com.anchor.app.home.HomeTab
 import com.anchor.app.home.HomeTopBar
 
 private val CardShape = RoundedCornerShape(16.dp)
+private val RecordsEntryMinHeight = 52.dp
 
 @Composable
 fun RecordsHub(
     medicalWaiting: Boolean,
     emotionCount: Int,
     journalCount: Int,
+    worryCount: Int = 0,
     onEmotionCards: () -> Unit,
     onCameraLog: () -> Unit,
+    onWorryVault: () -> Unit = {},
     onInsights: () -> Unit,
     onSettings: () -> Unit,
     onHelp: () -> Unit,
     onClose: () -> Unit,
     showEmotion: Boolean = true,
     showJournal: Boolean = true,
+    showWorry: Boolean = true,
     lockNote: String? = null,
 ) {
     Scaffold(
@@ -72,7 +77,7 @@ fun RecordsHub(
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text("记录", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Text(recordsTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(
                 recordsHubIntro(medicalWaiting),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -84,25 +89,36 @@ fun RecordsHub(
             }
             if (!medicalWaiting && showEmotion) {
                 RecordEntryCard(
-                    glyph = "情",
+                    glyph = recordsEmotionGlyph,
                     wellColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.55f),
-                    title = "情绪标签箱",
+                    title = recordsEmotionTitle,
                     body = recordsEmotionBody(),
                     countLabel = recordsCountLabel("张", emotionCount),
-                    contentDescription = "情绪标签箱",
+                    contentDescription = recordsEmotionTitle,
                     onClick = onEmotionCards,
                 )
             }
             if (showJournal || medicalWaiting) {
-            RecordEntryCard(
-                glyph = "栏",
-                wellColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
-                title = "双栏日志",
-                body = recordsJournalBody(),
-                countLabel = recordsCountLabel("条", journalCount),
-                contentDescription = "双栏日志",
-                onClick = onCameraLog,
-            )
+                RecordEntryCard(
+                    glyph = recordsJournalGlyph,
+                    wellColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
+                    title = recordsJournalTitle,
+                    body = recordsJournalBody(),
+                    countLabel = recordsCountLabel("条", journalCount),
+                    contentDescription = recordsJournalTitle,
+                    onClick = onCameraLog,
+                )
+            }
+            if (!medicalWaiting && showWorry) {
+                RecordEntryCard(
+                    glyph = recordsWorryGlyph,
+                    wellColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f),
+                    title = recordsWorryTitle,
+                    body = recordsWorryBody(),
+                    countLabel = recordsWorryCountLabel(worryCount),
+                    contentDescription = recordsWorryTitle,
+                    onClick = onWorryVault,
+                )
             }
             Spacer(Modifier.height(24.dp))
         }
@@ -124,7 +140,7 @@ private fun RecordEntryCard(
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-        modifier = Modifier.fillMaxWidth().semantics { this.contentDescription = contentDescription },
+        modifier = Modifier.fillMaxWidth().heightIn(min = RecordsEntryMinHeight).semantics { this.contentDescription = contentDescription },
     ) {
         Row(
             Modifier.fillMaxWidth().padding(20.dp),
