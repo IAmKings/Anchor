@@ -23,20 +23,29 @@ internal val socialAltruism = listOf(
     AltruismPreset("把门替后面的人扶一下", AltruismKind.Social),
 )
 
+internal const val relationBackLabel = "返回"
 internal const val relationHubTitle = "关系与利他"
 internal const val relationHubBody = "盘点需要演戏的关系，或抽一件对别人有用的小事。默认先做不社交的。"
+internal const val altruismHubHint = "默认先抽不社交的小事。"
 internal const val inventoryTitle = "关系耗竭自测"
 internal const val inventoryPrompt = "跟这个人相处时，我需要监控自己吗？"
 internal const val inventoryHint = "需要全程注意措辞、表情或接话，就是表演耗竭。"
+internal const val inventoryNameLabel = "对方怎么称呼"
+internal const val inventoryNoteLabel = "关系，可空。如同事"
+internal const val addContactLabel = "加进清单"
 internal const val monitorYes = "需要监控"
 internal const val monitorNo = "不需要"
 internal const val ledgerTitle = "回血 / 抽干"
 internal const val ledgerHint = "见面后记一下，被充满了还是被抽干了。"
+internal const val ledgerEmpty = "先在关系盘点里加一个人。"
+internal const val deletedContactLabel = "已删除"
 internal const val filledLabel = "回血"
 internal const val drainedLabel = "抽干"
 internal const val altruismTitle = "微小利他"
 internal const val drawNonSocialLabel = "抽一张非社交"
 internal const val drawSocialLabel = "抽一张社交"
+internal const val nonSocialKindLabel = "非社交"
+internal const val socialKindLabel = "社交"
 internal const val peoplePleasingHint = "做之前先想：我期待对方怎么回应？若期待回应，这就是讨好。"
 internal const val feelPrompt = "做完之后，你是更轻还是更紧？"
 internal const val lighterLabel = "更轻"
@@ -75,6 +84,9 @@ internal fun energyCopy(entries: List<RelationEnergyEntry>): String {
     val drained = entries.count { it.mark == EnergyMark.Drained }
     return "回血 $filled · 抽干 $drained"
 }
+
+internal fun energyRowCopy(name: String, mark: EnergyMark): String =
+    "$name · ${if (mark == EnergyMark.Filled) filledLabel else drainedLabel}"
 
 internal fun altruismFeelCopy(draws: List<AltruismDraw>): String {
     val felt = draws.filter { it.felt != null }

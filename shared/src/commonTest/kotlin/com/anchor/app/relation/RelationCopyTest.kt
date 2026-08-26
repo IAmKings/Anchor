@@ -44,6 +44,33 @@ class RelationCopyTest {
                 ),
             ),
         )
+        assertEquals("导师 · 回血", energyRowCopy("导师", EnergyMark.Filled))
+        assertEquals("已删除 · 抽干", energyRowCopy(deletedContactLabel, EnergyMark.Drained))
+    }
+
+    @Test
+    fun extractedActionsKeepProductGuardrailsNotStitchDrawCopy() {
+        assertEquals("返回", relationBackLabel)
+        assertEquals("默认先抽不社交的小事。", altruismHubHint)
+        assertEquals("对方怎么称呼", inventoryNameLabel)
+        assertEquals("关系，可空。如同事", inventoryNoteLabel)
+        assertEquals("加进清单", addContactLabel)
+        assertEquals("先在关系盘点里加一个人。", ledgerEmpty)
+        assertEquals("已删除", deletedContactLabel)
+        assertEquals("非社交", nonSocialKindLabel)
+        assertEquals("社交", socialKindLabel)
+        assertEquals("抽一张非社交", drawNonSocialLabel)
+        assertEquals("抽一张社交", drawSocialLabel)
+        assertEquals("更轻", lighterLabel)
+        assertEquals("更紧", tighterLabel)
+        assertTrue(peoplePleasingHint.contains("若期待回应，这就是讨好"))
+        assertFalse(drawNonSocialLabel.contains("开始抽取"))
+        assertFalse(peoplePleasingHint.contains("我已知晓"))
+        assertFalse(lighterLabel.contains("轻盈"))
+        assertFalse(tighterLabel.contains("内耗"))
+        assertFalse(relationHubBody.contains("系统注意到"))
+        assertFalse(altruismHubHint.contains("完成率"))
+        assertFalse(listOf(addContactLabel, filledLabel, drainedLabel, lighterLabel).any { it.contains("%") })
     }
 
     @Test
