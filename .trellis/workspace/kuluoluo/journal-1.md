@@ -628,3 +628,24 @@ exportVersion 4。录音进加密 zip audio/文件名.m4a，JSON 不写路径。
 ### Status
 
 [OK] **Completed**
+
+
+## Session 30: 关系/利他按钮加高并抽出文案
+
+**Date**: 2026-08-26
+**Task**: 关系/利他按钮加高并抽出文案
+**Branch**: `main`
+
+### Summary
+
+轨 D 关系/利他屏：Hub/盘点/账本/抽卡主按钮与监控芯片 heightIn 52.dp，剩余中文抽到 RelationCopy。未跟 Stitch 开始抽取、防讨好勾选、轻盈自然、系统注意到。默认非社交抽卡与更紧暂停不变。洞察关系/利他周期稿仍后置。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e5f249d` | (see git log) |
+
+### Status
+
+[OK] **Completed**
