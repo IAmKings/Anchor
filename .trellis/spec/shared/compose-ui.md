@@ -78,7 +78,7 @@ Settings includes preview controls for relation banners, waiting, and one-thing 
 - Shared `HomeTopBar(onHelp)`: brand mark + 「锚点」 heading + circular 「助」 (`contentDescription = "此刻需要帮助"`). Do not put SOS/设置 back on the chrome.
 - Records hub is a card page (emotion box + camera log + worry vault), not a nested tab replace of the bottom bar. Hide emotion and worry in medical waiting; journal stays. Camera log write/save use `heightIn(min = 52.dp)`. Evaluative words stay a non-blocking hint with 「挪过去」; do not use Stitch 「感受 / 平静 / 移动」.
 - Wave entry is the 192.dp home orb (title + 「等待中」 inside, 「难受的时候点这里」 below); keep it one-tap reachable in Normal mode
-- Practice-home daily flow (Stitch first-ship Chinese home): full-width 晨间节律 card, then micro-action | worry-vault side by side (`weight(1f)`, `IntrinsicSize.Min`). One-thing lock showing a single card → that card is full width. Relation/altruism stays a full-width `StatusCard` **below** the bento. No rhythm progress bar, 「温和开始」, or checkmark streak.
+- Practice-home daily flow (Stitch first-ship Chinese home): full-width 晨间节律 card, then micro-action | worry-vault side by side (`weight(1f)`, `IntrinsicSize.Min`). One-thing lock showing a single card → that card is full width. Relation/altruism stays a full-width `StatusCard` **below** the bento. No rhythm progress bar, 「温和开始」, or checkmark streak. Rhythm screen save and record circles use `heightIn` / `size` 52.dp. Intro stays 「起得好不好不重要」. Do not add `设置---晨间节律提醒` (fifth notification). Stability reuses `stabilityCopy` and is not a score.
 
 ---
 

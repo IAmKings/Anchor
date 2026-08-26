@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -37,18 +38,19 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.insights.stabilityCopy
 import com.anchor.app.insights.wakeStabilityMinutes
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.RhythmEntry
-import kotlin.math.roundToInt
-
 private val CardShape = RoundedCornerShape(16.dp)
+private val RhythmActionMinHeight = 52.dp
 
 @Composable
 fun RhythmScreen(
@@ -74,23 +76,25 @@ fun RhythmScreen(
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("返回") }
-        Text("晨间节律", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text("起得好不好不重要。为今天留下两个时间点。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text(rhythmBackLabel) }
+        Text(rhythmTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+        Text(rhythmIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
 
         TimeCard(
-            title = "起床时间",
-            glyph = "起",
+            title = rhythmWakeTitle,
+            glyph = rhythmWakeGlyph,
             time = wakeAt,
-            caption = if (wakeAt == null) "点一下记下此刻" else "今天",
+            caption = rhythmWakeCaption(wakeAt != null),
+            recordDescription = rhythmWakeRecordDescription,
             formatLocalTime = formatLocalTime,
             onRecord = { wakeAt = nowMillis(); saved = false },
         )
         TimeCard(
-            title = "见光时间",
-            glyph = "光",
+            title = rhythmLightTitle,
+            glyph = rhythmLightGlyph,
             time = lightAt,
-            caption = if (lightAt == null) "阴天也算见光" else "起床后一小时内更好",
+            caption = rhythmLightCaption(lightAt != null),
+            recordDescription = rhythmLightRecordDescription,
             formatLocalTime = formatLocalTime,
             onRecord = { lightAt = nowMillis(); saved = false },
         )
@@ -106,16 +110,16 @@ fun RhythmScreen(
                 revision++
             },
             enabled = wakeAt != null || lightAt != null,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().heightIn(min = RhythmActionMinHeight),
             shape = RoundedCornerShape(12.dp),
-        ) { Text("保存今天的记录") }
+        ) { Text(rhythmSaveLabel, fontSize = 17.sp) }
         if (saved) Text(rhythmSavedCopy(), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
 
         StabilityCard(stabilityMinutes = stability, points = wakeMinutes)
 
         Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = CardShape) {
             Text(
-                "睡不好也不用补觉。躺了 20 分钟仍睡不着，可以起来做点无聊的事，困了再回床。",
+                rhythmBedHint,
                 Modifier.padding(16.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 15.sp,
@@ -123,9 +127,9 @@ fun RhythmScreen(
             )
         }
 
-        Text("近期记录", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+        Text(rhythmRecentTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
         if (entries.isEmpty()) {
-            Text("还没有记录。漏记也很正常。", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(rhythmEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         entries.take(7).forEach { entry -> HistoryRow(entry, formatLocalTime) }
         Spacer(Modifier.height(24.dp))
@@ -138,6 +142,7 @@ private fun TimeCard(
     glyph: String,
     time: Long?,
     caption: String,
+    recordDescription: String,
     formatLocalTime: (Long) -> String,
     onRecord: () -> Unit,
 ) {
@@ -154,7 +159,7 @@ private fun TimeCard(
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        time?.let(formatLocalTime) ?: "--:--",
+                        time?.let(formatLocalTime) ?: rhythmTimePlaceholder,
                         fontFamily = FontFamily.Monospace,
                         fontSize = 28.sp,
                     )
@@ -164,7 +169,7 @@ private fun TimeCard(
                     onClick = onRecord,
                     shape = CircleShape,
                     color = if (time != null) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant,
-                    modifier = Modifier.size(44.dp),
+                    modifier = Modifier.size(RhythmActionMinHeight).semantics { contentDescription = recordDescription },
                 ) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(if (time != null) "✓" else "+", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp)
@@ -183,10 +188,10 @@ private fun StabilityCard(stabilityMinutes: Double?, points: List<Int>) {
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("30 日稳定度", fontWeight = FontWeight.SemiBold)
-            Text("起床时间的温和波动，不是得分。", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            Text(rhythmStabilityTitle, fontWeight = FontWeight.SemiBold)
+            Text(rhythmStabilityDetail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             Text(
-                stabilityMinutes?.let { "约 ${it.roundToInt()} 分钟" } ?: "记录还不够",
+                stabilityCopy(stabilityMinutes),
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -216,11 +221,20 @@ private fun StabilityCard(stabilityMinutes: Double?, points: List<Int>) {
 @Composable
 private fun HistoryRow(entry: RhythmEntry, formatLocalTime: (Long) -> String) {
     Row(
-        Modifier.fillMaxWidth().padding(vertical = 8.dp),
+        Modifier.fillMaxWidth().heightIn(min = RhythmActionMinHeight).padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text("起床 ${entry.wakeAtMillis?.let(formatLocalTime) ?: "未记"}", fontFamily = FontFamily.Monospace, fontSize = 16.sp)
-        Text("见光 ${entry.lightAtMillis?.let(formatLocalTime) ?: "未记"}", fontFamily = FontFamily.Monospace, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            rhythmWakeLine(entry.wakeAtMillis?.let(formatLocalTime) ?: rhythmUnrecorded),
+            fontFamily = FontFamily.Monospace,
+            fontSize = 16.sp,
+        )
+        Text(
+            rhythmLightLine(entry.lightAtMillis?.let(formatLocalTime) ?: rhythmUnrecorded),
+            fontFamily = FontFamily.Monospace,
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }
