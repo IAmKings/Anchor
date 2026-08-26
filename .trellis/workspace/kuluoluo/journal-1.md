@@ -565,3 +565,24 @@ Pick/Predict/Run/Rate/Result 主按钮与 1–10 芯片 52.dp，文案抽出。�
 ### Status
 
 [OK] **Completed**
+
+
+## Session 27: 补开箱书桌引导和首页声明
+
+**Date**: 2026-08-26
+**Task**: 补开箱书桌引导和首页声明
+**Branch**: `main`
+
+### Summary
+
+开箱开启态书桌引导不含必须。首页声明补全亚临床与就医边界。仪器测试隔离未做。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `b9ff433` | (see git log) |
+
+### Status
+
+[OK] **Completed**
