@@ -1,0 +1,30 @@
+{
+  "id": "rhythm-cta",
+  "name": "rhythm-cta",
+  "title": "晨间节律按钮加高并抽出文案",
+  "description": "Rhythm save and record buttons 52.dp. Extract copy. Keep 起得好不好不重要. Do not add rhythm reminder or 温和开始.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-26",
+  "completedAt": "2026-08-26",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/rhythm/RhythmScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/rhythm/RhythmCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/rhythm/RhythmCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
