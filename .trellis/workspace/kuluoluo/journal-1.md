@@ -649,3 +649,24 @@ exportVersion 4。录音进加密 zip audio/文件名.m4a，JSON 不写路径。
 ### Status
 
 [OK] **Completed**
+
+
+## Session 31: 洞察关系能量与利他周期按次数展示
+
+**Date**: 2026-08-26
+**Task**: 洞察关系能量与利他周期按次数展示
+**Branch**: `main`
+
+### Summary
+
+洞察回血/抽干与利他体感保留次数文案，补相对长短的次数条和最近 12 条折线。连续更紧复用 pauseAltruismCopy。未跟 Stitch 68% 表演耗竭率、75% 回血效果、HRV。监控卡仍只计段数。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `6dafbec` | (see git log) |
+
+### Status
+
+[OK] **Completed**
