@@ -28,7 +28,7 @@ If you need a debug breadcrumb while developing, keep it out of committed `commo
 | Surface | Rule |
 |---------|------|
 | SQLCipher DB | Keystore-wrapped random key; not a user password |
-| Private M4A worry audio | Local only; not included in export JSON (only `hasAudio`) |
+| Private M4A worry audio | Local `voice-notes/`; export JSON has `hasAudio` + basename only; bytes live inside the encrypted `.anchor` zip under `audio/` |
 | Encrypted `.anchor` export | User-chosen password, **not** stored; PBKDF2 + AES-GCM; share via read-only FileProvider URI |
 | Notifications | Lock-screen text is the app name `锚点` only — no body |
 | App switcher | `FLAG_SECURE` while app lock is enabled |
@@ -74,4 +74,4 @@ Keep the string in SQLCipher. Hotlines are constants reviewed before release (PR
 Export JSON with `audioPath: "/data/.../voice.m4a"`.
 
 #### Correct
-`"hasAudio": true` and leave the file on device (`buildLocalExport`).
+`"hasAudio": true`, `"audioName": "voice-1.m4a"`, and put bytes in encrypted zip `audio/voice-1.m4a`.

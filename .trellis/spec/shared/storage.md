@@ -92,7 +92,7 @@ SQLCipher key format for the driver is `ByteArray.toSqlCipherKey()` (`x'<hex>'`)
 
 ## Export / restore
 
-`buildLocalExport(store)` emits JSON `exportVersion: 3` and a three-column CSV. JSON includes `hasAudio` for worry cards but **not** audio bytes or file paths.
+`buildLocalExport(store)` emits JSON `exportVersion: 4` and a three-column CSV. Worry cards include `hasAudio` and `audioName` (basename only). Audio **bytes** go in the encrypted zip as `audio/<basename>.m4a`, never as JSON paths. Restore versions `2..4`; missing zip audio still stores `audio_file_name = null` (do not write `missing-audio`).
 
 Restore (`AndroidEncryptedProbeStore.restoreFromJson`):
 
@@ -113,7 +113,7 @@ Restore (`AndroidEncryptedProbeStore.restoreFromJson`):
 | Worry has neither text nor audio | `"请写下或录下要挂起来的念头。"` |
 | Rhythm with neither wake nor light | `"至少记录起床或见光时间。"` |
 | Predicted/actual difficulty outside 1..10 | `"预测困难度必须在 1 到 10 之间。"` / `"实际体感必须在 1 到 10 之间。"` |
-| Restore `exportVersion` not in 2..3 | `"不支持的备份版本。"` — no writes |
+| Restore `exportVersion` not in 2..4 | `"不支持的备份版本。"` — no writes |
 | Missing Keystore-wrapped key but DB file exists | `check` failure, do not mint a new key |
 
 ---
@@ -131,7 +131,7 @@ Restore (`AndroidEncryptedProbeStore.restoreFromJson`):
 - New store field: update `InMemoryAnchorStore`, `SqlDelightAnchorStore`, `.sq` + `N.sqm`, `buildLocalExport`, restore parser, and the in-memory contract test.
 - Schema bump: add `N.sqm` (do not edit old migrations). Instrumented migration tests live in `AndroidEncryptedProbeStoreTest` — they must use `m0-encrypted-probe.db`, never `anchor.db`.
 - Instrumented export uses `AndroidEncryptedExport.INSTRUMENTED_CACHE_FOLDER`, never `cacheDir/exports`. Lock tests use `app-lock-instrumented`. Timers use `BackgroundTimerKind.InstrumentedA/B`.
-- Export: `LocalExportTest` for JSON escaping and `hasAudio` without paths.
+- Export: `LocalExportTest` for JSON escaping, `audioName` basename, and no `/voice-notes/` paths.
 
 ---
 

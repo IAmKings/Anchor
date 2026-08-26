@@ -37,9 +37,9 @@ class AndroidEncryptedProbeStore private constructor(
 
     fun read(): String? = impl.read()
 
-    fun restoreFromJson(json: String) {
+    fun restoreFromJson(json: String, restoredAudioNames: Set<String> = emptySet()) {
         val root = JSONObject(json)
-        require(root.getInt("exportVersion") in 2..3) { "不支持的备份版本。" }
+        require(root.getInt("exportVersion") in MIN_EXPORT_VERSION..CURRENT_EXPORT_VERSION) { "不支持的备份版本。" }
         val profile = root.getJSONObject("userProfile")
         val safety = root.getJSONObject("safetyState")
         val assessments = root.getJSONArray("assessments")
@@ -63,7 +63,13 @@ class AndroidEncryptedProbeStore private constructor(
         cameraLogs.objects().forEach { validateCameraLog(it.getString("fact"), it.getString("inference")) }
         worries.objects().forEach {
             WorryResolution.valueOf(it.getString("resolution"))
-            validateWorryCard(it.getString("content"), it.getLong("sealedAt"), it.getLong("nextSessionAt"), if (it.optBoolean("hasAudio")) "missing-audio" else null)
+            val restoredName = restoredAudioName(it, restoredAudioNames)
+            validateWorryCard(
+                it.getString("content"),
+                it.getLong("sealedAt"),
+                it.getLong("nextSessionAt"),
+                if (it.optBoolean("hasAudio")) restoredName ?: "missing-audio" else null,
+            )
         }
         rhythm.objects().forEach { validateRhythmEntry(it.nullableLong("wakeAt"), it.nullableLong("lightAt"), it.getLong("createdAt")) }
 
@@ -84,7 +90,17 @@ class AndroidEncryptedProbeStore private constructor(
             assessments.objects().forEach { a -> queries.restoreAssessment(a.getLong("completedAt"), a.getJSONArray("phq9").ints().joinToString(","), a.getJSONArray("gad7").ints().joinToString(","), a.getLong("phq9Score"), a.getString("phq9Band"), a.getLong("gad7Score"), a.getString("gad7Band"), a.getString("action")) }
             emotions.objects().forEach { e -> queries.restoreEmotionCard(e.getLong("id"), e.getString("emotion"), e.getString("event"), e.getString("hardestPart"), e.getLong("createdAt"), e.nullableLong("passedAt")) }
             cameraLogs.objects().forEach { c -> queries.restoreCameraLog(c.getLong("id"), c.getString("fact"), c.getString("inference"), if (c.getBoolean("factNeedsHint")) 1 else 0, c.getLong("createdAt")) }
-            worries.objects().forEach { w -> queries.restoreWorryCard(w.getLong("id"), w.getString("content"), w.getLong("sealedAt"), w.getLong("nextSessionAt"), w.getString("resolution"), w.nullableString("action")) }
+            worries.objects().forEach { w ->
+                queries.restoreWorryCard(
+                    w.getLong("id"),
+                    w.getString("content"),
+                    w.getLong("sealedAt"),
+                    w.getLong("nextSessionAt"),
+                    w.getString("resolution"),
+                    w.nullableString("action"),
+                    restoredAudioName(w, restoredAudioNames),
+                )
+            }
             actions.objects().forEach { a -> queries.restoreMicroAction(a.getLong("id"), a.getString("title"), a.nullableLong("sourceWorryId"), a.getLong("createdAt"), a.nullableLong("predictedDifficulty"), a.nullableLong("startedAt"), a.nullableLong("actualDifficulty"), a.nullableLong("completedAt")) }
             rhythm.objects().forEach { r -> queries.restoreRhythmEntry(r.getLong("id"), r.nullableLong("wakeAt"), r.nullableLong("lightAt"), r.getLong("createdAt")) }
             root.optJSONArray("relationContacts")?.objects()?.forEach { c ->
@@ -157,6 +173,11 @@ private fun openAndroidStore(
             },
         ),
     )
+}
+
+private fun restoredAudioName(worry: JSONObject, restoredAudioNames: Set<String>): String? {
+    val named = worryAudioExportName(worry.optString("audioName").takeIf { it.isNotBlank() })
+    return named?.takeIf { it in restoredAudioNames }
 }
 
 private fun JSONObject.nullableString(key: String): String? = if (isNull(key)) null else getString(key)

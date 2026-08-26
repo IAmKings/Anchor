@@ -267,7 +267,7 @@ VALUES (?, ?, ?, ?, ?);
 
 restoreWorryCard:
 INSERT INTO worry_card(id, content, sealed_at, next_session_at, resolution, action, audio_file_name)
-VALUES (?, ?, ?, ?, ?, ?, NULL);
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
 restoreMicroAction:
 INSERT INTO micro_action(id, title, source_worry_id, created_at, predicted_difficulty, started_at, actual_difficulty, completed_at)

@@ -23,6 +23,7 @@ import com.anchor.app.timer.BackgroundTimerKind
 import com.anchor.app.storage.AndroidDatabaseKey
 import com.anchor.app.storage.AndroidEncryptedProbeStore
 import com.anchor.app.storage.buildLocalExport
+import com.anchor.app.storage.worryAudioExportName
 import com.anchor.app.worry.AndroidWorrySessionClock
 import java.io.File
 
@@ -298,6 +299,7 @@ class MainActivity : FragmentActivity() {
                 password = password,
                 json = localExport.json,
                 csv = localExport.csv,
+                audio = collectWorryAudio(this, anchorStore),
             )
             exportPasswordCopied = copyExportPassword(password)
             lastExportFile = file
@@ -329,9 +331,10 @@ class MainActivity : FragmentActivity() {
                 requireNotNull(input) { "无法读取所选备份。" }
                 temporary.outputStream().use(input::copyTo)
             }
-            val files = AndroidEncryptedExport(this).decrypt(temporary, password)
-            val json = requireNotNull(files["anchor.json"]) { "备份中缺少 anchor.json。" }
-            anchorStore.restoreFromJson(json)
+            val decrypted = AndroidEncryptedExport(this).decrypt(temporary, password)
+            val restoredNames = decrypted.audio.keys.mapNotNull(::worryAudioExportName).toSet()
+            anchorStore.restoreFromJson(decrypted.json, restoredNames)
+            replaceRestoredWorryAudio(this, decrypted.audio)
         }.onSuccess {
             exportPassword = ""
             exportStatus = "备份恢复成功。"
