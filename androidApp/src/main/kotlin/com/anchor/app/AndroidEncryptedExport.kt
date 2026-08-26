@@ -21,7 +21,10 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
-class AndroidEncryptedExport(private val context: Context) {
+class AndroidEncryptedExport(
+    private val context: Context,
+    private val cacheFolder: String = CACHE_FOLDER,
+) {
     fun create(password: CharArray, json: String, csv: String): File {
         require(password.size >= 8) { "密码至少需要 8 个字符" }
         val salt = ByteArray(SALT_BYTES).also(random::nextBytes)
@@ -34,7 +37,7 @@ class AndroidEncryptedExport(private val context: Context) {
         }
         plaintext.fill(0)
 
-        val directory = File(context.cacheDir, "exports").apply { mkdirs() }
+        val directory = File(context.cacheDir, cacheFolder).apply { mkdirs() }
         directory.listFiles()?.forEach(File::delete)
         return File(directory, "anchor-${timestamp()}.anchor").also { file ->
             DataOutputStream(file.outputStream()).use {
@@ -108,14 +111,16 @@ class AndroidEncryptedExport(private val context: Context) {
 
     private fun timestamp() = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss"))
 
-    private companion object {
-        val MAGIC = "ANCHOR01".toByteArray()
-        val random = SecureRandom()
-        const val ITERATIONS = 120_000
-        const val KEY_BITS = 256
-        const val SALT_BYTES = 16
-        const val NONCE_BYTES = 12
-        const val TAG_BITS = 128
-        const val MIME_TYPE = "application/vnd.anchor.encrypted-export"
+    companion object {
+        const val CACHE_FOLDER = "exports"
+        const val INSTRUMENTED_CACHE_FOLDER = "exports-instrumented"
+        private val MAGIC = "ANCHOR01".toByteArray()
+        private val random = SecureRandom()
+        private const val ITERATIONS = 120_000
+        private const val KEY_BITS = 256
+        private const val SALT_BYTES = 16
+        private const val NONCE_BYTES = 12
+        private const val TAG_BITS = 128
+        private const val MIME_TYPE = "application/vnd.anchor.encrypted-export"
     }
 }

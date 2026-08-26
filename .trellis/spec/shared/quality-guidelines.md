@@ -28,7 +28,7 @@
 3. **Atomic safety writes** via `evaluateAndStore` transaction.
 4. **Domain words** from [`CONTEXT.md`](../../../CONTEXT.md): 亚临床, 就医等待期, 情绪标签化, 双栏日志, 忧虑保险箱, 挂卡, 微行动, 预测偏差, 浪潮等待, 表演耗竭, 利他微任务, 一次一件, 锁屏脱敏.
 5. **New user-visible type ≥ 14sp**.
-6. **Instrument tests that open SQLCipher** run on an isolated DB name, never the tester's daily profile.
+6. **Instrument tests** use isolated names: SQLCipher `m0-encrypted-probe.db` (never `anchor.db`); lock prefs `app-lock-instrumented`; timers `InstrumentedA/B`; export cache `exports-instrumented`. Do not clear `cacheDir/exports`.
 
 ---
 

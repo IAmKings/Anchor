@@ -129,7 +129,8 @@ Restore (`AndroidEncryptedProbeStore.restoreFromJson`):
 ## Tests required
 
 - New store field: update `InMemoryAnchorStore`, `SqlDelightAnchorStore`, `.sq` + `N.sqm`, `buildLocalExport`, restore parser, and the in-memory contract test.
-- Schema bump: add `N.sqm` (do not edit old migrations). Instrumented migration tests live in `AndroidEncryptedProbeStoreTest` — they mutate device state; do not run them against a user's daily profile.
+- Schema bump: add `N.sqm` (do not edit old migrations). Instrumented migration tests live in `AndroidEncryptedProbeStoreTest` — they must use `m0-encrypted-probe.db`, never `anchor.db`.
+- Instrumented export uses `AndroidEncryptedExport.INSTRUMENTED_CACHE_FOLDER`, never `cacheDir/exports`. Lock tests use `app-lock-instrumented`. Timers use `BackgroundTimerKind.InstrumentedA/B`.
 - Export: `LocalExportTest` for JSON escaping and `hasAudio` without paths.
 
 ---
