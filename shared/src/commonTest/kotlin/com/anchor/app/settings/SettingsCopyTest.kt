@@ -28,5 +28,12 @@ class SettingsCopyTest {
         )
         assertEquals("提取密码已复制", exportPasswordCopiedTitle)
         assertEquals("点击分享", exportShareLabel)
+        assertEquals("生成加密导出文件", settingsExportAction)
+        assertEquals("删除全部本地数据", settingsDeleteAction)
+        assertEquals("备份中的录音正文当前无法恢复。", settingsAudioNotRestored)
+        assertTrue(settingsLockscreenNote.contains("锚点"))
+        assertFalse(settingsExportBody.contains("PDF"))
+        assertFalse(settingsRemindersIntro.contains("好久没来"))
+        assertTrue(settingsAboutBody.contains("不会上传"))
     }
 }

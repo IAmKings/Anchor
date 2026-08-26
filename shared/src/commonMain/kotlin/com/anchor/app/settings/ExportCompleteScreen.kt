@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -53,7 +54,7 @@ fun ExportCompleteScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        TextButton(onClick = onBack, modifier = Modifier.align(Alignment.End)) { Text("返回") }
+        TextButton(onClick = onBack, modifier = Modifier.align(Alignment.End)) { Text(settingsBackLabel) }
         Spacer(Modifier.height(24.dp))
         Surface(color = MaterialTheme.colorScheme.primaryContainer, shape = CircleShape) {
             Box(Modifier.size(96.dp), contentAlignment = Alignment.Center) {
@@ -102,7 +103,9 @@ fun ExportCompleteScreen(
         Button(onClick = onShare, modifier = Modifier.fillMaxWidth().height(56.dp), shape = PillShape) {
             Text(exportShareLabel, fontSize = 17.sp)
         }
-        TextButton(onClick = onHome, modifier = Modifier.fillMaxWidth()) { Text(exportHomeLabel) }
+        TextButton(onClick = onHome, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) {
+            Text(exportHomeLabel, fontSize = 17.sp)
+        }
         Spacer(Modifier.height(16.dp))
     }
 }
