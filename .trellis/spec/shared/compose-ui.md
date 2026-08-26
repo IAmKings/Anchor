@@ -35,7 +35,7 @@ Rules:
 
 - Test copy that branches (empty vs pending worry, running vs completed micro-action, insight empty state).
 - Look up `CONTEXT.md` before writing a new phrase. Forbidden product language: streak, 完成率, 补卡, 鸡汤 encouragement, "打卡成功".
-- Insights empty state is `"记录还不够"`, not "去完成更多任务".
+- Insights empty state is `"记录还不够"`, not "去完成更多任务". Insights 「查看历史记录」 uses `heightIn(min = 52.dp)` and reuses `historyOpenLabel`. Three-month card value is 「看长期，不看某一天」, never Stitch 「15% 提升」.
 - Micro-action CTA after finish is `"已记下"`, not "已完成打卡".
 - One-thing lock: `"这 14 天只练「…」。不是任务。"` — no "必须".
 

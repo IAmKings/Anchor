@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -17,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -34,6 +36,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.action.historyActualLabel
+import com.anchor.app.action.historyOpenLabel
+import com.anchor.app.action.historyPredictedLabel
 import com.anchor.app.relation.altruismFeelCopy
 import com.anchor.app.relation.energyCopy
 import com.anchor.app.relation.monitorCopy
@@ -44,6 +49,7 @@ import com.anchor.app.storage.RhythmEntry
 import kotlin.math.sqrt
 
 private val CardShape = RoundedCornerShape(16.dp)
+private val InsightsActionMinHeight = 52.dp
 
 fun wakeStabilityMinutes(entries: List<RhythmEntry>, localMinuteOfDay: (Long) -> Int): Double? {
     val minutes = entries.asSequence().mapNotNull { it.wakeAtMillis }.take(30).map(localMinuteOfDay).toList()
@@ -82,40 +88,46 @@ fun LocalInsightsScreen(
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("返回") }
-        Text("洞察", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text(insightsBackLabel) }
+        Text(insightsTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
         Text(
-            "长期趋势，非单日波动。这些计算只留在这台设备，不会上报。",
+            insightsIntro,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 15.sp,
             lineHeight = 24.sp,
         )
         InsightCard(
-            title = "30 日起床稳定度",
+            title = insightsWakeTitle,
             value = stabilityCopy(stability),
-            detail = "使用最近 ${rhythmEntries.count { it.wakeAtMillis != null }.coerceAtMost(30)} 次起床记录的标准差。数字越小代表时间越接近，不是得分。",
+            detail = insightsWakeDetail(rhythmEntries.count { it.wakeAtMillis != null }.coerceAtMost(30)),
         ) {
             if (wakeMinutes.size >= 2) Sparkline(wakeMinutes.map { it.toFloat() }, MaterialTheme.colorScheme.primary)
         }
         InsightCard(
-            title = "三个月移动平均",
-            value = if (averages.size >= 2) "看长期，不看某一天" else "记录还不够",
-            detail = "用最近起床时间做滚动平均。别看某一天的值。",
+            title = insightsAverageTitle,
+            value = if (averages.size >= 2) insightsAverageReady else interpretationNotEnough,
+            detail = insightsAverageDetail,
         ) {
             if (averages.size >= 2) Sparkline(averages.map { it.toFloat() }, MaterialTheme.colorScheme.primary)
         }
         InsightCard(
-            title = "大脑的困难预测",
+            title = insightsBiasTitle,
             value = biasCopy(predictionBias),
-            detail = "只比较同时有预测与实际体感的微行动，不评价完成多少。",
+            detail = insightsBiasDetail,
         ) {
             if (pairs.isNotEmpty()) BiasChart(pairs.take(6).reversed())
-            TextButton(onClick = onOpenHistory) { Text("查看历史记录") }
+            OutlinedButton(
+                onClick = onOpenHistory,
+                modifier = Modifier.fillMaxWidth().heightIn(min = InsightsActionMinHeight),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text(historyOpenLabel, fontSize = 17.sp)
+            }
         }
         InsightCard(
-            title = "忧虑受理",
+            title = insightsWorryAcceptedTitle,
             value = worryAcceptedCopy(store.worryCards()),
-            detail = "只计数已被处理的卡片，没有完成率，也没有断档提醒。",
+            detail = insightsWorryAcceptedDetail,
         )
         InsightCard(
             title = worryUnsolvableTitle,
@@ -136,19 +148,19 @@ fun LocalInsightsScreen(
             }
         }
         InsightCard(
-            title = "关系监控",
+            title = insightsMonitorTitle,
             value = monitorCopy(store.relationContacts()),
-            detail = "只计需要监控自己的关系段数，不是得分。",
+            detail = insightsMonitorDetail,
         )
         InsightCard(
-            title = "回血与抽干",
+            title = insightsEnergyTitle,
             value = energyCopy(store.relationEnergy()),
-            detail = "只计次数，没有净值，也没有完成率。",
+            detail = insightsEnergyDetail,
         )
         InsightCard(
-            title = "利他体感",
+            title = insightsAltruismTitle,
             value = altruismFeelCopy(store.altruismDraws()),
-            detail = "更紧只作护栏，不评价你做得够不够。",
+            detail = insightsAltruismDetail,
         )
         Spacer(Modifier.height(16.dp))
     }
@@ -197,8 +209,8 @@ internal fun BiasChart(pairs: List<Pair<Int, Int>>) {
     val actualColor = MaterialTheme.colorScheme.primary
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text("预测", color = predictedColor, fontSize = 14.sp)
-            Text("实际", color = actualColor, fontSize = 14.sp)
+            Text(historyPredictedLabel, color = predictedColor, fontSize = 14.sp)
+            Text(historyActualLabel, color = actualColor, fontSize = 14.sp)
         }
         pairs.forEach { (predicted, actual) ->
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {

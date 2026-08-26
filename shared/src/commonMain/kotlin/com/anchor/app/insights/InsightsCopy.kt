@@ -46,6 +46,27 @@ internal fun worryUnsolvableCopy(cards: List<WorryCard>): String {
 internal const val worryUnsolvableTitle = "暂时无解"
 internal const val worryUnsolvableDetail = "只看已处理卡片里暂时无解的张数。不是完成率，也不是诊断。"
 
+internal const val insightsBackLabel = "返回"
+internal const val insightsTitle = "洞察"
+internal const val insightsIntro = "长期趋势，非单日波动。这些计算只留在这台设备，不会上报。"
+internal const val insightsWakeTitle = "30 日起床稳定度"
+internal const val insightsAverageTitle = "三个月移动平均"
+internal const val insightsAverageReady = "看长期，不看某一天"
+internal const val insightsAverageDetail = "用最近起床时间做滚动平均。别看某一天的值。"
+internal const val insightsBiasTitle = "大脑的困难预测"
+internal const val insightsBiasDetail = "只比较同时有预测与实际体感的微行动，不评价完成多少。"
+internal const val insightsWorryAcceptedTitle = "忧虑受理"
+internal const val insightsWorryAcceptedDetail = "只计数已被处理的卡片，没有完成率，也没有断档提醒。"
+internal const val insightsMonitorTitle = "关系监控"
+internal const val insightsMonitorDetail = "只计需要监控自己的关系段数，不是得分。"
+internal const val insightsEnergyTitle = "回血与抽干"
+internal const val insightsEnergyDetail = "只计次数，没有净值，也没有完成率。"
+internal const val insightsAltruismTitle = "利他体感"
+internal const val insightsAltruismDetail = "更紧只作护栏，不评价你做得够不够。"
+
+internal fun insightsWakeDetail(sampleCount: Int): String =
+    "使用最近 $sampleCount 次起床记录的标准差。数字越小代表时间越接近，不是得分。"
+
 internal const val interpretationTitle = "反复出现的解释"
 internal const val interpretationNotEnough = "记录还不够"
 internal const val interpretationEmpty = "还没有反复出现的解释"

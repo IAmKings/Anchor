@@ -57,4 +57,29 @@ class LocalInsightsTest {
         assertTrue(interpretationDetail.contains("不是诊断"))
         assertTrue(hits.none { it.label.contains("认知扭曲") })
     }
+
+    @Test
+    fun screenCopyAvoidsPercentGoalsAndDiagnosis() {
+        assertEquals("洞察", insightsTitle)
+        assertEquals("看长期，不看某一天", insightsAverageReady)
+        assertEquals("记录还不够", interpretationNotEnough)
+        assertEquals("使用最近 3 次起床记录的标准差。数字越小代表时间越接近，不是得分。", insightsWakeDetail(3))
+        val texts = listOf(
+            insightsIntro,
+            insightsWakeTitle,
+            insightsAverageTitle,
+            insightsAverageReady,
+            insightsAverageDetail,
+            insightsBiasTitle,
+            insightsBiasDetail,
+            insightsWorryAcceptedTitle,
+            insightsMonitorTitle,
+            insightsEnergyTitle,
+            insightsAltruismTitle,
+        )
+        assertTrue(texts.none { it.contains("%") || it.contains("15%") || it.contains("提升") || it.contains("诊断") })
+        assertTrue(insightsWorryAcceptedDetail.contains("没有完成率"))
+        assertTrue(insightsEnergyDetail.contains("没有完成率"))
+        assertTrue(!insightsAltruismDetail.contains("够不够好"))
+    }
 }
