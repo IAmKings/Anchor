@@ -42,6 +42,8 @@ import com.anchor.app.action.historyPredictedLabel
 import com.anchor.app.relation.altruismFeelCopy
 import com.anchor.app.relation.energyCopy
 import com.anchor.app.relation.monitorCopy
+import com.anchor.app.relation.pauseAltruismCopy
+import com.anchor.app.relation.shouldPauseAltruism
 import com.anchor.app.rhythm.wakeMinutesOldestFirst
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.MicroAction
@@ -152,16 +154,40 @@ fun LocalInsightsScreen(
             value = monitorCopy(store.relationContacts()),
             detail = insightsMonitorDetail,
         )
-        InsightCard(
-            title = insightsEnergyTitle,
-            value = energyCopy(store.relationEnergy()),
-            detail = insightsEnergyDetail,
-        )
-        InsightCard(
-            title = insightsAltruismTitle,
-            value = altruismFeelCopy(store.altruismDraws()),
-            detail = insightsAltruismDetail,
-        )
+        run {
+            val energy = store.relationEnergy()
+            val bars = energyCountBars(energy)
+            val series = energyCycleSeries(energy)
+            InsightCard(
+                title = insightsEnergyTitle,
+                value = energyCopy(energy),
+                detail = insightsEnergyDetail,
+            ) {
+                if (series.size >= 2) Sparkline(series, MaterialTheme.colorScheme.primary)
+                CountBars(bars)
+            }
+        }
+        run {
+            val draws = store.altruismDraws()
+            val bars = altruismCountBars(draws)
+            val series = altruismCycleSeries(draws)
+            InsightCard(
+                title = insightsAltruismTitle,
+                value = altruismFeelCopy(draws),
+                detail = insightsAltruismDetail,
+            ) {
+                if (shouldPauseAltruism(draws)) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f),
+                        shape = CardShape,
+                    ) {
+                        Text(pauseAltruismCopy(), Modifier.padding(12.dp), fontSize = 14.sp, lineHeight = 22.sp)
+                    }
+                }
+                if (series.size >= 2) Sparkline(series, MaterialTheme.colorScheme.primary)
+                CountBars(bars)
+            }
+        }
         Spacer(Modifier.height(16.dp))
     }
 }
@@ -218,6 +244,39 @@ internal fun BiasChart(pairs: List<Pair<Int, Int>>) {
                 Bar(actual, actualColor)
             }
         }
+    }
+}
+
+@Composable
+private fun CountBars(items: List<InsightCountBar>) {
+    if (items.isEmpty()) return
+    val max = items.maxOf { it.count }.coerceAtLeast(1)
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        items.forEach { item ->
+            val color = if (item.warning) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(item.label, fontSize = 14.sp)
+                    Text(item.count.toString(), fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                }
+                CountBar(fraction = item.count / max.toFloat(), color = color)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CountBar(fraction: Float, color: Color) {
+    Canvas(Modifier.fillMaxWidth().height(10.dp)) {
+        val width = size.width * fraction.coerceIn(0f, 1f)
+        if (width <= 0f) return@Canvas
+        drawLine(
+            color = color,
+            start = Offset(0f, size.height / 2),
+            end = Offset(width, size.height / 2),
+            strokeWidth = size.height,
+            cap = StrokeCap.Round,
+        )
     }
 }
 

@@ -35,7 +35,7 @@ Rules:
 
 - Test copy that branches (empty vs pending worry, running vs completed micro-action, insight empty state).
 - Look up `CONTEXT.md` before writing a new phrase. Forbidden product language: streak, 完成率, 补卡, 鸡汤 encouragement, "打卡成功".
-- Insights empty state is `"记录还不够"`, not "去完成更多任务". Insights 「查看历史记录」 uses `heightIn(min = 52.dp)` and reuses `historyOpenLabel`. Three-month card value is 「看长期，不看某一天」, never Stitch 「15% 提升」.
+- Insights empty state is `"记录还不够"`, not "去完成更多任务". Insights 「查看历史记录」 uses `heightIn(min = 52.dp)` and reuses `historyOpenLabel`. Three-month card value is 「看长期，不看某一天」, never Stitch 「15% 提升」. Relation energy / altruism insight cards keep `energyCopy` / `altruismFeelCopy` (counts). Extra is count bars + last-12 sparkline, not Stitch 表演耗竭率 / 75% / HRV. Pause uses `pauseAltruismCopy`. Monitor stays a count of 段, not a rate.
 - Micro-action CTA after finish is `"已记下"`, not "已完成打卡".
 - One-thing lock: `"这 14 天只练「…」。不是任务。"` — no "必须".
 
@@ -71,7 +71,7 @@ Help-now / crisis page: numbered glyph wells and a sticky emergency bar. Numbers
 
 Settings includes preview controls for relation banners, waiting, and one-thing lock. Previews **must not** call `evaluateAndStore` or `enterCrisisWaiting()`. After closing settings, the real `SafetyState` is unchanged. Export / restore / delete primary buttons and reminder toggle rows use `heightIn(min = 52.dp)`. Keep the four reminder kinds only. Backup still does not restore audio bodies. Do not add a Stitch lockscreen toggle or a doctor PDF export.
 
-Relation hub cards, 「加进清单 / 回血 / 抽干 / 抽一张非社交 / 抽一张社交 / 更轻 / 更紧」 and monitor chips use `heightIn(min = 52.dp)`. Keep default non-social draw, `peoplePleasingHint`, 更轻/更紧, 不是断交, and `leavingCopy`. Do not add Stitch 「开始抽取」, checkbox 防讨好, 「轻盈自然」, or 「系统注意到」. Insights relation/altruism cycle charts stay a later Track D leftover.
+Relation hub cards, 「加进清单 / 回血 / 抽干 / 抽一张非社交 / 抽一张社交 / 更轻 / 更紧」 and monitor chips use `heightIn(min = 52.dp)`. Keep default non-social draw, `peoplePleasingHint`, 更轻/更紧, 不是断交, and `leavingCopy`. Do not add Stitch 「开始抽取」, checkbox 防讨好, 「轻盈自然」, or 「系统注意到」. Insights energy/altruism extras are count bars + last-12 sparkline; do not replace `energyCopy` / `altruismFeelCopy` with Stitch % cards.
 
 ---
 

@@ -1,6 +1,14 @@
 package com.anchor.app.insights
 
+import com.anchor.app.relation.drainedLabel
+import com.anchor.app.relation.filledLabel
+import com.anchor.app.relation.lighterLabel
+import com.anchor.app.relation.tighterLabel
+import com.anchor.app.storage.AltruismDraw
+import com.anchor.app.storage.AltruismFeel
+import com.anchor.app.storage.EnergyMark
 import com.anchor.app.storage.MicroAction
+import com.anchor.app.storage.RelationEnergyEntry
 import com.anchor.app.storage.RhythmEntry
 import com.anchor.app.storage.WorryCard
 import com.anchor.app.storage.WorryResolution
@@ -79,3 +87,35 @@ internal fun interpretationCopy(sampleCount: Int, hits: List<InterpretationHit>)
 }
 
 internal fun interpretationHitLine(hit: InterpretationHit): String = "${hit.label} · ${hit.count} 次"
+
+internal const val insightCycleWindow = 12
+
+internal data class InsightCountBar(val label: String, val count: Int, val warning: Boolean = false)
+
+internal fun energyCountBars(entries: List<RelationEnergyEntry>): List<InsightCountBar> {
+    if (entries.isEmpty()) return emptyList()
+    return listOf(
+        InsightCountBar(filledLabel, entries.count { it.mark == EnergyMark.Filled }),
+        InsightCountBar(drainedLabel, entries.count { it.mark == EnergyMark.Drained }, warning = true),
+    )
+}
+
+internal fun energyCycleSeries(entries: List<RelationEnergyEntry>): List<Float> =
+    entries.sortedBy { it.createdAtMillis }.takeLast(insightCycleWindow).map { entry ->
+        if (entry.mark == EnergyMark.Filled) 1f else 0f
+    }
+
+internal fun altruismCountBars(draws: List<AltruismDraw>): List<InsightCountBar> {
+    val felt = draws.filter { it.felt != null }
+    if (felt.isEmpty()) return emptyList()
+    return listOf(
+        InsightCountBar(lighterLabel, felt.count { it.felt == AltruismFeel.Lighter }),
+        InsightCountBar(tighterLabel, felt.count { it.felt == AltruismFeel.Tighter }, warning = true),
+    )
+}
+
+internal fun altruismCycleSeries(draws: List<AltruismDraw>): List<Float> =
+    draws.filter { it.felt != null }
+        .sortedBy { it.completedAtMillis ?: it.drawnAtMillis }
+        .takeLast(insightCycleWindow)
+        .map { draw -> if (draw.felt == AltruismFeel.Lighter) 1f else 0f }

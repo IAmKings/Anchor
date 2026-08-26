@@ -1,12 +1,22 @@
 package com.anchor.app.insights
 
+import com.anchor.app.relation.altruismFeelCopy
+import com.anchor.app.relation.energyCopy
+import com.anchor.app.relation.pauseAltruismCopy
+import com.anchor.app.relation.shouldPauseAltruism
+import com.anchor.app.storage.AltruismDraw
+import com.anchor.app.storage.AltruismFeel
+import com.anchor.app.storage.AltruismKind
 import com.anchor.app.storage.CameraLog
+import com.anchor.app.storage.EnergyMark
 import com.anchor.app.storage.MicroAction
+import com.anchor.app.storage.RelationEnergyEntry
 import com.anchor.app.storage.RhythmEntry
 import com.anchor.app.storage.WorryCard
 import com.anchor.app.storage.WorryResolution
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class LocalInsightsTest {
@@ -80,6 +90,62 @@ class LocalInsightsTest {
         assertTrue(texts.none { it.contains("%") || it.contains("15%") || it.contains("提升") || it.contains("诊断") })
         assertTrue(insightsWorryAcceptedDetail.contains("没有完成率"))
         assertTrue(insightsEnergyDetail.contains("没有完成率"))
+        assertTrue(insightsEnergyDetail.contains("没有净值"))
+        assertFalse(insightsMonitorDetail.contains("耗竭率"))
         assertTrue(!insightsAltruismDetail.contains("够不够好"))
+    }
+
+    @Test
+    fun relationAndAltruismCycleUseCountsNotRates() {
+        assertEquals(emptyList(), energyCountBars(emptyList()))
+        assertEquals(emptyList(), energyCycleSeries(emptyList()))
+        val energy = listOf(
+            RelationEnergyEntry(1, 1, EnergyMark.Drained, 30),
+            RelationEnergyEntry(2, 1, EnergyMark.Filled, 10),
+            RelationEnergyEntry(3, 1, EnergyMark.Filled, 20),
+        )
+        assertEquals(
+            listOf("回血" to 2, "抽干" to 1),
+            energyCountBars(energy).map { it.label to it.count },
+        )
+        assertEquals(listOf(1f, 1f, 0f), energyCycleSeries(energy))
+        val many = (1..14).map { index ->
+            RelationEnergyEntry(
+                index.toLong(),
+                1,
+                if (index % 2 == 0) EnergyMark.Filled else EnergyMark.Drained,
+                index.toLong(),
+            )
+        }
+        assertEquals(insightCycleWindow, energyCycleSeries(many).size)
+
+        val open = AltruismDraw(1, "浇水", AltruismKind.NonSocial, 1)
+        assertEquals(emptyList(), altruismCountBars(listOf(open)))
+        val draws = listOf(
+            AltruismDraw(1, "a", AltruismKind.NonSocial, 1, AltruismFeel.Tighter, 11),
+            AltruismDraw(2, "b", AltruismKind.NonSocial, 2, AltruismFeel.Lighter, 12),
+            AltruismDraw(3, "c", AltruismKind.Social, 3),
+        )
+        assertEquals(
+            listOf("更轻" to 1, "更紧" to 1),
+            altruismCountBars(draws).map { it.label to it.count },
+        )
+        assertEquals(listOf(0f, 1f), altruismCycleSeries(draws))
+        val tight = List(3) { index ->
+            AltruismDraw(index.toLong(), "x", AltruismKind.Social, index.toLong(), AltruismFeel.Tighter, index.toLong())
+        }
+        assertTrue(shouldPauseAltruism(tight))
+        assertTrue(pauseAltruismCopy().contains("讨好就会反噬"))
+        val forbidden = listOf(
+            energyCountBars(energy).joinToString { it.label },
+            altruismCountBars(draws).joinToString { it.label },
+            energyCopy(energy),
+            altruismFeelCopy(draws),
+            pauseAltruismCopy(),
+            insightsEnergyDetail,
+            insightsAltruismDetail,
+            insightsMonitorDetail,
+        )
+        assertTrue(forbidden.none { it.contains("%") || it.contains("耗竭率") || it.contains("75%") || it.contains("HRV") })
     }
 }
