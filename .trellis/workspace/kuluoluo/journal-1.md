@@ -586,3 +586,24 @@ Pick/Predict/Run/Rate/Result 主按钮与 1–10 芯片 52.dp，文案抽出。�
 ### Status
 
 [OK] **Completed**
+
+
+## Session 28: 仪器测试隔离日常库与导出缓存
+
+**Date**: 2026-08-26
+**Task**: 仪器测试隔离日常库与导出缓存
+**Branch**: `main`
+
+### Summary
+
+导出仪器目录独立。锁/计时不写生产 prefs。SQLCipher 仍用 m0-encrypted-probe.db。单测与 androidTest 编译通过，未在真机跑 instrumented。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `c7a325f` | (see git log) |
+
+### Status
+
+[OK] **Completed**

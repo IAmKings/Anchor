@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 27
+- **Total Sessions**: 28
 - **Last Active**: 2026-08-26
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~588 | Active |
+| `journal-1.md` | ~609 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 28 | 2026-08-26 | 仪器测试隔离日常库与导出缓存 | `c7a325f` | `main` |
 | 27 | 2026-08-26 | 补开箱书桌引导和首页声明 | `b9ff433` | `main` |
 | 26 | 2026-08-26 | 设置导出删除按钮加高并抽出文案 | `ce2b395` | `main` |
 | 25 | 2026-08-26 | 洞察页按钮加高并抽出文案 | `3292550` | `main` |
