@@ -607,3 +607,24 @@ Pick/Predict/Run/Rate/Result 主按钮与 1–10 芯片 52.dp，文案抽出。�
 ### Status
 
 [OK] **Completed**
+
+
+## Session 29: 加密导出带上本地录音
+
+**Date**: 2026-08-26
+**Task**: 加密导出带上本地录音
+**Branch**: `main`
+
+### Summary
+
+exportVersion 4。录音进加密 zip audio/文件名.m4a，JSON 不写路径。v2/v3 恢复仍不伪造音频。单测与 androidTest 编译通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `648029b` | (see git log) |
+
+### Status
+
+[OK] **Completed**
