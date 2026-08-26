@@ -1,0 +1,32 @@
+{
+  "id": "records-journal-cta",
+  "name": "records-journal-cta",
+  "title": "记录中心加保险箱并加高双栏按钮",
+  "description": "Records hub adds worry vault. Camera log write/save 52.dp. Extract copy. Evaluative words stay non-blocking. Hide worry in medical waiting.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-26",
+  "completedAt": "2026-08-26",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/journal/RecordsHub.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/journal/CameraLogScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/journal/CameraLogCopy.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/App.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/journal/CameraLogCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
