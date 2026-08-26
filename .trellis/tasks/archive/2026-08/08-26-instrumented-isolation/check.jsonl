@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/shared/storage.md", "reason": "No writes to anchor.db from instrumented tests."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "Timer kinds InstrumentedA/B; lock prefs instrumented."}

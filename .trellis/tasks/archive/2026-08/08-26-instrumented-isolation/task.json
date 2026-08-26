@@ -1,0 +1,32 @@
+{
+  "id": "instrumented-isolation",
+  "name": "instrumented-isolation",
+  "title": "仪器测试隔离日常库与导出缓存",
+  "description": "Isolate instrumented export cache. Assert lock and timer tests do not mutate production prefs. Keep m0-encrypted-probe.db. Do not add audio to export.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-26",
+  "completedAt": "2026-08-26",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "androidApp/src/main/kotlin/com/anchor/app/AndroidEncryptedExport.kt",
+    "androidApp/src/androidTest/kotlin/com/anchor/app/AndroidEncryptedExportTest.kt",
+    "androidApp/src/androidTest/kotlin/com/anchor/app/AndroidPrivacyShieldTest.kt",
+    "androidApp/src/androidTest/kotlin/com/anchor/app/timer/AndroidBackgroundTimerTest.kt",
+    "shared/src/androidInstrumentedTest/kotlin/com/anchor/app/storage/AndroidEncryptedProbeStoreTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}

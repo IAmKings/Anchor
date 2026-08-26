@@ -1,0 +1,3 @@
+{"file": ".trellis/spec/shared/storage.md", "reason": "Instrumented SQLCipher must not use daily DB."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "Isolated DB name; no shared timer IDs."}
+{"file": ".trellis/spec/shared/privacy.md", "reason": "Export cache isolation on device."}
