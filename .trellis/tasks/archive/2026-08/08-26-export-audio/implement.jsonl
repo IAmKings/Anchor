@@ -1,0 +1,3 @@
+{"file": ".trellis/spec/shared/storage.md", "reason": "Export version and restore audio names."}
+{"file": ".trellis/spec/shared/privacy.md", "reason": "No audio paths in JSON; bytes only in encrypted zip."}
+{"file": ".trellis/spec/shared/quality-guidelines.md", "reason": "LocalExportTest; instrumented cache still isolated."}

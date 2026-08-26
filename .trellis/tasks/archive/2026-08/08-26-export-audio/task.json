@@ -1,0 +1,31 @@
+{
+  "id": "export-audio",
+  "name": "export-audio",
+  "title": "加密导出带上本地录音",
+  "description": "Include worry M4A bytes in encrypted .anchor zip as audio/<basename>. Bump exportVersion to 4. Old backups still restore without fabricating files.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-26",
+  "completedAt": "2026-08-26",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/storage/LocalExport.kt",
+    "androidApp/src/main/kotlin/com/anchor/app/AndroidEncryptedExport.kt",
+    "androidApp/src/main/kotlin/com/anchor/app/MainActivity.kt",
+    "shared/src/androidMain/kotlin/com/anchor/app/storage/AndroidEncryptedProbeStore.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}

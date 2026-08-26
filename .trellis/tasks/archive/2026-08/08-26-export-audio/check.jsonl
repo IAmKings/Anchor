@@ -1,0 +1,2 @@
+{"file": ".trellis/spec/shared/privacy.md", "reason": "No device paths in export JSON."}
+{"file": ".trellis/spec/shared/storage.md", "reason": "v2-v3 restore still does not fabricate audio."}
