@@ -544,3 +544,24 @@ Pick/Predict/Run/Rate/Result 主按钮与 1–10 芯片 52.dp，文案抽出。�
 ### Status
 
 [OK] **Completed**
+
+
+## Session 26: 设置导出删除按钮加高并抽出文案
+
+**Date**: 2026-08-26
+**Task**: 设置导出删除按钮加高并抽出文案
+**Branch**: `main`
+
+### Summary
+
+导出/恢复/删除 52.dp，文案抽出。四类提醒不变。录音仍无法从备份恢复。轨 A 结束。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `ce2b395` | (see git log) |
+
+### Status
+
+[OK] **Completed**
