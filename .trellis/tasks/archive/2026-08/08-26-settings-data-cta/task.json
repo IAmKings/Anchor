@@ -1,0 +1,31 @@
+{
+  "id": "settings-data-cta",
+  "name": "settings-data-cta",
+  "title": "设置导出删除按钮加高并抽出文案",
+  "description": "Settings export/import/delete 52.dp. Extract copy. Keep four reminders and audio-not-in-backup note. Do not add PDF or a fifth notification.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-26",
+  "completedAt": "2026-08-26",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/settings/SettingsScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/settings/ExportCompleteScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/settings/SettingsCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/settings/SettingsCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
