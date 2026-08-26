@@ -1,0 +1,32 @@
+{
+  "id": "desk-disclaimer-copy",
+  "name": "desk-disclaimer-copy",
+  "title": "补开箱书桌引导和首页声明",
+  "description": "Add desk-not-bed hint on open vault overview. Expand home disclaimer to PRD FR-7.5 full sentence. No SafetyPolicy or hotline changes.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-26",
+  "completedAt": "2026-08-26",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/worry/WorryCopy.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/worry/WorryVaultScreen.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/home/HomeCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/worry/WorryCopyTest.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/home/HomeCopyTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
