@@ -1,0 +1,30 @@
+{
+  "id": "insights-cta",
+  "name": "insights-cta",
+  "title": "洞察页按钮加高并抽出文案",
+  "description": "Insights 查看历史记录 52.dp. Extract remaining copy. Keep 记录还不够 and no 15% / diagnosis. Do not replace relation/altruism cards with Stitch charts.",
+  "status": "completed",
+  "dev_type": "feat",
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "kuluoluo",
+  "assignee": "kuluoluo",
+  "createdAt": "2026-08-26",
+  "completedAt": "2026-08-26",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [
+    "shared/src/commonMain/kotlin/com/anchor/app/insights/LocalInsights.kt",
+    "shared/src/commonMain/kotlin/com/anchor/app/insights/InsightsCopy.kt",
+    "shared/src/commonTest/kotlin/com/anchor/app/insights/LocalInsightsTest.kt"
+  ],
+  "notes": "",
+  "meta": {}
+}
