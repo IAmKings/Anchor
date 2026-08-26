@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 24
+- **Total Sessions**: 25
 - **Last Active**: 2026-08-26
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~525 | Active |
+| `journal-1.md` | ~546 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 25 | 2026-08-26 | 洞察页按钮加高并抽出文案 | `3292550` | `main` |
 | 24 | 2026-08-26 | 晨间节律按钮加高并抽出文案 | `05cf27d` | `main` |
 | 23 | 2026-08-26 | 记录中心加保险箱并加高双栏按钮 | `31ec44f` | `main` |
 | 22 | 2026-08-25 | 情绪标签箱按钮加高并抽出文案 | `714ce61` | `main` |

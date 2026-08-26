@@ -523,3 +523,24 @@ Pick/Predict/Run/Rate/Result 主按钮与 1–10 芯片 52.dp，文案抽出。�
 ### Status
 
 [OK] **Completed**
+
+
+## Session 25: 洞察页按钮加高并抽出文案
+
+**Date**: 2026-08-26
+**Task**: 洞察页按钮加高并抽出文案
+**Branch**: `main`
+
+### Summary
+
+查看历史记录 52.dp，文案抽出。无 15% 提升、无诊断。解释模板仍满 15 条。shared 单测通过。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `3292550` | (see git log) |
+
+### Status
+
+[OK] **Completed**
