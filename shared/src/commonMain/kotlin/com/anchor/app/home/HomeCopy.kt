@@ -1,6 +1,6 @@
 package com.anchor.app.home
 
-internal const val homeMildUseDisclaimer = "应用仅适用于轻度调节"
+internal const val homeMildUseDisclaimer = "本应用仅适用于轻度/亚临床调节。诊断与治疗请务必寻求专业医生帮助。"
 internal const val homeRhythmKicker = "晨间节律"
 internal const val homeRhythmEmptyTitle = "见光记录"
 internal const val homeWorryLabel = "忧虑保险箱"

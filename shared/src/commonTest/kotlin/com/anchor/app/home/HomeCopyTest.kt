@@ -27,8 +27,11 @@ class HomeCopyTest {
     }
 
     @Test
-    fun disclaimerMatchesStitchFirstShipCopy() {
-        assertEquals("应用仅适用于轻度调节", homeMildUseDisclaimer)
+    fun disclaimerMatchesPrdStandingNotice() {
+        assertEquals("本应用仅适用于轻度/亚临床调节。诊断与治疗请务必寻求专业医生帮助。", homeMildUseDisclaimer)
+        assertTrue(homeMildUseDisclaimer.contains("亚临床"))
+        assertTrue(homeMildUseDisclaimer.contains("专业医生"))
+        assertFalse(homeMildUseDisclaimer.contains("检测"))
         assertEquals("晨间节律", homeRhythmKicker)
         assertEquals("见光记录", homeRhythmEmptyTitle)
         assertEquals("忧虑保险箱", homeWorryLabel)

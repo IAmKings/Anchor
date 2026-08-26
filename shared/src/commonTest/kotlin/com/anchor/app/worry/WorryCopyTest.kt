@@ -3,6 +3,7 @@ package com.anchor.app.worry
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class WorryCopyTest {
     @Test
@@ -38,6 +39,9 @@ class WorryCopyTest {
         assertFalse(vaultConfirmOpenHint.contains("务必"))
         assertFalse(vaultAcceptedQuote.contains("打卡"))
         assertFalse(vaultOpenBreath.contains("今晚"))
+        assertEquals("建议在书桌前处理，而不是床上或沙发上。", vaultDeskHint)
+        assertFalse(vaultDeskHint.contains("必须"))
+        assertTrue(vaultDeskHint.contains("书桌"))
     }
 
     @Test

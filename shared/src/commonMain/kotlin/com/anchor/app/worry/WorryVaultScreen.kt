@@ -265,6 +265,7 @@ private fun OverviewStep(
     } else {
         StatusMark("开", vaultOpenCaption)
         Text(vaultOpenBreath, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+        Text(vaultDeskHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         if (pending.isEmpty()) {
             Text(vaultEmptyPending, color = MaterialTheme.colorScheme.onSurfaceVariant)
         } else {
