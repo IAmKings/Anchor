@@ -65,12 +65,12 @@ android {
     }
 }
 
+val internalKeystorePath = providers.environmentVariable("ANCHOR_KEYSTORE")
 tasks.configureEach {
     if (name == "assembleInternal") {
         doFirst {
-            val path = System.getenv("ANCHOR_KEYSTORE")
-            val store = path?.takeIf { it.isNotBlank() }?.let { project.file(it) }
-            require(store != null && store.isFile) {
+            val path = internalKeystorePath.orNull
+            require(!path.isNullOrBlank() && java.io.File(path).isFile) {
                 "内部测试包需要签名钥。请设置 ANCHOR_KEYSTORE、ANCHOR_KEYSTORE_PASSWORD、ANCHOR_KEY_ALIAS、ANCHOR_KEY_PASSWORD。"
             }
         }
