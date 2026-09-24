@@ -1,3 +1,4 @@
+import java.io.File as KeystoreFile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -70,7 +71,7 @@ tasks.configureEach {
     if (name == "assembleInternal") {
         doFirst {
             val path = internalKeystorePath.orNull
-            require(!path.isNullOrBlank() && java.io.File(path).isFile) {
+            require(!path.isNullOrBlank() && KeystoreFile(path).isFile) {
                 "内部测试包需要签名钥。请设置 ANCHOR_KEYSTORE、ANCHOR_KEYSTORE_PASSWORD、ANCHOR_KEY_ALIAS、ANCHOR_KEY_PASSWORD。"
             }
         }
