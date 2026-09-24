@@ -38,6 +38,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.update.UpdatePhase
+import com.anchor.app.update.settingsCheckUpdate
+import com.anchor.app.update.settingsUpdateNote
+import com.anchor.app.update.settingsVersionLine
+import com.anchor.app.update.updateDownload
+import com.anchor.app.update.updateStatusLine
 
 private val CardShape = RoundedCornerShape(16.dp)
 private val SettingsActionMinHeight = 52.dp
@@ -64,6 +70,11 @@ fun SettingsScreen(
     onPreviewCrisisClarification: () -> Unit = {},
     onPreviewOneThingLock: () -> Unit = {},
     onOpenReassessment: () -> Unit = {},
+    installedVersionName: String = "",
+    updateCheckAvailable: Boolean = false,
+    updatePhase: UpdatePhase = UpdatePhase.Idle,
+    onCheckUpdate: () -> Unit = {},
+    onOpenUpdate: () -> Unit = {},
     onClose: () -> Unit,
 ) {
     var confirmingDeletion by remember { mutableStateOf(false) }
@@ -181,6 +192,26 @@ fun SettingsScreen(
         Text(settingsAboutTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
         SettingsCard {
             Text(settingsAboutBody)
+            if (installedVersionName.isNotBlank()) {
+                Text(settingsVersionLine(installedVersionName), fontSize = 15.sp)
+            }
+            if (updateCheckAvailable) {
+                Text(settingsUpdateNote, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
+                val status = updateStatusLine(updatePhase)
+                if (status.isNotEmpty()) Text(status, fontSize = 15.sp)
+                Button(
+                    onClick = onCheckUpdate,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight),
+                    shape = RoundedCornerShape(12.dp),
+                ) { Text(settingsCheckUpdate, fontSize = 17.sp) }
+                if (updatePhase is UpdatePhase.UpdateAvailable) {
+                    Button(
+                        onClick = onOpenUpdate,
+                        modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight),
+                        shape = RoundedCornerShape(12.dp),
+                    ) { Text(updateDownload, fontSize = 17.sp) }
+                }
+            }
             TextButton(onClick = onOpenHelp, modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight)) {
                 Text(settingsHelpLink, fontSize = 17.sp)
             }

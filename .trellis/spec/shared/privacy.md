@@ -15,7 +15,9 @@ Do **not** introduce:
 - Crash reporters (Sentry, Firebase Crashlytics, Bugsnag)
 - Analytics (Firebase Analytics, Amplitude, Mixpanel, AppsFlyer)
 - HTTP stacks (OkHttp, Ktor, Retrofit, Volley)
-- `INTERNET` / `ACCESS_NETWORK_STATE` / `ACCESS_WIFI_STATE`
+- `INTERNET` / `ACCESS_NETWORK_STATE` / `ACCESS_WIFI_STATE` on `debug` and `release`
+
+The `internal` build type is the only exception, and only for a version check. See [ADR-0004](../../../docs/adr/0004-internal-github-release.md). It may declare `INTERNET` in `androidApp/src/internal/AndroidManifest.xml` and GET `https://api.github.com/repos/IAmKings/Anchor/releases` with `HttpURLConnection`. No request body, no device id, no analytics SDK, no token in the APK. `verify_privacy.py` allows that one permission in that one manifest and still rejects it everywhere else.
 
 `make verify` runs `scripts/verify_privacy.py`, which scans Gradle files, manifests, and Kotlin imports for those coordinates.
 

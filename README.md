@@ -82,6 +82,14 @@ make verify
 
 真机调试包名：`com.anchor.app`。
 
+## 内部测试包
+
+日常 Debug 包不联网。给测试者安装的包是另一个构建类型 `internal`：用固定签名，启动后向公开的 GitHub Releases 核对 `versionCode`，设置里可以再次检查。签名钥不进仓库。生成与四个 Actions secrets 的名字见 [ADR-0004](docs/adr/0004-internal-github-release.md)。
+
+在 GitHub Actions 里手动运行 **Internal release**，填入更大的 `version_code` 和显示用的 `version_name`。Release 必须是 prerelease，正文前两行是 `anchor-version-code:` 和 `anchor-version-name:`，附件名以 `anchor-internal` 开头、以 `.apk` 结尾。
+
+手机上如果已经装着 Debug 包，第一次安装会因签名不同被系统拒绝。先加密导出，再卸载，然后安装测试包。以后商店包的证书也不同，同样不能覆盖安装。
+
 ## 文档
 
 | 文件 | 内容 |
@@ -91,6 +99,7 @@ make verify
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | 实施基线与切片记录 |
 | [DESIGN.md](DESIGN.md) / [design/](design/) | 视觉与页面稿 |
 | [docs/FEASIBILITY_CHECK.md](docs/FEASIBILITY_CHECK.md) | 可行性检查 |
+| [docs/QA_17_PAGES.md](docs/QA_17_PAGES.md) | 17 页人工验收勾选脚本 |
 
 ## 当前范围外
 

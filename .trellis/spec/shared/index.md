@@ -30,7 +30,7 @@ Always also read [`.trellis/spec/guides/index.md`](../guides/index.md).
 
 After writing code, verify:
 
-- [ ] No new network permission, HTTP client, analytics SDK, or remote log sink ([privacy](./privacy.md)).
+- [ ] No new network permission, HTTP client, analytics SDK, or remote log sink on `debug` / `release`. The `internal` build type's GitHub version check is the only exception ([privacy](./privacy.md), ADR-0004).
 - [ ] `SafetyPolicy` still owns scoring / crisis / hysteresis; UI does not reimplement it ([safety](./safety.md)).
 - [ ] Writes that must stay atomic still go through `queries.transaction` / `transactionWithResult` ([storage](./storage.md)).
 - [ ] User-facing strings live in `*Copy.kt` (or a named `internal const`) and avoid streak / 完成率 / 打卡 language ([compose-ui](./compose-ui.md)).

@@ -1,10 +1,12 @@
 package com.anchor.app
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.app.NotificationManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
 import androidx.activity.compose.setContent
@@ -24,6 +26,7 @@ import com.anchor.app.storage.AndroidDatabaseKey
 import com.anchor.app.storage.AndroidEncryptedProbeStore
 import com.anchor.app.storage.buildLocalExport
 import com.anchor.app.storage.worryAudioExportName
+import com.anchor.app.update.UpdatePhase
 import com.anchor.app.worry.AndroidWorrySessionClock
 import java.io.File
 
@@ -50,6 +53,8 @@ class MainActivity : FragmentActivity() {
     private var lastExportFile: File? = null
     private var deleteStatus by mutableStateOf<String?>(null)
     private var reminderAllows by mutableStateOf(ReminderToggle.entries.associateWith { true })
+    private var updatePhase by mutableStateOf<UpdatePhase>(UpdatePhase.Idle)
+    private var showUpdatePrompt by mutableStateOf(false)
     private var pendingAudioAction: (() -> Unit)? = null
     private lateinit var anchorStore: AndroidEncryptedProbeStore
     private lateinit var backgroundTimer: AndroidBackgroundTimer
@@ -85,6 +90,16 @@ class MainActivity : FragmentActivity() {
         appUnlocked = !appLockEnabled
         reminderAllows = loadReminderAllows()
         updatePrivacyShield()
+        if (BuildConfig.UPDATE_ENABLED) {
+            AnchorUpdateService.ensureStarted(
+                localVersionCode = BuildConfig.VERSION_CODE,
+                onPhase = { phase ->
+                    updatePhase = phase
+                    showUpdatePrompt = AnchorUpdateService.shouldPrompt()
+                },
+                openUrl = ::openUpdateUrl,
+            )
+        }
         setContent {
             App(
                 anchorStore = anchorStore,
@@ -149,6 +164,22 @@ class MainActivity : FragmentActivity() {
                 formatLocalTime = { AndroidWorrySessionClock.formatLocalTime(it) },
                 formatLocalStamp = { AndroidWorrySessionClock.formatLocalStamp(it) },
                 localMinuteOfDay = { AndroidWorrySessionClock.localMinuteOfDay(it) },
+                installedVersionName = BuildConfig.VERSION_NAME,
+                updateCheckAvailable = BuildConfig.UPDATE_ENABLED,
+                updatePhase = updatePhase,
+                showUpdatePrompt = showUpdatePrompt,
+                onCheckUpdate = {
+                    if (BuildConfig.UPDATE_ENABLED) AnchorUpdateService.check()
+                },
+                onDismissUpdate = {
+                    AnchorUpdateService.dismiss()
+                    showUpdatePrompt = false
+                },
+                onOpenUpdate = {
+                    AnchorUpdateService.openDownload()
+                    AnchorUpdateService.dismiss()
+                    showUpdatePrompt = false
+                },
             )
         }
     }
@@ -181,6 +212,13 @@ class MainActivity : FragmentActivity() {
         stopAudioPlayback()
         anchorStore.close()
         super.onDestroy()
+    }
+
+    private fun openUpdateUrl(url: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (_: ActivityNotFoundException) {
+        }
     }
 
     private fun authenticate(enableAfterSuccess: Boolean = false) {

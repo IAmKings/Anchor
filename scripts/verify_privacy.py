@@ -85,9 +85,19 @@ def kotlin_sources():
             yield path
 
 
+INTERNAL_MANIFEST = ROOT / "androidApp" / "src" / "internal" / "AndroidManifest.xml"
+
 for path in source_manifests():
     text = path.read_text(encoding="utf-8")
     rel = path.relative_to(ROOT)
+    if path.resolve() == INTERNAL_MANIFEST.resolve():
+        declared = re.findall(r'<uses-permission[^>]*android:name="([^"]+)"', text)
+        check(
+            "internal manifest requests only INTERNET",
+            declared == ["android.permission.INTERNET"],
+            ", ".join(declared),
+        )
+        continue
     for permission in FORBIDDEN_PERMISSIONS:
         check(
             f"manifest {rel} has no {permission}",

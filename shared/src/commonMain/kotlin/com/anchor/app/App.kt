@@ -68,6 +68,8 @@ import com.anchor.app.settings.ReminderToggle
 import com.anchor.app.settings.SettingsScreen
 import com.anchor.app.settings.exportFileLabel
 import com.anchor.app.settings.isExportSuccess
+import com.anchor.app.update.UpdatePhase
+import com.anchor.app.update.UpdatePromptDialog
 import com.anchor.app.wave.WaveWaitingScreen
 
 private val AnchorColors = lightColorScheme(
@@ -159,6 +161,13 @@ fun App(
     formatLocalTime: (Long) -> String = { "--:--" },
     formatLocalStamp: (Long) -> String = { "--" },
     localMinuteOfDay: (Long) -> Int = { 0 },
+    installedVersionName: String = "",
+    updateCheckAvailable: Boolean = false,
+    updatePhase: UpdatePhase = UpdatePhase.Idle,
+    showUpdatePrompt: Boolean = false,
+    onCheckUpdate: () -> Unit = {},
+    onDismissUpdate: () -> Unit = {},
+    onOpenUpdate: () -> Unit = {},
 ) {
     val store = anchorStore ?: remember { InMemoryAnchorStore() }
     var waveVisible by remember { mutableStateOf(false) }
@@ -431,6 +440,11 @@ fun App(
                             oneThingLockPreview = true
                         },
                         onOpenReassessment = { settingsVisible = false; reassessmentVisible = true },
+                        installedVersionName = installedVersionName,
+                        updateCheckAvailable = updateCheckAvailable,
+                        updatePhase = updatePhase,
+                        onCheckUpdate = onCheckUpdate,
+                        onOpenUpdate = onOpenUpdate,
                         onClose = { settingsVisible = false },
                     )
                 }
@@ -442,6 +456,8 @@ fun App(
                         onSelf = { openCrisisFromText(persistWaiting = false) },
                         onUncertain = { openCrisisFromText(persistWaiting = false) },
                     )
+                } else {
+                    MaybeUpdatePrompt(showUpdatePrompt, updatePhase, installedVersionName, onOpenUpdate, onDismissUpdate)
                 }
                 return@Surface
             }
@@ -544,9 +560,30 @@ fun App(
                         },
                     )
                 }
+                if (!hangSheetVisible) {
+                    MaybeUpdatePrompt(showUpdatePrompt, updatePhase, installedVersionName, onOpenUpdate, onDismissUpdate)
+                }
             }
         }
     }
+}
+
+@Composable
+private fun MaybeUpdatePrompt(
+    showUpdatePrompt: Boolean,
+    updatePhase: UpdatePhase,
+    installedVersionName: String,
+    onOpenUpdate: () -> Unit,
+    onDismissUpdate: () -> Unit,
+) {
+    val offer = updatePhase as? UpdatePhase.UpdateAvailable ?: return
+    if (!showUpdatePrompt) return
+    UpdatePromptDialog(
+        remoteVersion = offer.versionName,
+        localVersion = installedVersionName,
+        onDownload = onOpenUpdate,
+        onLater = onDismissUpdate,
+    )
 }
 
 @Composable

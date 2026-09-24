@@ -14,14 +14,45 @@ kotlin {
 android {
     namespace = "com.anchor.app"
     compileSdk = 36
+    buildFeatures { buildConfig = true }
+
+    val appVersionCode = when (val raw = findProperty("versionCode") as? String) {
+        null, "" -> 1
+        else -> raw.toIntOrNull() ?: error("versionCode 必须是整数，实际是 $raw")
+    }
+    val appVersionName = (findProperty("versionName") as? String)?.takeIf { it.isNotBlank() } ?: "0.1.0"
 
     defaultConfig {
         applicationId = "com.anchor.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("boolean", "UPDATE_ENABLED", "false")
+    }
+
+    signingConfigs {
+        create("internal") {
+            val path = System.getenv("ANCHOR_KEYSTORE")
+            if (!path.isNullOrBlank()) {
+                storeFile = file(path)
+                storePassword = System.getenv("ANCHOR_KEYSTORE_PASSWORD").orEmpty()
+                keyAlias = System.getenv("ANCHOR_KEY_ALIAS").orEmpty()
+                keyPassword = System.getenv("ANCHOR_KEY_PASSWORD").orEmpty()
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+        }
+        create("internal") {
+            initWith(getByName("release"))
+            matchingFallbacks += listOf("release")
+            buildConfigField("boolean", "UPDATE_ENABLED", "true")
+            signingConfig = signingConfigs.getByName("internal")
+        }
     }
 
     compileOptions {
@@ -31,6 +62,18 @@ android {
 
     installation {
         timeOutInMs = 600_000
+    }
+}
+
+tasks.configureEach {
+    if (name == "assembleInternal") {
+        doFirst {
+            val path = System.getenv("ANCHOR_KEYSTORE")
+            val store = path?.takeIf { it.isNotBlank() }?.let { project.file(it) }
+            require(store != null && store.isFile) {
+                "内部测试包需要签名钥。请设置 ANCHOR_KEYSTORE、ANCHOR_KEYSTORE_PASSWORD、ANCHOR_KEY_ALIAS、ANCHOR_KEY_PASSWORD。"
+            }
+        }
     }
 }
 
