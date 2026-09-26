@@ -16,11 +16,16 @@ android {
     compileSdk = 36
     buildFeatures { buildConfig = true }
 
-    val appVersionCode = when (val raw = findProperty("versionCode") as? String) {
-        null, "" -> 1
+    val appVersionCode = when (
+        val raw = (findProperty("versionCode") as? String)?.takeIf { it.isNotBlank() }
+            ?: findProperty("anchorVersionCode") as? String
+    ) {
+        null, "" -> error("缺少 versionCode")
         else -> raw.toIntOrNull() ?: error("versionCode 必须是整数，实际是 $raw")
     }
-    val appVersionName = (findProperty("versionName") as? String)?.takeIf { it.isNotBlank() } ?: "0.1.0"
+    val appVersionName = (findProperty("versionName") as? String)?.takeIf { it.isNotBlank() }
+        ?: (findProperty("anchorVersionName") as? String)?.takeIf { it.isNotBlank() }
+        ?: error("缺少 versionName")
 
     defaultConfig {
         applicationId = "com.anchor.app"

@@ -1,6 +1,9 @@
 name: Internal release
 
 on:
+  push:
+    tags:
+      - "v*"
   workflow_dispatch:
     inputs:
       version_name:
@@ -48,6 +51,31 @@ jobs:
           fi
           printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/anchor-internal.jks"
 
+      - name: Resolve version
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            VERSION_NAME="${{ inputs.version_name }}"
+            VERSION_CODE="${{ inputs.version_code }}"
+          else
+            VERSION_NAME=$(sed -n 's/^anchorVersionName=//p' gradle.properties)
+            VERSION_CODE=$(sed -n 's/^anchorVersionCode=//p' gradle.properties)
+            if [ "$GITHUB_REF_NAME" != "v${VERSION_NAME}" ]; then
+              echo "tag ${GITHUB_REF_NAME} 与 gradle.properties 的 v${VERSION_NAME} 不一致"
+              exit 1
+            fi
+          fi
+          if ! [[ "$VERSION_CODE" =~ ^[0-9]+$ ]]; then
+            echo "version_code 必须是整数"
+            exit 1
+          fi
+          if [ -z "$VERSION_NAME" ]; then
+            echo "version_name 不能为空"
+            exit 1
+          fi
+          echo "version_name=${VERSION_NAME}" >> "$GITHUB_ENV"
+          echo "version_code=${VERSION_CODE}" >> "$GITHUB_ENV"
+
       - name: Build internal APK
         env:
           ANCHOR_KEYSTORE: ${{ runner.temp }}/anchor-internal.jks
@@ -56,14 +84,10 @@ jobs:
           ANCHOR_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           set -euo pipefail
-          if ! [[ "${{ inputs.version_code }}" =~ ^[0-9]+$ ]]; then
-            echo "version_code 必须是整数"
-            exit 1
-          fi
           chmod +x ./gradlew
           ./gradlew :androidApp:assembleInternal --no-daemon \
-            -PversionCode="${{ inputs.version_code }}" \
-            -PversionName="${{ inputs.version_name }}"
+            -PversionCode="${version_code}" \
+            -PversionName="${version_name}"
 
       - name: Check embedded version
         run: |
@@ -72,15 +96,15 @@ jobs:
           APK=$(find androidApp/build/outputs/apk/internal -name '*.apk' | head -1)
           BT=$(ls "$SDK/build-tools" | sort -V | tail -1)
           BADGING=$("$SDK/build-tools/$BT/aapt" dump badging "$APK")
-          printf '%s\n' "$BADGING" | grep -q "versionCode='${{ inputs.version_code }}'"
-          printf '%s\n' "$BADGING" | grep -q "versionName='${{ inputs.version_name }}'"
-          cp "$APK" "$RUNNER_TEMP/anchor-internal-${{ inputs.version_name }}.apk"
+          printf '%s\n' "$BADGING" | grep -q "versionCode='${version_code}'"
+          printf '%s\n' "$BADGING" | grep -q "versionName='${version_name}'"
+          cp "$APK" "$RUNNER_TEMP/anchor-internal-${version_name}.apk"
 
       - name: Publish prerelease
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION_NAME: ${{ inputs.version_name }}
-          VERSION_CODE: ${{ inputs.version_code }}
+          VERSION_NAME: ${{ env.version_name }}
+          VERSION_CODE: ${{ env.version_code }}
         run: |
           set -euo pipefail
           printf '%s\n' \
