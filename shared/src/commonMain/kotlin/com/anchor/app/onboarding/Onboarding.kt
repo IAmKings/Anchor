@@ -17,13 +17,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -37,6 +35,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -56,14 +55,25 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.ui.AnchorAppIcon
+import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorGlyph
 import com.anchor.app.safety.SafetyAction
 import com.anchor.app.safety.SafetyOutcome
 import com.anchor.app.safety.SafetyPolicy
@@ -101,6 +111,21 @@ private enum class Step { Welcome, Phq9, Gad7, Buffer, Result, Anchor }
 
 private val CardShape = RoundedCornerShape(16.dp)
 private val PillShape = RoundedCornerShape(28.dp)
+
+@Composable
+private fun OnboardingMark(titleSize: TextUnit, asHeading: Boolean) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        AnchorAppIcon(Modifier.size(84.dp))
+        Spacer(Modifier.height(12.dp))
+        Text(
+            "锚点 Anchor",
+            modifier = if (asHeading) Modifier.semantics { heading() } else Modifier,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = titleSize,
+            fontWeight = FontWeight.SemiBold,
+        )
+    }
+}
 
 @Composable
 fun FirstRunAssessment(
@@ -237,23 +262,7 @@ private fun Welcome(
             Spacer(Modifier.height(36.dp))
         }
         Spacer(Modifier.height(24.dp))
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            shape = RoundedCornerShape(20.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)),
-        ) {
-            Box(Modifier.size(96.dp), contentAlignment = Alignment.Center) {
-                Box(
-                    Modifier.size(56.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Surface(color = MaterialTheme.colorScheme.primaryContainer, shape = CircleShape, modifier = Modifier.fillMaxSize()) {}
-                    Text("锚", color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 22.sp, fontWeight = FontWeight.Medium)
-                }
-            }
-        }
-        Spacer(Modifier.height(20.dp))
-        Text("锚点 Anchor", Modifier.semantics { heading() }, color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+        OnboardingMark(titleSize = 22.sp, asHeading = true)
         Spacer(Modifier.height(8.dp))
         Text(
             welcomeTagline,
@@ -272,7 +281,13 @@ private fun Welcome(
             Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape) {
                     Box(Modifier.size(40.dp), contentAlignment = Alignment.Center) {
-                        Text("i", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            "!",
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp,
+                            modifier = Modifier.clearAndSetSemantics {},
+                        )
                     }
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -313,36 +328,40 @@ private fun Welcome(
                 onCheckedChange = onAgreed,
                 modifier = Modifier.semantics { contentDescription = agreementLabel },
             )
-            FlowRow(
-                Modifier.weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    agreementPrefix,
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                TextButton(
-                    onClick = { legal = termsTitle to termsBody },
-                    contentPadding = PaddingValues(0.dp),
-                ) {
-                    Text(termsTitle, fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
-                }
-                Text(
-                    agreementAnd,
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                TextButton(
-                    onClick = { legal = privacyTitle to privacyBody },
-                    contentPadding = PaddingValues(0.dp),
-                ) {
-                    Text(privacyTitle, fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
-                }
-            }
+            val linkStyle = TextLinkStyles(
+                style = SpanStyle(
+                    color = MaterialTheme.colorScheme.secondary,
+                    textDecoration = TextDecoration.Underline,
+                    fontWeight = FontWeight.SemiBold,
+                ),
+            )
+            Text(
+                buildAnnotatedString {
+                    append(agreementPrefix)
+                    append(" ")
+                    withLink(
+                        LinkAnnotation.Clickable(
+                            tag = "terms",
+                            styles = linkStyle,
+                            linkInteractionListener = { legal = termsTitle to termsBody },
+                        ),
+                    ) { append(termsTitle) }
+                    append(" ")
+                    append(agreementAnd)
+                    append(" ")
+                    withLink(
+                        LinkAnnotation.Clickable(
+                            tag = "privacy",
+                            styles = linkStyle,
+                            linkInteractionListener = { legal = privacyTitle to privacyBody },
+                        ),
+                    ) { append(privacyTitle) }
+                },
+                modifier = Modifier.weight(1f),
+                fontSize = 14.sp,
+                lineHeight = 20.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
         Spacer(Modifier.height(12.dp))
         Button(
@@ -397,12 +416,12 @@ internal fun ScaleForm(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             if (onBack != null) {
-                TextButton(
+                AnchorBackButton(
                     onClick = onBack,
                     modifier = Modifier
                         .windowInsetsPadding(WindowInsets.statusBars)
                         .padding(horizontal = 8.dp),
-                ) { Text("返回") }
+                )
             }
         },
         bottomBar = {
@@ -434,7 +453,7 @@ internal fun ScaleForm(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+            OnboardingMark(titleSize = 18.sp, asHeading = false)
             Text(title, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
             Text(scalePrompt, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp, textAlign = TextAlign.Center)
             questions.forEachIndexed { index, question ->
@@ -513,7 +532,12 @@ internal fun BufferStep(onDone: () -> Unit) {
             ) {}
             Surface(color = MaterialTheme.colorScheme.surface, shape = CircleShape, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))) {
                 Box(Modifier.size(64.dp), contentAlignment = Alignment.Center) {
-                    Text("锚", color = MaterialTheme.colorScheme.primary, fontSize = 20.sp)
+                    Icon(
+                        imageVector = AnchorGlyph,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(48.dp),
+                    )
                 }
             }
         }
@@ -572,7 +596,7 @@ private fun MildResult(outcome: SafetyOutcome, onChooseAnchor: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+            OnboardingMark(titleSize = 18.sp, asHeading = false)
             ScoreRing(score = score, max = 27, caption = phqBandLabel(outcome.assessment.phq9Band))
             Text(mildInsight, fontSize = 17.sp, textAlign = TextAlign.Center, lineHeight = 26.sp)
             Text(
@@ -635,7 +659,7 @@ private fun MedicalResult(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text("锚点 Anchor", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+            OnboardingMark(titleSize = 18.sp, asHeading = false)
             Surface(color = MaterialTheme.colorScheme.surface, shape = CircleShape, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))) {
                 Box(Modifier.size(168.dp), contentAlignment = Alignment.Center) {
                     Text("${outcome.assessment.phq9Score}", color = MaterialTheme.colorScheme.secondary, fontFamily = FontFamily.Monospace, fontSize = 64.sp)
@@ -814,12 +838,13 @@ fun FirstAnchorChoice(onConfirm: (FirstAnchor) -> Unit, onBack: (() -> Unit)? = 
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             if (onBack != null) {
-                TextButton(
+                AnchorBackButton(
                     onClick = onBack,
+                    showIcon = true,
                     modifier = Modifier
                         .windowInsetsPadding(WindowInsets.statusBars)
                         .padding(horizontal = 8.dp),
-                ) { Text("返回") }
+                )
             }
         },
         bottomBar = {
@@ -901,15 +926,15 @@ fun FirstAnchorChoice(onConfirm: (FirstAnchor) -> Unit, onBack: (() -> Unit)? = 
                             modifier = Modifier.size(32.dp),
                         ) {
                             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Text(
-                                    firstAnchorGlyph(option.anchor),
-                                    color = if (checked) {
+                                Icon(
+                                    imageVector = firstAnchorIcon(option.anchor),
+                                    contentDescription = null,
+                                    tint = if (checked) {
                                         MaterialTheme.colorScheme.primaryContainer
                                     } else {
                                         MaterialTheme.colorScheme.primary
                                     },
-                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = 14.sp,
+                                    modifier = Modifier.size(20.dp),
                                 )
                             }
                         }

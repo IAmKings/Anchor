@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.anchor.app.ui.AnchorBackButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,7 +55,7 @@ fun ExportCompleteScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        TextButton(onClick = onBack, modifier = Modifier.align(Alignment.End)) { Text(settingsBackLabel) }
+        AnchorBackButton(onClick = onBack, label = settingsBackLabel, modifier = Modifier.align(Alignment.End))
         Spacer(Modifier.height(24.dp))
         Surface(color = MaterialTheme.colorScheme.primaryContainer, shape = CircleShape) {
             Box(Modifier.size(96.dp), contentAlignment = Alignment.Center) {

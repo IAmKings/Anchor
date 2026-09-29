@@ -26,9 +26,8 @@ class BaselineAssessmentTest {
         assertEquals("确认选择", confirmFirstAnchorLabel)
         assertEquals("选定后我们将固定练习 14 天", firstAnchorCommitHint)
         assertFalse(p0FirstAnchors.any { it.title.startsWith("✓") })
-        assertEquals("情", firstAnchorGlyph(FirstAnchor.EmotionLabel))
-        assertEquals("步", firstAnchorGlyph(FirstAnchor.MicroAction))
-        assertEquals("植", firstAnchorGlyph(FirstAnchor.AltruisticTask))
+        val icons = FirstAnchor.entries.map { firstAnchorIcon(it) }
+        assertEquals(FirstAnchor.entries.size, icons.toSet().size)
     }
 
     @Test

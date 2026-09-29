@@ -27,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.anchor.app.ui.AnchorBackButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -90,7 +91,7 @@ fun HelpNowScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("返回") }
+            AnchorBackButton(onClick = onClose, modifier = Modifier.align(Alignment.End))
             Text(helpNowTitle, Modifier.semantics { heading() }, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
             HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline)
             HelpNowStepCard(2, helpNowStep2Label, helpNowStep2Title, helpNowStep2Body)
