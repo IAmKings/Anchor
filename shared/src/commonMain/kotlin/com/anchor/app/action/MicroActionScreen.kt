@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,8 +14,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -27,7 +24,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -93,83 +90,83 @@ fun MicroActionScreen(
         }
     }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .imePadding()
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        AnchorBackButton(onClick = onClose, modifier = Modifier.align(Alignment.End))
-        when (step) {
-            ActionStep.Pick -> PickStep(
-                ready = ready,
-                hasHistory = completed.isNotEmpty(),
-                custom = custom,
-                onCustom = { custom = it },
-                onPickExisting = { selectedId = it; step = ActionStep.Predict },
-                onPickPreset = { title ->
-                    store.addMicroAction(title, nowMillis())
-                    revision++
-                    selectedId = store.microActions().firstOrNull { it.title == title && it.startedAtMillis == null }?.id
-                    custom = ""
-                    step = ActionStep.Predict
-                },
-                onOpenHistory = onOpenHistory,
-            )
-            ActionStep.Predict -> selected?.let { action ->
-                PredictStep(
-                    title = action.title,
-                    predicted = predicted,
-                    onPredicted = { predicted = it },
-                    onStart = {
-                        store.startMicroAction(action.id, predicted, nowMillis())
-                        onStartTimer(MICRO_ACTION_MILLIS)
-                        revision++
-                        step = ActionStep.Run
-                    },
-                    onBack = { step = ActionStep.Pick },
-                )
-            } ?: Text(microActionNeedPick)
-            ActionStep.Run -> active?.let { action ->
-                val remaining = (action.startedAtMillis!! + MICRO_ACTION_MILLIS - nowMillis()).coerceAtLeast(0)
-                RunStep(
-                    title = action.title,
-                    predicted = action.predictedDifficulty,
-                    remainingMillis = remaining,
-                    onFinish = { step = ActionStep.Rate },
-                    onLeave = onClose,
-                )
-            } ?: Text(microActionTimerEnded)
-            ActionStep.Rate -> (active ?: finished)?.let { action ->
-                RateStep(
-                    title = action.title,
-                    actual = actual,
-                    onActual = { actual = it },
-                    onSave = {
-                        if (action.completedAtMillis == null) {
-                            store.completeMicroAction(action.id, actual, nowMillis())
-                            onCancelTimer()
-                        }
-                        justCompletedId = action.id
-                        revision++
-                        step = ActionStep.Result
-                    },
-                )
-            }
-            ActionStep.Result -> finished?.let { action ->
-                ResultStep(
-                    action = action,
+    AnchorBackBar(onBack = onClose) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            when (step) {
+                ActionStep.Pick -> PickStep(
+                    ready = ready,
                     hasHistory = completed.isNotEmpty(),
-                    onClose = onClose,
-                    onAnother = { selectedId = null; step = ActionStep.Pick },
+                    custom = custom,
+                    onCustom = { custom = it },
+                    onPickExisting = { selectedId = it; step = ActionStep.Predict },
+                    onPickPreset = { title ->
+                        store.addMicroAction(title, nowMillis())
+                        revision++
+                        selectedId = store.microActions().firstOrNull { it.title == title && it.startedAtMillis == null }?.id
+                        custom = ""
+                        step = ActionStep.Predict
+                    },
                     onOpenHistory = onOpenHistory,
                 )
+                ActionStep.Predict -> selected?.let { action ->
+                    PredictStep(
+                        title = action.title,
+                        predicted = predicted,
+                        onPredicted = { predicted = it },
+                        onStart = {
+                            store.startMicroAction(action.id, predicted, nowMillis())
+                            onStartTimer(MICRO_ACTION_MILLIS)
+                            revision++
+                            step = ActionStep.Run
+                        },
+                        onBack = { step = ActionStep.Pick },
+                    )
+                } ?: Text(microActionNeedPick)
+                ActionStep.Run -> active?.let { action ->
+                    val remaining = (action.startedAtMillis!! + MICRO_ACTION_MILLIS - nowMillis()).coerceAtLeast(0)
+                    RunStep(
+                        title = action.title,
+                        predicted = action.predictedDifficulty,
+                        remainingMillis = remaining,
+                        onFinish = { step = ActionStep.Rate },
+                        onLeave = onClose,
+                    )
+                } ?: Text(microActionTimerEnded)
+                ActionStep.Rate -> (active ?: finished)?.let { action ->
+                    RateStep(
+                        title = action.title,
+                        actual = actual,
+                        onActual = { actual = it },
+                        onSave = {
+                            if (action.completedAtMillis == null) {
+                                store.completeMicroAction(action.id, actual, nowMillis())
+                                onCancelTimer()
+                            }
+                            justCompletedId = action.id
+                            revision++
+                            step = ActionStep.Result
+                        },
+                    )
+                }
+                ActionStep.Result -> finished?.let { action ->
+                    ResultStep(
+                        action = action,
+                        hasHistory = completed.isNotEmpty(),
+                        onClose = onClose,
+                        onAnother = { selectedId = null; step = ActionStep.Pick },
+                        onOpenHistory = onOpenHistory,
+                    )
+                }
             }
+            Spacer(Modifier.height(24.dp))
         }
-        Spacer(Modifier.height(24.dp))
     }
 }
 

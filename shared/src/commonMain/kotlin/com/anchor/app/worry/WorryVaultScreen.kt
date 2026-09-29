@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,8 +13,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +24,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -83,92 +80,92 @@ fun WorryVaultScreen(
     val open = isSessionOpen() || forcedOpen
     val current = pending.firstOrNull()
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .imePadding()
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        AnchorBackButton(onClick = onClose, modifier = Modifier.align(Alignment.End))
-        when {
-            step == VaultStep.Done -> DoneStep(processedCount, onClose)
-            step == VaultStep.Convert && current != null -> ConvertStep(
-                card = current,
-                action = action,
-                nowMillis = nowMillis(),
-                onActionChange = { action = it },
-                onConfirm = {
-                    store.resolveWorryAsAction(current.id, action, nowMillis())
-                    action = ""
-                    processedCount++
-                    revision++
-                    step = if (pending.size <= 1) VaultStep.Done else VaultStep.Process
-                },
-                onBack = { step = VaultStep.Process },
-            )
-            step == VaultStep.Process && current != null && open -> ProcessStep(
-                card = current,
-                nowMillis = nowMillis(),
-                nextSessionLabel = nextSessionLabel(),
-                audioPlaybackStatus = audioPlaybackStatus,
-                onPlayAudio = onPlayAudio,
-                onAction = { step = VaultStep.Convert },
-                onUnsolvable = {
-                    store.resolveWorryCard(current.id, WorryResolution.Unsolvable)
-                    processedCount++
-                    revision++
-                    step = if (pending.size <= 1) VaultStep.Done else VaultStep.Process
-                },
-                onDismiss = {
-                    store.dismissWorryCard(current.id)
-                    processedCount++
-                    revision++
-                    step = if (pending.size <= 1) VaultStep.Done else VaultStep.Process
-                },
-                onBack = { step = VaultStep.Overview },
-            )
-            else -> OverviewStep(
-                open = open,
-                pending = pending,
-                content = content,
-                onContent = { content = it },
-                savedMessage = savedMessage,
-                speechStatus = speechStatus,
-                speechRecording = speechRecording,
-                confirmationVisible = confirmationVisible,
-                nextSessionLabel = nextSessionLabel(),
-                nowMillis = nowMillis(),
-                onHang = {
-                    val hit = findCrisisPhrase(content)
-                    if (hit != null) pendingPhrase = hit
-                    else {
-                        store.addWorryCard(content, nowMillis(), nextSessionMillis())
-                        content = ""
-                        savedMessage = vaultSealedMessage(open, nextSessionLabel())
+    AnchorBackBar(onBack = onClose) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            when {
+                step == VaultStep.Done -> DoneStep(processedCount, onClose)
+                step == VaultStep.Convert && current != null -> ConvertStep(
+                    card = current,
+                    action = action,
+                    nowMillis = nowMillis(),
+                    onActionChange = { action = it },
+                    onConfirm = {
+                        store.resolveWorryAsAction(current.id, action, nowMillis())
+                        action = ""
+                        processedCount++
                         revision++
-                    }
-                },
-                onSpeech = {
-                    if (speechRecording) {
-                        onStopRecording()?.let { audioFileName ->
-                            store.addWorryCard("", nowMillis(), nextSessionMillis(), audioFileName)
+                        step = if (pending.size <= 1) VaultStep.Done else VaultStep.Process
+                    },
+                    onBack = { step = VaultStep.Process },
+                )
+                step == VaultStep.Process && current != null && open -> ProcessStep(
+                    card = current,
+                    nowMillis = nowMillis(),
+                    nextSessionLabel = nextSessionLabel(),
+                    audioPlaybackStatus = audioPlaybackStatus,
+                    onPlayAudio = onPlayAudio,
+                    onAction = { step = VaultStep.Convert },
+                    onUnsolvable = {
+                        store.resolveWorryCard(current.id, WorryResolution.Unsolvable)
+                        processedCount++
+                        revision++
+                        step = if (pending.size <= 1) VaultStep.Done else VaultStep.Process
+                    },
+                    onDismiss = {
+                        store.dismissWorryCard(current.id)
+                        processedCount++
+                        revision++
+                        step = if (pending.size <= 1) VaultStep.Done else VaultStep.Process
+                    },
+                    onBack = { step = VaultStep.Overview },
+                )
+                else -> OverviewStep(
+                    open = open,
+                    pending = pending,
+                    content = content,
+                    onContent = { content = it },
+                    savedMessage = savedMessage,
+                    speechStatus = speechStatus,
+                    speechRecording = speechRecording,
+                    confirmationVisible = confirmationVisible,
+                    nextSessionLabel = nextSessionLabel(),
+                    nowMillis = nowMillis(),
+                    onHang = {
+                        val hit = findCrisisPhrase(content)
+                        if (hit != null) pendingPhrase = hit
+                        else {
+                            store.addWorryCard(content, nowMillis(), nextSessionMillis())
+                            content = ""
                             savedMessage = vaultSealedMessage(open, nextSessionLabel())
                             revision++
                         }
-                    } else {
-                        onCaptureSpeech { content = it }
-                    }
-                },
-                onAskOpenNow = { confirmationVisible = true },
-                onConfirmOpen = { forcedOpen = true; confirmationVisible = false },
-                onWaitForSession = { confirmationVisible = false },
-                onStartProcess = { step = VaultStep.Process },
-            )
+                    },
+                    onSpeech = {
+                        if (speechRecording) {
+                            onStopRecording()?.let { audioFileName ->
+                                store.addWorryCard("", nowMillis(), nextSessionMillis(), audioFileName)
+                                savedMessage = vaultSealedMessage(open, nextSessionLabel())
+                                revision++
+                            }
+                        } else {
+                            onCaptureSpeech { content = it }
+                        }
+                    },
+                    onAskOpenNow = { confirmationVisible = true },
+                    onConfirmOpen = { forcedOpen = true; confirmationVisible = false },
+                    onWaitForSession = { confirmationVisible = false },
+                    onStartProcess = { step = VaultStep.Process },
+                )
+            }
+            Spacer(Modifier.height(24.dp))
         }
-        Spacer(Modifier.height(24.dp))
     }
     pendingPhrase?.let { phrase ->
         CrisisClarificationDialog(

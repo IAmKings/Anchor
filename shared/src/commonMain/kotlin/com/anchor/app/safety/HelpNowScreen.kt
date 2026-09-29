@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -27,7 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +52,7 @@ fun HelpNowScreen(
     val resource = crisisResource(region, youth)
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        topBar = { AnchorBackRow(onBack = onClose) },
         bottomBar = {
             Column(
                 Modifier
@@ -86,12 +86,10 @@ fun HelpNowScreen(
             Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .windowInsetsPadding(WindowInsets.statusBars)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            AnchorBackButton(onClick = onClose, modifier = Modifier.align(Alignment.End))
             Text(helpNowTitle, Modifier.semantics { heading() }, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
             HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline)
             HelpNowStepCard(2, helpNowStep2Label, helpNowStep2Title, helpNowStep2Body)

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,8 +12,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +23,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -104,39 +101,39 @@ fun CameraLogScreen(
         return
     }
     val logs = remember(revision) { store.cameraLogs() }
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        AnchorBackButton(onClick = onClose, label = journalBackLabel, modifier = Modifier.align(Alignment.End))
-        JournalHeader()
-        if (reflectionVisible) {
-            Surface(
-                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.28f),
-                shape = CardShape,
-            ) {
-                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(journalReflection, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-                    TextButton(onClick = { reflectionVisible = false }) { Text(journalReflectionDismiss) }
+    AnchorBackBar(onBack = onClose, label = journalBackLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            JournalHeader()
+            if (reflectionVisible) {
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.28f),
+                    shape = CardShape,
+                ) {
+                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text(journalReflection, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                        TextButton(onClick = { reflectionVisible = false }) { Text(journalReflectionDismiss) }
+                    }
                 }
             }
+            Button(
+                onClick = { composing = true },
+                modifier = Modifier.fillMaxWidth().heightIn(min = JournalActionMinHeight),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text(journalWriteLabel, fontSize = 17.sp)
+            }
+            if (logs.isEmpty()) {
+                Text(journalEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+            }
+            logs.forEach { SavedCameraLog(it) }
+            Spacer(Modifier.height(24.dp))
         }
-        Button(
-            onClick = { composing = true },
-            modifier = Modifier.fillMaxWidth().heightIn(min = JournalActionMinHeight),
-            shape = RoundedCornerShape(12.dp),
-        ) {
-            Text(journalWriteLabel, fontSize = 17.sp)
-        }
-        if (logs.isEmpty()) {
-            Text(journalEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
-        }
-        logs.forEach { SavedCameraLog(it) }
-        Spacer(Modifier.height(24.dp))
     }
 }
 
@@ -189,88 +186,88 @@ private fun NewCameraLog(onCancel: () -> Unit, onSave: (String, String) -> Unit)
     var fact by remember { mutableStateOf("") }
     var inference by remember { mutableStateOf("") }
     val detected = firstEvaluativeWord(fact)
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .imePadding()
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        TextButton(onClick = onCancel, modifier = Modifier.align(Alignment.End)) { Text(journalCancelLabel) }
-        JournalHeader()
-        ColumnCard(
-            glyph = "摄",
-            title = journalFactTitle,
-            caption = journalFactCaption,
-            wellColor = MaterialTheme.colorScheme.surfaceVariant,
+    AnchorBackBar(onBack = onCancel, label = journalCancelLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            OutlinedTextField(
-                value = fact,
-                onValueChange = { fact = it },
-                placeholder = { Text(journalFactPlaceholder) },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 5,
-                shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                ),
-            )
-            if (detected != null) {
-                Surface(
-                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.10f),
+            JournalHeader()
+            ColumnCard(
+                glyph = "摄",
+                title = journalFactTitle,
+                caption = journalFactCaption,
+                wellColor = MaterialTheme.colorScheme.surfaceVariant,
+            ) {
+                OutlinedTextField(
+                    value = fact,
+                    onValueChange = { fact = it },
+                    placeholder = { Text(journalFactPlaceholder) },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 5,
                     shape = RoundedCornerShape(12.dp),
-                ) {
-                    Row(
-                        Modifier.fillMaxWidth().padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    ),
+                )
+                if (detected != null) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.10f),
+                        shape = RoundedCornerShape(12.dp),
                     ) {
-                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text(journalHintTitle, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
-                            Text(journalHintDetail(detected), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                        Row(
+                            Modifier.fillMaxWidth().padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        ) {
+                            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(journalHintTitle, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                                Text(journalHintDetail(detected), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                            }
+                            TextButton(
+                                onClick = {
+                                    val moved = moveEvaluativeSentence(fact, inference, detected)
+                                    fact = moved.first
+                                    inference = moved.second
+                                },
+                                modifier = Modifier.heightIn(min = JournalActionMinHeight),
+                            ) { Text(journalMoveLabel, fontSize = 17.sp) }
                         }
-                        TextButton(
-                            onClick = {
-                                val moved = moveEvaluativeSentence(fact, inference, detected)
-                                fact = moved.first
-                                inference = moved.second
-                            },
-                            modifier = Modifier.heightIn(min = JournalActionMinHeight),
-                        ) { Text(journalMoveLabel, fontSize = 17.sp) }
                     }
                 }
             }
-        }
-        ColumnCard(
-            glyph = "脑",
-            title = journalInferenceTitle,
-            caption = journalInferenceCaption,
-            wellColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f),
-        ) {
-            OutlinedTextField(
-                value = inference,
-                onValueChange = { inference = it },
-                placeholder = { Text(journalInferencePlaceholder) },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 5,
+            ColumnCard(
+                glyph = "脑",
+                title = journalInferenceTitle,
+                caption = journalInferenceCaption,
+                wellColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f),
+            ) {
+                OutlinedTextField(
+                    value = inference,
+                    onValueChange = { inference = it },
+                    placeholder = { Text(journalInferencePlaceholder) },
+                    modifier = Modifier.fillMaxWidth(),
+                    minLines = 5,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                    ),
+                )
+            }
+            Text(journalOneColumnHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            Button(
+                onClick = { onSave(fact, inference) },
+                enabled = fact.isNotBlank() || inference.isNotBlank(),
+                modifier = Modifier.fillMaxWidth().heightIn(min = JournalActionMinHeight),
                 shape = RoundedCornerShape(12.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                ),
-            )
+            ) { Text(journalSaveLabel, fontSize = 17.sp) }
+            Spacer(Modifier.height(24.dp))
         }
-        Text(journalOneColumnHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
-        Button(
-            onClick = { onSave(fact, inference) },
-            enabled = fact.isNotBlank() || inference.isNotBlank(),
-            modifier = Modifier.fillMaxWidth().heightIn(min = JournalActionMinHeight),
-            shape = RoundedCornerShape(12.dp),
-        ) { Text(journalSaveLabel, fontSize = 17.sp) }
-        Spacer(Modifier.height(24.dp))
     }
 }
 

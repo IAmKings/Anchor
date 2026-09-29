@@ -4,6 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class SafetyPolicyTest {
@@ -87,6 +88,28 @@ class SafetyPolicyTest {
         assertEquals(SafetyState(SafetyMode.MedicalWaiting), moderate.state)
         val high = evaluate(phq9 = answers(9, 15), previous = streak, completedAtMillis = 1_000 + SEVEN_DAYS)
         assertEquals(SafetyState(SafetyMode.MedicalWaiting), high.state)
+    }
+
+    @Test
+    fun stillWaitingKindFollowsTheHysteresisStep() {
+        val waiting = SafetyState(SafetyMode.MedicalWaiting)
+        val entered = evaluate(phq9 = answers(9, 15))
+        assertNull(SafetyPolicy.stillWaitingKind(SafetyState(), entered))
+
+        val first = evaluate(previous = waiting, completedAtMillis = 1_000)
+        assertEquals(StillWaitingKind.FirstLow, SafetyPolicy.stillWaitingKind(waiting, first))
+
+        val tooEarly = evaluate(previous = first.state, completedAtMillis = 1_000 + SIX_DAYS)
+        assertEquals(StillWaitingKind.LowTooSoon, SafetyPolicy.stillWaitingKind(first.state, tooEarly))
+
+        val recovered = evaluate(previous = first.state, completedAtMillis = 1_000 + SEVEN_DAYS)
+        assertNull(SafetyPolicy.stillWaitingKind(first.state, recovered))
+
+        val streak = SafetyState(SafetyMode.MedicalWaiting, firstLowAssessmentAtMillis = 1_000)
+        val moderate = evaluate(phq9 = answers(9, 10), previous = streak, completedAtMillis = 1_000 + SEVEN_DAYS)
+        assertEquals(StillWaitingKind.NotLowEnough, SafetyPolicy.stillWaitingKind(streak, moderate))
+        val high = evaluate(phq9 = answers(9, 15), previous = streak, completedAtMillis = 1_000 + SEVEN_DAYS)
+        assertEquals(StillWaitingKind.StillHigh, SafetyPolicy.stillWaitingKind(streak, high))
     }
 
     @Test

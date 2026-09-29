@@ -63,6 +63,7 @@ import com.anchor.app.relation.homeRelationPresentation
 import com.anchor.app.relation.homeRelationPreviewNote
 import com.anchor.app.relation.previewHomeRelation
 import com.anchor.app.onboarding.additionalPracticeUnlocked
+import com.anchor.app.onboarding.waitingReassessNotice
 import com.anchor.app.onboarding.oneThingLockBody
 import com.anchor.app.onboarding.practiceVisible
 import com.anchor.app.storage.AnchorStore
@@ -174,6 +175,10 @@ fun HomeScreen(
                     onChecklist = onSomaticChecklist,
                     onCameraLog = onCameraLog,
                     canReassessNow = canReassessNow,
+                    reassessBody = waitingReassessNotice(
+                        store.safetyState().firstLowAssessmentAtMillis,
+                        nowMillis(),
+                    ).body,
                     onReassess = onReassess,
                 )
             } else {
@@ -471,6 +476,7 @@ private fun MedicalWaitingHome(
     onChecklist: () -> Unit,
     onCameraLog: () -> Unit,
     canReassessNow: Boolean,
+    reassessBody: String,
     onReassess: () -> Unit,
 ) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
@@ -524,7 +530,7 @@ private fun MedicalWaitingHome(
         ToolRow("单", homeWaitingChecklistTitle, homeWaitingChecklistBody, onChecklist)
         ToolRow("记", homeWaitingJournalTitle, homeWaitingJournalBody, onCameraLog)
         if (canReassessNow) {
-            ToolRow("评", homeWaitingReassessTitle, homeWaitingReassessBody, onReassess)
+            ToolRow("评", homeWaitingReassessTitle, reassessBody, onReassess)
         }
     }
 }

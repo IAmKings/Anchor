@@ -6,15 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -25,7 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -102,25 +99,25 @@ private fun RelationHub(
     onAltruism: () -> Unit,
     onClose: () -> Unit,
 ) {
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        AnchorBackButton(onClick = onClose, label = relationBackLabel, modifier = Modifier.align(Alignment.End))
-        Text(relationHubTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text(relationHubBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
-        if (showInventory) {
-            HubButton(inventoryTitle, inventoryHint, onInventory)
-            HubButton(ledgerTitle, ledgerHint, onLedger)
+    AnchorBackBar(onBack = onClose, label = relationBackLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            Text(relationHubTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Text(relationHubBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            if (showInventory) {
+                HubButton(inventoryTitle, inventoryHint, onInventory)
+                HubButton(ledgerTitle, ledgerHint, onLedger)
+            }
+            if (showAltruism) {
+                HubButton(altruismTitle, altruismHubHint, onAltruism)
+            }
+            Text(leavingCopy, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
         }
-        if (showAltruism) {
-            HubButton(altruismTitle, altruismHubHint, onAltruism)
-        }
-        Text(leavingCopy, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
     }
 }
 
@@ -151,39 +148,39 @@ private fun InventoryScreen(
     var name by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val contacts = remember(revision) { store.relationContacts() }
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .imePadding()
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        AnchorBackButton(onClick = onBack, label = relationBackLabel)
-        Text(inventoryTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text(inventoryHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
-        OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(inventoryNameLabel) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), singleLine = true)
-        OutlinedTextField(value = note, onValueChange = { note = it }, label = { Text(inventoryNoteLabel) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), singleLine = true)
-        Button(
-            onClick = {
-                store.addRelationContact(name, note, nowMillis())
-                name = ""
-                note = ""
-                onChanged()
-            },
-            enabled = name.isNotBlank(),
-            modifier = Modifier.fillMaxWidth().heightIn(min = RelationActionMinHeight),
-            shape = RoundedCornerShape(12.dp),
-        ) { Text(addContactLabel, fontSize = 17.sp) }
-        contacts.forEach { contact ->
-            ContactCard(contact, onMonitor = { yes ->
-                store.setRelationMonitorsSelf(contact.id, yes)
-                onChanged()
-            })
+    AnchorBackBar(onBack = onBack, label = relationBackLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .imePadding()
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            Text(inventoryTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Text(inventoryHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(inventoryNameLabel) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), singleLine = true)
+            OutlinedTextField(value = note, onValueChange = { note = it }, label = { Text(inventoryNoteLabel) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), singleLine = true)
+            Button(
+                onClick = {
+                    store.addRelationContact(name, note, nowMillis())
+                    name = ""
+                    note = ""
+                    onChanged()
+                },
+                enabled = name.isNotBlank(),
+                modifier = Modifier.fillMaxWidth().heightIn(min = RelationActionMinHeight),
+                shape = RoundedCornerShape(12.dp),
+            ) { Text(addContactLabel, fontSize = 17.sp) }
+            contacts.forEach { contact ->
+                ContactCard(contact, onMonitor = { yes ->
+                    store.setRelationMonitorsSelf(contact.id, yes)
+                    onChanged()
+                })
+            }
+            Text(leavingCopy, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
+            Spacer(Modifier.height(16.dp))
         }
-        Text(leavingCopy, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
-        Spacer(Modifier.height(16.dp))
     }
 }
 
@@ -221,57 +218,57 @@ private fun LedgerScreen(
     val contacts = remember(revision) { store.relationContacts() }
     val energy = remember(revision) { store.relationEnergy() }
     var selectedId by remember { mutableStateOf(contacts.firstOrNull()?.id) }
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        AnchorBackButton(onClick = onBack, label = relationBackLabel)
-        Text(ledgerTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text(ledgerHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
-        if (contacts.isEmpty()) {
-            Text(ledgerEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
-        } else {
-            contacts.forEach { contact ->
-                ChoiceChip(contact.name, selectedId == contact.id, Modifier.fillMaxWidth()) { selectedId = contact.id }
+    AnchorBackBar(onBack = onBack, label = relationBackLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            Text(ledgerTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Text(ledgerHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            if (contacts.isEmpty()) {
+                Text(ledgerEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+            } else {
+                contacts.forEach { contact ->
+                    ChoiceChip(contact.name, selectedId == contact.id, Modifier.fillMaxWidth()) { selectedId = contact.id }
+                }
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = {
+                            selectedId?.let { store.addRelationEnergy(it, EnergyMark.Filled, nowMillis()); onChanged() }
+                        },
+                        enabled = selectedId != null,
+                        modifier = Modifier.weight(1f).heightIn(min = RelationActionMinHeight),
+                        shape = RoundedCornerShape(12.dp),
+                    ) { Text(filledLabel, fontSize = 17.sp) }
+                    OutlinedButton(
+                        onClick = {
+                            selectedId?.let { store.addRelationEnergy(it, EnergyMark.Drained, nowMillis()); onChanged() }
+                        },
+                        enabled = selectedId != null,
+                        modifier = Modifier.weight(1f).heightIn(min = RelationActionMinHeight),
+                        shape = RoundedCornerShape(12.dp),
+                    ) { Text(drainedLabel, fontSize = 17.sp) }
+                }
             }
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(
-                    onClick = {
-                        selectedId?.let { store.addRelationEnergy(it, EnergyMark.Filled, nowMillis()); onChanged() }
-                    },
-                    enabled = selectedId != null,
-                    modifier = Modifier.weight(1f).heightIn(min = RelationActionMinHeight),
-                    shape = RoundedCornerShape(12.dp),
-                ) { Text(filledLabel, fontSize = 17.sp) }
-                OutlinedButton(
-                    onClick = {
-                        selectedId?.let { store.addRelationEnergy(it, EnergyMark.Drained, nowMillis()); onChanged() }
-                    },
-                    enabled = selectedId != null,
-                    modifier = Modifier.weight(1f).heightIn(min = RelationActionMinHeight),
-                    shape = RoundedCornerShape(12.dp),
-                ) { Text(drainedLabel, fontSize = 17.sp) }
+            energy.take(8).forEach { entry ->
+                val name = contacts.firstOrNull { it.id == entry.contactId }?.name ?: deletedContactLabel
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = CardShape,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+                ) {
+                    Text(
+                        energyRowCopy(name, entry.mark),
+                        Modifier.fillMaxWidth().padding(16.dp),
+                        fontSize = 15.sp,
+                    )
+                }
             }
+            Spacer(Modifier.height(16.dp))
         }
-        energy.take(8).forEach { entry ->
-            val name = contacts.firstOrNull { it.id == entry.contactId }?.name ?: deletedContactLabel
-            Surface(
-                color = MaterialTheme.colorScheme.surface,
-                shape = CardShape,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-            ) {
-                Text(
-                    energyRowCopy(name, entry.mark),
-                    Modifier.fillMaxWidth().padding(16.dp),
-                    fontSize = 15.sp,
-                )
-            }
-        }
-        Spacer(Modifier.height(16.dp))
     }
 }
 
@@ -286,73 +283,73 @@ private fun AltruismScreen(
     val draws = remember(revision) { store.altruismDraws() }
     val open = draws.firstOrNull { it.felt == null }
     val pause = shouldPauseAltruism(draws)
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        AnchorBackButton(onClick = onBack, label = relationBackLabel)
-        Text(altruismTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text(peoplePleasingHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
-        if (pause) {
-            Surface(color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f), shape = CardShape) {
-                Text(pauseAltruismCopy(), Modifier.padding(16.dp), fontSize = 15.sp, lineHeight = 24.sp)
-            }
-        }
-        if (open == null) {
-            Button(
-                onClick = {
-                    val card = nextAltruismCard(draws, preferSocial = false)
-                    store.addAltruismDraw(card.title, card.kind, nowMillis())
-                    onChanged()
-                },
-                modifier = Modifier.fillMaxWidth().heightIn(min = RelationActionMinHeight),
-                shape = RoundedCornerShape(12.dp),
-            ) { Text(drawNonSocialLabel, fontSize = 17.sp) }
-            OutlinedButton(
-                onClick = {
-                    val card = nextAltruismCard(draws, preferSocial = true)
-                    store.addAltruismDraw(card.title, card.kind, nowMillis())
-                    onChanged()
-                },
-                enabled = !pause,
-                modifier = Modifier.fillMaxWidth().heightIn(min = RelationActionMinHeight),
-                shape = RoundedCornerShape(12.dp),
-            ) { Text(drawSocialLabel, fontSize = 17.sp) }
-        } else {
-            Surface(
-                color = MaterialTheme.colorScheme.surface,
-                shape = CardShape,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-            ) {
-                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(
-                        if (open.kind == AltruismKind.NonSocial) nonSocialKindLabel else socialKindLabel,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 14.sp,
-                    )
-                    Text(open.title, fontSize = 20.sp, fontWeight = FontWeight.SemiBold, lineHeight = 28.sp)
+    AnchorBackBar(onBack = onBack, label = relationBackLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            Text(altruismTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Text(peoplePleasingHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            if (pause) {
+                Surface(color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f), shape = CardShape) {
+                    Text(pauseAltruismCopy(), Modifier.padding(16.dp), fontSize = 15.sp, lineHeight = 24.sp)
                 }
             }
-            Text(feelPrompt, fontSize = 15.sp)
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            if (open == null) {
                 Button(
-                    onClick = { store.completeAltruismDraw(open.id, AltruismFeel.Lighter, nowMillis()); onChanged() },
-                    modifier = Modifier.weight(1f).heightIn(min = RelationActionMinHeight),
+                    onClick = {
+                        val card = nextAltruismCard(draws, preferSocial = false)
+                        store.addAltruismDraw(card.title, card.kind, nowMillis())
+                        onChanged()
+                    },
+                    modifier = Modifier.fillMaxWidth().heightIn(min = RelationActionMinHeight),
                     shape = RoundedCornerShape(12.dp),
-                ) { Text(lighterLabel, fontSize = 17.sp) }
+                ) { Text(drawNonSocialLabel, fontSize = 17.sp) }
                 OutlinedButton(
-                    onClick = { store.completeAltruismDraw(open.id, AltruismFeel.Tighter, nowMillis()); onChanged() },
-                    modifier = Modifier.weight(1f).heightIn(min = RelationActionMinHeight),
+                    onClick = {
+                        val card = nextAltruismCard(draws, preferSocial = true)
+                        store.addAltruismDraw(card.title, card.kind, nowMillis())
+                        onChanged()
+                    },
+                    enabled = !pause,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = RelationActionMinHeight),
                     shape = RoundedCornerShape(12.dp),
-                ) { Text(tighterLabel, fontSize = 17.sp) }
+                ) { Text(drawSocialLabel, fontSize = 17.sp) }
+            } else {
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = CardShape,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+                ) {
+                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            if (open.kind == AltruismKind.NonSocial) nonSocialKindLabel else socialKindLabel,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontSize = 14.sp,
+                        )
+                        Text(open.title, fontSize = 20.sp, fontWeight = FontWeight.SemiBold, lineHeight = 28.sp)
+                    }
+                }
+                Text(feelPrompt, fontSize = 15.sp)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(
+                        onClick = { store.completeAltruismDraw(open.id, AltruismFeel.Lighter, nowMillis()); onChanged() },
+                        modifier = Modifier.weight(1f).heightIn(min = RelationActionMinHeight),
+                        shape = RoundedCornerShape(12.dp),
+                    ) { Text(lighterLabel, fontSize = 17.sp) }
+                    OutlinedButton(
+                        onClick = { store.completeAltruismDraw(open.id, AltruismFeel.Tighter, nowMillis()); onChanged() },
+                        modifier = Modifier.weight(1f).heightIn(min = RelationActionMinHeight),
+                        shape = RoundedCornerShape(12.dp),
+                    ) { Text(tighterLabel, fontSize = 17.sp) }
+                }
             }
+            Text(altruismFeelCopy(draws), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            Spacer(Modifier.height(16.dp))
         }
-        Text(altruismFeelCopy(draws), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
-        Spacer(Modifier.height(16.dp))
     }
 }
 

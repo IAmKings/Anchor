@@ -56,6 +56,8 @@ Bands (do not "simplify"):
 
 Hysteresis (`recoverIfEligible`): leaving `MedicalWaiting` requires **two** low assessments (PHQ ≤ 9 **and** GAD ≤ 9) whose timestamps are **≥ 7 days** apart. A high score in between resets to waiting without a first-low timestamp. `firstLowAssessmentAtMillis == null` means "this is the first low".
 
+`stillWaitingKind` names the step when the outcome is still waiting: first low, low but under 7 days, not yet both ≤ 9, or still ≥ 15. It does not change `evaluate`. A screen must not re-derive that step from raw answers.
+
 `keywordHit` without `clarification` is the only path that does **not** move state. Providing `clarification` when `keywordHit` is false is illegal.
 
 Item 9 crisis **skips GAD-7** in the first-run UI (`shouldSkipGad7`). The policy still requires a 7-length GAD list; onboarding fills zeros when skipped.

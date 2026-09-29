@@ -7,15 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,7 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -69,71 +66,71 @@ fun RhythmScreen(
     val wakeMinutes = remember(entries) { wakeMinutesOldestFirst(entries, localMinuteOfDay) }
     val stability = remember(entries) { wakeStabilityMinutes(entries, localMinuteOfDay) }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        AnchorBackButton(onClick = onClose, label = rhythmBackLabel, modifier = Modifier.align(Alignment.End))
-        Text(rhythmTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text(rhythmIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+    AnchorBackBar(onBack = onClose, label = rhythmBackLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(rhythmTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Text(rhythmIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
 
-        TimeCard(
-            title = rhythmWakeTitle,
-            glyph = rhythmWakeGlyph,
-            time = wakeAt,
-            caption = rhythmWakeCaption(wakeAt != null),
-            recordDescription = rhythmWakeRecordDescription,
-            formatLocalTime = formatLocalTime,
-            onRecord = { wakeAt = nowMillis(); saved = false },
-        )
-        TimeCard(
-            title = rhythmLightTitle,
-            glyph = rhythmLightGlyph,
-            time = lightAt,
-            caption = rhythmLightCaption(lightAt != null),
-            recordDescription = rhythmLightRecordDescription,
-            formatLocalTime = formatLocalTime,
-            onRecord = { lightAt = nowMillis(); saved = false },
-        )
-        if (lightIsLaterThanOneHour(wakeAt, lightAt)) {
-            Text(lateLightCopy(), color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp, lineHeight = 22.sp)
-        }
-        Button(
-            onClick = {
-                store.addRhythmEntry(wakeAt, lightAt, nowMillis())
-                wakeAt = null
-                lightAt = null
-                saved = true
-                revision++
-            },
-            enabled = wakeAt != null || lightAt != null,
-            modifier = Modifier.fillMaxWidth().heightIn(min = RhythmActionMinHeight),
-            shape = RoundedCornerShape(12.dp),
-        ) { Text(rhythmSaveLabel, fontSize = 17.sp) }
-        if (saved) Text(rhythmSavedCopy(), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
-
-        StabilityCard(stabilityMinutes = stability, points = wakeMinutes)
-
-        Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = CardShape) {
-            Text(
-                rhythmBedHint,
-                Modifier.padding(16.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 15.sp,
-                lineHeight = 24.sp,
+            TimeCard(
+                title = rhythmWakeTitle,
+                glyph = rhythmWakeGlyph,
+                time = wakeAt,
+                caption = rhythmWakeCaption(wakeAt != null),
+                recordDescription = rhythmWakeRecordDescription,
+                formatLocalTime = formatLocalTime,
+                onRecord = { wakeAt = nowMillis(); saved = false },
             )
-        }
+            TimeCard(
+                title = rhythmLightTitle,
+                glyph = rhythmLightGlyph,
+                time = lightAt,
+                caption = rhythmLightCaption(lightAt != null),
+                recordDescription = rhythmLightRecordDescription,
+                formatLocalTime = formatLocalTime,
+                onRecord = { lightAt = nowMillis(); saved = false },
+            )
+            if (lightIsLaterThanOneHour(wakeAt, lightAt)) {
+                Text(lateLightCopy(), color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp, lineHeight = 22.sp)
+            }
+            Button(
+                onClick = {
+                    store.addRhythmEntry(wakeAt, lightAt, nowMillis())
+                    wakeAt = null
+                    lightAt = null
+                    saved = true
+                    revision++
+                },
+                enabled = wakeAt != null || lightAt != null,
+                modifier = Modifier.fillMaxWidth().heightIn(min = RhythmActionMinHeight),
+                shape = RoundedCornerShape(12.dp),
+            ) { Text(rhythmSaveLabel, fontSize = 17.sp) }
+            if (saved) Text(rhythmSavedCopy(), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
 
-        Text(rhythmRecentTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-        if (entries.isEmpty()) {
-            Text(rhythmEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            StabilityCard(stabilityMinutes = stability, points = wakeMinutes)
+
+            Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = CardShape) {
+                Text(
+                    rhythmBedHint,
+                    Modifier.padding(16.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 15.sp,
+                    lineHeight = 24.sp,
+                )
+            }
+
+            Text(rhythmRecentTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+            if (entries.isEmpty()) {
+                Text(rhythmEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            entries.take(7).forEach { entry -> HistoryRow(entry, formatLocalTime) }
+            Spacer(Modifier.height(24.dp))
         }
-        entries.take(7).forEach { entry -> HistoryRow(entry, formatLocalTime) }
-        Spacer(Modifier.height(24.dp))
     }
 }
 

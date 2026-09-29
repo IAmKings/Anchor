@@ -10,6 +10,8 @@ data class AssessmentResult(
 )
 
 enum class SafetyMode { Normal, MedicalWaiting }
+
+enum class StillWaitingKind { FirstLow, LowTooSoon, NotLowEnough, StillHigh }
 enum class Clarification { NotSelf, Self, Uncertain }
 
 data class SafetyState(
@@ -74,6 +76,20 @@ object SafetyPolicy {
             else -> SafetyAction.Continue
         }
         return SafetyOutcome(assessment, action, nextState)
+    }
+
+    fun stillWaitingKind(previous: SafetyState, outcome: SafetyOutcome): StillWaitingKind? {
+        if (previous.mode != SafetyMode.MedicalWaiting || outcome.action != SafetyAction.MedicalWaiting) {
+            return null
+        }
+        val low = outcome.assessment.phq9Score <= 9 && outcome.assessment.gad7Score <= 9
+        val high = outcome.assessment.phq9Score >= 15 || outcome.assessment.gad7Score >= 15
+        return when {
+            high -> StillWaitingKind.StillHigh
+            !low -> StillWaitingKind.NotLowEnough
+            previous.firstLowAssessmentAtMillis == null -> StillWaitingKind.FirstLow
+            else -> StillWaitingKind.LowTooSoon
+        }
     }
 
     fun phqBand(score: Int): AssessmentBand = when (score) {

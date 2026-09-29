@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,7 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -100,39 +97,39 @@ fun EmotionCardsScreen(
     }
 
     val cards = remember(revision) { store.emotionCards() }
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        AnchorBackButton(onClick = onClose, label = emotionBackLabel, modifier = Modifier.align(Alignment.End))
-        Text(emotionListTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text(
-            emotionListIntro,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 15.sp,
-            lineHeight = 24.sp,
-        )
-        Button(
-            onClick = { composing = true },
-            modifier = Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight),
-            shape = RoundedCornerShape(12.dp),
+    AnchorBackBar(onBack = onClose, label = emotionBackLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text(emotionWriteLabel, fontSize = 17.sp)
+            Text(emotionListTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Text(
+                emotionListIntro,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 15.sp,
+                lineHeight = 24.sp,
+            )
+            Button(
+                onClick = { composing = true },
+                modifier = Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight),
+                shape = RoundedCornerShape(12.dp),
+            ) {
+                Text(emotionWriteLabel, fontSize = 17.sp)
+            }
+            if (cards.isEmpty()) {
+                Text(emotionEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
+            }
+            cards.forEach { card ->
+                SavedEmotionCard(card, onPassed = {
+                    store.markEmotionCardPassed(card.id, nowMillis())
+                    revision++
+                })
+            }
+            Spacer(Modifier.height(24.dp))
         }
-        if (cards.isEmpty()) {
-            Text(emotionEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
-        }
-        cards.forEach { card ->
-            SavedEmotionCard(card, onPassed = {
-                store.markEmotionCardPassed(card.id, nowMillis())
-                revision++
-            })
-        }
-        Spacer(Modifier.height(24.dp))
     }
 }
 
@@ -180,112 +177,112 @@ private fun NewEmotionCard(onCancel: () -> Unit, onSave: (String, String, String
     var hardestPart by remember { mutableStateOf("") }
     val search = remember(query) { searchEmotions(query) }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        TextButton(onClick = onCancel, modifier = Modifier.align(Alignment.End)) { Text(emotionCancelLabel) }
-        if (selected == null) {
-            Text(emotionPickTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-            Text(
-                emotionPickIntro,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 15.sp,
-                lineHeight = 24.sp,
-            )
-            OutlinedTextField(
-                value = query,
-                onValueChange = { query = it },
-                label = { Text(emotionSearchLabel) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = CardShape,
-            )
-            if (search.vague) {
-                HintBanner(emotionVagueHint)
-            }
-            if (search.unmatched) {
-                HintBanner(emotionUnmatchedHint)
-            }
-            search.groups.forEach { group ->
-                Text(group.title, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                group.words.chunked(2).forEach { row ->
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        row.forEach { word ->
-                            Surface(
-                                onClick = { selected = word },
-                                shape = CardShape,
-                                color = MaterialTheme.colorScheme.surface,
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-                                modifier = Modifier.weight(1f).heightIn(min = EmotionActionMinHeight),
-                            ) {
-                                Box(
-                                    Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight).padding(horizontal = 12.dp),
-                                    contentAlignment = Alignment.CenterStart,
+    AnchorBackBar(onBack = onCancel, label = emotionCancelLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            if (selected == null) {
+                Text(emotionPickTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+                Text(
+                    emotionPickIntro,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 15.sp,
+                    lineHeight = 24.sp,
+                )
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    label = { Text(emotionSearchLabel) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = CardShape,
+                )
+                if (search.vague) {
+                    HintBanner(emotionVagueHint)
+                }
+                if (search.unmatched) {
+                    HintBanner(emotionUnmatchedHint)
+                }
+                search.groups.forEach { group ->
+                    Text(group.title, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                    group.words.chunked(2).forEach { row ->
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            row.forEach { word ->
+                                Surface(
+                                    onClick = { selected = word },
+                                    shape = CardShape,
+                                    color = MaterialTheme.colorScheme.surface,
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+                                    modifier = Modifier.weight(1f).heightIn(min = EmotionActionMinHeight),
                                 ) {
-                                    Text(word, fontSize = 16.sp)
+                                    Box(
+                                        Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight).padding(horizontal = 12.dp),
+                                        contentAlignment = Alignment.CenterStart,
+                                    ) {
+                                        Text(word, fontSize = 16.sp)
+                                    }
                                 }
                             }
+                            if (row.size == 1) Spacer(Modifier.weight(1f))
                         }
-                        if (row.size == 1) Spacer(Modifier.weight(1f))
                     }
                 }
-            }
-        } else {
-            Surface(
-                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f),
-                shape = RoundedCornerShape(999.dp),
-            ) {
-                Text(
-                    selected!!,
-                    Modifier.padding(horizontal = 14.dp, vertical = 6.dp).semantics { heading() },
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-            TextButton(onClick = { selected = null }) { Text(emotionSwapWord) }
-            OutlinedTextField(
-                value = event,
-                onValueChange = { event = it },
-                label = { Text(emotionEventLabel) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = CardShape,
-                minLines = 2,
-            )
-            OutlinedTextField(
-                value = hardestPart,
-                onValueChange = { hardestPart = it },
-                label = { Text(emotionHardestLabel) },
-                modifier = Modifier.fillMaxWidth(),
-                shape = CardShape,
-                minLines = 2,
-            )
-            if (event.isNotBlank() && hardestPart.isNotBlank()) {
+            } else {
                 Surface(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = CardShape,
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f),
+                    shape = RoundedCornerShape(999.dp),
                 ) {
                     Text(
-                        emotionCardSentence(selected!!, event, hardestPart),
-                        Modifier.padding(16.dp),
-                        fontSize = 16.sp,
-                        lineHeight = 26.sp,
+                        selected!!,
+                        Modifier.padding(horizontal = 14.dp, vertical = 6.dp).semantics { heading() },
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.SemiBold,
                     )
                 }
+                TextButton(onClick = { selected = null }) { Text(emotionSwapWord) }
+                OutlinedTextField(
+                    value = event,
+                    onValueChange = { event = it },
+                    label = { Text(emotionEventLabel) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = CardShape,
+                    minLines = 2,
+                )
+                OutlinedTextField(
+                    value = hardestPart,
+                    onValueChange = { hardestPart = it },
+                    label = { Text(emotionHardestLabel) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = CardShape,
+                    minLines = 2,
+                )
+                if (event.isNotBlank() && hardestPart.isNotBlank()) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = CardShape,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+                    ) {
+                        Text(
+                            emotionCardSentence(selected!!, event, hardestPart),
+                            Modifier.padding(16.dp),
+                            fontSize = 16.sp,
+                            lineHeight = 26.sp,
+                        )
+                    }
+                }
+                Button(
+                    onClick = { onSave(selected!!, event, hardestPart) },
+                    enabled = event.isNotBlank() && hardestPart.isNotBlank(),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight),
+                    shape = RoundedCornerShape(12.dp),
+                ) { Text(emotionSaveLabel, fontSize = 17.sp) }
             }
-            Button(
-                onClick = { onSave(selected!!, event, hardestPart) },
-                enabled = event.isNotBlank() && hardestPart.isNotBlank(),
-                modifier = Modifier.fillMaxWidth().heightIn(min = EmotionActionMinHeight),
-                shape = RoundedCornerShape(12.dp),
-            ) { Text(emotionSaveLabel, fontSize = 17.sp) }
+            Spacer(Modifier.height(24.dp))
         }
-        Spacer(Modifier.height(24.dp))
     }
 }
 

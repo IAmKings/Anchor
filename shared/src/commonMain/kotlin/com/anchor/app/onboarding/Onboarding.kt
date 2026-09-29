@@ -72,7 +72,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.ui.AnchorAppIcon
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackRow
 import com.anchor.app.ui.AnchorGlyph
 import com.anchor.app.safety.SafetyAction
 import com.anchor.app.safety.SafetyOutcome
@@ -248,19 +248,19 @@ private fun Welcome(
     onStart: () -> Unit,
 ) {
     var legal by remember { mutableStateOf<Pair<String, String>?>(null) }
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
+    Column(Modifier.fillMaxSize()) {
         if (allowClose) {
-            TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("关闭") }
-        } else {
-            Spacer(Modifier.height(36.dp))
+            AnchorBackRow(onBack = onClose)
         }
+        Column(
+            Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .then(if (allowClose) Modifier else Modifier.windowInsetsPadding(WindowInsets.statusBars))
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
         Spacer(Modifier.height(24.dp))
         OnboardingMark(titleSize = 22.sp, asHeading = true)
         Spacer(Modifier.height(8.dp))
@@ -376,6 +376,7 @@ private fun Welcome(
             }
         }
         Spacer(Modifier.height(24.dp))
+        }
     }
     legal?.let { (title, body) ->
         AlertDialog(
@@ -416,12 +417,7 @@ internal fun ScaleForm(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             if (onBack != null) {
-                AnchorBackButton(
-                    onClick = onBack,
-                    modifier = Modifier
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .padding(horizontal = 8.dp),
-                )
+                AnchorBackRow(onBack = onBack)
             }
         },
         bottomBar = {
@@ -557,10 +553,21 @@ internal fun ResultStep(
     onOpenGuide: () -> Unit,
     onOpenChecklist: () -> Unit,
     onFinish: () -> Unit,
+    previous: SafetyState = SafetyState(),
+    nowMillis: Long = 0,
 ) {
     when (outcome.action) {
         SafetyAction.CrisisGuidance -> CrisisResult(outcome, youth, region, onOpenGuide, onOpenChecklist, onFinish)
-        SafetyAction.MedicalWaiting -> MedicalResult(outcome, youth, region, onOpenGuide, onOpenChecklist, onFinish)
+        SafetyAction.MedicalWaiting -> MedicalResult(
+            outcome,
+            youth,
+            region,
+            onOpenGuide,
+            onOpenChecklist,
+            onFinish,
+            previous,
+            nowMillis,
+        )
         else -> MildResult(outcome, onChooseAnchor)
     }
 }
@@ -630,7 +637,10 @@ private fun MedicalResult(
     onOpenGuide: () -> Unit,
     onOpenChecklist: () -> Unit,
     onFinish: () -> Unit,
+    previous: SafetyState,
+    nowMillis: Long,
 ) {
+    val staying = stillWaitingResult(previous, outcome, nowMillis)
     val resource = crisisResource(region, youth)
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -645,7 +655,7 @@ private fun MedicalResult(
                     onClick = onFinish,
                     modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                     shape = CardShape,
-                ) { Text(enterMedicalWaitingLabel, fontSize = 17.sp) }
+                ) { Text(staying?.button ?: enterMedicalWaitingLabel, fontSize = 17.sp) }
             }
         },
     ) { padding ->
@@ -665,8 +675,20 @@ private fun MedicalResult(
                     Text("${outcome.assessment.phq9Score}", color = MaterialTheme.colorScheme.secondary, fontFamily = FontFamily.Monospace, fontSize = 64.sp)
                 }
             }
-            Surface(color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(999.dp)) {
-                Text(resultBadge(outcome.action), Modifier.padding(horizontal = 16.dp, vertical = 6.dp), color = MaterialTheme.colorScheme.onSecondary, fontSize = 14.sp)
+            if (staying == null) {
+                Surface(color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(999.dp)) {
+                    Text(resultBadge(outcome.action), Modifier.padding(horizontal = 16.dp, vertical = 6.dp), color = MaterialTheme.colorScheme.onSecondary, fontSize = 14.sp)
+                }
+            } else {
+                Text(staying.phqLine, fontSize = 16.sp, textAlign = TextAlign.Center)
+                Text(staying.gadLine, fontSize = 16.sp, textAlign = TextAlign.Center)
+                Text(
+                    staying.body,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 15.sp,
+                    lineHeight = 24.sp,
+                    textAlign = TextAlign.Center,
+                )
             }
             QuoteCard()
             WaitingActions(onOpenGuide, onOpenChecklist)
@@ -838,13 +860,7 @@ fun FirstAnchorChoice(onConfirm: (FirstAnchor) -> Unit, onBack: (() -> Unit)? = 
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             if (onBack != null) {
-                AnchorBackButton(
-                    onClick = onBack,
-                    showIcon = true,
-                    modifier = Modifier
-                        .windowInsetsPadding(WindowInsets.statusBars)
-                        .padding(horizontal = 8.dp),
-                )
+                AnchorBackRow(onBack = onBack)
             }
         },
         bottomBar = {

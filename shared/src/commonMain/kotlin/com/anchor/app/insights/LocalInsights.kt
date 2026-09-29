@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -22,9 +19,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -83,113 +79,113 @@ fun LocalInsightsScreen(
     val predictionBias = averagePredictionBias(actions)
     val averages = movingAverage(wakeMinutes, window = 7)
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        AnchorBackButton(onClick = onClose, label = insightsBackLabel, modifier = Modifier.align(Alignment.End))
-        Text(insightsTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
-        Text(
-            insightsIntro,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 15.sp,
-            lineHeight = 24.sp,
-        )
-        InsightCard(
-            title = insightsWakeTitle,
-            value = stabilityCopy(stability),
-            detail = insightsWakeDetail(rhythmEntries.count { it.wakeAtMillis != null }.coerceAtMost(30)),
+    AnchorBackBar(onBack = onClose, label = insightsBackLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            if (wakeMinutes.size >= 2) Sparkline(wakeMinutes.map { it.toFloat() }, MaterialTheme.colorScheme.primary)
-        }
-        InsightCard(
-            title = insightsAverageTitle,
-            value = if (averages.size >= 2) insightsAverageReady else interpretationNotEnough,
-            detail = insightsAverageDetail,
-        ) {
-            if (averages.size >= 2) Sparkline(averages.map { it.toFloat() }, MaterialTheme.colorScheme.primary)
-        }
-        InsightCard(
-            title = insightsBiasTitle,
-            value = biasCopy(predictionBias),
-            detail = insightsBiasDetail,
-        ) {
-            if (pairs.isNotEmpty()) BiasChart(pairs.take(6).reversed())
-            OutlinedButton(
-                onClick = onOpenHistory,
-                modifier = Modifier.fillMaxWidth().heightIn(min = InsightsActionMinHeight),
-                shape = RoundedCornerShape(12.dp),
-            ) {
-                Text(historyOpenLabel, fontSize = 17.sp)
-            }
-        }
-        InsightCard(
-            title = insightsWorryAcceptedTitle,
-            value = worryAcceptedCopy(store.worryCards()),
-            detail = insightsWorryAcceptedDetail,
-        )
-        InsightCard(
-            title = worryUnsolvableTitle,
-            value = worryUnsolvableCopy(store.worryCards()),
-            detail = worryUnsolvableDetail,
-        )
-        run {
-            val logs = store.cameraLogs()
-            val hits = interpretationHits(logs)
+            Text(insightsTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
+            Text(
+                insightsIntro,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 15.sp,
+                lineHeight = 24.sp,
+            )
             InsightCard(
-                title = interpretationTitle,
-                value = interpretationCopy(interpretationSampleCount(logs), hits),
-                detail = interpretationDetail,
+                title = insightsWakeTitle,
+                value = stabilityCopy(stability),
+                detail = insightsWakeDetail(rhythmEntries.count { it.wakeAtMillis != null }.coerceAtMost(30)),
             ) {
-                hits.forEach { hit ->
-                    Text(interpretationHitLine(hit), fontSize = 15.sp, lineHeight = 22.sp)
+                if (wakeMinutes.size >= 2) Sparkline(wakeMinutes.map { it.toFloat() }, MaterialTheme.colorScheme.primary)
+            }
+            InsightCard(
+                title = insightsAverageTitle,
+                value = if (averages.size >= 2) insightsAverageReady else interpretationNotEnough,
+                detail = insightsAverageDetail,
+            ) {
+                if (averages.size >= 2) Sparkline(averages.map { it.toFloat() }, MaterialTheme.colorScheme.primary)
+            }
+            InsightCard(
+                title = insightsBiasTitle,
+                value = biasCopy(predictionBias),
+                detail = insightsBiasDetail,
+            ) {
+                if (pairs.isNotEmpty()) BiasChart(pairs.take(6).reversed())
+                OutlinedButton(
+                    onClick = onOpenHistory,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = InsightsActionMinHeight),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(historyOpenLabel, fontSize = 17.sp)
                 }
             }
-        }
-        InsightCard(
-            title = insightsMonitorTitle,
-            value = monitorCopy(store.relationContacts()),
-            detail = insightsMonitorDetail,
-        )
-        run {
-            val energy = store.relationEnergy()
-            val bars = energyCountBars(energy)
-            val series = energyCycleSeries(energy)
             InsightCard(
-                title = insightsEnergyTitle,
-                value = energyCopy(energy),
-                detail = insightsEnergyDetail,
-            ) {
-                if (series.size >= 2) Sparkline(series, MaterialTheme.colorScheme.primary)
-                CountBars(bars)
-            }
-        }
-        run {
-            val draws = store.altruismDraws()
-            val bars = altruismCountBars(draws)
-            val series = altruismCycleSeries(draws)
+                title = insightsWorryAcceptedTitle,
+                value = worryAcceptedCopy(store.worryCards()),
+                detail = insightsWorryAcceptedDetail,
+            )
             InsightCard(
-                title = insightsAltruismTitle,
-                value = altruismFeelCopy(draws),
-                detail = insightsAltruismDetail,
-            ) {
-                if (shouldPauseAltruism(draws)) {
-                    Surface(
-                        color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f),
-                        shape = CardShape,
-                    ) {
-                        Text(pauseAltruismCopy(), Modifier.padding(12.dp), fontSize = 14.sp, lineHeight = 22.sp)
+                title = worryUnsolvableTitle,
+                value = worryUnsolvableCopy(store.worryCards()),
+                detail = worryUnsolvableDetail,
+            )
+            run {
+                val logs = store.cameraLogs()
+                val hits = interpretationHits(logs)
+                InsightCard(
+                    title = interpretationTitle,
+                    value = interpretationCopy(interpretationSampleCount(logs), hits),
+                    detail = interpretationDetail,
+                ) {
+                    hits.forEach { hit ->
+                        Text(interpretationHitLine(hit), fontSize = 15.sp, lineHeight = 22.sp)
                     }
                 }
-                if (series.size >= 2) Sparkline(series, MaterialTheme.colorScheme.primary)
-                CountBars(bars)
             }
+            InsightCard(
+                title = insightsMonitorTitle,
+                value = monitorCopy(store.relationContacts()),
+                detail = insightsMonitorDetail,
+            )
+            run {
+                val energy = store.relationEnergy()
+                val bars = energyCountBars(energy)
+                val series = energyCycleSeries(energy)
+                InsightCard(
+                    title = insightsEnergyTitle,
+                    value = energyCopy(energy),
+                    detail = insightsEnergyDetail,
+                ) {
+                    if (series.size >= 2) Sparkline(series, MaterialTheme.colorScheme.primary)
+                    CountBars(bars)
+                }
+            }
+            run {
+                val draws = store.altruismDraws()
+                val bars = altruismCountBars(draws)
+                val series = altruismCycleSeries(draws)
+                InsightCard(
+                    title = insightsAltruismTitle,
+                    value = altruismFeelCopy(draws),
+                    detail = insightsAltruismDetail,
+                ) {
+                    if (shouldPauseAltruism(draws)) {
+                        Surface(
+                            color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f),
+                            shape = CardShape,
+                        ) {
+                            Text(pauseAltruismCopy(), Modifier.padding(12.dp), fontSize = 14.sp, lineHeight = 22.sp)
+                        }
+                    }
+                    if (series.size >= 2) Sparkline(series, MaterialTheme.colorScheme.primary)
+                    CountBars(bars)
+                }
+            }
+            Spacer(Modifier.height(16.dp))
         }
-        Spacer(Modifier.height(16.dp))
     }
 }
 

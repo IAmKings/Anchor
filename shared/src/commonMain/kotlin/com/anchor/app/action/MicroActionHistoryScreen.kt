@@ -6,15 +6,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,7 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import com.anchor.app.ui.AnchorBackButton
+import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,79 +56,79 @@ fun MicroActionHistoryScreen(
     val evidence = evidenceActions(store.microActions())
     val pairsOldestFirst = predictionPairs(evidence.sortedBy { it.completedAtMillis ?: 0L })
     val bias = averagePredictionBias(evidence)
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        AnchorBackButton(onClick = onClose, label = historyBackLabel, modifier = Modifier.align(Alignment.End))
-        Text(
-            historyEvidenceTitle,
-            Modifier.fillMaxWidth().semantics { heading() },
-            fontSize = 24.sp,
-            fontWeight = FontWeight.SemiBold,
-        )
-        Text(
-            historyEvidenceIntro,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 15.sp,
-            lineHeight = 24.sp,
-        )
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            SummaryCard(
-                modifier = Modifier.weight(1f),
-                label = historyBiasLabel,
-                value = biasCopy(bias),
+    AnchorBackBar(onBack = onClose, label = historyBackLabel) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                historyEvidenceTitle,
+                Modifier.fillMaxWidth().semantics { heading() },
+                fontSize = 24.sp,
+                fontWeight = FontWeight.SemiBold,
             )
-            SummaryCard(
-                modifier = Modifier.weight(1f),
-                label = historyOverestimateLabel,
-                value = historyOverestimateValue(overestimateCount(evidence)),
+            Text(
+                historyEvidenceIntro,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 15.sp,
+                lineHeight = 24.sp,
             )
-        }
-        if (pairsOldestFirst.isNotEmpty()) {
-            Surface(
-                color = MaterialTheme.colorScheme.surface,
-                shape = CardShape,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-            ) {
-                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(historyChartTitle, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
-                    PredictionLineChart(pairsOldestFirst)
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-                    ) {
-                        LegendDot(MaterialTheme.colorScheme.outline, historyPredictedLabel)
-                        LegendDot(MaterialTheme.colorScheme.primary, historyActualLabel)
-                    }
-                }
-            }
-            Text(historyListTitle, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-            evidence.forEach { action ->
-                EvidenceRow(
-                    title = action.title,
-                    stamp = action.completedAtMillis?.let(formatLocalStamp).orEmpty(),
-                    predicted = action.predictedDifficulty,
-                    actual = action.actualDifficulty,
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                SummaryCard(
+                    modifier = Modifier.weight(1f),
+                    label = historyBiasLabel,
+                    value = biasCopy(bias),
+                )
+                SummaryCard(
+                    modifier = Modifier.weight(1f),
+                    label = historyOverestimateLabel,
+                    value = historyOverestimateValue(overestimateCount(evidence)),
                 )
             }
-        } else {
-            Text(historyEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            if (pairsOldestFirst.isNotEmpty()) {
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = CardShape,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
+                ) {
+                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text(historyChartTitle, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                        PredictionLineChart(pairsOldestFirst)
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+                        ) {
+                            LegendDot(MaterialTheme.colorScheme.outline, historyPredictedLabel)
+                            LegendDot(MaterialTheme.colorScheme.primary, historyActualLabel)
+                        }
+                    }
+                }
+                Text(historyListTitle, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+                evidence.forEach { action ->
+                    EvidenceRow(
+                        title = action.title,
+                        stamp = action.completedAtMillis?.let(formatLocalStamp).orEmpty(),
+                        predicted = action.predictedDifficulty,
+                        actual = action.actualDifficulty,
+                    )
+                }
+            } else {
+                Text(historyEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            }
+            Text(
+                historyQuotedEvidence(),
+                Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 16.sp,
+                lineHeight = 26.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium,
+            )
+            Spacer(Modifier.height(24.dp))
         }
-        Text(
-            historyQuotedEvidence(),
-            Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 16.sp,
-            lineHeight = 26.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Medium,
-        )
-        Spacer(Modifier.height(24.dp))
     }
 }
 

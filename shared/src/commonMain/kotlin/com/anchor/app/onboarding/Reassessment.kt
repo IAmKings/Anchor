@@ -22,6 +22,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -47,8 +48,10 @@ import com.anchor.app.insights.stabilityCopy
 import com.anchor.app.insights.wakeStabilityMinutes
 import com.anchor.app.safety.ReturnToPracticeScreen
 import com.anchor.app.safety.SafetyAction
+import com.anchor.app.safety.SafetyMode
 import com.anchor.app.safety.SafetyOutcome
 import com.anchor.app.safety.SafetyPolicy
+import com.anchor.app.safety.SafetyState
 import com.anchor.app.safety.recoveredToPractice
 import com.anchor.app.storage.AgeGroup
 import com.anchor.app.storage.AnchorStore
@@ -78,6 +81,7 @@ fun ReassessmentFlow(
     val phq9 = remember { mutableStateListOf<Int?>().also { list -> repeat(9) { list.add(null) } } }
     val gad7 = remember { mutableStateListOf<Int?>().also { list -> repeat(7) { list.add(null) } } }
     var outcome by remember { mutableStateOf<SafetyOutcome?>(null) }
+    var stateBeforeSubmit by remember { mutableStateOf(SafetyState()) }
     var justRecovered by remember { mutableStateOf(false) }
     val profile = store.userProfile()
     val due = reassessmentDue(store.assessments(), nowMillis())
@@ -86,6 +90,7 @@ fun ReassessmentFlow(
         val phqAnswers = phq9.map { it ?: 0 }
         val gadAnswers = if (shouldSkipGad7(phq9.getOrNull(8))) List(7) { 0 } else gad7.map { it ?: 0 }
         val previous = store.safetyState()
+        stateBeforeSubmit = previous
         outcome = if (persist) {
             store.evaluateAndStore(AssessmentInput(phqAnswers, gadAnswers, nowMillis()))
         } else {
@@ -143,6 +148,8 @@ fun ReassessmentFlow(
             onOpenGuide = onOpenGuide,
             onOpenChecklist = onOpenChecklist,
             onFinish = onClose,
+            previous = stateBeforeSubmit,
+            nowMillis = nowMillis(),
         )
         ReassessStep.Compare -> ReassessmentResultScreen(
             assessments = store.assessments(),
@@ -178,39 +185,46 @@ internal fun ReassessmentInviteScreen(
     val overestimates = overestimateCount(store.microActions())
     val recorded = recordedActionCount(store.microActions())
     val bias = averagePredictionBias(store.microActions())
+    val safety = store.safetyState()
+    val invite = reassessInviteCopy(
+        waiting = safety.mode == SafetyMode.MedicalWaiting,
+        due = due,
+        firstLowAtMillis = safety.firstLowAssessmentAtMillis,
+        nowMillis = nowMillis,
+    )
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        TextButton(onClick = onClose, modifier = Modifier.align(Alignment.End)) { Text("关闭") }
-        Text(reassessmentKicker, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, fontWeight = FontWeight.Medium)
-        Text(inviteHeadline(due), Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold, lineHeight = 34.sp)
-        Text(inviteBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+    AnchorBackBar(onBack = onClose) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 20.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(invite.kicker, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+            Text(invite.headline, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold, lineHeight = 34.sp)
+            Text(invite.body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
 
-        InviteCard(wakeCardTitle, stabilityCopy(stability), wakeCardDetail) {
-            if (wakeMinutes.size >= 2) Sparkline(wakeMinutes.map { it.toFloat() }, MaterialTheme.colorScheme.primary)
-        }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Box(Modifier.weight(1f)) {
-                InviteCard(biasCardTitle, overestimateCopy(overestimates), biasCopy(bias))
+            InviteCard(wakeCardTitle, stabilityCopy(stability), wakeCardDetail) {
+                if (wakeMinutes.size >= 2) Sparkline(wakeMinutes.map { it.toFloat() }, MaterialTheme.colorScheme.primary)
             }
-            Box(Modifier.weight(1f)) {
-                InviteCard(actionCardTitle, recordedActionCopy(recorded), actionCardDetail)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Box(Modifier.weight(1f)) {
+                    InviteCard(biasCardTitle, overestimateCopy(overestimates), biasCopy(bias))
+                }
+                Box(Modifier.weight(1f)) {
+                    InviteCard(actionCardTitle, recordedActionCopy(recorded), actionCardDetail)
+                }
             }
-        }
 
-        Spacer(Modifier.height(8.dp))
-        Text(inviteDurationHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
-        Button(onClick = onStart, modifier = Modifier.fillMaxWidth().height(56.dp), shape = PillShape) {
-            Text(startReassessmentLabel, fontSize = 17.sp)
+            Spacer(Modifier.height(8.dp))
+            Text(inviteDurationHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+            Button(onClick = onStart, modifier = Modifier.fillMaxWidth().height(56.dp), shape = PillShape) {
+                Text(startReassessmentLabel, fontSize = 17.sp)
+            }
+            TextButton(onClick = onPostpone, modifier = Modifier.fillMaxWidth()) { Text(postponeReassessmentLabel) }
+            Spacer(Modifier.height(16.dp))
         }
-        TextButton(onClick = onPostpone, modifier = Modifier.fillMaxWidth()) { Text(postponeReassessmentLabel) }
-        Spacer(Modifier.height(16.dp))
     }
 }
 
