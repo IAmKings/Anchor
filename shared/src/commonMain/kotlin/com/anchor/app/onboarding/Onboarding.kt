@@ -55,7 +55,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
@@ -67,6 +66,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -248,6 +248,14 @@ private fun Welcome(
     onStart: () -> Unit,
 ) {
     var legal by remember { mutableStateOf<Pair<String, String>?>(null) }
+    val uriHandler = LocalUriHandler.current
+    fun openLegal(url: String, title: String, body: String) {
+        try {
+            uriHandler.openUri(url)
+        } catch (_: IllegalArgumentException) {
+            legal = title to body
+        }
+    }
     Column(Modifier.fillMaxSize()) {
         if (allowClose) {
             AnchorBackRow(onBack = onClose)
@@ -281,12 +289,11 @@ private fun Welcome(
             Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape) {
                     Box(Modifier.size(40.dp), contentAlignment = Alignment.Center) {
-                        Text(
-                            "!",
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            modifier = Modifier.clearAndSetSemantics {},
+                        Icon(
+                            InfoIcon,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(22.dp),
                         )
                     }
                 }
@@ -343,7 +350,7 @@ private fun Welcome(
                         LinkAnnotation.Clickable(
                             tag = "terms",
                             styles = linkStyle,
-                            linkInteractionListener = { legal = termsTitle to termsBody },
+                            linkInteractionListener = { openLegal(termsUrl, termsTitle, termsBody) },
                         ),
                     ) { append(termsTitle) }
                     append(" ")
@@ -353,7 +360,7 @@ private fun Welcome(
                         LinkAnnotation.Clickable(
                             tag = "privacy",
                             styles = linkStyle,
-                            linkInteractionListener = { legal = privacyTitle to privacyBody },
+                            linkInteractionListener = { openLegal(privacyUrl, privacyTitle, privacyBody) },
                         ),
                     ) { append(privacyTitle) }
                 },
@@ -417,7 +424,7 @@ internal fun ScaleForm(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             if (onBack != null) {
-                AnchorBackRow(onBack = onBack)
+                AnchorBackRow(onBack = onBack, title = title)
             }
         },
         bottomBar = {
@@ -450,7 +457,9 @@ internal fun ScaleForm(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             OnboardingMark(titleSize = 18.sp, asHeading = false)
-            Text(title, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+            if (onBack == null) {
+                Text(title, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
+            }
             Text(scalePrompt, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp, textAlign = TextAlign.Center)
             questions.forEachIndexed { index, question ->
                 val crisis = highlightLast && index == questions.lastIndex

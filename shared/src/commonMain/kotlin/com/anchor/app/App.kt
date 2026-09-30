@@ -66,6 +66,8 @@ import com.anchor.app.insights.LocalInsightsScreen
 import com.anchor.app.settings.ExportCompleteScreen
 import com.anchor.app.settings.ReminderToggle
 import com.anchor.app.settings.SettingsScreen
+import com.anchor.app.settings.ThemeChoice
+import com.anchor.app.settings.useDark
 import com.anchor.app.settings.exportFileLabel
 import com.anchor.app.settings.isExportSuccess
 import com.anchor.app.update.UpdatePhase
@@ -168,6 +170,8 @@ fun App(
     onCheckUpdate: () -> Unit = {},
     onDismissUpdate: () -> Unit = {},
     onOpenUpdate: () -> Unit = {},
+    themeChoice: ThemeChoice = ThemeChoice.System,
+    onThemeChoice: (ThemeChoice) -> Unit = {},
 ) {
     val store = anchorStore ?: remember { InMemoryAnchorStore() }
     var waveVisible by remember { mutableStateOf(false) }
@@ -226,7 +230,8 @@ fun App(
                 store.safetyState().mode != SafetyMode.MedicalWaiting,
         )
     }
-    MaterialTheme(colorScheme = if (isSystemInDarkTheme()) AnchorDarkColors else AnchorColors) {
+    val darkTheme = themeChoice.useDark(isSystemInDarkTheme())
+    MaterialTheme(colorScheme = if (darkTheme) AnchorDarkColors else AnchorColors) {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             if (appLocked) {
                 LockedApp(appLockMessage, onUnlock)
@@ -422,6 +427,8 @@ fun App(
                         onDeleteAllData = onDeleteAllData,
                         reminderAllows = reminderAllows,
                         onToggleReminder = onToggleReminder,
+                        themeChoice = themeChoice,
+                        onThemeChoice = onThemeChoice,
                         onOpenHelp = { settingsVisible = false; helpVisible = true },
                         onPreviewOnboarding = { settingsVisible = false; assessmentPreviewVisible = true },
                         onPreviewReturnToPractice = { settingsVisible = false; returnToPracticePreviewVisible = true },

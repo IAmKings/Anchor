@@ -2,6 +2,7 @@ package com.anchor.app.settings
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,9 +31,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,6 +57,8 @@ fun SettingsScreen(
     onToggleAppLock: () -> Unit,
     reminderAllows: Map<ReminderToggle, Boolean> = ReminderToggle.entries.associateWith { true },
     onToggleReminder: (ReminderToggle) -> Unit = {},
+    themeChoice: ThemeChoice = ThemeChoice.System,
+    onThemeChoice: (ThemeChoice) -> Unit = {},
     exportPassword: String,
     onExportPasswordChange: (String) -> Unit,
     exportStatus: String?,
@@ -77,7 +83,7 @@ fun SettingsScreen(
 ) {
     var confirmingDeletion by remember { mutableStateOf(false) }
     var confirmingImport by remember { mutableStateOf(false) }
-    AnchorBackBar(onBack = onClose, label = settingsBackLabel) {
+    AnchorBackBar(onBack = onClose, label = settingsBackLabel, title = settingsTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -86,7 +92,6 @@ fun SettingsScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(settingsTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(settingsIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
 
             Text(settingsPrivacyTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
@@ -99,6 +104,12 @@ fun SettingsScreen(
                     onToggle = onToggleAppLock,
                 )
                 Text(settingsLockscreenNote, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            }
+
+            Text(settingsAppearanceTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+            Text(settingsAppearanceIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            SettingsCard {
+                ThemeChoiceRow(selected = themeChoice, onSelect = onThemeChoice)
             }
 
             Text(settingsRemindersTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
@@ -223,6 +234,52 @@ fun SettingsScreen(
                 TextButton(onClick = onPreviewOneThingLock) { Text(settingsPreviewLock) }
             }
             Spacer(Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+private fun ThemeChoiceRow(selected: ThemeChoice, onSelect: (ThemeChoice) -> Unit) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        ThemeChoice.entries.forEach { choice ->
+            val chosen = choice == selected
+            Surface(
+                onClick = { onSelect(choice) },
+                modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = SettingsActionMinHeight)
+                    .semantics {
+                        role = Role.RadioButton
+                        this.selected = chosen
+                    },
+                shape = RoundedCornerShape(12.dp),
+                color = if (chosen) {
+                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
+                } else {
+                    MaterialTheme.colorScheme.surface
+                },
+                border = BorderStroke(
+                    1.dp,
+                    if (chosen) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
+                ),
+            ) {
+                Box(
+                    Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 12.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        themeChoiceLabel(choice),
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        fontWeight = if (chosen) FontWeight.SemiBold else FontWeight.Medium,
+                        color = if (chosen) {
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.onSurface
+                        },
+                    )
+                }
+            }
         }
     }
 }

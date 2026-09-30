@@ -14,11 +14,16 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.anchor.app.onboarding.DoneIcon
+import com.anchor.app.onboarding.LockedIcon
+import com.anchor.app.onboarding.ThoughtIcon
+import com.anchor.app.onboarding.UnlockedIcon
+import com.anchor.app.ui.AnchorIconWell
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -80,7 +85,7 @@ fun WorryVaultScreen(
     val open = isSessionOpen() || forcedOpen
     val current = pending.firstOrNull()
 
-    AnchorBackBar(onBack = onClose) {
+    AnchorBackBar(onBack = onClose, title = vaultTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -224,7 +229,7 @@ private fun OverviewStep(
         onHang = onHang,
     )
     if (!open) {
-        StatusMark("锁", vaultLockedCaption)
+        StatusMark(LockedIcon, vaultLockedCaption)
         Surface(
             color = MaterialTheme.colorScheme.surface,
             shape = CardShape,
@@ -261,7 +266,7 @@ private fun OverviewStep(
             }
         }
     } else {
-        StatusMark("开", vaultOpenCaption)
+        StatusMark(UnlockedIcon, vaultOpenCaption)
         Text(vaultOpenBreath, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         Text(vaultDeskHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
         if (pending.isEmpty()) {
@@ -330,7 +335,7 @@ private fun ProcessStep(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            StatusMark("念", null)
+            StatusMark(ThoughtIcon, null)
             Text(
                 vaultQuotedCard(card.content),
                 fontSize = 20.sp,
@@ -429,7 +434,7 @@ private fun DoneStep(processedCount: Int, onClose: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        StatusMark("完", null)
+        StatusMark(DoneIcon, null)
         Text(vaultDoneTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
         Text(vaultDoneBody, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center, fontSize = 16.sp, lineHeight = 26.sp)
         Surface(
@@ -451,13 +456,14 @@ private fun DoneStep(processedCount: Int, onClose: () -> Unit) {
 }
 
 @Composable
-private fun StatusMark(glyph: String, caption: String?) {
+private fun StatusMark(icon: ImageVector, caption: String?) {
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Surface(color = MaterialTheme.colorScheme.primaryContainer, shape = CircleShape, modifier = Modifier.size(64.dp)) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(glyph, color = MaterialTheme.colorScheme.onPrimaryContainer, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-            }
-        }
+        AnchorIconWell(
+            icon,
+            MaterialTheme.colorScheme.primaryContainer,
+            size = 64.dp,
+            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+        )
         if (caption != null) {
             Text(caption, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
         }

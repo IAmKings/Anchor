@@ -38,6 +38,8 @@ If you need a debug breadcrumb while developing, keep it out of committed `commo
 
 `MainActivity` owns these host adapters. Shared Compose must not start network or upload.
 
+Welcome 用户协议 / 隐私政策 hand `termsUrl` and `privacyUrl` (`https://anchor-legal.125457.xyz/terms` and `https://anchor-legal.125457.xyz/privacy`) to the system browser through `LocalUriHandler`. The app does not fetch those pages, so this does not add `INTERNET` or a WebView. `termsBody` and `privacyBody` stay in the APK and appear only when no browser can open the address. The manifest may declare an `https` `VIEW` query so Android 11+ can see a browser; that is package visibility, not a network permission.
+
 ---
 
 ## Notifications and timers

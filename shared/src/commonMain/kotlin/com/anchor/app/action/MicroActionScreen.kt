@@ -90,7 +90,10 @@ fun MicroActionScreen(
         }
     }
 
-    AnchorBackBar(onBack = onClose) {
+    AnchorBackBar(
+        onBack = onClose,
+        title = if (step == ActionStep.Pick) microActionTitle else null,
+    ) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -180,7 +183,6 @@ private fun PickStep(
     onPickPreset: (String) -> Unit,
     onOpenHistory: () -> Unit,
 ) {
-    Text(microActionTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
     Text(microActionIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
     if (hasHistory) {
         TextButton(onClick = onOpenHistory) { Text(historyOpenLabel) }

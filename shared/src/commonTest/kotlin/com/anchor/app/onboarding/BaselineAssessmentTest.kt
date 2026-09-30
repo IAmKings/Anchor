@@ -46,7 +46,9 @@ class BaselineAssessmentTest {
         assertEquals("14–17 岁", youthAgeLabel)
         assertEquals("我已阅读并同意用户协议与隐私政策", agreementLabel)
         assertEquals("用户协议", termsTitle)
+        assertEquals("https://anchor-legal.125457.xyz/terms", termsUrl)
         assertEquals("隐私政策", privacyTitle)
+        assertEquals("https://anchor-legal.125457.xyz/privacy", privacyUrl)
     }
 
     @Test

@@ -1,9 +1,7 @@
 package com.anchor.app.journal
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -24,13 +20,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.onboarding.EmotionLabelIcon
+import com.anchor.app.onboarding.FactsJournalIcon
+import com.anchor.app.onboarding.WorryVaultIcon
+import com.anchor.app.ui.AnchorIconWell
 import com.anchor.app.home.HomeBottomBar
 import com.anchor.app.home.HomeTab
 import com.anchor.app.home.HomeTopBar
@@ -89,7 +89,7 @@ fun RecordsHub(
             }
             if (!medicalWaiting && showEmotion) {
                 RecordEntryCard(
-                    glyph = recordsEmotionGlyph,
+                    icon = EmotionLabelIcon,
                     wellColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.55f),
                     title = recordsEmotionTitle,
                     body = recordsEmotionBody(),
@@ -100,7 +100,7 @@ fun RecordsHub(
             }
             if (showJournal || medicalWaiting) {
                 RecordEntryCard(
-                    glyph = recordsJournalGlyph,
+                    icon = FactsJournalIcon,
                     wellColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
                     title = recordsJournalTitle,
                     body = recordsJournalBody(),
@@ -111,7 +111,7 @@ fun RecordsHub(
             }
             if (!medicalWaiting && showWorry) {
                 RecordEntryCard(
-                    glyph = recordsWorryGlyph,
+                    icon = WorryVaultIcon,
                     wellColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f),
                     title = recordsWorryTitle,
                     body = recordsWorryBody(),
@@ -127,7 +127,7 @@ fun RecordsHub(
 
 @Composable
 private fun RecordEntryCard(
-    glyph: String,
+    icon: ImageVector,
     wellColor: androidx.compose.ui.graphics.Color,
     title: String,
     body: String,
@@ -147,12 +147,7 @@ private fun RecordEntryCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.Top,
         ) {
-            Box(
-                Modifier.size(48.dp).clip(CircleShape).background(wellColor),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(glyph, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
-            }
+            AnchorIconWell(icon, wellColor, size = 48.dp)
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
                 Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)

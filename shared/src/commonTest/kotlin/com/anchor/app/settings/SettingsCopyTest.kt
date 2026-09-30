@@ -38,4 +38,15 @@ class SettingsCopyTest {
         assertFalse(settingsRemindersIntro.contains("好久没来"))
         assertTrue(settingsAboutBody.contains("不会上传"))
     }
+
+    @Test
+    fun themeChoiceDefaultsToSystemAndLabelsTheThreeModes() {
+        assertEquals(ThemeChoice.System, ThemeChoice.entries.first())
+        assertEquals(listOf("跟随系统", "浅色", "深色"), ThemeChoice.entries.map(::themeChoiceLabel))
+        assertFalse(ThemeChoice.System.useDark(systemDark = false))
+        assertTrue(ThemeChoice.System.useDark(systemDark = true))
+        assertFalse(ThemeChoice.Light.useDark(systemDark = true))
+        assertTrue(ThemeChoice.Dark.useDark(systemDark = false))
+        assertTrue(settingsAppearanceIntro.contains("跟随系统"))
+    }
 }

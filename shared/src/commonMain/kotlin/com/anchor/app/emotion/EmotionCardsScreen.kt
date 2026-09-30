@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.anchor.app.journal.recordsEmotionTitle
 import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -97,7 +98,7 @@ fun EmotionCardsScreen(
     }
 
     val cards = remember(revision) { store.emotionCards() }
-    AnchorBackBar(onBack = onClose, label = emotionBackLabel) {
+    AnchorBackBar(onBack = onClose, label = emotionBackLabel, title = recordsEmotionTitle, titleIsHeading = false) {
         Column(
             Modifier
                 .fillMaxSize()

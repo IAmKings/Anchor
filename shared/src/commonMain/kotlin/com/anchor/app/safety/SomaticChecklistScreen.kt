@@ -15,11 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.anchor.app.home.homeWaitingChecklistTitle
 import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +27,7 @@ private val CardShape = RoundedCornerShape(16.dp)
 
 @Composable
 fun SomaticChecklistScreen(onClose: () -> Unit) {
-    AnchorBackBar(onBack = onClose) {
+    AnchorBackBar(onBack = onClose, title = homeWaitingChecklistTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -36,7 +35,6 @@ fun SomaticChecklistScreen(onClose: () -> Unit) {
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text("就医准备清单", Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(
                 "躯体问题有时会伪装成情绪症状。这份清单只供你和医生讨论，不是诊断。",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

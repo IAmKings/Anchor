@@ -6,29 +6,34 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -43,16 +48,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -62,6 +67,23 @@ import com.anchor.app.relation.HomeRelationPresentation
 import com.anchor.app.relation.homeRelationPresentation
 import com.anchor.app.relation.homeRelationPreviewNote
 import com.anchor.app.relation.previewHomeRelation
+import com.anchor.app.onboarding.AddIcon
+import com.anchor.app.onboarding.AutoGraphIcon
+import com.anchor.app.onboarding.ChecklistIcon
+import com.anchor.app.onboarding.FactsJournalFilledIcon
+import com.anchor.app.onboarding.FactsJournalIcon
+import com.anchor.app.onboarding.HelpIcon
+import com.anchor.app.onboarding.MedicalIcon
+import com.anchor.app.onboarding.MicroActionIcon
+import com.anchor.app.onboarding.PersonFilledIcon
+import com.anchor.app.onboarding.PersonIcon
+import com.anchor.app.onboarding.ReassessIcon
+import com.anchor.app.onboarding.RestIcon
+import com.anchor.app.onboarding.RhythmIcon
+import com.anchor.app.onboarding.SocialEnergyIcon
+import com.anchor.app.onboarding.TodayFilledIcon
+import com.anchor.app.onboarding.TodayIcon
+import com.anchor.app.onboarding.WorryVaultIcon
 import com.anchor.app.onboarding.additionalPracticeUnlocked
 import com.anchor.app.onboarding.waitingReassessNotice
 import com.anchor.app.onboarding.oneThingLockBody
@@ -69,6 +91,8 @@ import com.anchor.app.onboarding.practiceVisible
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.FirstAnchor
 import com.anchor.app.storage.WorryResolution
+import com.anchor.app.ui.AnchorAppIcon
+import com.anchor.app.ui.AnchorIconWell
 import com.anchor.app.ui.formatCountdown
 import kotlin.math.PI
 import kotlin.math.cos
@@ -132,7 +156,7 @@ fun HomeScreen(
                         contentColor = MaterialTheme.colorScheme.onSecondary,
                         shape = CircleShape,
                         modifier = Modifier.semantics { contentDescription = "此刻需要帮助" },
-                    ) { Text("助", fontWeight = FontWeight.SemiBold, fontSize = 18.sp) }
+                    ) { Icon(HelpIcon, contentDescription = null, modifier = Modifier.size(24.dp)) }
                 } else if (showPractice(FirstAnchor.WorryVault)) {
                     FloatingActionButton(
                         onClick = onHang,
@@ -140,7 +164,7 @@ fun HomeScreen(
                         contentColor = MaterialTheme.colorScheme.onPrimary,
                         shape = CircleShape,
                         modifier = Modifier.semantics { contentDescription = "挂卡" },
-                    ) { Text("+", fontSize = 28.sp, fontWeight = FontWeight.Medium) }
+                    ) { Icon(AddIcon, contentDescription = null, modifier = Modifier.size(28.dp)) }
                 }
             }
         },
@@ -221,13 +245,7 @@ internal fun HomeTopBar(onHelp: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(
-            "锚",
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.semantics { contentDescription = "锚点" },
-        )
+        AnchorAppIcon(Modifier.size(40.dp))
         Text(
             "锚点",
             Modifier.semantics { heading() },
@@ -242,7 +260,12 @@ internal fun HomeTopBar(onHelp: () -> Unit) {
             modifier = Modifier.size(40.dp).semantics { contentDescription = "此刻需要帮助" },
         ) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("助", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
+                Icon(
+                    HelpIcon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.fillMaxSize(0.55f),
+                )
             }
         }
     }
@@ -262,33 +285,62 @@ internal fun HomeBottomBar(
         shadowElevation = 0.dp,
     ) {
         Row(
-            Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
+            Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.navigationBars)
+                .padding(horizontal = 8.dp, vertical = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            BottomTab("今天", selected = selected == HomeTab.Today, onClick = onToday)
-            BottomTab("记录", selected = selected == HomeTab.Records, onClick = onRecords)
-            BottomTab("洞察", selected = selected == HomeTab.Insights, onClick = onInsights)
-            BottomTab("我的", selected = selected == HomeTab.Mine, onClick = onMine)
+            BottomTab("今天", TodayIcon, TodayFilledIcon, selected == HomeTab.Today, onToday)
+            BottomTab("记录", FactsJournalIcon, FactsJournalFilledIcon, selected == HomeTab.Records, onRecords)
+            BottomTab("洞察", AutoGraphIcon, AutoGraphIcon, selected == HomeTab.Insights, onInsights)
+            BottomTab("我的", PersonIcon, PersonFilledIcon, selected == HomeTab.Mine, onMine)
         }
     }
 }
 
 @Composable
-private fun BottomTab(label: String, selected: Boolean, onClick: () -> Unit) {
+private fun RowScope.BottomTab(
+    label: String,
+    icon: ImageVector,
+    selectedIcon: ImageVector,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
     val color = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-    Surface(
-        onClick = onClick,
-        color = if (selected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f) else Color.Transparent,
-        shape = RoundedCornerShape(999.dp),
-        modifier = Modifier.semantics { role = Role.Tab },
+    Column(
+        Modifier
+            .weight(1f)
+            .heightIn(min = 48.dp)
+            .selectable(selected = selected, onClick = onClick, role = Role.Tab)
+            .padding(horizontal = 4.dp, vertical = 2.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .background(
+                    color = if (selected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f) else Color.Transparent,
+                    shape = RoundedCornerShape(999.dp),
+                ),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                if (selected) selectedIcon else icon,
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(28.dp),
+            )
+        }
         Text(
             label,
-            Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             color = color,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+            fontWeight = FontWeight.Medium,
             fontSize = 14.sp,
+            lineHeight = 18.sp,
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -449,7 +501,7 @@ private fun PracticeHome(
             }
             if (showRelation) {
                 StatusCard(
-                    glyph = if (relationState.kind == HomeRelationKind.Exhausted) "植" else "他",
+                    icon = if (relationState.kind == HomeRelationKind.Exhausted) RestIcon else SocialEnergyIcon,
                     wellColor = when (relationState.kind) {
                         HomeRelationKind.Filled -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f)
                         HomeRelationKind.Drained -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f)
@@ -516,7 +568,12 @@ private fun MedicalWaitingHome(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                IconWell("医", MaterialTheme.colorScheme.secondaryContainer, 56.dp)
+                AnchorIconWell(
+                    MedicalIcon,
+                    MaterialTheme.colorScheme.secondaryContainer,
+                    size = 56.dp,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                )
                 Text(homeWaitingSupportTitle, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
                 Text(
                     homeWaitingSupportBody,
@@ -527,10 +584,10 @@ private fun MedicalWaitingHome(
             }
         }
         Text(homeWaitingToolsLabel, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
-        ToolRow("单", homeWaitingChecklistTitle, homeWaitingChecklistBody, onChecklist)
-        ToolRow("记", homeWaitingJournalTitle, homeWaitingJournalBody, onCameraLog)
+        ToolRow(ChecklistIcon, homeWaitingChecklistTitle, homeWaitingChecklistBody, onChecklist)
+        ToolRow(FactsJournalIcon, homeWaitingJournalTitle, homeWaitingJournalBody, onCameraLog)
         if (canReassessNow) {
-            ToolRow("评", homeWaitingReassessTitle, reassessBody, onReassess)
+            ToolRow(ReassessIcon, homeWaitingReassessTitle, reassessBody, onReassess)
         }
     }
 }
@@ -655,7 +712,7 @@ private fun RhythmBentoCard(
                     Text(homeRhythmEmptyTitle, fontSize = 17.sp, fontWeight = FontWeight.Medium)
                 }
             }
-            IconWell("光", MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f))
+            AnchorIconWell(RhythmIcon, MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f))
         }
     }
 }
@@ -683,7 +740,7 @@ private fun MicroActionBentoCard(
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                IconWell("步", MaterialTheme.colorScheme.secondaryContainer)
+                AnchorIconWell(MicroActionIcon, MaterialTheme.colorScheme.secondaryContainer)
                 if (running) {
                     Text(
                         homeMicroActionTitle(true),
@@ -742,7 +799,7 @@ private fun WorryBentoCard(
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                IconWell("箱", MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f))
+                AnchorIconWell(WorryVaultIcon, MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f))
                 Text(homeWorryLabel, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 if (count == null) {
                     Text(
@@ -779,7 +836,7 @@ private fun WorryBentoCard(
 
 @Composable
 private fun StatusCard(
-    glyph: String,
+    icon: ImageVector,
     wellColor: Color,
     label: String,
     title: String? = null,
@@ -800,7 +857,7 @@ private fun StatusCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            IconWell(glyph, wellColor)
+            AnchorIconWell(icon, wellColor)
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 if (title != null) {
@@ -836,7 +893,7 @@ private fun StatusCard(
 }
 
 @Composable
-private fun ToolRow(glyph: String, title: String, body: String, onClick: () -> Unit) {
+private fun ToolRow(icon: ImageVector, title: String, body: String, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
         color = MaterialTheme.colorScheme.surface,
@@ -849,22 +906,12 @@ private fun ToolRow(glyph: String, title: String, body: String, onClick: () -> U
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.Top,
         ) {
-            IconWell(glyph, MaterialTheme.colorScheme.surfaceVariant)
+            AnchorIconWell(icon, MaterialTheme.colorScheme.surfaceVariant)
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(title, fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
                 Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
             }
         }
-    }
-}
-
-@Composable
-private fun IconWell(glyph: String, color: Color, size: androidx.compose.ui.unit.Dp = 40.dp) {
-    Box(
-        Modifier.size(size).clip(CircleShape).background(color),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(glyph, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
     }
 }
 

@@ -17,10 +17,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.anchor.app.onboarding.CheckIcon
+import com.anchor.app.onboarding.KeyIcon
 import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -55,7 +58,12 @@ fun ExportCompleteScreen(
             Spacer(Modifier.height(24.dp))
             Surface(color = MaterialTheme.colorScheme.primaryContainer, shape = CircleShape) {
                 Box(Modifier.size(96.dp), contentAlignment = Alignment.Center) {
-                    Text("✓", color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 36.sp, fontWeight = FontWeight.Medium)
+                    Icon(
+                        CheckIcon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.size(48.dp),
+                    )
                 }
             }
             Text(exportCompleteTitle, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center)
@@ -78,7 +86,12 @@ fun ExportCompleteScreen(
                 Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     Surface(color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f), shape = CircleShape) {
                         Box(Modifier.size(36.dp), contentAlignment = Alignment.Center) {
-                            Text("钥", color = MaterialTheme.colorScheme.primary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                            Icon(
+                                KeyIcon,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp),
+                            )
                         }
                     }
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {

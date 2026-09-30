@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -23,7 +21,10 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.anchor.app.onboarding.CameraIcon
+import com.anchor.app.onboarding.InferenceIcon
 import com.anchor.app.ui.AnchorBackBar
+import com.anchor.app.ui.AnchorIconWell
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,8 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -101,7 +101,7 @@ fun CameraLogScreen(
         return
     }
     val logs = remember(revision) { store.cameraLogs() }
-    AnchorBackBar(onBack = onClose, label = journalBackLabel) {
+    AnchorBackBar(onBack = onClose, label = journalBackLabel, title = recordsJournalTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -148,7 +148,6 @@ private fun JournalHeader() {
                 fontSize = 14.sp,
             )
         }
-        Text(recordsJournalTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
         Text(
             recordsJournalBody(),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -186,7 +185,7 @@ private fun NewCameraLog(onCancel: () -> Unit, onSave: (String, String) -> Unit)
     var fact by remember { mutableStateOf("") }
     var inference by remember { mutableStateOf("") }
     val detected = firstEvaluativeWord(fact)
-    AnchorBackBar(onBack = onCancel, label = journalCancelLabel) {
+    AnchorBackBar(onBack = onCancel, label = journalCancelLabel, title = recordsJournalTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -197,7 +196,7 @@ private fun NewCameraLog(onCancel: () -> Unit, onSave: (String, String) -> Unit)
         ) {
             JournalHeader()
             ColumnCard(
-                glyph = "摄",
+                icon = CameraIcon,
                 title = journalFactTitle,
                 caption = journalFactCaption,
                 wellColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -241,7 +240,7 @@ private fun NewCameraLog(onCancel: () -> Unit, onSave: (String, String) -> Unit)
                 }
             }
             ColumnCard(
-                glyph = "脑",
+                icon = InferenceIcon,
                 title = journalInferenceTitle,
                 caption = journalInferenceCaption,
                 wellColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f),
@@ -273,7 +272,7 @@ private fun NewCameraLog(onCancel: () -> Unit, onSave: (String, String) -> Unit)
 
 @Composable
 private fun ColumnCard(
-    glyph: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
     title: String,
     caption: String,
     wellColor: androidx.compose.ui.graphics.Color,
@@ -286,14 +285,7 @@ private fun ColumnCard(
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                Surface(color = wellColor, shape = CircleShape, modifier = Modifier.size(40.dp)) {
-                    androidx.compose.foundation.layout.Box(
-                        Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(glyph, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
-                    }
-                }
+                AnchorIconWell(icon, wellColor)
                 Column {
                     Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                     Text(caption, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)

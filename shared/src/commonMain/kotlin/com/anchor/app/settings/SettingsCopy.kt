@@ -7,6 +7,24 @@ enum class ReminderToggle {
     MedicalWaiting,
 }
 
+enum class ThemeChoice {
+    System,
+    Light,
+    Dark,
+}
+
+fun ThemeChoice.useDark(systemDark: Boolean): Boolean = when (this) {
+    ThemeChoice.System -> systemDark
+    ThemeChoice.Light -> false
+    ThemeChoice.Dark -> true
+}
+
+internal fun themeChoiceLabel(choice: ThemeChoice): String = when (choice) {
+    ThemeChoice.System -> "跟随系统"
+    ThemeChoice.Light -> "浅色"
+    ThemeChoice.Dark -> "深色"
+}
+
 internal fun reminderToggleTitle(toggle: ReminderToggle): String = when (toggle) {
     ReminderToggle.WorrySession -> "忧虑专场"
     ReminderToggle.CrisisCare -> "危机后关怀"
@@ -24,8 +42,10 @@ internal const val exportShareLabel = "点击分享"
 internal const val exportHomeLabel = "返回主页"
 internal const val settingsBackLabel = "返回"
 internal const val settingsTitle = "我的"
-internal const val settingsIntro = "管理应用锁、四类提醒和本地数据。"
+internal const val settingsIntro = "管理应用锁、外观、四类提醒和本地数据。"
 internal const val settingsPrivacyTitle = "隐私与安全"
+internal const val settingsAppearanceTitle = "外观"
+internal const val settingsAppearanceIntro = "默认跟随系统。选定浅色或深色后，会留在这台设备上。"
 internal const val settingsLockTitle = "应用锁"
 internal const val settingsLockAvailable = "开启后，每次打开都需要验证。"
 internal const val settingsLockUnavailable = "当前设备暂不支持生物识别或设备凭据。"

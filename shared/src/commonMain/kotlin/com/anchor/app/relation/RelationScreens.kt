@@ -31,8 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,7 +98,7 @@ private fun RelationHub(
     onAltruism: () -> Unit,
     onClose: () -> Unit,
 ) {
-    AnchorBackBar(onBack = onClose, label = relationBackLabel) {
+    AnchorBackBar(onBack = onClose, label = relationBackLabel, title = relationHubTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -107,7 +106,6 @@ private fun RelationHub(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text(relationHubTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(relationHubBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
             if (showInventory) {
                 HubButton(inventoryTitle, inventoryHint, onInventory)
@@ -148,7 +146,7 @@ private fun InventoryScreen(
     var name by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
     val contacts = remember(revision) { store.relationContacts() }
-    AnchorBackBar(onBack = onBack, label = relationBackLabel) {
+    AnchorBackBar(onBack = onBack, label = relationBackLabel, title = inventoryTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -157,7 +155,6 @@ private fun InventoryScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text(inventoryTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(inventoryHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
             OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(inventoryNameLabel) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), singleLine = true)
             OutlinedTextField(value = note, onValueChange = { note = it }, label = { Text(inventoryNoteLabel) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp), singleLine = true)
@@ -218,7 +215,7 @@ private fun LedgerScreen(
     val contacts = remember(revision) { store.relationContacts() }
     val energy = remember(revision) { store.relationEnergy() }
     var selectedId by remember { mutableStateOf(contacts.firstOrNull()?.id) }
-    AnchorBackBar(onBack = onBack, label = relationBackLabel) {
+    AnchorBackBar(onBack = onBack, label = relationBackLabel, title = ledgerTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -226,7 +223,6 @@ private fun LedgerScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text(ledgerTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(ledgerHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
             if (contacts.isEmpty()) {
                 Text(ledgerEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
@@ -283,7 +279,7 @@ private fun AltruismScreen(
     val draws = remember(revision) { store.altruismDraws() }
     val open = draws.firstOrNull { it.felt == null }
     val pause = shouldPauseAltruism(draws)
-    AnchorBackBar(onBack = onBack, label = relationBackLabel) {
+    AnchorBackBar(onBack = onBack, label = relationBackLabel, title = altruismTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -291,7 +287,6 @@ private fun AltruismScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text(altruismTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(peoplePleasingHint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
             if (pause) {
                 Surface(color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f), shape = CardShape) {

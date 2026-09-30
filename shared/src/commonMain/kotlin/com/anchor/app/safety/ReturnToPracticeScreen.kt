@@ -24,12 +24,18 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.anchor.app.onboarding.MicroActionIcon
+import com.anchor.app.onboarding.WaveWaitingIcon
+import com.anchor.app.ui.AnchorGlyph
+import com.anchor.app.ui.AnchorIconWell
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.heading
@@ -65,7 +71,12 @@ fun ReturnToPracticeScreen(onHome: () -> Unit) {
             Surface(color = MaterialTheme.colorScheme.primary.copy(alpha = 0.22f), shape = CircleShape, modifier = Modifier.size(112.dp)) {}
             Surface(color = MaterialTheme.colorScheme.surface, shape = CircleShape, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))) {
                 Box(Modifier.size(72.dp), contentAlignment = Alignment.Center) {
-                    Text("锚", color = MaterialTheme.colorScheme.primary, fontSize = 22.sp, fontWeight = FontWeight.Medium)
+                    Icon(
+                        AnchorGlyph,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(48.dp),
+                    )
                 }
             }
         }
@@ -86,8 +97,8 @@ fun ReturnToPracticeScreen(onHome: () -> Unit) {
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 12.dp),
         )
-        UnlockCard(returnWaveTitle, returnWaveDetail)
-        UnlockCard(returnActionTitle, returnActionDetail)
+        UnlockCard(WaveWaitingIcon, returnWaveTitle, returnWaveDetail)
+        UnlockCard(MicroActionIcon, returnActionTitle, returnActionDetail)
         Spacer(Modifier.height(8.dp))
         Button(onClick = onHome, modifier = Modifier.fillMaxWidth().height(56.dp), shape = PillShape) {
             Text(returnHomeLabel, fontSize = 17.sp)
@@ -97,18 +108,14 @@ fun ReturnToPracticeScreen(onHome: () -> Unit) {
 }
 
 @Composable
-private fun UnlockCard(title: String, detail: String) {
+private fun UnlockCard(icon: ImageVector, title: String, detail: String) {
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
         Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = CircleShape) {
-                Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                    Text(title.take(1), color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
-                }
-            }
+            AnchorIconWell(icon, MaterialTheme.colorScheme.surfaceVariant, size = 48.dp)
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                 Text(detail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)

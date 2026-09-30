@@ -18,10 +18,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.anchor.app.onboarding.AddIcon
+import com.anchor.app.onboarding.CheckIcon
+import com.anchor.app.onboarding.RhythmIcon
+import com.anchor.app.onboarding.WakeIcon
 import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,7 +43,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -66,7 +71,7 @@ fun RhythmScreen(
     val wakeMinutes = remember(entries) { wakeMinutesOldestFirst(entries, localMinuteOfDay) }
     val stability = remember(entries) { wakeStabilityMinutes(entries, localMinuteOfDay) }
 
-    AnchorBackBar(onBack = onClose, label = rhythmBackLabel) {
+    AnchorBackBar(onBack = onClose, label = rhythmBackLabel, title = rhythmTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -74,12 +79,11 @@ fun RhythmScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(rhythmTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(rhythmIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
 
             TimeCard(
                 title = rhythmWakeTitle,
-                glyph = rhythmWakeGlyph,
+                icon = WakeIcon,
                 time = wakeAt,
                 caption = rhythmWakeCaption(wakeAt != null),
                 recordDescription = rhythmWakeRecordDescription,
@@ -88,7 +92,7 @@ fun RhythmScreen(
             )
             TimeCard(
                 title = rhythmLightTitle,
-                glyph = rhythmLightGlyph,
+                icon = RhythmIcon,
                 time = lightAt,
                 caption = rhythmLightCaption(lightAt != null),
                 recordDescription = rhythmLightRecordDescription,
@@ -137,7 +141,7 @@ fun RhythmScreen(
 @Composable
 private fun TimeCard(
     title: String,
-    glyph: String,
+    icon: ImageVector,
     time: Long?,
     caption: String,
     recordDescription: String,
@@ -152,7 +156,7 @@ private fun TimeCard(
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(title, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(glyph, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
+                Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(22.dp))
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -170,7 +174,12 @@ private fun TimeCard(
                     modifier = Modifier.size(RhythmActionMinHeight).semantics { contentDescription = recordDescription },
                 ) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(if (time != null) "✓" else "+", color = MaterialTheme.colorScheme.primary, fontSize = 18.sp)
+                        Icon(
+                            if (time != null) CheckIcon else AddIcon,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp),
+                        )
                     }
                 }
             }

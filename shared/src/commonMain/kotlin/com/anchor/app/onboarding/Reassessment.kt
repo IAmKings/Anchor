@@ -193,7 +193,7 @@ internal fun ReassessmentInviteScreen(
         nowMillis = nowMillis,
     )
 
-    AnchorBackBar(onBack = onClose) {
+    AnchorBackBar(onBack = onClose, title = invite.kicker, titleIsHeading = false) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -201,7 +201,6 @@ internal fun ReassessmentInviteScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(invite.kicker, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, fontWeight = FontWeight.Medium)
             Text(invite.headline, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold, lineHeight = 34.sp)
             Text(invite.body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
 

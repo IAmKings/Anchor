@@ -15,9 +15,6 @@ internal const val recordsTitle = "记录"
 internal const val recordsEmotionTitle = "情绪标签箱"
 internal const val recordsJournalTitle = "双栏日志"
 internal const val recordsWorryTitle = "忧虑保险箱"
-internal const val recordsEmotionGlyph = "情"
-internal const val recordsJournalGlyph = "栏"
-internal const val recordsWorryGlyph = "箱"
 
 internal fun recordsWorryBody(): String = "念头来了就挂一张。专场再统一开箱。"
 

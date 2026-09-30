@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.media.MediaPlayer
 import android.app.NotificationManager
 import android.net.Uri
@@ -11,15 +12,19 @@ import android.os.Bundle
 import android.os.SystemClock
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.anchor.app.reminder.AndroidReminderScheduler
 import com.anchor.app.reminder.ReminderKind
 import com.anchor.app.settings.ReminderToggle
+import com.anchor.app.settings.ThemeChoice
+import com.anchor.app.settings.useDark
 import com.anchor.app.timer.AndroidBackgroundTimer
 import com.anchor.app.timer.BackgroundTimerKind
 import com.anchor.app.storage.AndroidDatabaseKey
@@ -36,6 +41,8 @@ class MainActivity : FragmentActivity() {
     }
     private var inAppBannerText by mutableStateOf<String?>(null)
     private lateinit var biometricLock: AndroidBiometricLock
+    private lateinit var themePreference: AndroidThemePreference
+    private var themeChoice by mutableStateOf(ThemeChoice.System)
     private var appLockAvailable by mutableStateOf(false)
     private var appLockEnabled by mutableStateOf(false)
     private var appUnlocked by mutableStateOf(true)
@@ -78,6 +85,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         biometricLock = AndroidBiometricLock(this)
+        themePreference = AndroidThemePreference(this)
+        themeChoice = themePreference.choice
         offlineSpeech = AndroidOfflineSpeech(this)
         audioRecorder = AndroidLocalAudioRecorder(this)
         val databaseKey = AndroidDatabaseKey.getOrCreate(this, DATABASE_NAME)
@@ -101,6 +110,9 @@ class MainActivity : FragmentActivity() {
             )
         }
         setContent {
+            val view = LocalView.current
+            val darkBars = themeChoice.useDark(isNightMode())
+            SideEffect { applyAnchorSystemBars(window, view, darkBars) }
             App(
                 anchorStore = anchorStore,
                 inAppBannerText = inAppBannerText,
@@ -180,9 +192,17 @@ class MainActivity : FragmentActivity() {
                     AnchorUpdateService.dismiss()
                     showUpdatePrompt = false
                 },
+                themeChoice = themeChoice,
+                onThemeChoice = { choice ->
+                    themeChoice = choice
+                    themePreference.choice = choice
+                },
             )
         }
     }
+
+    private fun isNightMode(): Boolean =
+        (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
     override fun onResume() {
         super.onResume()

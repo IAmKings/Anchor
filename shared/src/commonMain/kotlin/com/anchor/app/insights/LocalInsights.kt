@@ -28,8 +28,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
+
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,7 +78,7 @@ fun LocalInsightsScreen(
     val predictionBias = averagePredictionBias(actions)
     val averages = movingAverage(wakeMinutes, window = 7)
 
-    AnchorBackBar(onBack = onClose, label = insightsBackLabel) {
+    AnchorBackBar(onBack = onClose, label = insightsBackLabel, title = insightsTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -87,7 +86,6 @@ fun LocalInsightsScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(insightsTitle, Modifier.semantics { heading() }, fontSize = 24.sp, fontWeight = FontWeight.SemiBold)
             Text(
                 insightsIntro,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

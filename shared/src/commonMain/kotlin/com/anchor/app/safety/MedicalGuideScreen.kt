@@ -32,12 +32,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.home.homeWaitingGuideTitle
 import com.anchor.app.onboarding.label
 import com.anchor.app.storage.CrisisRegion
 
@@ -62,7 +62,7 @@ fun MedicalGuideScreen(
 ) {
     var shownRegion by remember(region) { mutableStateOf(region) }
     val content = medicalGuideContent(shownRegion, youth)
-    AnchorBackBar(onBack = onClose) {
+    AnchorBackBar(onBack = onClose, title = homeWaitingGuideTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -70,14 +70,6 @@ fun MedicalGuideScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                "就医指南",
-                Modifier.fillMaxWidth().semantics { heading() },
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-            )
             Text(
                 shownRegion.label(),
                 Modifier.fillMaxWidth(),
