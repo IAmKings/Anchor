@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -48,6 +49,7 @@ fun HelpNowScreen(
     onOpenGuide: () -> Unit = {},
     onOpenChecklist: () -> Unit = {},
     onClose: () -> Unit,
+    onDial: (String) -> Unit = {},
 ) {
     val resource = crisisResource(region, youth)
     Scaffold(
@@ -58,7 +60,7 @@ fun HelpNowScreen(
                 Modifier
                     .fillMaxWidth()
                     .windowInsetsPadding(WindowInsets.navigationBars)
-                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                    .padding(horizontal = 20.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
@@ -70,15 +72,7 @@ fun HelpNowScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Button(
-                    onClick = onClose,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = HelpActionMinHeight),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        contentColor = MaterialTheme.colorScheme.onSecondary,
-                    ),
-                ) { Text(helpNowCallEmergency(resource.emergency), fontSize = 17.sp) }
+                EmergencyDialButtons(resource.emergency, onDial)
             }
         },
     ) { padding ->
@@ -88,10 +82,10 @@ fun HelpNowScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Text(helpNowTitle, Modifier.semantics { heading() }, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
-            HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline)
+            HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline, onDial)
             HelpNowStepCard(2, helpNowStep2Label, helpNowStep2Title, helpNowStep2Body)
             HelpNowStepCard(3, helpNowStep3Label, helpNowStep3Title, helpNowStep3Body)
             Surface(
@@ -126,7 +120,44 @@ fun HelpNowScreen(
 }
 
 @Composable
-internal fun HelpNowStepCard(index: Int, step: String, title: String, body: String) {
+internal fun EmergencyDialButtons(emergency: String, onDial: (String) -> Unit) {
+    val numbers = dialableNumbers(emergency)
+    if (numbers.isEmpty()) return
+    if (numbers.size == 1) {
+        EmergencyDialButton(numbers.single(), Modifier.fillMaxWidth(), onDial)
+        return
+    }
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        numbers.forEach { number ->
+            EmergencyDialButton(number, Modifier.weight(1f), onDial)
+        }
+    }
+}
+
+@Composable
+private fun EmergencyDialButton(number: String, modifier: Modifier, onDial: (String) -> Unit) {
+    Button(
+        onClick = { onDial(number) },
+        modifier = modifier.heightIn(min = HelpActionMinHeight),
+        shape = RoundedCornerShape(12.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+        ),
+    ) {
+        Text("拨打 $number", fontSize = 17.sp, textAlign = TextAlign.Center)
+    }
+}
+
+@Composable
+internal fun HelpNowStepCard(
+    index: Int,
+    step: String,
+    title: String,
+    body: String,
+    onDial: ((String) -> Unit)? = null,
+) {
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
@@ -149,7 +180,18 @@ internal fun HelpNowStepCard(index: Int, step: String, title: String, body: Stri
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(step, color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp, fontWeight = FontWeight.Medium)
                 Text(title, fontWeight = FontWeight.SemiBold, fontSize = 17.sp)
-                Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+                val numbers = if (onDial == null) emptyList() else dialableNumbers(body)
+                if (numbers.isEmpty() || !isEntirelyDialable(body)) {
+                    Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+                }
+                if (onDial != null) {
+                    numbers.forEach { number ->
+                        TextButton(
+                            onClick = { onDial(number) },
+                            modifier = Modifier.heightIn(min = 48.dp),
+                        ) { Text("拨打 $number", fontSize = 16.sp) }
+                    }
+                }
             }
         }
     }

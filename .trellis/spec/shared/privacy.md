@@ -40,6 +40,8 @@ If you need a debug breadcrumb while developing, keep it out of committed `commo
 
 Welcome 用户协议 / 隐私政策 hand `termsUrl` and `privacyUrl` (`https://anchor-legal.125457.xyz/terms` and `https://anchor-legal.125457.xyz/privacy`) to the system browser through `LocalUriHandler`. The app does not fetch those pages, so this does not add `INTERNET` or a WebView. `termsBody` and `privacyBody` stay in the APK and appear only when no browser can open the address. The manifest may declare an `https` `VIEW` query so Android 11+ can see a browser; that is package visibility, not a network permission.
 
+Crisis and guide numbers hand a `tel:` URI to the system dialer: Android `Intent.ACTION_DIAL`, iOS `UIApplication.openURL`. The user still confirms the call. This is not `CALL_PHONE`, not `INTERNET`, and not a request to a hotline directory. The manifest may declare a `DIAL` + `tel` query so Android 11+ can see a dialer. Do not add `LSApplicationQueriesSchemes` or call `canOpenURL` for `tel`. If no dialer exists, stay on the page.
+
 ---
 
 ## Notifications and timers

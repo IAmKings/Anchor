@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.ComposeUIViewController
+import com.anchor.app.safety.phoneTelUri
 import com.anchor.app.settings.ThemeChoice
 import com.anchor.app.storage.IOS_DATABASE_NAME
 import com.anchor.app.storage.IosDatabaseKey
@@ -18,7 +19,9 @@ import platform.Foundation.NSDate
 import platform.Foundation.NSDateFormatter
 import platform.Foundation.NSProcessInfo
 import platform.Foundation.NSUserDefaults
+import platform.Foundation.NSURL
 import platform.Foundation.dateWithTimeIntervalSince1970
+import platform.UIKit.UIApplication
 
 @OptIn(ExperimentalForeignApi::class)
 fun MainViewController() = ComposeUIViewController {
@@ -42,7 +45,16 @@ fun MainViewController() = ComposeUIViewController {
             themeChoice = choice
             writeIosThemeChoice(choice)
         },
+        onDial = ::dialIos,
     )
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun dialIos(number: String) {
+    val tel = phoneTelUri(number) ?: return
+    val url = NSURL.URLWithString(tel) ?: return
+    // openURL, not canOpenURL: tel does not need LSApplicationQueriesSchemes.
+    UIApplication.sharedApplication.openURL(url, emptyMap<Any?, Any>(), null)
 }
 
 private const val IosThemeKey = "anchor.theme"

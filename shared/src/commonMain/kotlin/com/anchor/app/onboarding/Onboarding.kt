@@ -33,7 +33,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -86,7 +85,7 @@ import com.anchor.app.home.homeWaitingGuideDetail
 import com.anchor.app.home.homeWaitingGuideTitle
 import com.anchor.app.safety.HelpNowStepCard
 import com.anchor.app.safety.crisisResource
-import com.anchor.app.safety.helpNowCallEmergency
+import com.anchor.app.safety.EmergencyDialButtons
 import com.anchor.app.safety.helpNowEnterWaiting
 import com.anchor.app.safety.helpNowImmediateDanger
 import com.anchor.app.safety.helpNowMedicalQuote
@@ -135,6 +134,7 @@ fun FirstRunAssessment(
     onOpenGuide: () -> Unit = {},
     onOpenChecklist: () -> Unit = {},
     onClose: () -> Unit,
+    onDial: (String) -> Unit = {},
 ) {
     var step by remember { mutableStateOf(Step.Welcome) }
     var ageGroup by remember { mutableStateOf<AgeGroup?>(null) }
@@ -223,6 +223,7 @@ fun FirstRunAssessment(
                 onOpenChecklist()
             },
             onFinish = { completeWithoutAnchor() },
+            onDial = onDial,
         )
         Step.Anchor -> FirstAnchorChoice(
             onConfirm = { firstAnchor ->
@@ -564,9 +565,10 @@ internal fun ResultStep(
     onFinish: () -> Unit,
     previous: SafetyState = SafetyState(),
     nowMillis: Long = 0,
+    onDial: (String) -> Unit = {},
 ) {
     when (outcome.action) {
-        SafetyAction.CrisisGuidance -> CrisisResult(outcome, youth, region, onOpenGuide, onOpenChecklist, onFinish)
+        SafetyAction.CrisisGuidance -> CrisisResult(outcome, youth, region, onOpenGuide, onOpenChecklist, onFinish, onDial)
         SafetyAction.MedicalWaiting -> MedicalResult(
             outcome,
             youth,
@@ -576,6 +578,7 @@ internal fun ResultStep(
             onFinish,
             previous,
             nowMillis,
+            onDial,
         )
         else -> MildResult(outcome, onChooseAnchor)
     }
@@ -648,6 +651,7 @@ private fun MedicalResult(
     onFinish: () -> Unit,
     previous: SafetyState,
     nowMillis: Long,
+    onDial: (String) -> Unit,
 ) {
     val staying = stillWaitingResult(previous, outcome, nowMillis)
     val resource = crisisResource(region, youth)
@@ -701,7 +705,7 @@ private fun MedicalResult(
             }
             QuoteCard()
             WaitingActions(onOpenGuide, onOpenChecklist)
-            HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline)
+            HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline, onDial)
             HelpNowStepCard(2, helpNowStep2Label, helpNowStep2Title, helpNowStep2Body)
             HelpNowStepCard(3, helpNowStep3Label, helpNowStep3Title, helpNowStep3Body)
             Text(scaleSource, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, textAlign = TextAlign.Center)
@@ -717,6 +721,7 @@ private fun CrisisResult(
     onOpenGuide: () -> Unit,
     onOpenChecklist: () -> Unit,
     onFinish: () -> Unit,
+    onDial: (String) -> Unit,
 ) {
     val resource = crisisResource(region, youth)
     Scaffold(
@@ -738,15 +743,7 @@ private fun CrisisResult(
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Button(
-                    onClick = onFinish,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-                    shape = CardShape,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        contentColor = MaterialTheme.colorScheme.onSecondary,
-                    ),
-                ) { Text(helpNowCallEmergency(resource.emergency), fontSize = 17.sp) }
+                EmergencyDialButtons(resource.emergency, onDial)
                 TextButton(onClick = onFinish, modifier = Modifier.fillMaxWidth()) {
                     Text(helpNowEnterWaiting)
                 }
@@ -763,7 +760,7 @@ private fun CrisisResult(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(helpNowTitle, Modifier.semantics { heading() }, fontSize = 26.sp, fontWeight = FontWeight.SemiBold)
-            HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline)
+            HelpNowStepCard(1, helpNowStep1Label, helpNowStep1Title, resource.hotline, onDial)
             HelpNowStepCard(2, helpNowStep2Label, helpNowStep2Title, helpNowStep2Body)
             HelpNowStepCard(3, helpNowStep3Label, helpNowStep3Title, helpNowStep3Body)
             WaitingActions(onOpenGuide, onOpenChecklist)

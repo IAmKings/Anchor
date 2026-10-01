@@ -76,6 +76,7 @@ fun ReassessmentFlow(
     onPostpone: () -> Unit = {},
     onRecovered: () -> Unit = {},
     onClose: () -> Unit,
+    onDial: (String) -> Unit = {},
 ) {
     var step by remember { mutableStateOf(ReassessStep.Invite) }
     val phq9 = remember { mutableStateListOf<Int?>().also { list -> repeat(9) { list.add(null) } } }
@@ -150,6 +151,7 @@ fun ReassessmentFlow(
             onFinish = onClose,
             previous = stateBeforeSubmit,
             nowMillis = nowMillis(),
+            onDial = onDial,
         )
         ReassessStep.Compare -> ReassessmentResultScreen(
             assessments = store.assessments(),

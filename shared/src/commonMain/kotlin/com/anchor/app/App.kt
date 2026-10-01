@@ -19,9 +19,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +53,11 @@ import com.anchor.app.safety.ReturnToPracticeScreen
 import com.anchor.app.safety.MedicalGuideScreen
 import com.anchor.app.safety.practiceReturnedBanner
 import com.anchor.app.safety.SafetyMode
+import com.anchor.app.safety.SafetyPlace
 import com.anchor.app.safety.SomaticChecklistScreen
+import com.anchor.app.safety.popSafety
+import com.anchor.app.safety.pushSafety
+import com.anchor.app.safety.safetyStateKey
 import com.anchor.app.storage.AgeGroup
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.InMemoryAnchorStore
@@ -172,6 +178,7 @@ fun App(
     onOpenUpdate: () -> Unit = {},
     themeChoice: ThemeChoice = ThemeChoice.System,
     onThemeChoice: (ThemeChoice) -> Unit = {},
+    onDial: (String) -> Unit = {},
 ) {
     val store = anchorStore ?: remember { InMemoryAnchorStore() }
     var waveVisible by remember { mutableStateOf(false) }
@@ -188,9 +195,7 @@ fun App(
     var rhythmVisible by remember { mutableStateOf(false) }
     var insightsVisible by remember { mutableStateOf(false) }
     var settingsVisible by remember { mutableStateOf(false) }
-    var helpVisible by remember { mutableStateOf(false) }
-    var medicalGuideVisible by remember { mutableStateOf(false) }
-    var medicalGuidePreviewing by remember { mutableStateOf(false) }
+    var safetyStack by remember { mutableStateOf(emptyList<SafetyPlace>()) }
     var homeRelationPreview by remember { mutableStateOf<HomeRelationKind?>(null) }
     var crisisClarificationPreviewVisible by remember { mutableStateOf(false) }
     var oneThingLockPreview by remember { mutableStateOf(false) }
@@ -208,9 +213,8 @@ fun App(
         recordsHubVisible = false
         settingsVisible = false
         crisisClarificationPreviewVisible = false
-        helpVisible = true
+        safetyStack = listOf(SafetyPlace.Help)
     }
-    var somaticChecklistVisible by remember { mutableStateOf(false) }
     var assessmentPreviewVisible by remember { mutableStateOf(false) }
     var reassessmentVisible by remember(store) {
         mutableStateOf(
@@ -242,8 +246,9 @@ fun App(
                     store = store,
                     nowMillis = nowMillis,
                     persist = true,
-                    onOpenGuide = { onboardingVisible = false; medicalGuideVisible = true },
-                    onOpenChecklist = { onboardingVisible = false; somaticChecklistVisible = true },
+                    onOpenGuide = { onboardingVisible = false; safetyStack = listOf(SafetyPlace.Guide(preview = false)) },
+                    onOpenChecklist = { onboardingVisible = false; safetyStack = listOf(SafetyPlace.Checklist) },
+                    onDial = onDial,
                     onClose = { onboardingVisible = false },
                 )
                 return@Surface
@@ -253,8 +258,9 @@ fun App(
                     store = store,
                     nowMillis = nowMillis,
                     persist = false,
-                    onOpenGuide = { assessmentPreviewVisible = false; medicalGuideVisible = true },
-                    onOpenChecklist = { assessmentPreviewVisible = false; somaticChecklistVisible = true },
+                    onOpenGuide = { assessmentPreviewVisible = false; safetyStack = listOf(SafetyPlace.Guide(preview = false)) },
+                    onOpenChecklist = { assessmentPreviewVisible = false; safetyStack = listOf(SafetyPlace.Checklist) },
+                    onDial = onDial,
                     onClose = { assessmentPreviewVisible = false },
                 )
                 return@Surface
@@ -265,8 +271,9 @@ fun App(
                     nowMillis = nowMillis,
                     persist = true,
                     localMinuteOfDay = localMinuteOfDay,
-                    onOpenGuide = { reassessmentVisible = false; medicalGuideVisible = true },
-                    onOpenChecklist = { reassessmentVisible = false; somaticChecklistVisible = true },
+                    onOpenGuide = { reassessmentVisible = false; safetyStack = listOf(SafetyPlace.Guide(preview = false)) },
+                    onOpenChecklist = { reassessmentVisible = false; safetyStack = listOf(SafetyPlace.Checklist) },
+                    onDial = onDial,
                     onAddMicroAction = { reassessmentVisible = false; microActionVisible = true },
                     onPostpone = onPostponeReassessment,
                     onRecovered = { practiceReturnedVisible = true },
@@ -365,40 +372,49 @@ fun App(
                 )
                 return@Surface
             }
-            if (helpVisible) {
-                HelpNowScreen(
-                    region = store.userProfile().crisisRegion,
-                    youth = store.userProfile().ageGroup == AgeGroup.Youth14To17,
-                    onOpenGuide = { helpVisible = false; medicalGuideVisible = true },
-                    onOpenChecklist = { helpVisible = false; somaticChecklistVisible = true },
-                    onClose = { helpVisible = false },
-                )
-                return@Surface
-            }
-            if (medicalGuideVisible) {
-                MedicalGuideScreen(
-                    region = store.userProfile().crisisRegion,
-                    youth = store.userProfile().ageGroup == AgeGroup.Youth14To17,
-                    onOpenChecklist = {
-                        medicalGuideVisible = false
-                        medicalGuidePreviewing = false
-                        somaticChecklistVisible = true
-                    },
-                    onOpenRecords = {
-                        medicalGuideVisible = false
-                        medicalGuidePreviewing = false
-                        cameraLogVisible = true
-                    },
-                    onClose = {
-                        medicalGuideVisible = false
-                        medicalGuidePreviewing = false
-                    },
-                    previewing = medicalGuidePreviewing,
-                )
-                return@Surface
-            }
-            if (somaticChecklistVisible) {
-                SomaticChecklistScreen(onClose = { somaticChecklistVisible = false })
+            if (safetyStack.isNotEmpty()) {
+                val region = store.userProfile().crisisRegion
+                val youth = store.userProfile().ageGroup == AgeGroup.Youth14To17
+                val safetyStates = rememberSaveableStateHolder()
+                val keptSafetyKeys = remember { mutableSetOf<String>() }
+                val place = safetyStack.last()
+                // Places still underneath keep their scroll. A place that left the stack does not.
+                safetyStates.SaveableStateProvider(place.let(::safetyStateKey)) {
+                    when (place) {
+                    SafetyPlace.Help -> HelpNowScreen(
+                        region = region,
+                        youth = youth,
+                        onOpenGuide = { safetyStack = pushSafety(safetyStack, SafetyPlace.Guide(preview = false)) },
+                        onOpenChecklist = { safetyStack = pushSafety(safetyStack, SafetyPlace.Checklist) },
+                        onClose = { safetyStack = popSafety(safetyStack) },
+                        onDial = onDial,
+                    )
+                    is SafetyPlace.Guide -> MedicalGuideScreen(
+                        region = region,
+                        youth = youth,
+                        onOpenChecklist = { safetyStack = pushSafety(safetyStack, SafetyPlace.Checklist) },
+                        onOpenRecords = { safetyStack = pushSafety(safetyStack, SafetyPlace.Journal) },
+                        onClose = { safetyStack = popSafety(safetyStack) },
+                        previewing = place.preview,
+                        onDial = onDial,
+                    )
+                    SafetyPlace.Checklist -> SomaticChecklistScreen(
+                        onClose = { safetyStack = popSafety(safetyStack) },
+                    )
+                    SafetyPlace.Journal -> CameraLogScreen(
+                        store = store,
+                        nowMillis = nowMillis,
+                        onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
+                        onClose = { safetyStack = popSafety(safetyStack) },
+                    )
+                    }
+                }
+                SideEffect {
+                    val current = safetyStack.map(::safetyStateKey).toSet()
+                    (keptSafetyKeys - current).forEach(safetyStates::removeState)
+                    keptSafetyKeys.clear()
+                    keptSafetyKeys.addAll(current)
+                }
                 return@Surface
             }
             if (settingsVisible) {
@@ -429,13 +445,11 @@ fun App(
                         onToggleReminder = onToggleReminder,
                         themeChoice = themeChoice,
                         onThemeChoice = onThemeChoice,
-                        onOpenHelp = { settingsVisible = false; helpVisible = true },
+                        onOpenHelp = { safetyStack = pushSafety(safetyStack, SafetyPlace.Help) },
                         onPreviewOnboarding = { settingsVisible = false; assessmentPreviewVisible = true },
                         onPreviewReturnToPractice = { settingsVisible = false; returnToPracticePreviewVisible = true },
                         onPreviewMedicalGuide = {
-                            settingsVisible = false
-                            medicalGuidePreviewing = true
-                            medicalGuideVisible = true
+                            safetyStack = pushSafety(safetyStack, SafetyPlace.Guide(preview = true))
                         },
                         onPreviewHomeRelation = {
                             settingsVisible = false
@@ -497,7 +511,7 @@ fun App(
                     onWorryVault = { if (canPractice(FirstAnchor.WorryVault)) worryVaultVisible = true },
                     onInsights = { recordsHubVisible = false; insightsVisible = true },
                     onSettings = { recordsHubVisible = false; settingsVisible = true },
-                    onHelp = { recordsHubVisible = false; helpVisible = true },
+                    onHelp = { safetyStack = pushSafety(safetyStack, SafetyPlace.Help) },
                     onClose = { recordsHubVisible = false },
                     showEmotion = canPractice(FirstAnchor.EmotionLabel),
                     showJournal = canPractice(FirstAnchor.FactsJournal),
@@ -530,9 +544,9 @@ fun App(
                     onRecords = { recordsHubVisible = true },
                     onInsights = { insightsVisible = true },
                     onSettings = { settingsVisible = true },
-                    onHelp = { helpVisible = true },
-                    onMedicalGuide = { medicalGuideVisible = true },
-                    onSomaticChecklist = { somaticChecklistVisible = true },
+                    onHelp = { safetyStack = pushSafety(safetyStack, SafetyPlace.Help) },
+                    onMedicalGuide = { safetyStack = pushSafety(safetyStack, SafetyPlace.Guide(preview = false)) },
+                    onSomaticChecklist = { safetyStack = pushSafety(safetyStack, SafetyPlace.Checklist) },
                     onWorryVault = { if (canPractice(FirstAnchor.WorryVault)) worryVaultVisible = true },
                     hangSheetOpen = hangSheetVisible,
                     onHang = { if (canPractice(FirstAnchor.WorryVault)) hangSheetVisible = true },

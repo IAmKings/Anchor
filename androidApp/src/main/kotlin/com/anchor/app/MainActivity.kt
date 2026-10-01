@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity
 import com.anchor.app.reminder.AndroidReminderScheduler
 import com.anchor.app.reminder.ReminderKind
 import com.anchor.app.settings.ReminderToggle
+import com.anchor.app.safety.phoneTelUri
 import com.anchor.app.settings.ThemeChoice
 import com.anchor.app.settings.useDark
 import com.anchor.app.timer.AndroidBackgroundTimer
@@ -197,7 +198,17 @@ class MainActivity : FragmentActivity() {
                     themeChoice = choice
                     themePreference.choice = choice
                 },
+                onDial = ::dialNumber,
             )
+        }
+    }
+
+    private fun dialNumber(number: String) {
+        val tel = phoneTelUri(number) ?: return
+        try {
+            startActivity(Intent(Intent.ACTION_DIAL, Uri.parse(tel)))
+        } catch (_: ActivityNotFoundException) {
+            // The number stays on the page.
         }
     }
 

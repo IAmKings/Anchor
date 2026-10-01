@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -59,6 +60,7 @@ fun MedicalGuideScreen(
     onOpenRecords: () -> Unit = {},
     onClose: () -> Unit,
     previewing: Boolean = false,
+    onDial: (String) -> Unit = {},
 ) {
     var shownRegion by remember(region) { mutableStateOf(region) }
     val content = medicalGuideContent(shownRegion, youth)
@@ -135,12 +137,12 @@ fun MedicalGuideScreen(
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 16.sp,
                             )
-                            EmergencyActionLine(content.emergency)
+                            EmergencyActionLine(content.emergency, onDial)
                         }
                     }
                     content.hotlines.forEachIndexed { index, line ->
                         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
-                        HotlineRow(line, emphasize = index == 0)
+                        HotlineRow(line, emphasize = index == 0, onDial = onDial)
                     }
                 }
             }
@@ -200,8 +202,10 @@ fun MedicalGuideScreen(
 }
 
 @Composable
-private fun EmergencyActionLine(emergency: MedicalGuideEmergency) {
-    if (emergency.numbers.isEmpty()) {
+@OptIn(ExperimentalLayoutApi::class)
+private fun EmergencyActionLine(emergency: MedicalGuideEmergency, onDial: (String) -> Unit) {
+    val numbers = emergency.numbers.filter { phoneTelUri(it) != null }
+    if (numbers.isEmpty()) {
         Text(
             emergency.actionLine(),
             color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.85f),
@@ -209,51 +213,79 @@ private fun EmergencyActionLine(emergency: MedicalGuideEmergency) {
         )
         return
     }
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(
-            "请立即拨打 ",
-            color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.85f),
-            fontSize = 14.sp,
-        )
-        emergency.numbers.forEachIndexed { index, number ->
+    FlowRow(
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Box(Modifier.heightIn(min = 48.dp), contentAlignment = Alignment.CenterStart) {
+            Text(
+                "请立即拨打 ",
+                color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.85f),
+                fontSize = 14.sp,
+            )
+        }
+        numbers.forEachIndexed { index, number ->
             if (index > 0) {
+                Box(Modifier.heightIn(min = 48.dp), contentAlignment = Alignment.CenterStart) {
+                    Text(
+                        " 或 ",
+                        color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.85f),
+                        fontSize = 14.sp,
+                    )
+                }
+            }
+            TextButton(
+                onClick = { onDial(number) },
+                modifier = Modifier.heightIn(min = 48.dp).semantics { contentDescription = "拨打 $number" },
+            ) {
                 Text(
-                    " 或 ",
-                    color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.85f),
-                    fontSize = 14.sp,
+                    number,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Medium,
                 )
             }
-            Text(
-                number,
-                color = MaterialTheme.colorScheme.error,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Medium,
-            )
         }
     }
 }
 
 @Composable
-private fun HotlineRow(line: GuideHotline, emphasize: Boolean) {
+private fun HotlineRow(line: GuideHotline, emphasize: Boolean, onDial: (String) -> Unit) {
+    val phones = line.phoneNumbers()
+    val note = line.note()
+    val showNumber = !isEntirelyDialable(line.number)
     Row(
-        Modifier.fillMaxWidth().padding(16.dp),
+        Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(line.name, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-            if (line.detail.isNotEmpty()) {
-                Text(line.detail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            if (note.isNotEmpty()) {
+                Text(note, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            }
+            if (showNumber) {
+                Text(line.number, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 22.sp)
             }
         }
-        Text(
-            line.number,
-            Modifier.widthIn(max = 168.dp),
-            color = if (emphasize) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.End,
-        )
+        Column(horizontalAlignment = Alignment.End) {
+            phones.forEach { number ->
+                TextButton(
+                    onClick = { onDial(number) },
+                    modifier = Modifier.heightIn(min = 48.dp).widthIn(max = 168.dp).semantics {
+                        contentDescription = "拨打 $number"
+                    },
+                ) {
+                    Text(
+                        number,
+                        color = if (emphasize) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.End,
+                    )
+                }
+            }
+        }
     }
 }
 

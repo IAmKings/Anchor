@@ -90,6 +90,41 @@ Do not fetch or "verify" numbers on a network. If a number is wrong, change the 
 
 ---
 
+## Safety page stack
+
+Crisis, guide, checklist, and the guide's journal are one stack in `App`: `safetyStack: List<SafetyPlace>` (`SafetyStack.kt`). They are not independent booleans. A child must not clear the parent flag to become visible.
+
+| Place | How it opens | Back |
+|-------|----------------|------|
+| `Help` | Push from home, records, or settings. `openCrisisFromText` **replaces** the stack with Help (worry, emotion, camera log, hang sheet, records, settings). | Pop one. The opener's flag is still set, so home / records / settings returns. |
+| `Guide(preview)` | Push from Help, home, or settings preview. First-run, assessment preview, and reassessment **close that flow** and set a new root `listOf(Guide)`, not a push. | Pop one. Settings preview keeps `settingsVisible`. |
+| `Checklist` | Push from Help, Guide, or home. Same new-root rule as Guide when opened from an assessment flow. | Pop one. |
+| `Journal` | Push only from the guide's 「打开记录」. | Pop back to the guide. |
+
+`pushSafety` appends. `popSafety` drops the last entry; an empty stack stays empty. System back and `AnchorBack` both call that pop.
+
+The records hub's own camera log is still `cameraLogVisible`, and that branch is checked **after** the stack. Do not route it through `SafetyPlace.Journal`.
+
+Wave, worry, insights, and the other full-screen flags still return before the stack. `openCrisisFromText` clears the ones that would hide Help.
+
+---
+
+## Dialing
+
+Parsing lives in `PhoneDial.kt`. Do not copy it into a screen.
+
+- Split on `/` `、` `；` `;` `或`. Do not split on spaces: `2382 0000` is one number.
+- A token is dialable only when it contains no letters (`isLetter`, so Chinese counts) and, after dropping spaces and hyphens, is an optional `+` plus 3–15 digits.
+- `phoneTelUri` returns `tel:` plus digits, keeping one leading `+`. `010-82951332` → `tel:01082951332`. `+86 10 55` → `tel:+861055`.
+- `当地紧急电话`, `请查询当地心理援助资源`, and `NHS 111 转 2` are not buttons. A dialable piece after a separator still is (`116 123`).
+- `GuideHotline.phoneNumbers()` is `dialableNumbers(number) + dialableNumbers(detail)`, distinct. `note()` is `detail` only when `detail` itself has no dialable number (北京 `800-810-1117` is a second target, not a note).
+- If the whole string is dialable, do not also print it as plain text. Otherwise keep the prose and add a button per dialable piece.
+- No dialable piece means no button. Do not invent one, and do not call `onClose` / `onFinish` from a dial control.
+
+The host opens the system dialer. Android: `Intent.ACTION_DIAL`. iOS: `UIApplication.openURL` with the `tel:` URL. Do not use `canOpenURL` (that is what needs `LSApplicationQueriesSchemes`). No `CALL_PHONE`. The safety page stays open. `ActivityNotFoundException` or a missing dialer leaves the number on the page. The user confirms the call. Do not fetch numbers.
+
+---
+
 ## Validation & error matrix
 
 | Input | Result |
@@ -116,6 +151,8 @@ Do not fetch or "verify" numbers on a network. If a number is wrong, change the 
 - Item 9, keyword clarification matrix, either-scale-at-15, 6-day vs 7-day recovery.
 - Copy: crisis result badge `"需要立即支持"`, waiting `"中度至重度"` (`BaselineAssessmentTest`).
 - Hotline mapping per region and youth flag (`CrisisResourcesTest`).
+- Stack push/pop, including journal back to the guide and pop on an empty stack (`SafetyStackTest`).
+- Dial split, `tel:` normalization, prose rejection, and Beijing / 12356 note (`PhoneDialTest`).
 
 When changing hysteresis or bands, extend `SafetyPolicyTest` first. Do not "fix" waiting by writing `SafetyState()` from a screen.
 
