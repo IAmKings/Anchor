@@ -66,6 +66,9 @@ internal fun additionalPracticeUnlocked(firstAnchorAtMillis: Long?, nowMillis: L
 internal fun practiceVisible(anchor: FirstAnchor, selected: FirstAnchor?, unlocked: Boolean): Boolean =
     unlocked || selected == null || selected == anchor
 
+internal fun factLogVisible(medicalWaiting: Boolean, practiceAllowed: Boolean): Boolean =
+    medicalWaiting || practiceAllowed
+
 internal fun firstAnchorTitle(anchor: FirstAnchor): String =
     (p0FirstAnchors + p1FirstAnchors).first { it.anchor == anchor }.title
 

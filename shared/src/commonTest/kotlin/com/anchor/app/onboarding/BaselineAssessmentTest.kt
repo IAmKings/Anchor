@@ -98,6 +98,9 @@ class BaselineAssessmentTest {
         assertFalse(practiceVisible(FirstAnchor.WaveWaiting, FirstAnchor.MicroAction, unlocked = false))
         assertTrue(practiceVisible(FirstAnchor.MicroAction, FirstAnchor.MicroAction, unlocked = false))
         assertTrue(practiceVisible(FirstAnchor.WaveWaiting, FirstAnchor.MicroAction, unlocked = true))
+        assertTrue(factLogVisible(medicalWaiting = true, practiceAllowed = false))
+        assertFalse(factLogVisible(medicalWaiting = false, practiceAllowed = false))
+        assertTrue(factLogVisible(medicalWaiting = false, practiceAllowed = true))
         assertTrue(oneThingLockBody(FirstAnchor.MicroAction).contains("5 分钟微行动"))
         assertFalse(oneThingLockBody(FirstAnchor.MicroAction).contains("必须"))
     }

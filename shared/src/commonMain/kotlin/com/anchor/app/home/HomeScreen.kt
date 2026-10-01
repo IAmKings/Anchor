@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -130,6 +131,7 @@ fun HomeScreen(
     onRelationPreviewChange: (HomeRelationKind?) -> Unit = {},
     forceOneThingLock: Boolean = false,
     onDismissOneThingLock: () -> Unit = {},
+    scrollState: ScrollState = rememberScrollState(),
 ) {
     val profile = store.userProfile()
     val unlocked = !forceOneThingLock && additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis())
@@ -173,7 +175,7 @@ fun HomeScreen(
             Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
                 .padding(horizontal = 20.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),

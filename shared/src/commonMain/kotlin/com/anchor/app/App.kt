@@ -1,6 +1,7 @@
 package com.anchor.app
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.anchor.app.onboarding.FirstRunAssessment
 import com.anchor.app.onboarding.FirstAnchorChoice
 import com.anchor.app.onboarding.additionalPracticeUnlocked
+import com.anchor.app.onboarding.factLogVisible
 import com.anchor.app.onboarding.oneThingLockBody
 import com.anchor.app.onboarding.practiceVisible
 import com.anchor.app.storage.FirstAnchor
@@ -196,6 +198,7 @@ fun App(
     var insightsVisible by remember { mutableStateOf(false) }
     var settingsVisible by remember { mutableStateOf(false) }
     var safetyStack by remember { mutableStateOf(emptyList<SafetyPlace>()) }
+    val homeScroll = rememberScrollState()
     var homeRelationPreview by remember { mutableStateOf<HomeRelationKind?>(null) }
     var crisisClarificationPreviewVisible by remember { mutableStateOf(false) }
     var oneThingLockPreview by remember { mutableStateOf(false) }
@@ -523,6 +526,7 @@ fun App(
             Box(Modifier.fillMaxSize()) {
                 HomeScreen(
                     store = store,
+                    scrollState = homeScroll,
                     medicalWaiting = store.safetyState().mode == SafetyMode.MedicalWaiting,
                     bannerText = inAppBannerText ?: if (practiceReturnedVisible) practiceReturnedBanner else null,
                     onDismissBanner = {
@@ -557,7 +561,15 @@ fun App(
                             relationVisible = true
                         }
                     },
-                    onCameraLog = { if (canPractice(FirstAnchor.FactsJournal)) cameraLogVisible = true },
+                    onCameraLog = {
+                        if (factLogVisible(
+                                store.safetyState().mode == SafetyMode.MedicalWaiting,
+                                canPractice(FirstAnchor.FactsJournal),
+                            )
+                        ) {
+                            cameraLogVisible = true
+                        }
+                    },
                     relationPreview = homeRelationPreview,
                     onRelationPreviewChange = { homeRelationPreview = it },
                     forceOneThingLock = oneThingLockPreview,

@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.onboarding.EmotionLabelIcon
+import com.anchor.app.onboarding.factLogVisible
 import com.anchor.app.onboarding.FactsJournalIcon
 import com.anchor.app.onboarding.WorryVaultIcon
 import com.anchor.app.ui.AnchorIconWell
@@ -98,7 +99,7 @@ fun RecordsHub(
                     onClick = onEmotionCards,
                 )
             }
-            if (showJournal || medicalWaiting) {
+            if (factLogVisible(medicalWaiting, showJournal)) {
                 RecordEntryCard(
                     icon = FactsJournalIcon,
                     wellColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
