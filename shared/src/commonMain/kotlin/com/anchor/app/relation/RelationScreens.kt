@@ -54,7 +54,9 @@ fun RelationFlow(
     showAltruism: Boolean = true,
     onClose: () -> Unit,
 ) {
-    var step by remember { mutableStateOf(RelationStep.Hub) }
+    var step by remember(showInventory, showAltruism) {
+        mutableStateOf(if (showAltruism && !showInventory) RelationStep.Altruism else RelationStep.Hub)
+    }
     var revision by remember { mutableIntStateOf(0) }
     when (step) {
         RelationStep.Hub -> RelationHub(
@@ -84,7 +86,7 @@ fun RelationFlow(
             nowMillis = nowMillis,
             revision = revision,
             onChanged = { revision++ },
-            onBack = { step = RelationStep.Hub },
+            onBack = { if (showInventory) step = RelationStep.Hub else onClose() },
         )
     }
 }

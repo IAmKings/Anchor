@@ -73,6 +73,7 @@ fun SettingsScreen(
     onPreviewHomeRelation: () -> Unit = {},
     onPreviewCrisisClarification: () -> Unit = {},
     onPreviewOneThingLock: () -> Unit = {},
+    onPreviewUnlock: () -> Unit = {},
     onOpenReassessment: () -> Unit = {},
     installedVersionName: String = "",
     updateCheckAvailable: Boolean = false,
@@ -232,6 +233,7 @@ fun SettingsScreen(
                 TextButton(onClick = onPreviewHomeRelation) { Text(settingsPreviewRelation) }
                 TextButton(onClick = onPreviewCrisisClarification) { Text(settingsPreviewCrisis) }
                 TextButton(onClick = onPreviewOneThingLock) { Text(settingsPreviewLock) }
+                TextButton(onClick = onPreviewUnlock) { Text(settingsPreviewUnlock) }
             }
             Spacer(Modifier.height(16.dp))
         }

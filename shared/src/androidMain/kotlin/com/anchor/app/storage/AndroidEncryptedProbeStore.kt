@@ -50,7 +50,11 @@ class AndroidEncryptedProbeStore private constructor(
         val rhythm = root.getJSONArray("rhythmEntries")
 
         profile.nullableString("ageGroup")?.let(AgeGroup::valueOf)
-        profile.nullableString("firstAnchor")?.let(FirstAnchor::valueOf)
+        val restoredFirst = profile.nullableString("firstAnchor")?.let(FirstAnchor::valueOf)
+        val restoredAdded = profile.optJSONArray("addedAnchors")?.let { array ->
+            (0 until array.length()).map { FirstAnchor.valueOf(array.getString(it)) }
+        }.orEmpty()
+        validateAddedAnchors(restoredFirst, restoredAdded)
         profile.nullableString("crisisRegion")?.let(CrisisRegion::valueOf)
         SafetyMode.valueOf(safety.getString("mode"))
         assessments.objects().forEach {
@@ -85,6 +89,7 @@ class AndroidEncryptedProbeStore private constructor(
                 profile.nullableString("firstAnchor"),
                 profile.nullableString("crisisRegion") ?: CrisisRegion.MainlandChina.name,
                 profile.nullableLong("firstAnchorAt"),
+                encodeAddedAnchors(restoredAdded),
             )
             queries.upsertSafetyState(safety.getString("mode"), safety.nullableLong("firstLowAssessmentAt"))
             assessments.objects().forEach { a -> queries.restoreAssessment(a.getLong("completedAt"), a.getJSONArray("phq9").ints().joinToString(","), a.getJSONArray("gad7").ints().joinToString(","), a.getLong("phq9Score"), a.getString("phq9Band"), a.getLong("gad7Score"), a.getString("gad7Band"), a.getString("action")) }

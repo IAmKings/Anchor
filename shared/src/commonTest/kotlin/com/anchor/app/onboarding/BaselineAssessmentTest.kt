@@ -23,6 +23,20 @@ class BaselineAssessmentTest {
         assertEquals(setOf(FirstAnchor.SocialEnergy, FirstAnchor.AltruisticTask), p1FirstAnchors.map { it.anchor }.toSet())
         assertTrue(FirstAnchor.EmotionLabel in p0FirstAnchors.map { it.anchor })
         assertTrue(FirstAnchor.WaveWaiting in p0FirstAnchors.map { it.anchor })
+        assertEquals(
+            listOf(
+                FirstAnchor.EmotionLabel,
+                FirstAnchor.FactsJournal,
+                FirstAnchor.Rhythm,
+                FirstAnchor.SocialEnergy,
+                FirstAnchor.AltruisticTask,
+            ),
+            choosableFirstAnchors.map { it.anchor },
+        )
+        assertEquals(
+            listOf(FirstAnchor.EmotionLabel, FirstAnchor.FactsJournal, FirstAnchor.SocialEnergy, FirstAnchor.AltruisticTask),
+            anchorsAvailableToAdd(FirstAnchor.Rhythm, emptyList()),
+        )
         assertEquals("确认选择", confirmFirstAnchorLabel)
         assertEquals("选定后我们将固定练习 14 天", firstAnchorCommitHint)
         assertFalse(p0FirstAnchors.any { it.title.startsWith("✓") })
@@ -95,9 +109,24 @@ class BaselineAssessmentTest {
         assertTrue(additionalPracticeUnlocked(null, start))
         assertFalse(additionalPracticeUnlocked(start, start + REASSESSMENT_INTERVAL_MILLIS - 1))
         assertTrue(additionalPracticeUnlocked(start, start + REASSESSMENT_INTERVAL_MILLIS))
-        assertFalse(practiceVisible(FirstAnchor.WaveWaiting, FirstAnchor.MicroAction, unlocked = false))
-        assertTrue(practiceVisible(FirstAnchor.MicroAction, FirstAnchor.MicroAction, unlocked = false))
-        assertTrue(practiceVisible(FirstAnchor.WaveWaiting, FirstAnchor.MicroAction, unlocked = true))
+        assertTrue(availableDuringOneThingLock(FirstAnchor.WaveWaiting))
+        assertTrue(availableDuringOneThingLock(FirstAnchor.MicroAction))
+        assertTrue(availableDuringOneThingLock(FirstAnchor.WorryVault))
+        assertFalse(availableDuringOneThingLock(FirstAnchor.Rhythm))
+        assertFalse(availableDuringOneThingLock(FirstAnchor.SocialEnergy))
+        assertTrue(practiceVisible(FirstAnchor.WaveWaiting, FirstAnchor.Rhythm))
+        assertTrue(practiceVisible(FirstAnchor.MicroAction, FirstAnchor.Rhythm))
+        assertTrue(practiceVisible(FirstAnchor.WorryVault, FirstAnchor.Rhythm))
+        assertTrue(practiceVisible(FirstAnchor.Rhythm, FirstAnchor.Rhythm))
+        assertFalse(practiceVisible(FirstAnchor.Rhythm, FirstAnchor.MicroAction))
+        assertFalse(practiceVisible(FirstAnchor.SocialEnergy, FirstAnchor.Rhythm))
+        assertFalse(practiceVisible(FirstAnchor.AltruisticTask, FirstAnchor.Rhythm))
+        assertFalse(practiceVisible(FirstAnchor.EmotionLabel, FirstAnchor.Rhythm))
+        assertFalse(practiceVisible(FirstAnchor.FactsJournal, FirstAnchor.Rhythm))
+        assertTrue(practiceVisible(FirstAnchor.SocialEnergy, FirstAnchor.SocialEnergy))
+        assertTrue(practiceVisible(FirstAnchor.Rhythm, null))
+        assertFalse(practiceVisible(FirstAnchor.Rhythm, FirstAnchor.MicroAction, emptySet()))
+        assertTrue(practiceVisible(FirstAnchor.Rhythm, FirstAnchor.MicroAction, setOf(FirstAnchor.Rhythm)))
         assertTrue(factLogVisible(medicalWaiting = true, practiceAllowed = false))
         assertFalse(factLogVisible(medicalWaiting = false, practiceAllowed = false))
         assertTrue(factLogVisible(medicalWaiting = false, practiceAllowed = true))

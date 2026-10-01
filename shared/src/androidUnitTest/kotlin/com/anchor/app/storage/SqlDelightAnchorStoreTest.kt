@@ -20,6 +20,7 @@ class SqlDelightAnchorStoreTest {
                 onboardingComplete = true,
                 firstAnchor = FirstAnchor.EmotionLabel,
                 firstAnchorAtMillis = 1_000,
+                addedAnchors = listOf(FirstAnchor.FactsJournal, FirstAnchor.Rhythm),
             ),
         )
         first.addCameraLog("10:00 收到回复", "他可能不高兴", 1_500)
@@ -30,6 +31,7 @@ class SqlDelightAnchorStoreTest {
 
         val reopened = SqlDelightAnchorStore(AnchorDatabase(driver).encryptedProbeQueries)
         assertEquals(FirstAnchor.EmotionLabel, reopened.userProfile().firstAnchor)
+        assertEquals(listOf(FirstAnchor.FactsJournal, FirstAnchor.Rhythm), reopened.userProfile().addedAnchors)
         assertEquals("他可能不高兴", reopened.cameraLogs().single().inference)
         assertEquals(1, reopened.assessments().size)
         val thrown = runCatching { reopened.addEmotionCard("难受", "开会", "没人说话", 3_000) }

@@ -9,13 +9,20 @@ class LocalExportTest {
     @Test
     fun exportsRealRecordsAndEscapesJsonAndCsv() {
         val store = InMemoryAnchorStore()
-        store.saveUserProfile(UserProfile(crisisRegion = CrisisRegion.Japan))
+        store.saveUserProfile(
+            UserProfile(
+                crisisRegion = CrisisRegion.Japan,
+                firstAnchor = FirstAnchor.Rhythm,
+                addedAnchors = listOf(FirstAnchor.FactsJournal, FirstAnchor.SocialEnergy),
+            ),
+        )
         store.addCameraLog("他说 \"好\"", "第一行\n第二行", 1_000)
         store.addRhythmEntry(900, null, 1_000)
 
         val export = buildLocalExport(store)
 
-        assertContains(export.json, "\"exportVersion\":4")
+        assertContains(export.json, "\"exportVersion\":5")
+        assertContains(export.json, "\"addedAnchors\":[\"FactsJournal\",\"SocialEnergy\"]")
         assertContains(export.json, "他说 \\\"好\\\"")
         assertContains(export.json, "第一行\\n第二行")
         assertContains(export.json, "\"wakeAt\":900")

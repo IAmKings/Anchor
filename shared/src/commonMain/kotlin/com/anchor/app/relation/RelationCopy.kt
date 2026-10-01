@@ -25,6 +25,34 @@ internal val socialAltruism = listOf(
 
 internal const val relationBackLabel = "返回"
 internal const val relationHubTitle = "关系与利他"
+internal const val homeSocialOnlyLabel = "无损消耗"
+internal const val homeAltruismOnlyLabel = "利他微任务"
+internal const val homeSocialOnlyBody = "留意需要全程自我监控的关系。"
+internal const val homeAltruismOnlyBody = "用一件小事把注意力转向外部。"
+private const val combinedRelationBody = "盘点关系，或抽一件小事"
+
+internal fun relationEntryLabel(
+    social: Boolean,
+    altruism: Boolean,
+    presentation: HomeRelationPresentation,
+): String = when {
+    social && altruism -> presentation.cardLabel
+    altruism && presentation.kind == HomeRelationKind.Exhausted -> presentation.cardLabel
+    social -> homeSocialOnlyLabel
+    altruism -> homeAltruismOnlyLabel
+    else -> presentation.cardLabel
+}
+
+internal fun relationEntryBody(
+    social: Boolean,
+    altruism: Boolean,
+    presentation: HomeRelationPresentation,
+): String = when {
+    social && altruism -> presentation.cardBody
+    presentation.cardBody == combinedRelationBody && social -> homeSocialOnlyBody
+    presentation.cardBody == combinedRelationBody && altruism -> homeAltruismOnlyBody
+    else -> presentation.cardBody
+}
 internal const val relationHubBody = "盘点需要演戏的关系，或抽一件对别人有用的小事。默认先做不社交的。"
 internal const val altruismHubHint = "默认先抽不社交的小事。"
 internal const val inventoryTitle = "关系耗竭自测"

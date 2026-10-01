@@ -69,9 +69,9 @@ Item 9 crisis **skips GAD-7** in the first-run UI (`shouldSkipGad7`). The policy
 These are different mechanisms. Do not merge them.
 
 - **Medical waiting** (`SafetyMode.MedicalWaiting`): hide practice entries; keep help, medical guide, somatic checklist, and fact-only camera log. The waiting-home 「事实记录」 row opens that log even when another anchor holds the 14-day lock (`factLogVisible`). Do not gate it with `practiceVisible` alone. Copy: pause is not punishment (`medicalWaitingBody` in `OnboardingCopy.kt`).
-- **One-thing lock**: after first-anchor choice, only that practice is visible for 14 days (`REASSESSMENT_INTERVAL_MILLIS`). `firstAnchorAtMillis == null` (legacy profiles) is treated as unlocked. Helpers: `additionalPracticeUnlocked`, `practiceVisible` in `OnboardingCopy.kt`.
+- **One-thing lock**: after first-anchor choice, the lock note names that practice for 14 days (`REASSESSMENT_INTERVAL_MILLIS`). It does not hide 浪潮等待, 微行动, or 忧虑保险箱 / 挂卡 (`availableDuringOneThingLock`). Those three are not in `choosableFirstAnchors`. The other five stay hidden unless that anchor is the first choice or is later in `UserProfile.addedAnchors`. Passing the interval does not reveal them; it only enables 「再加一件」. `firstAnchorAtMillis == null` (legacy profiles) is treated as open. Adding does not move `firstAnchorAtMillis`. Helpers: `additionalPracticeUnlocked`, `practiceVisible`, `anchorsAvailableToAdd` in `OnboardingCopy.kt`.
 
-Wave waiting stays reachable from the home orb even when other practices are locked, unless medical waiting is active.
+Wave waiting, micro-action, and the worry vault stay reachable from the practice home during the lock, unless medical waiting is active.
 
 Settings may **preview** waiting / relation / lock states without writing `SafetyState`. Do not persist preview toggles.
 

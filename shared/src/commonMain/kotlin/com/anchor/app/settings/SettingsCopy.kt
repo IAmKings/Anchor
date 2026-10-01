@@ -77,6 +77,8 @@ internal const val settingsPreviewMedical = "预览就医指南（不改地区�
 internal const val settingsPreviewRelation = "预览首页回血 / 抽干 / 耗竭（不改记录）"
 internal const val settingsPreviewCrisis = "预览危机澄清（不改状态）"
 internal const val settingsPreviewLock = "预览一次一件锁定（不改选择）"
+internal const val settingsPreviewUnlock = "预览 14 天已开放（不改选择）"
+internal const val unlockPreviewNote = "预览中，不会改选择。"
 
 internal fun isExportSuccess(status: String?): Boolean =
     status?.startsWith("已生成") == true

@@ -30,7 +30,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -45,6 +47,7 @@ import com.anchor.app.storage.AnchorStore
 private val SheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
 private val FieldShape = RoundedCornerShape(12.dp)
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HangSheet(
     store: AnchorStore,
@@ -102,6 +105,8 @@ fun HangSheet(
             onCaptureSpeech { content = it }
         }
     }
+
+    BackHandler(onBack = ::close)
 
     Box(Modifier.fillMaxSize().imePadding()) {
         Box(

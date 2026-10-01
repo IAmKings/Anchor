@@ -158,6 +158,7 @@ fun FirstRunAssessment(
                     current.firstAnchorAtMillis
                 },
                 crisisRegion = crisisRegion,
+                addedAnchors = current.addedAnchors,
             ),
         )
     }
@@ -860,7 +861,15 @@ private fun ScoreRing(score: Int, max: Int, caption: String) {
 }
 
 @Composable
-fun FirstAnchorChoice(onConfirm: (FirstAnchor) -> Unit, onBack: (() -> Unit)? = null) {
+internal fun FirstAnchorChoice(
+    onConfirm: (FirstAnchor) -> Unit,
+    onBack: (() -> Unit)? = null,
+    options: List<FirstAnchorOption> = choosableFirstAnchors,
+    headline: String = firstAnchorHeadline,
+    body: String = firstAnchorBody,
+    commitHint: String? = firstAnchorCommitHint,
+    confirmLabel: String = confirmFirstAnchorLabel,
+) {
     var selected by remember { mutableStateOf<FirstAnchor?>(null) }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -878,12 +887,14 @@ fun FirstAnchorChoice(onConfirm: (FirstAnchor) -> Unit, onBack: (() -> Unit)? = 
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Text(
-                    firstAnchorCommitHint,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Center,
-                )
+                if (commitHint != null) {
+                    Text(
+                        commitHint,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                        textAlign = TextAlign.Center,
+                    )
+                }
                 Button(
                     onClick = { onConfirm(selected!!) },
                     enabled = selected != null,
@@ -892,7 +903,7 @@ fun FirstAnchorChoice(onConfirm: (FirstAnchor) -> Unit, onBack: (() -> Unit)? = 
                         .widthIn(max = 300.dp)
                         .heightIn(min = 52.dp),
                     shape = PillShape,
-                ) { Text(confirmFirstAnchorLabel, fontSize = 17.sp) }
+                ) { Text(confirmLabel, fontSize = 17.sp) }
             }
         },
     ) { padding ->
@@ -906,14 +917,14 @@ fun FirstAnchorChoice(onConfirm: (FirstAnchor) -> Unit, onBack: (() -> Unit)? = 
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
-                firstAnchorHeadline,
+                headline,
                 Modifier.semantics { heading() },
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold,
                 lineHeight = 32.sp,
             )
-            Text(firstAnchorBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
-            (p0FirstAnchors + p1FirstAnchors).forEach { option ->
+            Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+            options.forEach { option ->
                 val checked = selected == option.anchor
                 Surface(
                     onClick = { selected = option.anchor },

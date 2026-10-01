@@ -34,7 +34,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.onboarding.FirstRunAssessment
 import com.anchor.app.onboarding.FirstAnchorChoice
+import com.anchor.app.onboarding.addAnchorBody
+import com.anchor.app.onboarding.addAnchorConfirm
+import com.anchor.app.onboarding.addAnchorHeadline
+import com.anchor.app.onboarding.addAnchorHint
 import com.anchor.app.onboarding.additionalPracticeUnlocked
+import com.anchor.app.onboarding.anchorsAvailableToAdd
+import com.anchor.app.onboarding.choosableFirstAnchors
 import com.anchor.app.onboarding.factLogVisible
 import com.anchor.app.onboarding.oneThingLockBody
 import com.anchor.app.onboarding.practiceVisible
@@ -202,11 +208,16 @@ fun App(
     var homeRelationPreview by remember { mutableStateOf<HomeRelationKind?>(null) }
     var crisisClarificationPreviewVisible by remember { mutableStateOf(false) }
     var oneThingLockPreview by remember { mutableStateOf(false) }
+    var unlockPreview by remember { mutableStateOf(false) }
+    var previewAdded by remember { mutableStateOf(emptyList<FirstAnchor>()) }
+    var addAnchorVisible by remember { mutableStateOf(false) }
     val profile = store.userProfile()
-    val practiceUnlocked = !oneThingLockPreview && additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis())
+    val canAddAnchor = !oneThingLockPreview &&
+        (unlockPreview || additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis()))
+    val addedAnchors = profile.addedAnchors + if (unlockPreview) previewAdded else emptyList()
     val lockedAnchor = profile.firstAnchor ?: if (oneThingLockPreview) FirstAnchor.MicroAction else null
-    fun canPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, lockedAnchor, practiceUnlocked)
-    val oneThingNote = lockedAnchor?.takeIf { !practiceUnlocked }?.let(::oneThingLockBody)
+    fun canPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, lockedAnchor, addedAnchors.toSet())
+    val oneThingNote = lockedAnchor?.takeIf { !canAddAnchor }?.let(::oneThingLockBody)
     fun openCrisisFromText(persistWaiting: Boolean) {
         if (persistWaiting) store.enterCrisisWaiting()
         hangSheetVisible = false
@@ -286,6 +297,26 @@ fun App(
             }
             if (returnToPracticePreviewVisible) {
                 ReturnToPracticeScreen(onHome = { returnToPracticePreviewVisible = false })
+                return@Surface
+            }
+            if (addAnchorVisible) {
+                FirstAnchorChoice(
+                    options = choosableFirstAnchors.filter { it.anchor in anchorsAvailableToAdd(lockedAnchor, addedAnchors) },
+                    headline = addAnchorHeadline,
+                    body = addAnchorBody,
+                    commitHint = addAnchorHint,
+                    confirmLabel = addAnchorConfirm,
+                    onBack = { addAnchorVisible = false },
+                    onConfirm = { anchor ->
+                        if (unlockPreview) {
+                            previewAdded = previewAdded + anchor
+                        } else {
+                            val current = store.userProfile()
+                            store.saveUserProfile(current.copy(addedAnchors = current.addedAnchors + anchor))
+                        }
+                        addAnchorVisible = false
+                    },
+                )
                 return@Surface
             }
             if (relationVisible) {
@@ -461,7 +492,16 @@ fun App(
                         onPreviewCrisisClarification = { crisisClarificationPreviewVisible = true },
                         onPreviewOneThingLock = {
                             settingsVisible = false
+                            unlockPreview = false
+                            previewAdded = emptyList()
+                            addAnchorVisible = false
                             oneThingLockPreview = true
+                        },
+                        onPreviewUnlock = {
+                            settingsVisible = false
+                            oneThingLockPreview = false
+                            previewAdded = emptyList()
+                            unlockPreview = true
                         },
                         onOpenReassessment = { settingsVisible = false; reassessmentVisible = true },
                         installedVersionName = installedVersionName,
@@ -574,6 +614,16 @@ fun App(
                     onRelationPreviewChange = { homeRelationPreview = it },
                     forceOneThingLock = oneThingLockPreview,
                     onDismissOneThingLock = { oneThingLockPreview = false },
+                    forceUnlocked = unlockPreview,
+                    onDismissUnlockPreview = {
+                        unlockPreview = false
+                        previewAdded = emptyList()
+                        addAnchorVisible = false
+                    },
+                    addedAnchors = addedAnchors,
+                    canAddAnchor = canAddAnchor,
+                    onAddAnchor = { addAnchorVisible = true },
+                    onEmotion = { if (canPractice(FirstAnchor.EmotionLabel)) emotionCardsVisible = true },
                 )
                 if (hangSheetVisible) {
                     HangSheet(

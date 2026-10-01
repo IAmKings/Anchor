@@ -1,14 +1,15 @@
 package com.anchor.app.home
 
-import androidx.compose.animation.core.Easing
-import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,9 +50,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -85,18 +93,25 @@ import com.anchor.app.onboarding.SocialEnergyIcon
 import com.anchor.app.onboarding.TodayFilledIcon
 import com.anchor.app.onboarding.TodayIcon
 import com.anchor.app.onboarding.WorryVaultIcon
+import com.anchor.app.onboarding.addAnotherAnchorLabel
 import com.anchor.app.onboarding.additionalPracticeUnlocked
+import com.anchor.app.onboarding.anchorsAvailableToAdd
+import com.anchor.app.onboarding.firstAnchorDescription
+import com.anchor.app.onboarding.firstAnchorIcon
+import com.anchor.app.onboarding.firstAnchorTitle
+import com.anchor.app.onboarding.practiceVisible
 import com.anchor.app.onboarding.waitingReassessNotice
 import com.anchor.app.onboarding.oneThingLockBody
-import com.anchor.app.onboarding.practiceVisible
+import com.anchor.app.relation.relationEntryBody
+import com.anchor.app.relation.relationEntryLabel
+import com.anchor.app.settings.unlockPreviewNote
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.FirstAnchor
+import com.anchor.app.storage.RhythmEntry
 import com.anchor.app.storage.WorryResolution
 import com.anchor.app.ui.AnchorAppIcon
 import com.anchor.app.ui.AnchorIconWell
 import com.anchor.app.ui.formatCountdown
-import kotlin.math.PI
-import kotlin.math.cos
 
 private val CardShape = RoundedCornerShape(16.dp)
 
@@ -131,15 +146,22 @@ fun HomeScreen(
     onRelationPreviewChange: (HomeRelationKind?) -> Unit = {},
     forceOneThingLock: Boolean = false,
     onDismissOneThingLock: () -> Unit = {},
+    forceUnlocked: Boolean = false,
+    onDismissUnlockPreview: () -> Unit = {},
+    addedAnchors: List<FirstAnchor> = emptyList(),
+    canAddAnchor: Boolean = false,
+    onAddAnchor: () -> Unit = {},
+    onEmotion: () -> Unit = {},
     scrollState: ScrollState = rememberScrollState(),
 ) {
     val profile = store.userProfile()
-    val unlocked = !forceOneThingLock && additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis())
+    val canAdd = canAddAnchor || forceUnlocked ||
+        (!forceOneThingLock && additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis()))
     val selectedAnchor = profile.firstAnchor ?: if (forceOneThingLock) FirstAnchor.MicroAction else null
-    fun showPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, selectedAnchor, unlocked)
+    fun showPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, selectedAnchor, addedAnchors.toSet())
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = { HomeTopBar(onHelp = onHelp) },
+        topBar = { HomeTopBar(onHelp = onHelp, showHelp = !medicalWaiting) },
         bottomBar = {
             HomeBottomBar(
                 selected = HomeTab.Today,
@@ -222,12 +244,19 @@ fun HomeScreen(
                     relationPreview = relationPreview,
                     onRelationPreviewChange = onRelationPreviewChange,
                     showWave = showPractice(FirstAnchor.WaveWaiting),
-                    showRhythm = showPractice(FirstAnchor.Rhythm),
                     showMicroAction = showPractice(FirstAnchor.MicroAction),
                     showWorry = showPractice(FirstAnchor.WorryVault),
-                    showRelation = showPractice(FirstAnchor.SocialEnergy) || showPractice(FirstAnchor.AltruisticTask),
-                    lockNote = if (!unlocked && selectedAnchor != null) oneThingLockBody(selectedAnchor) else null,
+                    selectedAnchor = selectedAnchor,
+                    addedAnchors = addedAnchors,
+                    canAddAnchor = canAdd && anchorsAvailableToAdd(selectedAnchor, addedAnchors).isNotEmpty(),
+                    onAddAnchor = onAddAnchor,
+                    onEmotion = onEmotion,
+                    onCameraLog = onCameraLog,
+                    lockAnchor = if (!canAdd) selectedAnchor else null,
+                    lockNote = if (!canAdd && selectedAnchor != null) oneThingLockBody(selectedAnchor) else null,
                     onDismissLockPreview = if (forceOneThingLock) onDismissOneThingLock else null,
+                    unlockPreview = forceUnlocked,
+                    onDismissUnlockPreview = onDismissUnlockPreview,
                 )
             }
             Spacer(Modifier.height(72.dp))
@@ -238,7 +267,7 @@ fun HomeScreen(
 internal enum class HomeTab { Today, Records, Insights, Mine }
 
 @Composable
-internal fun HomeTopBar(onHelp: () -> Unit) {
+internal fun HomeTopBar(onHelp: () -> Unit, showHelp: Boolean = true) {
     Row(
         Modifier
             .fillMaxWidth()
@@ -255,20 +284,24 @@ internal fun HomeTopBar(onHelp: () -> Unit) {
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold,
         )
-        Surface(
-            onClick = onHelp,
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f),
-            modifier = Modifier.size(40.dp).semantics { contentDescription = "此刻需要帮助" },
-        ) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Icon(
-                    HelpIcon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.fillMaxSize(0.55f),
-                )
+        if (showHelp) {
+            Surface(
+                onClick = onHelp,
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f),
+                modifier = Modifier.size(40.dp).semantics { contentDescription = "此刻需要帮助" },
+            ) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Icon(
+                        HelpIcon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.fillMaxSize(0.55f),
+                    )
+                }
             }
+        } else {
+            Spacer(Modifier.size(40.dp))
         }
     }
 }
@@ -363,13 +396,24 @@ private fun PracticeHome(
     relationPreview: HomeRelationKind? = null,
     onRelationPreviewChange: (HomeRelationKind?) -> Unit = {},
     showWave: Boolean = true,
-    showRhythm: Boolean = true,
     showMicroAction: Boolean = true,
     showWorry: Boolean = true,
-    showRelation: Boolean = true,
+    selectedAnchor: FirstAnchor? = null,
+    addedAnchors: List<FirstAnchor> = emptyList(),
+    canAddAnchor: Boolean = false,
+    onAddAnchor: () -> Unit = {},
+    onEmotion: () -> Unit = {},
+    onCameraLog: () -> Unit = {},
+    lockAnchor: FirstAnchor? = null,
     lockNote: String? = null,
     onDismissLockPreview: (() -> Unit)? = null,
+    unlockPreview: Boolean = false,
+    onDismissUnlockPreview: () -> Unit = {},
 ) {
+    val addedSet = addedAnchors.toSet()
+    val (commitment, bottom) = layoutPracticeCards(selectedAnchor, addedAnchors)
+    val socialOn = practiceVisible(FirstAnchor.SocialEnergy, selectedAnchor, addedSet)
+    val altruismOn = practiceVisible(FirstAnchor.AltruisticTask, selectedAnchor, addedSet)
     val rhythm = store.rhythmEntries().firstOrNull()
     val actions = store.microActions()
     val active = actions.firstOrNull { it.startedAtMillis != null && it.completedAtMillis == null }
@@ -399,14 +443,15 @@ private fun PracticeHome(
             fontSize = 14.sp,
             lineHeight = 22.sp,
         )
-        lockNote?.let {
-            Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 22.sp)
-        }
-        onDismissLockPreview?.let { dismiss ->
-            TextButton(onClick = dismiss) { Text("关闭预览") }
+        if (lockNote != null && commitment == null && lockAnchor !in HomeLockCards) {
+            OneThingLockLine(lockNote, onDismissLockPreview)
         }
         if (showWave) {
-            WaveEntry(onClick = onWave)
+            WaveEntry(
+                onClick = onWave,
+                lockNote = lockNote.takeIf { lockAnchor == FirstAnchor.WaveWaiting },
+                onDismissLockPreview = onDismissLockPreview.takeIf { lockAnchor == FirstAnchor.WaveWaiting },
+            )
         }
         val relationState = if (relationPreview != null) {
             previewHomeRelation(relationPreview)
@@ -463,16 +508,29 @@ private fun PracticeHome(
             RelationBanner(relationState)
         }
         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            if (showRhythm) {
-                RhythmBentoCard(
-                    wakeLabel = rhythm?.wakeAtMillis?.let(formatLocalTime) ?: "--:--",
-                    lightLabel = rhythm?.lightAtMillis?.let(formatLocalTime) ?: "--:--",
-                    recorded = rhythm != null,
-                    onClick = onRhythm,
+            if (commitment != null) {
+                PracticeEntry(
+                    card = commitment,
+                    lockNote = lockNote.takeIf { cardMatchesAnchor(commitment, lockAnchor) },
+                    onDismissLockPreview = onDismissLockPreview,
+                    rhythm = rhythm,
+                    formatLocalTime = formatLocalTime,
+                    relationState = relationState,
+                    socialOn = socialOn,
+                    altruismOn = altruismOn,
+                    onRhythm = onRhythm,
+                    onRelation = onRelation,
+                    onEmotion = onEmotion,
+                    onFacts = onCameraLog,
                 )
             }
             if (showMicroAction || showWorry) {
-                Row(
+                val toolLock = lockAnchor == FirstAnchor.MicroAction || lockAnchor == FirstAnchor.WorryVault
+                Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    if (toolLock && lockNote != null) {
+                        OneThingLockLine(lockNote, onDismissLockPreview)
+                    }
+                    Row(
                     Modifier.fillMaxWidth().height(IntrinsicSize.Min),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
@@ -500,27 +558,109 @@ private fun PracticeHome(
                         )
                     }
                 }
+                }
             }
-            if (showRelation) {
-                StatusCard(
-                    icon = if (relationState.kind == HomeRelationKind.Exhausted) RestIcon else SocialEnergyIcon,
-                    wellColor = when (relationState.kind) {
-                        HomeRelationKind.Filled -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f)
-                        HomeRelationKind.Drained -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f)
-                        HomeRelationKind.Exhausted -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.35f)
-                        else -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f)
-                    },
-                    label = relationState.cardLabel,
-                    title = relationState.cardBody,
-                    onClick = onRelation,
-                ) {
-                    relationState.cardHint?.let { hint ->
-                        Text(hint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
-                    }
+            if (unlockPreview) {
+                OneThingLockLine(unlockPreviewNote, onDismissUnlockPreview)
+            }
+            val relationAlreadyShown = commitment == HomeAddedCard.Relation || HomeAddedCard.Relation in bottom
+            bottom.forEach { card ->
+                PracticeEntry(
+                    card = card,
+                    lockNote = null,
+                    onDismissLockPreview = null,
+                    rhythm = rhythm,
+                    formatLocalTime = formatLocalTime,
+                    relationState = relationState,
+                    socialOn = socialOn,
+                    altruismOn = altruismOn,
+                    onRhythm = onRhythm,
+                    onRelation = onRelation,
+                    onEmotion = onEmotion,
+                    onFacts = onCameraLog,
+                )
+            }
+            if (relationPreview != null && !relationAlreadyShown) {
+                PracticeEntry(
+                    card = HomeAddedCard.Relation,
+                    lockNote = null,
+                    onDismissLockPreview = null,
+                    rhythm = rhythm,
+                    formatLocalTime = formatLocalTime,
+                    relationState = relationState,
+                    socialOn = true,
+                    altruismOn = true,
+                    onRhythm = onRhythm,
+                    onRelation = onRelation,
+                    onEmotion = onEmotion,
+                    onFacts = onCameraLog,
+                )
+            }
+            if (canAddAnchor) {
+                TextButton(
+                    onClick = onAddAnchor,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                ) { Text(addAnotherAnchorLabel, fontSize = 17.sp) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PracticeEntry(
+    card: HomeAddedCard,
+    lockNote: String?,
+    onDismissLockPreview: (() -> Unit)?,
+    rhythm: RhythmEntry?,
+    formatLocalTime: (Long) -> String,
+    relationState: HomeRelationPresentation,
+    socialOn: Boolean,
+    altruismOn: Boolean,
+    onRhythm: () -> Unit,
+    onRelation: () -> Unit,
+    onEmotion: () -> Unit,
+    onFacts: () -> Unit,
+) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        if (lockNote != null) OneThingLockLine(lockNote, onDismissLockPreview)
+        when (card) {
+            HomeAddedCard.Rhythm -> RhythmBentoCard(
+                wakeLabel = rhythm?.wakeAtMillis?.let(formatLocalTime) ?: "--:--",
+                lightLabel = rhythm?.lightAtMillis?.let(formatLocalTime) ?: "--:--",
+                recorded = rhythm != null,
+                onClick = onRhythm,
+            )
+            HomeAddedCard.Emotion -> AnchorEntryCard(FirstAnchor.EmotionLabel, onEmotion)
+            HomeAddedCard.Facts -> AnchorEntryCard(FirstAnchor.FactsJournal, onFacts)
+            HomeAddedCard.Relation -> StatusCard(
+                icon = if (relationState.kind == HomeRelationKind.Exhausted) RestIcon else SocialEnergyIcon,
+                wellColor = when (relationState.kind) {
+                    HomeRelationKind.Filled -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f)
+                    HomeRelationKind.Drained -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f)
+                    HomeRelationKind.Exhausted -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.35f)
+                    else -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f)
+                },
+                label = relationEntryLabel(socialOn, altruismOn, relationState),
+                title = relationEntryBody(socialOn, altruismOn, relationState),
+                onClick = onRelation,
+            ) {
+                relationState.cardHint?.let { hint ->
+                    Text(hint, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)
                 }
             }
         }
     }
+}
+
+@Composable
+private fun AnchorEntryCard(anchor: FirstAnchor, onClick: () -> Unit) {
+    StatusCard(
+        icon = firstAnchorIcon(anchor),
+        wellColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f),
+        label = firstAnchorTitle(anchor),
+        title = firstAnchorDescription(anchor),
+        onClick = onClick,
+    )
 }
 
 @Composable
@@ -594,52 +734,63 @@ private fun MedicalWaitingHome(
     }
 }
 
+private val HomeLockCards = setOf(
+    FirstAnchor.WaveWaiting,
+    FirstAnchor.Rhythm,
+    FirstAnchor.MicroAction,
+    FirstAnchor.WorryVault,
+    FirstAnchor.SocialEnergy,
+    FirstAnchor.AltruisticTask,
+)
+
 @Composable
-private fun WaveEntry(onClick: () -> Unit) {
-    val transition = rememberInfiniteTransition(label = "home-wave")
-    val sineEase = Easing { fraction -> (0.5 - cos(PI * fraction) / 2).toFloat() }
-    val scale by transition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.02f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 5_000, easing = sineEase),
-            repeatMode = RepeatMode.Reverse,
-        ),
-        label = "home-wave-scale",
-    )
+private fun OneThingLockLine(note: String, onDismiss: (() -> Unit)?) {
+    Column(Modifier.fillMaxWidth()) {
+        Text(note, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 22.sp)
+        onDismiss?.let { dismiss ->
+            TextButton(onClick = dismiss) { Text("关闭预览") }
+        }
+    }
+}
+
+private val WaveParchment = Color(0xFFFCF9F3)
+private val WaveDisc = Color(0xFFD7E6DC)
+private val WaveSage = Color(0xFF7A9B86)
+private val WaveSageDeep = Color(0xFF5A7B66)
+private val WaveInk = Color(0xFF133222)
+
+@Composable
+private fun WaveEntry(
+    onClick: () -> Unit,
+    lockNote: String? = null,
+    onDismissLockPreview: (() -> Unit)? = null,
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        if (lockNote != null) {
+            OneThingLockLine(lockNote, onDismissLockPreview)
+            Spacer(Modifier.height(4.dp))
+        }
         Box(
             Modifier
                 .size(192.dp)
-                .graphicsLayer { scaleX = scale; scaleY = scale },
+                .semantics { contentDescription = "浪潮等待，难受的时候点这里" }
+                .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
-            Surface(
-                onClick = onClick,
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primaryContainer,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .semantics { contentDescription = "浪潮等待，难受的时候点这里" },
-            ) {
-                Column(
-                    Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        "浪潮等待",
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        "等待中",
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
-                        fontSize = 14.sp,
-                    )
-                }
+            HomeWaveMark(Modifier.fillMaxSize())
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    "浪潮等待",
+                    color = WaveInk,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "等待中",
+                    color = WaveInk.copy(alpha = 0.8f),
+                    fontSize = 14.sp,
+                )
             }
         }
         Text(
@@ -649,6 +800,92 @@ private fun WaveEntry(onClick: () -> Unit) {
             modifier = Modifier.padding(top = 24.dp),
         )
     }
+}
+
+@Composable
+private fun HomeWaveMark(modifier: Modifier = Modifier) {
+    val shift = rememberInfiniteTransition(label = "home-wave-mark")
+    val back by shift.animateFloat(
+        0f,
+        200f,
+        infiniteRepeatable(tween(4_000, easing = LinearEasing)),
+        label = "wave-back",
+    )
+    val middle by shift.animateFloat(
+        0f,
+        200f,
+        infiniteRepeatable(tween(3_000, easing = LinearEasing)),
+        label = "wave-middle",
+    )
+    val front by shift.animateFloat(
+        0f,
+        200f,
+        infiniteRepeatable(tween(2_500, easing = LinearEasing)),
+        label = "wave-front",
+    )
+    val backPath = remember { homeWavePath(baseline = 120f, crest = 100f) }
+    val middlePath = remember { homeWavePath(baseline = 130f, crest = 110f) }
+    val frontPath = remember { homeWavePath(baseline = 145f, crest = 125f) }
+    val anchor = remember { homeWaveAnchorPath() }
+    Canvas(modifier) {
+        val unit = size.minDimension / 200f
+        scale(unit, unit, pivot = Offset.Zero) {
+            drawCircle(
+                color = WaveSage.copy(alpha = 0.3f),
+                radius = 98f,
+                center = Offset(100f, 100f),
+                style = Stroke(width = 1f),
+            )
+            val clip = Path().apply {
+                addOval(Rect(center = Offset(100f, 100f), radius = 90f))
+            }
+            clipPath(clip) {
+                drawCircle(WaveDisc, radius = 90f, center = Offset(100f, 100f))
+                translate(left = back) { drawPath(backPath, WaveSage.copy(alpha = 0.4f)) }
+                translate(left = middle) { drawPath(middlePath, WaveSage.copy(alpha = 0.6f)) }
+                translate(left = front) {
+                    drawPath(
+                        frontPath,
+                        Brush.verticalGradient(
+                            colors = listOf(WaveSage, WaveSageDeep),
+                            startY = 125f,
+                            endY = 200f,
+                        ),
+                    )
+                }
+                drawPath(anchor, WaveParchment.copy(alpha = 0.8f))
+            }
+        }
+    }
+}
+
+private fun homeWavePath(baseline: Float, crest: Float): Path {
+    val path = Path()
+    path.moveTo(-200f, baseline)
+    path.quadraticTo(-150f, crest, -100f, baseline)
+    var x = -100f
+    var controlX = -150f
+    var controlY = crest
+    for (endX in floatArrayOf(0f, 100f, 200f, 300f, 400f)) {
+        val nextControlX = 2f * x - controlX
+        val nextControlY = 2f * baseline - controlY
+        path.quadraticTo(nextControlX, nextControlY, endX, baseline)
+        controlX = nextControlX
+        controlY = nextControlY
+        x = endX
+    }
+    path.lineTo(400f, 200f)
+    path.lineTo(-200f, 200f)
+    path.close()
+    return path
+}
+
+private fun homeWaveAnchorPath(): Path = Path().apply {
+    moveTo(100f, 160f)
+    cubicTo(95f, 160f, 92f, 155f, 92f, 150f)
+    lineTo(108f, 150f)
+    cubicTo(108f, 155f, 105f, 160f, 100f, 160f)
+    close()
 }
 
 @Composable
@@ -742,7 +979,10 @@ private fun MicroActionBentoCard(
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                AnchorIconWell(MicroActionIcon, MaterialTheme.colorScheme.secondaryContainer)
+                AnchorIconWell(
+                    MicroActionIcon,
+                    MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f),
+                )
                 if (running) {
                     Text(
                         homeMicroActionTitle(true),

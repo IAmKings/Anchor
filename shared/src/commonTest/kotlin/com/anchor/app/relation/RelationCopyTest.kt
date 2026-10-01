@@ -136,4 +136,17 @@ class RelationCopyTest {
         )
         assertEquals(HomeRelationKind.Default, stale.kind)
     }
+
+    @Test
+    fun homeCardNamesOnlyTheAddedSide() {
+        val idle = previewHomeRelation(HomeRelationKind.Default)
+        assertEquals(homeSocialOnlyLabel, relationEntryLabel(social = true, altruism = false, idle))
+        assertEquals(homeSocialOnlyBody, relationEntryBody(social = true, altruism = false, idle))
+        assertEquals(homeAltruismOnlyLabel, relationEntryLabel(social = false, altruism = true, idle))
+        assertEquals(homeAltruismOnlyBody, relationEntryBody(social = false, altruism = true, idle))
+        assertEquals(relationHubTitle, relationEntryLabel(social = true, altruism = true, idle))
+        assertEquals("盘点关系，或抽一件小事", relationEntryBody(social = true, altruism = true, idle))
+        val exhausted = previewHomeRelation(HomeRelationKind.Exhausted)
+        assertEquals(homeRelationExhaustedLabel, relationEntryLabel(social = false, altruism = true, exhausted))
+    }
 }

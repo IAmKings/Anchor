@@ -67,23 +67,26 @@ internal class SqlDelightAnchorStore(
         )
     }.executeAsList()
 
-    override fun userProfile(): UserProfile = queries.readUserProfile { ageGroup, complete, firstAnchor, crisisRegion, firstAnchorAt ->
+    override fun userProfile(): UserProfile = queries.readUserProfile { ageGroup, complete, firstAnchor, crisisRegion, firstAnchorAt, addedAnchors ->
         UserProfile(
             ageGroup = ageGroup?.let(AgeGroup::valueOf),
             onboardingComplete = complete == 1L,
             firstAnchor = firstAnchor?.let(FirstAnchor::valueOf),
             firstAnchorAtMillis = firstAnchorAt,
             crisisRegion = crisisRegion?.let(CrisisRegion::valueOf) ?: CrisisRegion.MainlandChina,
+            addedAnchors = decodeAddedAnchors(addedAnchors),
         )
     }.executeAsOneOrNull() ?: UserProfile()
 
     override fun saveUserProfile(profile: UserProfile) {
+        validateAddedAnchors(profile.firstAnchor, profile.addedAnchors)
         queries.upsertUserProfile(
             age_group = profile.ageGroup?.name,
             onboarding_complete = if (profile.onboardingComplete) 1 else 0,
             first_anchor = profile.firstAnchor?.name,
             crisis_region = profile.crisisRegion.name,
             first_anchor_at = profile.firstAnchorAtMillis,
+            added_anchors = encodeAddedAnchors(profile.addedAnchors),
         )
     }
 

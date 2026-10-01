@@ -38,7 +38,30 @@ data class UserProfile(
     val firstAnchor: FirstAnchor? = null,
     val firstAnchorAtMillis: Long? = null,
     val crisisRegion: CrisisRegion = CrisisRegion.MainlandChina,
+    val addedAnchors: List<FirstAnchor> = emptyList(),
 )
+
+internal val adoptableAnchors = listOf(
+    FirstAnchor.EmotionLabel,
+    FirstAnchor.FactsJournal,
+    FirstAnchor.Rhythm,
+    FirstAnchor.SocialEnergy,
+    FirstAnchor.AltruisticTask,
+)
+
+internal fun validateAddedAnchors(firstAnchor: FirstAnchor?, added: List<FirstAnchor>) {
+    require(added.distinct() == added) { "同一件不能加两次。" }
+    added.forEach { anchor ->
+        require(anchor in adoptableAnchors) { "这一件不用再加。" }
+        require(anchor != firstAnchor) { "这一件已经在练。" }
+    }
+}
+
+internal fun encodeAddedAnchors(added: List<FirstAnchor>): String? =
+    added.takeIf { it.isNotEmpty() }?.joinToString(",") { it.name }
+
+internal fun decodeAddedAnchors(raw: String?): List<FirstAnchor> =
+    raw?.split(',')?.filter { it.isNotBlank() }?.map(FirstAnchor::valueOf).orEmpty()
 
 data class EmotionCard(
     val id: Long,
@@ -209,6 +232,7 @@ class InMemoryAnchorStore : AnchorStore {
     override fun assessments(): List<StoredAssessment> = history.toList()
     override fun userProfile(): UserProfile = profile
     override fun saveUserProfile(profile: UserProfile) {
+        validateAddedAnchors(profile.firstAnchor, profile.addedAnchors)
         this.profile = profile
     }
 

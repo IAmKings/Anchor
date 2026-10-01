@@ -4,6 +4,7 @@ import com.anchor.app.safety.AssessmentBand
 import com.anchor.app.safety.SafetyAction
 import com.anchor.app.storage.CrisisRegion
 import com.anchor.app.storage.FirstAnchor
+import com.anchor.app.storage.adoptableAnchors
 
 internal data class FirstAnchorOption(
     val anchor: FirstAnchor,
@@ -63,8 +64,28 @@ internal const val oneThingLockNote = "这 14 天只练这一件。不是任务�
 internal fun additionalPracticeUnlocked(firstAnchorAtMillis: Long?, nowMillis: Long): Boolean =
     firstAnchorAtMillis == null || nowMillis - firstAnchorAtMillis >= REASSESSMENT_INTERVAL_MILLIS
 
-internal fun practiceVisible(anchor: FirstAnchor, selected: FirstAnchor?, unlocked: Boolean): Boolean =
-    unlocked || selected == null || selected == anchor
+internal val choosableFirstAnchors: List<FirstAnchorOption> =
+    (p0FirstAnchors + p1FirstAnchors).filter { it.anchor in adoptableAnchors }
+
+internal const val addAnchorHeadline = "再加一件"
+internal const val addAnchorBody = "从还没在练的里面选一件。"
+internal const val addAnchorHint = "加上不重新锁 14 天。"
+internal const val addAnchorConfirm = "加上这一件"
+internal const val addAnotherAnchorLabel = "再加一件"
+
+internal fun availableDuringOneThingLock(anchor: FirstAnchor): Boolean = when (anchor) {
+    FirstAnchor.WaveWaiting, FirstAnchor.MicroAction, FirstAnchor.WorryVault -> true
+    else -> false
+}
+
+internal fun practiceVisible(anchor: FirstAnchor, selected: FirstAnchor?, added: Set<FirstAnchor> = emptySet()): Boolean =
+    availableDuringOneThingLock(anchor) || selected == null || selected == anchor || anchor in added
+
+internal fun anchorsAvailableToAdd(selected: FirstAnchor?, added: Collection<FirstAnchor>): List<FirstAnchor> =
+    choosableFirstAnchors.map { it.anchor }.filter { it != selected && it !in added }
+
+internal fun firstAnchorDescription(anchor: FirstAnchor): String =
+    (p0FirstAnchors + p1FirstAnchors).first { it.anchor == anchor }.description
 
 internal fun factLogVisible(medicalWaiting: Boolean, practiceAllowed: Boolean): Boolean =
     medicalWaiting || practiceAllowed

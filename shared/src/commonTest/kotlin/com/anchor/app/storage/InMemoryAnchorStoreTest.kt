@@ -5,8 +5,8 @@ import com.anchor.app.safety.SafetyMode
 import com.anchor.app.safety.SafetyState
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotSame
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNotSame
 import kotlin.test.assertTrue
 
 class InMemoryAnchorStoreTest {
@@ -82,6 +82,28 @@ class InMemoryAnchorStoreTest {
         assertTrue(store.worryCards().isEmpty())
         assertTrue(store.microActions().isEmpty())
         assertTrue(store.rhythmEntries().isEmpty())
+    }
+
+    @Test
+    fun addedAnchorsStayInOrderAndRejectResidentTools() {
+        val store: AnchorStore = InMemoryAnchorStore()
+        store.saveUserProfile(
+            UserProfile(
+                onboardingComplete = true,
+                firstAnchor = FirstAnchor.Rhythm,
+                addedAnchors = listOf(FirstAnchor.FactsJournal, FirstAnchor.SocialEnergy),
+            ),
+        )
+        assertEquals(
+            listOf(FirstAnchor.FactsJournal, FirstAnchor.SocialEnergy),
+            store.userProfile().addedAnchors,
+        )
+        assertFailsWith<IllegalArgumentException> {
+            store.saveUserProfile(store.userProfile().copy(addedAnchors = listOf(FirstAnchor.MicroAction)))
+        }
+        assertFailsWith<IllegalArgumentException> {
+            store.saveUserProfile(store.userProfile().copy(addedAnchors = listOf(FirstAnchor.Rhythm)))
+        }
     }
 
     private fun zeros(size: Int) = List(size) { 0 }
