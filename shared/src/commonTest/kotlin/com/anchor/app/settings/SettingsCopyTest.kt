@@ -49,4 +49,29 @@ class SettingsCopyTest {
         assertTrue(ThemeChoice.Dark.useDark(systemDark = false))
         assertTrue(settingsAppearanceIntro.contains("跟随系统"))
     }
+
+    @Test
+    fun notificationPermissionIsSeparateFromTheFourReminders() {
+        assertEquals(4, ReminderToggle.entries.size)
+        assertEquals("系统通知", settingsNotificationTitle)
+        assertEquals("已允许。锁屏只显示「锚点」，不显示正文。", settingsNotificationDetail(NotificationPermission.Granted))
+        assertEquals("允许通知", settingsNotificationAction(NotificationPermission.Requestable))
+        assertEquals("去系统设置打开", settingsNotificationAction(NotificationPermission.Blocked))
+        val denied = settingsNotificationDetail(NotificationPermission.Requestable)
+        assertEquals(denied, settingsNotificationDetail(NotificationPermission.Blocked))
+        assertTrue(denied.contains("顶部提示"))
+        assertFalse(denied.contains("必须"))
+        assertFalse(ReminderToggle.entries.any { reminderToggleTitle(it) == settingsNotificationTitle })
+    }
+
+    @Test
+    fun exactAlarmCopyExplainsALateNotificationWithoutNagging() {
+        assertEquals("准时提醒", settingsExactAlarmTitle)
+        assertEquals("已允许。浪潮到点会准时进通知栏。", settingsExactAlarmDetail(granted = true))
+        assertEquals("去开启", settingsExactAlarmAction(granted = false))
+        val denied = settingsExactAlarmDetail(granted = false)
+        assertTrue(denied.contains("推迟"))
+        assertFalse(denied.contains("必须"))
+        assertFalse(denied.contains("streak"))
+    }
 }

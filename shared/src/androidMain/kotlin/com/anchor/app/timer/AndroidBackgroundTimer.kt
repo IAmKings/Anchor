@@ -72,6 +72,46 @@ class AndroidBackgroundTimer(context: Context, private val kind: BackgroundTimer
         preferences.edit().clear().apply()
     }
 
+    /** Post the completion notice once the stored deadline has passed. Cancels the alarm. */
+    fun deliverIfDue(nowMillis: Long = SystemClock.elapsedRealtime()): Boolean {
+        val deadline = preferences.getLong(DEADLINE, 0L)
+        if (deadline == 0L || nowMillis < deadline || hasFired()) return false
+        onAlarm()
+        return true
+    }
+
+    /** Switch a still-running round to an exact alarm after the user allows it. */
+    fun promoteToExactAlarm() {
+        if (!canScheduleExactAlarms()) return
+        val deadline = preferences.getLong(DEADLINE, 0L)
+        if (deadline == 0L || hasFired()) return
+        val now = SystemClock.elapsedRealtime()
+        if (now >= deadline) {
+            onAlarm()
+            return
+        }
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            deadline,
+            pendingIntent(),
+        )
+    }
+
+    fun onAlarm() {
+        if (!claimFire()) return
+        val delivered = deliverTimerCompletionNotification(appContext, kind)
+        preferences.edit().putBoolean(IN_APP_NOTICE_PENDING, !delivered).apply()
+        alarmManager.cancel(pendingIntent())
+    }
+
+    private fun claimFire(): Boolean {
+        synchronized(preferences) {
+            if (preferences.getBoolean(FIRED, false)) return false
+            preferences.edit().putBoolean(FIRED, true).commit()
+            return true
+        }
+    }
+
     private fun pendingIntent(): PendingIntent = PendingIntent.getBroadcast(
         appContext,
         kind.requestCode,
@@ -85,12 +125,7 @@ class BackgroundTimerReceiver : BroadcastReceiver() {
         val kind = intent.getStringExtra(TIMER_KIND)
             ?.let { runCatching { BackgroundTimerKind.valueOf(it) }.getOrNull() }
             ?: BackgroundTimerKind.Wave
-        val notificationDelivered = deliverTimerCompletionNotification(context, kind)
-        context.getSharedPreferences("$PREFERENCES-${kind.name}", Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean(FIRED, true)
-            .putBoolean(IN_APP_NOTICE_PENDING, !notificationDelivered)
-            .apply()
+        AndroidBackgroundTimer(context, kind).onAlarm()
     }
 }
 

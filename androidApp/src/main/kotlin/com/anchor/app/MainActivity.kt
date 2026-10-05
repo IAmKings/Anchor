@@ -8,8 +8,12 @@ import android.content.res.Configuration
 import android.media.MediaPlayer
 import android.app.NotificationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
+import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.SideEffect
@@ -22,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.anchor.app.reminder.AndroidReminderScheduler
 import com.anchor.app.reminder.ReminderKind
+import com.anchor.app.settings.NotificationPermission
 import com.anchor.app.settings.ReminderToggle
 import com.anchor.app.safety.phoneTelUri
 import com.anchor.app.settings.ThemeChoice
@@ -39,6 +44,39 @@ import java.io.File
 class MainActivity : FragmentActivity() {
     private val importBackup = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri?.let(::restoreEncryptedExport)
+    }
+    private val requestPostNotifications = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        if (!granted &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS,
+            )
+        ) {
+            notificationPrefs().edit().putBoolean(NOTIFICATION_ASKED, true).apply()
+        }
+        refreshNotificationPermission()
+    }
+    private var notificationPermission by mutableStateOf(NotificationPermission.Requestable)
+    private var exactAlarmGranted by mutableStateOf(true)
+    private var exactAlarmPromptAsked by mutableStateOf(true)
+    private val deadlineHandler = Handler(Looper.getMainLooper())
+    private val deadlineTick: Runnable = Runnable { onDeadlineTick() }
+
+    private fun onDeadlineTick() {
+        if (!::backgroundTimer.isInitialized) return
+        backgroundTimer.deliverIfDue()
+        microActionTimer.deliverIfDue()
+        val waveLeft = backgroundTimer.remainingMillis()
+        val microLeft = microActionTimer.remainingMillis()
+        val wait = minOf(
+            if (waveLeft > 0L) waveLeft else Long.MAX_VALUE,
+            if (microLeft > 0L) microLeft else Long.MAX_VALUE,
+        )
+        val delayMillis = if (wait == Long.MAX_VALUE) 30_000L else wait.coerceIn(500L, 12L * 60 * 60 * 1000)
+        deadlineHandler.postDelayed(deadlineTick, delayMillis)
     }
     private var inAppBannerText by mutableStateOf<String?>(null)
     private lateinit var biometricLock: AndroidBiometricLock
@@ -88,12 +126,17 @@ class MainActivity : FragmentActivity() {
         biometricLock = AndroidBiometricLock(this)
         themePreference = AndroidThemePreference(this)
         themeChoice = themePreference.choice
+        syncAnchorNightMode(this, themeChoice)
+        refreshNotificationPermission()
         offlineSpeech = AndroidOfflineSpeech(this)
         audioRecorder = AndroidLocalAudioRecorder(this)
         val databaseKey = AndroidDatabaseKey.getOrCreate(this, DATABASE_NAME)
         anchorStore = AndroidEncryptedProbeStore(this, DATABASE_NAME, databaseKey)
         backgroundTimer = AndroidBackgroundTimer(this)
         microActionTimer = AndroidBackgroundTimer(this, BackgroundTimerKind.MicroAction)
+        refreshExactAlarm()
+        exactAlarmPromptAsked = exactAlarmPrefs().getBoolean(EXACT_ALARM_ASKED, false)
+        armDeadlineWatch()
         databaseKey.fill(0)
         appLockAvailable = biometricLock.isAvailable()
         appLockEnabled = biometricLock.enabled
@@ -164,15 +207,30 @@ class MainActivity : FragmentActivity() {
                 onDeleteAllData = { deleteAllLocalData() },
                 reminderAllows = reminderAllows,
                 onToggleReminder = { toggleReminder(it) },
+                notificationPermission = notificationPermission,
+                onRequestNotificationPermission = { requestNotificationPermission() },
+                exactAlarmGranted = exactAlarmGranted,
+                onRequestExactAlarm = { requestExactAlarm() },
+                showExactAlarmPrompt = !exactAlarmGranted && !exactAlarmPromptAsked,
+                onExactAlarmPromptShown = {
+                    exactAlarmPromptAsked = true
+                    exactAlarmPrefs().edit().putBoolean(EXACT_ALARM_ASKED, true).apply()
+                },
                 onPostponeReassessment = { AndroidReminderScheduler(this).postponeReassessment() },
                 nowMillis = System::currentTimeMillis,
                 waveClockMillis = SystemClock::elapsedRealtime,
-                onStartWaveTimer = { backgroundTimer.schedule(it) },
+                onStartWaveTimer = {
+                    backgroundTimer.schedule(it)
+                    armDeadlineWatch()
+                },
                 waveRemainingMillis = backgroundTimer::remainingMillis,
                 isWorrySessionOpen = { AndroidWorrySessionClock.isOpen() },
                 nextWorrySessionMillis = { AndroidWorrySessionClock.nextSessionMillis() },
                 nextWorrySessionLabel = { AndroidWorrySessionClock.nextSessionLabel() },
-                onStartMicroActionTimer = { microActionTimer.schedule(it) },
+                onStartMicroActionTimer = {
+                    microActionTimer.schedule(it)
+                    armDeadlineWatch()
+                },
                 onCancelMicroActionTimer = { microActionTimer.cancel() },
                 formatLocalTime = { AndroidWorrySessionClock.formatLocalTime(it) },
                 formatLocalStamp = { AndroidWorrySessionClock.formatLocalStamp(it) },
@@ -197,6 +255,7 @@ class MainActivity : FragmentActivity() {
                 onThemeChoice = { choice ->
                     themeChoice = choice
                     themePreference.choice = choice
+                    syncAnchorNightMode(this, choice)
                 },
                 onDial = ::dialNumber,
             )
@@ -217,6 +276,13 @@ class MainActivity : FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
+        refreshNotificationPermission()
+        refreshExactAlarm()
+        backgroundTimer.promoteToExactAlarm()
+        microActionTimer.promoteToExactAlarm()
+        backgroundTimer.deliverIfDue()
+        microActionTimer.deliverIfDue()
+        armDeadlineWatch()
         inAppBannerText = when {
             backgroundTimer.consumePendingInAppNotice() ->
                 "它自己退了。你没有掐掉它，它也会走。"
@@ -239,6 +305,7 @@ class MainActivity : FragmentActivity() {
     }
 
     override fun onDestroy() {
+        deadlineHandler.removeCallbacks(deadlineTick)
         offlineSpeech.destroy()
         stopAudioPlayback()
         anchorStore.close()
@@ -343,6 +410,84 @@ class MainActivity : FragmentActivity() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
+
+    private fun refreshNotificationPermission() {
+        notificationPermission = currentNotificationPermission()
+    }
+
+    private fun refreshExactAlarm() {
+        exactAlarmGranted = backgroundTimer.canScheduleExactAlarms()
+    }
+
+    private fun armDeadlineWatch() {
+        deadlineHandler.removeCallbacks(deadlineTick)
+        deadlineHandler.post(deadlineTick)
+    }
+
+    private fun requestExactAlarm() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || backgroundTimer.canScheduleExactAlarms()) {
+            exactAlarmGranted = true
+            return
+        }
+        val request = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            .setData(Uri.parse("package:$packageName"))
+        try {
+            startActivity(request)
+        } catch (_: ActivityNotFoundException) {
+            startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)),
+            )
+        }
+    }
+
+    private fun currentNotificationPermission(): NotificationPermission {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return NotificationPermission.Granted
+        val granted = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS,
+        ) == PackageManager.PERMISSION_GRANTED
+        if (granted) return NotificationPermission.Granted
+        val asked = notificationPrefs().getBoolean(NOTIFICATION_ASKED, false)
+        val canAskAgain = ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS,
+        )
+        return if (asked && !canAskAgain) {
+            NotificationPermission.Blocked
+        } else {
+            NotificationPermission.Requestable
+        }
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            notificationPermission = NotificationPermission.Granted
+            return
+        }
+        if (currentNotificationPermission() == NotificationPermission.Blocked) {
+            openNotificationSettings()
+            return
+        }
+        requestPostNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    private fun openNotificationSettings() {
+        val settings = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+            .putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+        try {
+            startActivity(settings)
+        } catch (_: ActivityNotFoundException) {
+            startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)),
+            )
+        }
+    }
+
+    private fun notificationPrefs() =
+        getSharedPreferences(NOTIFICATION_PREFERENCES, MODE_PRIVATE)
+
+    private fun exactAlarmPrefs() =
+        getSharedPreferences(EXACT_ALARM_PREFERENCES, MODE_PRIVATE)
 
     private fun withMicrophonePermission(action: () -> Unit) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
@@ -483,5 +628,9 @@ class MainActivity : FragmentActivity() {
     private companion object {
         const val MICROPHONE_REQUEST_CODE = 7
         const val DATABASE_NAME = "anchor.db"
+        const val NOTIFICATION_PREFERENCES = "anchor-notification"
+        const val NOTIFICATION_ASKED = "asked"
+        const val EXACT_ALARM_PREFERENCES = "anchor-exact-alarm"
+        const val EXACT_ALARM_ASKED = "asked"
     }
 }

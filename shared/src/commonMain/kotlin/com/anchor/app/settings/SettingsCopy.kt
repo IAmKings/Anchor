@@ -13,6 +13,13 @@ enum class ThemeChoice {
     Dark,
 }
 
+/** System notification permission, separate from the four in-app reminder allows. */
+enum class NotificationPermission {
+    Granted,
+    Requestable,
+    Blocked,
+}
+
 fun ThemeChoice.useDark(systemDark: Boolean): Boolean = when (this) {
     ThemeChoice.System -> systemDark
     ThemeChoice.Light -> false
@@ -52,6 +59,31 @@ internal const val settingsLockUnavailable = "当前设备暂不支持生物识�
 internal const val settingsLockscreenNote = "锁屏通知只显示「锚点」，不显示正文。"
 internal const val settingsRemindersTitle = "提醒"
 internal const val settingsRemindersIntro = "只有这四类。关掉后不追问、不挽留。"
+internal const val settingsNotificationTitle = "系统通知"
+
+internal fun settingsNotificationDetail(permission: NotificationPermission): String = when (permission) {
+    NotificationPermission.Granted -> "已允许。锁屏只显示「锚点」，不显示正文。"
+    NotificationPermission.Requestable,
+    NotificationPermission.Blocked,
+    -> "浪潮到点和四类提醒需要系统允许。拒绝后，回到应用时用顶部提示。"
+}
+
+internal fun settingsNotificationAction(permission: NotificationPermission): String = when (permission) {
+    NotificationPermission.Granted -> "已允许"
+    NotificationPermission.Requestable -> "允许通知"
+    NotificationPermission.Blocked -> "去系统设置打开"
+}
+
+internal const val settingsExactAlarmTitle = "准时提醒"
+
+internal fun settingsExactAlarmDetail(granted: Boolean): String = if (granted) {
+    "已允许。浪潮到点会准时进通知栏。"
+} else {
+    "没开的话，手机会把到点通知推迟几分钟。通知权限本身不管准时。"
+}
+
+internal fun settingsExactAlarmAction(granted: Boolean): String = if (granted) "已允许" else "去开启"
+
 internal const val settingsDataTitle = "数据管理"
 internal const val settingsExportTitle = "加密导出"
 internal const val settingsExportBody = "导出 JSON 与 CSV。密码不会保存，遗失后无法恢复。"

@@ -1,7 +1,9 @@
 package com.anchor.app
 
+import android.app.UiModeManager
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.view.View
 import android.view.Window
 import androidx.core.view.WindowCompat
@@ -23,6 +25,35 @@ internal class AndroidThemePreference(context: Context) {
         const val PREFERENCES = "anchor-theme"
         private const val KEY = "choice"
     }
+}
+
+private const val APPLIED_NIGHT_MODE = "night-mode-applied"
+
+/**
+ * Persists the app night mode so the next cold start's system splash uses the saved theme.
+ * 跟随系统 is left alone until an explicit light or dark choice has been applied once.
+ * [UiModeManager.MODE_NIGHT_AUTO] clears that override (the platform stores "unspecified").
+ */
+internal fun syncAnchorNightMode(context: Context, choice: ThemeChoice) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
+    val preferences = context.getSharedPreferences(
+        AndroidThemePreference.PREFERENCES,
+        Context.MODE_PRIVATE,
+    )
+    val applied = preferences.getString(APPLIED_NIGHT_MODE, null)
+    if (applied == choice.name) return
+    if (choice == ThemeChoice.System && applied == null) {
+        preferences.edit().putString(APPLIED_NIGHT_MODE, choice.name).apply()
+        return
+    }
+    preferences.edit().putString(APPLIED_NIGHT_MODE, choice.name).commit()
+    val mode = when (choice) {
+        ThemeChoice.Light -> UiModeManager.MODE_NIGHT_NO
+        ThemeChoice.Dark -> UiModeManager.MODE_NIGHT_YES
+        ThemeChoice.System -> UiModeManager.MODE_NIGHT_AUTO
+    }
+    val uiMode = context.getSystemService(UiModeManager::class.java) ?: return
+    runCatching { uiMode.setApplicationNightMode(mode) }
 }
 
 @Suppress("DEPRECATION")

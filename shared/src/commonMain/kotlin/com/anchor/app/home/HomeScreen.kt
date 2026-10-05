@@ -112,6 +112,13 @@ import com.anchor.app.storage.WorryResolution
 import com.anchor.app.ui.AnchorAppIcon
 import com.anchor.app.ui.AnchorIconWell
 import com.anchor.app.ui.formatCountdown
+import com.anchor.app.wave.waveHomeCaption
+import com.anchor.app.wave.waveHomeContentDescription
+import com.anchor.app.wave.waveHomeIdleStatus
+import com.anchor.app.wave.waveHomeStatus
+import com.anchor.app.wave.waveHomeStatusMaxMillis
+import com.anchor.app.wave.waveHomeTitle
+import kotlinx.coroutines.delay
 
 private val CardShape = RoundedCornerShape(16.dp)
 
@@ -152,8 +159,19 @@ fun HomeScreen(
     canAddAnchor: Boolean = false,
     onAddAnchor: () -> Unit = {},
     onEmotion: () -> Unit = {},
+    waveRemainingMillis: () -> Long = { 0L },
     scrollState: ScrollState = rememberScrollState(),
 ) {
+    var waveRemaining by remember { mutableStateOf(waveRemainingMillis()) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            val remaining = waveRemainingMillis()
+            waveRemaining = remaining
+            if (remaining <= 0L || remaining > waveHomeStatusMaxMillis) break
+            val untilNextMinute = remaining % 60_000L
+            delay(if (untilNextMinute == 0L) 60_000L else untilNextMinute)
+        }
+    }
     val profile = store.userProfile()
     val canAdd = canAddAnchor || forceUnlocked ||
         (!forceOneThingLock && additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis()))
@@ -237,6 +255,7 @@ fun HomeScreen(
                     isWorrySessionOpen = isWorrySessionOpen,
                     nextWorrySessionLabel = nextWorrySessionLabel,
                     onWave = onWave,
+                    waveStatus = waveHomeStatus(waveRemaining),
                     onRhythm = onRhythm,
                     onRelation = onRelation,
                     onMicroAction = onMicroAction,
@@ -389,6 +408,7 @@ private fun PracticeHome(
     isWorrySessionOpen: () -> Boolean,
     nextWorrySessionLabel: () -> String,
     onWave: () -> Unit,
+    waveStatus: String = waveHomeIdleStatus,
     onRhythm: () -> Unit,
     onRelation: () -> Unit,
     onMicroAction: () -> Unit,
@@ -449,6 +469,7 @@ private fun PracticeHome(
         if (showWave) {
             WaveEntry(
                 onClick = onWave,
+                status = waveStatus,
                 lockNote = lockNote.takeIf { lockAnchor == FirstAnchor.WaveWaiting },
                 onDismissLockPreview = onDismissLockPreview.takeIf { lockAnchor == FirstAnchor.WaveWaiting },
             )
@@ -762,6 +783,7 @@ private val WaveInk = Color(0xFF133222)
 @Composable
 private fun WaveEntry(
     onClick: () -> Unit,
+    status: String,
     lockNote: String? = null,
     onDismissLockPreview: (() -> Unit)? = null,
 ) {
@@ -773,28 +795,29 @@ private fun WaveEntry(
         Box(
             Modifier
                 .size(192.dp)
-                .semantics { contentDescription = "浪潮等待，难受的时候点这里" }
+                .semantics { contentDescription = waveHomeContentDescription(status) }
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
             HomeWaveMark(Modifier.fillMaxSize())
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    "浪潮等待",
+                    waveHomeTitle,
                     color = WaveInk,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "等待中",
+                    status,
                     color = WaveInk.copy(alpha = 0.8f),
                     fontSize = 14.sp,
+                    maxLines = 1,
                 )
             }
         }
         Text(
-            "难受的时候点这里",
+            waveHomeCaption,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 17.sp,
             modifier = Modifier.padding(top = 24.dp),

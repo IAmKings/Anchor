@@ -50,19 +50,22 @@ fun EmotionCardsScreen(
     nowMillis: () -> Long,
     onCrisisGuidance: () -> Unit = {},
     onClose: () -> Unit,
+    writeOnly: Boolean = false,
 ) {
-    var composing by remember { mutableStateOf(false) }
+    var composing by remember { mutableStateOf(writeOnly) }
     var revision by remember { mutableIntStateOf(0) }
     var pendingPhrase by remember { mutableStateOf<String?>(null) }
     var pendingSave by remember { mutableStateOf<(() -> Unit)?>(null) }
     if (composing) {
         NewEmotionCard(
-            onCancel = { composing = false },
+            onCancel = { if (writeOnly) onClose() else composing = false },
             onSave = { emotion, event, hardestPart ->
                 val save = {
                     store.addEmotionCard(emotion, event, hardestPart, nowMillis())
-                    revision++
-                    composing = false
+                    if (writeOnly) onClose() else {
+                        revision++
+                        composing = false
+                    }
                 }
                 val hit = findCrisisPhrase(listOf(emotion, event, hardestPart))
                 if (hit == null) save()

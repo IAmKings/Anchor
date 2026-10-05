@@ -1,6 +1,8 @@
 package com.anchor.app
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -78,6 +80,7 @@ import com.anchor.app.relation.RelationFlow
 import com.anchor.app.rhythm.RhythmScreen
 import com.anchor.app.insights.LocalInsightsScreen
 import com.anchor.app.settings.ExportCompleteScreen
+import com.anchor.app.settings.NotificationPermission
 import com.anchor.app.settings.ReminderToggle
 import com.anchor.app.settings.SettingsScreen
 import com.anchor.app.settings.ThemeChoice
@@ -86,6 +89,7 @@ import com.anchor.app.settings.exportFileLabel
 import com.anchor.app.settings.isExportSuccess
 import com.anchor.app.update.UpdatePhase
 import com.anchor.app.update.UpdatePromptDialog
+import com.anchor.app.wave.WaveExactAlarmPrompt
 import com.anchor.app.wave.WaveWaitingScreen
 
 private val AnchorColors = lightColorScheme(
@@ -164,6 +168,12 @@ fun App(
     onDeleteAllData: () -> Unit = {},
     reminderAllows: Map<ReminderToggle, Boolean> = ReminderToggle.entries.associateWith { true },
     onToggleReminder: (ReminderToggle) -> Unit = {},
+    notificationPermission: NotificationPermission? = null,
+    onRequestNotificationPermission: () -> Unit = {},
+    exactAlarmGranted: Boolean? = null,
+    onRequestExactAlarm: () -> Unit = {},
+    showExactAlarmPrompt: Boolean = false,
+    onExactAlarmPromptShown: () -> Unit = {},
     onPostponeReassessment: () -> Unit = {},
     nowMillis: () -> Long = { 0L },
     waveClockMillis: () -> Long = nowMillis,
@@ -190,6 +200,8 @@ fun App(
 ) {
     val store = anchorStore ?: remember { InMemoryAnchorStore() }
     var waveVisible by remember { mutableStateOf(false) }
+    var waveEmotionNote by remember { mutableStateOf(false) }
+    var waveExactAlarmPromptVisible by remember { mutableStateOf(false) }
     var emotionCardsVisible by remember { mutableStateOf(false) }
     var recordsHubVisible by remember { mutableStateOf(false) }
     var cameraLogVisible by remember { mutableStateOf(false) }
@@ -345,12 +357,58 @@ fun App(
                 return@Surface
             }
             if (waveVisible) {
-                WaveWaitingScreen(
-                    nowMillis = waveClockMillis,
-                    initialRemainingMillis = waveRemainingMillis(),
-                    onSchedule = onStartWaveTimer,
-                    onClose = { waveVisible = false },
-                )
+                Box(Modifier.fillMaxSize()) {
+                    WaveWaitingScreen(
+                        nowMillis = waveClockMillis,
+                        initialRemainingMillis = waveRemainingMillis(),
+                        onSchedule = { millis ->
+                            onStartWaveTimer(millis)
+                            if (showExactAlarmPrompt) waveExactAlarmPromptVisible = true
+                        },
+                        onNoteEmotion = { waveEmotionNote = true },
+                        onClose = {
+                            waveEmotionNote = false
+                            waveVisible = false
+                        },
+                    )
+                    if (waveEmotionNote) {
+                        Box(
+                            Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.background)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null,
+                                    onClick = {},
+                                ),
+                        ) {
+                            EmotionCardsScreen(
+                                store = store,
+                                nowMillis = nowMillis,
+                                writeOnly = true,
+                                onCrisisGuidance = {
+                                    waveEmotionNote = false
+                                    waveVisible = false
+                                    openCrisisFromText(persistWaiting = true)
+                                },
+                                onClose = { waveEmotionNote = false },
+                            )
+                        }
+                    }
+                    if (waveExactAlarmPromptVisible && showExactAlarmPrompt) {
+                        WaveExactAlarmPrompt(
+                            onAllow = {
+                                waveExactAlarmPromptVisible = false
+                                onExactAlarmPromptShown()
+                                onRequestExactAlarm()
+                            },
+                            onSkip = {
+                                waveExactAlarmPromptVisible = false
+                                onExactAlarmPromptShown()
+                            },
+                        )
+                    }
+                }
                 return@Surface
             }
             if (worryVaultVisible) {
@@ -477,6 +535,10 @@ fun App(
                         onDeleteAllData = onDeleteAllData,
                         reminderAllows = reminderAllows,
                         onToggleReminder = onToggleReminder,
+                        notificationPermission = notificationPermission,
+                        onRequestNotificationPermission = onRequestNotificationPermission,
+                        exactAlarmGranted = exactAlarmGranted,
+                        onRequestExactAlarm = onRequestExactAlarm,
                         themeChoice = themeChoice,
                         onThemeChoice = onThemeChoice,
                         onOpenHelp = { safetyStack = pushSafety(safetyStack, SafetyPlace.Help) },
@@ -556,7 +618,7 @@ fun App(
                     onSettings = { recordsHubVisible = false; settingsVisible = true },
                     onHelp = { safetyStack = pushSafety(safetyStack, SafetyPlace.Help) },
                     onClose = { recordsHubVisible = false },
-                    showEmotion = canPractice(FirstAnchor.EmotionLabel),
+                    showEmotion = canPractice(FirstAnchor.EmotionLabel) || store.emotionCards().isNotEmpty(),
                     showJournal = canPractice(FirstAnchor.FactsJournal),
                     showWorry = canPractice(FirstAnchor.WorryVault),
                     lockNote = oneThingNote,
@@ -584,6 +646,7 @@ fun App(
                     formatLocalTime = formatLocalTime,
                     isWorrySessionOpen = isWorrySessionOpen,
                     nextWorrySessionLabel = nextWorrySessionLabel,
+                    waveRemainingMillis = waveRemainingMillis,
                     onWave = { if (canPractice(FirstAnchor.WaveWaiting)) waveVisible = true },
                     onRecords = { recordsHubVisible = true },
                     onInsights = { insightsVisible = true },

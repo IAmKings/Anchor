@@ -57,6 +57,10 @@ fun SettingsScreen(
     onToggleAppLock: () -> Unit,
     reminderAllows: Map<ReminderToggle, Boolean> = ReminderToggle.entries.associateWith { true },
     onToggleReminder: (ReminderToggle) -> Unit = {},
+    notificationPermission: NotificationPermission? = null,
+    onRequestNotificationPermission: () -> Unit = {},
+    exactAlarmGranted: Boolean? = null,
+    onRequestExactAlarm: () -> Unit = {},
     themeChoice: ThemeChoice = ThemeChoice.System,
     onThemeChoice: (ThemeChoice) -> Unit = {},
     exportPassword: String,
@@ -116,6 +120,42 @@ fun SettingsScreen(
             Text(settingsRemindersTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
             Text(settingsRemindersIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             SettingsCard {
+                notificationPermission?.let { permission ->
+                    Text(settingsNotificationTitle, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                    Text(
+                        settingsNotificationDetail(permission),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                    )
+                    if (permission != NotificationPermission.Granted) {
+                        Button(
+                            onClick = onRequestNotificationPermission,
+                            modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight),
+                            shape = RoundedCornerShape(12.dp),
+                        ) {
+                            Text(settingsNotificationAction(permission), fontSize = 17.sp)
+                        }
+                    }
+                }
+                exactAlarmGranted?.let { granted ->
+                    Text(settingsExactAlarmTitle, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                    Text(
+                        settingsExactAlarmDetail(granted),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                    )
+                    if (!granted) {
+                        Button(
+                            onClick = onRequestExactAlarm,
+                            modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight),
+                            shape = RoundedCornerShape(12.dp),
+                        ) {
+                            Text(settingsExactAlarmAction(granted), fontSize = 17.sp)
+                        }
+                    }
+                }
                 ReminderToggle.entries.forEach { toggle ->
                     ToggleRow(
                         title = reminderToggleTitle(toggle),

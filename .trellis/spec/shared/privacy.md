@@ -46,7 +46,9 @@ Crisis and guide numbers hand a `tel:` URI to the system dialer: Android `Intent
 
 ## Notifications and timers
 
-AlarmManager / exact alarms may be delayed on ColorOS. When the OS drops a notification, write an **in-app banner** (`inAppBannerText`). Do not "fix" reliability by posting the worry content to a visible lock-screen notification.
+AlarmManager without an exact-alarm grant may be delayed on ColorOS. While the process is alive, deliver the completion notice at the stored deadline (`deliverIfDue`) and cancel that alarm; do not wait for the inexact alarm. 「我的」 can open the exact-alarm setting. A frozen process can still be late until that grant exists. When the notification itself cannot be posted, write an **in-app banner** (`inAppBannerText`). Do not "fix" reliability by posting the worry content to a visible lock-screen notification.
+
+`POST_NOTIFICATIONS` is declared, and Android 13+ still needs a runtime grant. 「我的」 asks for it from the reminder card. The four reminder toggles stay app-level allows; they do not grant the OS permission. If the user refuses, or the system will not show the dialog again, keep the in-app banner. Do not request the permission from a practice screen.
 
 Wave waiting and micro-action timers use **separate** `PendingIntent` request codes and notification IDs (`AndroidBackgroundTimer` + `BackgroundTimerKind`). Do not share one alarm slot.
 

@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,17 +53,16 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.ui.AnchorBackBar
 import com.anchor.app.ui.formatCountdown
-import kotlin.math.PI
-import kotlin.math.sin
-
 private enum class WaveStep { Recognize, Locate, Wait }
 
 private val WaveActionMinHeight = 52.dp
 private val WaveLocationMinHeight = 96.dp
+private val WaveBreathClearance = 32.dp
 
 @Composable
 fun WaveWaitingScreen(
@@ -69,6 +70,7 @@ fun WaveWaitingScreen(
     initialRemainingMillis: Long,
     onSchedule: (Long) -> Unit,
     onClose: () -> Unit,
+    onNoteEmotion: () -> Unit = {},
 ) {
     var step by remember { mutableStateOf(if (initialRemainingMillis > 0) WaveStep.Wait else WaveStep.Recognize) }
     var bodyLocation by remember { mutableStateOf<String?>(null) }
@@ -90,9 +92,8 @@ fun WaveWaitingScreen(
     }
 
     Box(Modifier.fillMaxSize()) {
-        BreathingBackdrop()
         AnchorBackBar(onBack = onClose, label = waveLeave()) {
-            Box(Modifier.fillMaxSize().padding(horizontal = 20.dp), contentAlignment = Alignment.Center) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 when (step) {
                     WaveStep.Recognize -> RecognizeStep(onSeen = { step = WaveStep.Locate })
                     WaveStep.Locate -> LocateStep(
@@ -122,6 +123,7 @@ fun WaveWaitingScreen(
                             deadlineMillis = nowMillis() + extension
                             onSchedule(extension)
                         },
+                        onNoteEmotion = onNoteEmotion,
                         onClose = onClose,
                     )
                 }
@@ -132,40 +134,57 @@ fun WaveWaitingScreen(
 
 @Composable
 private fun RecognizeStep(onSeen: () -> Unit) {
-    Column(
-        Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+    BoxWithConstraints(
+        Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp),
+        contentAlignment = Alignment.Center,
     ) {
-        Text(
-            waveRecognizeTitle(),
-            Modifier.semantics { heading() },
-            fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            lineHeight = 32.sp,
+        val diameter = minOf(
+            maxWidth,
+            (maxHeight - WaveBreathClearance - WaveActionMinHeight).coerceAtLeast(0.dp),
         )
-        Text(
-            waveRecognizeBody(),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 17.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(0.8f),
-            lineHeight = 28.sp,
-        )
-        Spacer(Modifier.height(16.dp))
-        Button(
-            onClick = onSeen,
-            shape = RoundedCornerShape(999.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ),
-            modifier = Modifier
-                .padding(horizontal = 12.dp)
-                .heightIn(min = WaveActionMinHeight),
-        ) {
-            Text(waveRecognizeAction(), Modifier.padding(horizontal = 16.dp), fontSize = 17.sp)
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(Modifier.size(diameter), contentAlignment = Alignment.Center) {
+                BreathingCircles(Modifier.fillMaxSize())
+                val copyWidth = waveRecognizeCopyWidth(diameter.value).dp
+                Column(
+                    Modifier
+                        .width(copyWidth)
+                        .heightIn(max = copyWidth)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    Text(
+                        waveRecognizeTitle(),
+                        Modifier.semantics { heading() },
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 32.sp,
+                    )
+                    Text(
+                        waveRecognizeBody(),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 17.sp,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 28.sp,
+                    )
+                }
+            }
+            Spacer(Modifier.height(WaveBreathClearance))
+            Button(
+                onClick = onSeen,
+                shape = RoundedCornerShape(999.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .heightIn(min = WaveActionMinHeight),
+            ) {
+                Text(waveRecognizeAction(), Modifier.padding(horizontal = 16.dp), fontSize = 17.sp)
+            }
         }
     }
 }
@@ -182,7 +201,7 @@ private fun LocateStep(
         Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .padding(bottom = 24.dp),
+            .padding(horizontal = 20.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
@@ -264,76 +283,128 @@ private fun WaitStep(
     sessionTotalMillis: Long,
     location: String?,
     onAddTen: () -> Unit,
+    onNoteEmotion: () -> Unit,
     onClose: () -> Unit,
 ) {
     val done = remainingMillis == 0L
-    val progress = if (sessionTotalMillis <= 0L) 0f else (remainingMillis.toFloat() / sessionTotalMillis).coerceIn(0f, 1f)
-    val track = MaterialTheme.colorScheme.surfaceVariant
-    val active = MaterialTheme.colorScheme.primary
-    Column(
-        Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-    ) {
-        Text(
-            waveWaitTitle(done),
-            Modifier.semantics { heading() },
-            fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            lineHeight = 32.sp,
+    BoxWithConstraints(Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 8.dp)) {
+        val controls = if (done) {
+            WaveActionMinHeight * 3 + 24.dp + 16.dp * 2
+        } else {
+            WaveActionMinHeight + 24.dp
+        }
+        val textReserve = 80.dp + 72.dp
+        val viewport = maxHeight
+        val diameter = minOf(
+            maxWidth,
+            (viewport - WaveBreathClearance * 2 - controls - textReserve).coerceAtLeast(0.dp),
         )
-        Box(Modifier.size(256.dp), contentAlignment = Alignment.Center) {
-            Canvas(Modifier.fillMaxSize()) {
-                val stroke = 4.dp.toPx()
-                drawCircle(color = track, style = Stroke(width = stroke))
-                if (progress > 0f) {
-                    drawArc(
-                        color = active,
-                        startAngle = -90f,
-                        sweepAngle = 360f * progress,
-                        useCenter = false,
-                        style = Stroke(width = stroke, cap = StrokeCap.Round),
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(viewport)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Column(
+                Modifier.fillMaxWidth().heightIn(min = viewport),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    waveWaitTitle(done),
+                    Modifier.semantics { heading() },
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center,
+                    lineHeight = 32.sp,
+                )
+                Spacer(Modifier.height(WaveBreathClearance))
+                Box(Modifier.size(diameter), contentAlignment = Alignment.Center) {
+                    BreathingCircles(Modifier.fillMaxSize())
+                    CountdownRing(
+                        remainingMillis = remainingMillis,
+                        sessionTotalMillis = sessionTotalMillis,
+                        done = done,
+                        diameter = diameter,
                     )
                 }
-            }
-            Text(
-                if (done) "00:00" else formatCountdown(remainingMillis),
-                fontFamily = FontFamily.Monospace,
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        }
-        Text(
-            waveWaitBody(if (done) null else location),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 17.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(0.8f),
-            lineHeight = 28.sp,
-        )
-        OutlinedButton(
-            onClick = onAddTen,
-            shape = RoundedCornerShape(999.dp),
-            modifier = Modifier.heightIn(min = WaveActionMinHeight),
-        ) {
-            Text(waveAddTenMinutes(), fontSize = 17.sp)
-        }
-        if (done) {
-            Button(
-                onClick = onClose,
-                shape = RoundedCornerShape(999.dp),
-                modifier = Modifier.heightIn(min = WaveActionMinHeight),
-            ) {
-                Text(waveBackToToday(), Modifier.padding(horizontal = 12.dp), fontSize = 17.sp)
+                Spacer(Modifier.height(WaveBreathClearance))
+                Text(
+                    waveWaitBody(if (done) null else location),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 17.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    lineHeight = 28.sp,
+                )
+                Spacer(Modifier.height(24.dp))
+                OutlinedButton(
+                    onClick = onAddTen,
+                    shape = RoundedCornerShape(999.dp),
+                    modifier = Modifier.heightIn(min = WaveActionMinHeight),
+                ) {
+                    Text(waveAddTenMinutes(), fontSize = 17.sp)
+                }
+                if (done) {
+                    Spacer(Modifier.height(16.dp))
+                    OutlinedButton(
+                        onClick = onNoteEmotion,
+                        shape = RoundedCornerShape(999.dp),
+                        modifier = Modifier.heightIn(min = WaveActionMinHeight),
+                    ) {
+                        Text(waveNoteEmotion(), Modifier.padding(horizontal = 12.dp), fontSize = 17.sp)
+                    }
+                    Spacer(Modifier.height(16.dp))
+                    Button(
+                        onClick = onClose,
+                        shape = RoundedCornerShape(999.dp),
+                        modifier = Modifier.heightIn(min = WaveActionMinHeight),
+                    ) {
+                        Text(waveBackToToday(), Modifier.padding(horizontal = 12.dp), fontSize = 17.sp)
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun BreathingBackdrop() {
+private fun CountdownRing(
+    remainingMillis: Long,
+    sessionTotalMillis: Long,
+    done: Boolean,
+    diameter: Dp,
+) {
+    val progress = if (sessionTotalMillis <= 0L) 0f else (remainingMillis.toFloat() / sessionTotalMillis).coerceIn(0f, 1f)
+    val track = MaterialTheme.colorScheme.surfaceVariant
+    val active = MaterialTheme.colorScheme.primary
+    val ring = minOf(256.dp, diameter)
+    Box(Modifier.size(ring), contentAlignment = Alignment.Center) {
+        Canvas(Modifier.fillMaxSize()) {
+            val stroke = 4.dp.toPx()
+            drawCircle(color = track, style = Stroke(width = stroke))
+            if (progress > 0f) {
+                drawArc(
+                    color = active,
+                    startAngle = -90f,
+                    sweepAngle = 360f * progress,
+                    useCenter = false,
+                    style = Stroke(width = stroke, cap = StrokeCap.Round),
+                )
+            }
+        }
+        Text(
+            if (done) "00:00" else formatCountdown(remainingMillis),
+            fontFamily = FontFamily.Monospace,
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Normal,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+    }
+}
+
+@Composable
+private fun BreathingCircles(modifier: Modifier = Modifier) {
     val transition = rememberInfiniteTransition(label = "wave-breathe")
     val t by transition.animateFloat(
         initialValue = 0f,
@@ -345,16 +416,16 @@ private fun BreathingBackdrop() {
         label = "wave-breathe-t",
     )
     val color = MaterialTheme.colorScheme.primaryContainer
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        GlowCircle(fraction = 0.88f, alpha = 0.18f, phase = 0f, t = t, color = color)
-        GlowCircle(fraction = 0.66f, alpha = 0.22f, phase = 0.25f, t = t, color = color)
-        GlowCircle(fraction = 0.44f, alpha = 0.28f, phase = 0.5f, t = t, color = color)
+    Box(modifier, contentAlignment = Alignment.Center) {
+        GlowCircle(fraction = 1f, alpha = 0.18f, phase = 0f, t = t, color = color)
+        GlowCircle(fraction = 0.72f, alpha = 0.22f, phase = 0.25f, t = t, color = color)
+        GlowCircle(fraction = 0.48f, alpha = 0.28f, phase = 0.5f, t = t, color = color)
     }
 }
 
 @Composable
 private fun GlowCircle(fraction: Float, alpha: Float, phase: Float, t: Float, color: androidx.compose.ui.graphics.Color) {
-    val scale = 1f + 0.15f * sin(2.0 * PI * (t + phase)).toFloat()
+    val scale = waveBreathScale(waveBreathUnit(t, phase))
     Box(
         Modifier
             .fillMaxWidth(fraction)

@@ -1,5 +1,8 @@
 package com.anchor.app.wave
 
+import kotlin.math.PI
+import kotlin.math.sin
+
 internal const val WAVE_TEN_MINUTES = 10L * 60 * 1_000
 
 data class BodyLocation(
@@ -37,3 +40,49 @@ internal fun waveWaitBody(location: String?): String = when {
 internal fun waveAddTenMinutes(): String = "再加 10 分钟"
 internal fun waveLeave(): String = "离开"
 internal fun waveBackToToday(): String = "回到今天"
+internal fun waveNoteEmotion(): String = "顺手记一张情绪卡"
+
+/** Shown once before the first round when exact alarms are not granted. */
+internal fun waveExactAlarmPromptTitle(): String = "想让到点提醒准时吗"
+
+internal fun waveExactAlarmPromptBody(): String =
+    "还没开系统的「闹钟和提醒」。开着的话，练习一到点，提醒就准时进通知栏；不开，手机可能把它推迟几分钟。之后也可以在「我的」里再开。"
+
+internal const val waveExactAlarmPromptAllow = "去开启"
+internal const val waveExactAlarmPromptSkip = "先不用"
+
+internal const val waveHomeTitle = "浪潮等待"
+internal const val waveHomeIdleStatus = "等待中"
+internal const val waveHomeCaption = "难受的时候点这里"
+
+/** Above this, the stored deadline is not a live round (for example after reboot). */
+internal const val waveHomeStatusMaxMillis = 12L * 60 * 60 * 1_000
+
+/** Minute label while a round is running. Rounds up, and never says 0 while time remains. */
+internal fun waveHomeStatus(remainingMillis: Long): String {
+    if (remainingMillis <= 0L || remainingMillis > waveHomeStatusMaxMillis) return waveHomeIdleStatus
+    val minutes = (remainingMillis + 60_000L - 1L) / 60_000L
+    return "还剩 $minutes 分钟"
+}
+
+internal fun waveHomeContentDescription(status: String): String =
+    "$waveHomeTitle，$status。$waveHomeCaption"
+
+/** Smallest breathing scale. The layout slot is the largest size, so this never grows past it. */
+internal const val waveBreathMinScale = 0.82f
+
+/** Share of the smallest circle used by the recognize copy. Below the inscribed square (0.707). */
+internal const val waveRecognizeCopyFraction = 0.68f
+
+internal fun waveBreathUnit(t: Float, phase: Float): Float {
+    val wave = sin(2.0 * PI * (t + phase))
+    return ((wave + 1.0) / 2.0).toFloat().coerceIn(0f, 1f)
+}
+
+internal fun waveBreathScale(unit: Float): Float {
+    val clamped = unit.coerceIn(0f, 1f)
+    return waveBreathMinScale + (1f - waveBreathMinScale) * clamped
+}
+
+internal fun waveRecognizeCopyWidth(maxDiameter: Float): Float =
+    maxDiameter * waveBreathMinScale * waveRecognizeCopyFraction
