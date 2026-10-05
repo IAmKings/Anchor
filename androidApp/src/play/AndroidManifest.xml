@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Google Play 渠道：Play 政策只允许闹钟/日历类应用声明 USE_EXACT_ALARM，这里移除。
+     用户仍可在系统设置里手动授予 SCHEDULE_EXACT_ALARM（应用内「我的」有入口）。 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission
+        android:name="android.permission.USE_EXACT_ALARM"
+        tools:node="remove" />
+</manifest>

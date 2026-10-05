@@ -76,7 +76,7 @@ jobs:
           echo "version_name=${VERSION_NAME}" >> "$GITHUB_ENV"
           echo "version_code=${VERSION_CODE}" >> "$GITHUB_ENV"
 
-      - name: Build internal APK
+      - name: Build internal APKs
         env:
           ANCHOR_KEYSTORE: ${{ runner.temp }}/anchor-internal.jks
           ANCHOR_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
@@ -85,20 +85,30 @@ jobs:
         run: |
           set -euo pipefail
           chmod +x ./gradlew
-          ./gradlew :androidApp:assembleInternal --no-daemon \
+          ./gradlew :androidApp:assembleStandardInternal :androidApp:assemblePlayInternal --no-daemon \
             -PversionCode="${version_code}" \
             -PversionName="${version_name}"
 
-      - name: Check embedded version
+      - name: Check embedded version and permissions
         run: |
           set -euo pipefail
           SDK="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
-          APK=$(find androidApp/build/outputs/apk/internal -name '*.apk' | head -1)
+          STANDARD_APK=$(find androidApp/build/outputs/apk/standard/internal -name '*.apk' | head -1)
+          PLAY_APK=$(find androidApp/build/outputs/apk/play/internal -name '*.apk' | head -1)
           BT=$(ls "$SDK/build-tools" | sort -V | tail -1)
-          BADGING=$("$SDK/build-tools/$BT/aapt" dump badging "$APK")
-          printf '%s\n' "$BADGING" | grep -q "versionCode='${version_code}'"
-          printf '%s\n' "$BADGING" | grep -q "versionName='${version_name}'"
-          cp "$APK" "$RUNNER_TEMP/anchor-internal-${version_name}.apk"
+          STANDARD_BADGING=$("$SDK/build-tools/$BT/aapt" dump badging "$STANDARD_APK")
+          PLAY_BADGING=$("$SDK/build-tools/$BT/aapt" dump badging "$PLAY_APK")
+          printf '%s\n' "$STANDARD_BADGING" | grep -q "versionCode='${version_code}'"
+          printf '%s\n' "$STANDARD_BADGING" | grep -q "versionName='${version_name}'"
+          printf '%s\n' "$PLAY_BADGING" | grep -q "versionCode='${version_code}'"
+          printf '%s\n' "$PLAY_BADGING" | grep -q "versionName='${version_name}'"
+          printf '%s\n' "$STANDARD_BADGING" | grep -q "uses-permission: 'android.permission.USE_EXACT_ALARM'"
+          if printf '%s\n' "$PLAY_BADGING" | grep -q "uses-permission: 'android.permission.USE_EXACT_ALARM'"; then
+            echo "play 渠道包不应包含 USE_EXACT_ALARM"
+            exit 1
+          fi
+          cp "$STANDARD_APK" "$RUNNER_TEMP/anchor-internal-${version_name}.apk"
+          cp "$PLAY_APK" "$RUNNER_TEMP/anchor-internal-play-${version_name}.apk"
 
       - name: Publish prerelease
         env:
@@ -112,9 +122,13 @@ jobs:
             "anchor-version-name: ${VERSION_NAME}" \
             "" \
             "内部测试包。若手机上已有 Debug 签名的锚点，先在应用里加密导出，再卸载，然后安装本包。正式版上架后证书不同，也不能覆盖安装，请先导出。" \
+            "" \
+            "anchor-internal-*.apk 是默认渠道包，含系统「闹钟和提醒」权限（USE_EXACT_ALARM），计时结束提醒准时。" \
+            "anchor-internal-play-*.apk 是 Google Play 渠道包，按 Play 政策不含该权限，提醒可能晚几分钟；可在系统设置里手动开「闹钟和提醒」。" \
             > "$RUNNER_TEMP/notes.md"
           gh release create "v${VERSION_NAME}" \
             --prerelease \
             --title "${VERSION_NAME}" \
             --notes-file "$RUNNER_TEMP/notes.md" \
-            "$RUNNER_TEMP/anchor-internal-${VERSION_NAME}.apk"
+            "$RUNNER_TEMP/anchor-internal-${VERSION_NAME}.apk" \
+            "$RUNNER_TEMP/anchor-internal-play-${VERSION_NAME}.apk"
