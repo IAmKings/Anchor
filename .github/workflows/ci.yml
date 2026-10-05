@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install Android SDK 36
+        run: |
+          set -euo pipefail
+          SDK="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
+          TOOL=$SDK/cmdline-tools/latest/bin/sdkmanager
+          if [ ! -x "$TOOL" ]; then
+            TOOL=$(find "$SDK/cmdline-tools" -name sdkmanager -type f | head -1)
+          fi
+          yes | "$TOOL" --licenses >/dev/null || true
+          "$TOOL" "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Unit tests
+        run: |
+          set -euo pipefail
+          chmod +x ./gradlew
+          ./gradlew :shared:testDebugUnitTest \
+            :androidApp:testStandardDebugUnitTest :androidApp:testPlayDebugUnitTest --no-daemon
+
+      - name: Build debug APKs (standard + play)
+        run: |
+          set -euo pipefail
+          ./gradlew :androidApp:assembleStandardDebug :androidApp:assemblePlayDebug --no-daemon
+
+      # 与打 tag 的发布构建同任务、同签名环境，编译问题在提交时就暴露。
+      - name: Build signed internal APKs (tag parity)
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANCHOR_KEYSTORE: ${{ runner.temp }}/anchor-internal.jks
+          ANCHOR_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANCHOR_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANCHOR_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${KEYSTORE_BASE64}" ]; then
+            echo "缺少 secret ANDROID_KEYSTORE_BASE64"
+            exit 1
+          fi
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$ANCHOR_KEYSTORE"
+          ./gradlew :androidApp:assembleStandardInternal :androidApp:assemblePlayInternal --no-daemon
