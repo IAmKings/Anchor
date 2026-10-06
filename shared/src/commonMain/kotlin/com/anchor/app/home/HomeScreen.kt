@@ -144,6 +144,7 @@ fun HomeScreen(
     onSomaticChecklist: () -> Unit = onHelp,
     onWorryVault: () -> Unit,
     hangSheetOpen: Boolean = false,
+    worryDataRevision: Int = 0,
     onHang: () -> Unit = onWorryVault,
     onMicroAction: () -> Unit,
     onRhythm: () -> Unit,
@@ -260,6 +261,7 @@ fun HomeScreen(
                     onRelation = onRelation,
                     onMicroAction = onMicroAction,
                     onWorryVault = onWorryVault,
+                    worryDataRevision = worryDataRevision,
                     relationPreview = relationPreview,
                     onRelationPreviewChange = onRelationPreviewChange,
                     showWave = showPractice(FirstAnchor.WaveWaiting),
@@ -409,6 +411,7 @@ private fun PracticeHome(
     nextWorrySessionLabel: () -> String,
     onWave: () -> Unit,
     waveStatus: String = waveHomeIdleStatus,
+    worryDataRevision: Int = 0,
     onRhythm: () -> Unit,
     onRelation: () -> Unit,
     onMicroAction: () -> Unit,
@@ -438,7 +441,10 @@ private fun PracticeHome(
     val actions = store.microActions()
     val active = actions.firstOrNull { it.startedAtMillis != null && it.completedAtMillis == null }
     val featured = active ?: actions.firstOrNull { it.completedAtMillis == null } ?: actions.firstOrNull()
-    val pendingWorry = store.worryCards().count { it.resolution == WorryResolution.Pending }
+    // 挂卡浮层关闭时本页可能不重组，revision 变化保证卡数重读。
+    val pendingWorry = remember(worryDataRevision) {
+        store.worryCards().count { it.resolution == WorryResolution.Pending }
+    }
     var now by remember { mutableStateOf(nowMillis()) }
     LaunchedEffect(active?.id) {
         if (active != null) {

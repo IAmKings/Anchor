@@ -56,12 +56,13 @@ fun ExportCompleteScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Spacer(Modifier.height(24.dp))
-            Surface(color = MaterialTheme.colorScheme.primaryContainer, shape = CircleShape) {
+            // primary/onPrimary 配对（与主按钮一致）；primaryContainer 在浅色下与图标同为深绿系，对比不够。
+            Surface(color = MaterialTheme.colorScheme.primary, shape = CircleShape) {
                 Box(Modifier.size(96.dp), contentAlignment = Alignment.Center) {
                     Icon(
                         CheckIcon,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(48.dp),
                     )
                 }
