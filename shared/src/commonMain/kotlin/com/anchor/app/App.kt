@@ -24,6 +24,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveableStateHolder
@@ -58,6 +59,7 @@ import com.anchor.app.relation.HomeRelationKind
 import com.anchor.app.journal.CameraLogScreen
 import com.anchor.app.journal.RecordsHub
 import com.anchor.app.safety.CrisisClarificationDialog
+import com.anchor.app.speech.SpeechFinal
 import com.anchor.app.safety.HelpNowScreen
 import com.anchor.app.safety.ReturnToPracticeScreen
 import com.anchor.app.safety.MedicalGuideScreen
@@ -150,10 +152,13 @@ fun App(
     onToggleAppLock: () -> Unit = {},
     speechStatus: String? = null,
     speechRecording: Boolean = false,
-    onTestOfflineSpeech: () -> Unit = {},
-    onTestRecordingFallback: () -> Unit = {},
-    onCaptureWorrySpeech: ((String) -> Unit) -> Unit = {},
-    onStopWorryRecording: () -> String? = { null },
+    speechPartial: String? = null,
+    speechResult: SpeechFinal? = null,
+    speechTranscribes: Boolean = false,
+    onCaptureWorrySpeech: () -> Unit = {},
+    onFinalizeWorrySpeech: () -> Unit = {},
+    onDiscardWorrySpeech: (String?) -> Unit = {},
+    onConsumeWorrySpeechResult: () -> Unit = {},
     audioPlaybackStatus: String? = null,
     onPlayWorryAudio: (String) -> Unit = {},
     exportPassword: String = "",
@@ -207,6 +212,8 @@ fun App(
     var cameraLogVisible by remember { mutableStateOf(false) }
     var worryVaultVisible by remember { mutableStateOf(false) }
     var hangSheetVisible by remember { mutableStateOf(false) }
+    // 挂卡弹层是首页之上的浮层，关掉时首页不一定重读仓库；用版本号驱动保险箱卡数刷新。
+    var worryDataRevision by remember { mutableIntStateOf(0) }
     var relationVisible by remember { mutableStateOf(false) }
     var returnToPracticePreviewVisible by remember { mutableStateOf(false) }
     var practiceReturnedVisible by remember { mutableStateOf(false) }
@@ -420,13 +427,17 @@ fun App(
                     nextSessionLabel = nextWorrySessionLabel,
                     speechStatus = speechStatus,
                     speechRecording = speechRecording,
+                    speechPartial = speechPartial,
+                    speechResult = speechResult,
+                    speechTranscribes = speechTranscribes,
                     onCaptureSpeech = onCaptureWorrySpeech,
-                    onStopRecording = onStopWorryRecording,
+                    onFinalizeSpeech = onFinalizeWorrySpeech,
+                    onDiscardSpeech = onDiscardWorrySpeech,
+                    onConsumeSpeechResult = onConsumeWorrySpeechResult,
                     audioPlaybackStatus = audioPlaybackStatus,
                     onPlayAudio = onPlayWorryAudio,
                     onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
                     onClose = {
-                        if (speechRecording) onStopWorryRecording()
                         worryVaultVisible = false
                     },
                 )
@@ -656,6 +667,7 @@ fun App(
                     onSomaticChecklist = { safetyStack = pushSafety(safetyStack, SafetyPlace.Checklist) },
                     onWorryVault = { if (canPractice(FirstAnchor.WorryVault)) worryVaultVisible = true },
                     hangSheetOpen = hangSheetVisible,
+                    worryDataRevision = worryDataRevision,
                     onHang = { if (canPractice(FirstAnchor.WorryVault)) hangSheetVisible = true },
                     onMicroAction = { if (canPractice(FirstAnchor.MicroAction)) microActionVisible = true },
                     onRhythm = { if (canPractice(FirstAnchor.Rhythm)) rhythmVisible = true },
@@ -697,13 +709,18 @@ fun App(
                         nextSessionLabel = nextWorrySessionLabel,
                         speechStatus = speechStatus,
                         speechRecording = speechRecording,
+                        speechPartial = speechPartial,
+                        speechResult = speechResult,
+                        speechTranscribes = speechTranscribes,
                         onCaptureSpeech = onCaptureWorrySpeech,
-                        onStopRecording = onStopWorryRecording,
-                        onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
-                        onClose = {
-                            if (speechRecording) onStopWorryRecording()
-                            hangSheetVisible = false
-                        },
+                        onFinalizeSpeech = onFinalizeWorrySpeech,
+                        onDiscardSpeech = onDiscardWorrySpeech,
+                        onConsumeSpeechResult = onConsumeWorrySpeechResult,
+                    onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
+                    onClose = {
+                        hangSheetVisible = false
+                        worryDataRevision++
+                    },
                     )
                 }
                 if (!hangSheetVisible) {

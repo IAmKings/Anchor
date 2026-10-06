@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.safety.CrisisClarificationDialog
 import com.anchor.app.safety.findCrisisPhrase
+import com.anchor.app.speech.SpeechFinal
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.WorryCard
 import com.anchor.app.storage.WorryResolution
@@ -64,8 +66,13 @@ fun WorryVaultScreen(
     nextSessionLabel: () -> String,
     speechStatus: String?,
     speechRecording: Boolean,
-    onCaptureSpeech: ((String) -> Unit) -> Unit,
-    onStopRecording: () -> String?,
+    speechPartial: String?,
+    speechResult: SpeechFinal?,
+    speechTranscribes: Boolean,
+    onCaptureSpeech: () -> Unit,
+    onFinalizeSpeech: () -> Unit,
+    onDiscardSpeech: (String?) -> Unit,
+    onConsumeSpeechResult: () -> Unit,
     audioPlaybackStatus: String?,
     onPlayAudio: (String) -> Unit,
     onCrisisGuidance: () -> Unit = {},
@@ -76,6 +83,7 @@ fun WorryVaultScreen(
     var pendingPhrase by remember { mutableStateOf<String?>(null) }
     var forcedOpen by remember { mutableStateOf(false) }
     var savedMessage by remember { mutableStateOf<String?>(null) }
+    var pendingAudio by remember { mutableStateOf<String?>(null) }
     var action by remember { mutableStateOf("") }
     var processedCount by remember { mutableIntStateOf(0) }
     var step by remember { mutableStateOf(VaultStep.Overview) }
@@ -85,7 +93,33 @@ fun WorryVaultScreen(
     val open = isSessionOpen() || forcedOpen
     val current = pending.firstOrNull()
 
-    AnchorBackBar(onBack = onClose, title = vaultTitle) {
+    // 转写结果一次性消费：到达即清空宿主状态（否则每次进入本页都会重复封存同一张录音卡）。
+    // 语义与挂卡弹层一致：有文字先回输入框过目；纯录音直接封存。
+    LaunchedEffect(speechResult) {
+        speechResult?.let { final ->
+            onConsumeSpeechResult()
+            if (final.text.isNullOrBlank()) {
+                final.audioFileName?.let { fileName ->
+                    store.addWorryCard("", nowMillis(), nextSessionMillis(), fileName)
+                    savedMessage = vaultSealedMessage(isSessionOpen() || forcedOpen, nextSessionLabel())
+                    revision++
+                }
+            } else {
+                content = final.text
+                pendingAudio = final.audioFileName
+            }
+        }
+    }
+
+    AnchorBackBar(
+        onBack = {
+            if (speechRecording || pendingAudio != null) onDiscardSpeech(pendingAudio)
+            pendingAudio = null
+            onConsumeSpeechResult()
+            onClose()
+        },
+        title = vaultTitle,
+    ) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -134,11 +168,13 @@ fun WorryVaultScreen(
                 else -> OverviewStep(
                     open = open,
                     pending = pending,
-                    content = content,
-                    onContent = { content = it },
+                    content = if (speechRecording) (speechPartial ?: "") else content,
+                    onContent = { if (!speechRecording) content = it },
                     savedMessage = savedMessage,
                     speechStatus = speechStatus,
                     speechRecording = speechRecording,
+                    speechTranscribes = speechTranscribes,
+                    sealEnabled = content.isNotBlank() || pendingAudio != null,
                     confirmationVisible = confirmationVisible,
                     nextSessionLabel = nextSessionLabel(),
                     nowMillis = nowMillis(),
@@ -146,22 +182,16 @@ fun WorryVaultScreen(
                         val hit = findCrisisPhrase(content)
                         if (hit != null) pendingPhrase = hit
                         else {
-                            store.addWorryCard(content, nowMillis(), nextSessionMillis())
+                            store.addWorryCard(content, nowMillis(), nextSessionMillis(), pendingAudio)
                             content = ""
+                            pendingAudio = null
+                            onConsumeSpeechResult()
                             savedMessage = vaultSealedMessage(open, nextSessionLabel())
                             revision++
                         }
                     },
                     onSpeech = {
-                        if (speechRecording) {
-                            onStopRecording()?.let { audioFileName ->
-                                store.addWorryCard("", nowMillis(), nextSessionMillis(), audioFileName)
-                                savedMessage = vaultSealedMessage(open, nextSessionLabel())
-                                revision++
-                            }
-                        } else {
-                            onCaptureSpeech { content = it }
-                        }
+                        if (speechRecording) onFinalizeSpeech() else onCaptureSpeech()
                     },
                     onAskOpenNow = { confirmationVisible = true },
                     onConfirmOpen = { forcedOpen = true; confirmationVisible = false },
@@ -207,6 +237,8 @@ private fun OverviewStep(
     savedMessage: String?,
     speechStatus: String?,
     speechRecording: Boolean,
+    speechTranscribes: Boolean,
+    sealEnabled: Boolean,
     confirmationVisible: Boolean,
     nextSessionLabel: String,
     nowMillis: Long,
@@ -223,6 +255,8 @@ private fun OverviewStep(
         content = content,
         onContent = onContent,
         speechRecording = speechRecording,
+        speechTranscribes = speechTranscribes,
+        sealEnabled = sealEnabled,
         speechStatus = speechStatus,
         savedMessage = savedMessage,
         onSpeech = onSpeech,
@@ -458,11 +492,12 @@ private fun DoneStep(processedCount: Int, onClose: () -> Unit) {
 @Composable
 private fun StatusMark(icon: ImageVector, caption: String?) {
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // primary/onPrimary 配对（与主按钮一致），primaryContainer 在浅色下底和图标同为深绿系，对比不够。
         AnchorIconWell(
             icon,
-            MaterialTheme.colorScheme.primaryContainer,
+            MaterialTheme.colorScheme.primary,
             size = 64.dp,
-            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            tint = MaterialTheme.colorScheme.onPrimary,
         )
         if (caption != null) {
             Text(caption, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)

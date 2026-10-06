@@ -3,21 +3,35 @@ package com.anchor.app
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.anchor.app.speech.createSpeechEngine
+import com.anchor.app.speech.selectSpeechEngineKind
+import com.anchor.app.speech.AndroidLocalAudioRecorder
+import android.os.Build
 import java.io.File
 
 class SpeechProbeReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         resultData = when (intent.action) {
             ACTION_STATUS ->
-                "onDevice=${AndroidOfflineSpeech(context).isAvailable()},recording=${recorder != null}," +
+                "kind=${selectSpeechEngineKind(
+                    apiLevel = Build.VERSION.SDK_INT,
+                    onDeviceRecognitionAvailable = onDeviceAvailable(context),
+                    sherpaModelPresent = sherpaPresent(context),
+                )},recording=${recorder != null}," +
                     "result=${preferences(context).getString(RESULT, null)}"
             ACTION_RECOGNIZE -> {
                 speech?.destroy()
-                speech = AndroidOfflineSpeech(context).also { recognizer ->
-                    recognizer.start(
-                        onResult = { saveResult(context, "recognized=$it") },
-                        onFailure = { saveResult(context, "fallback=$it") },
-                    )
+                val engine = createSpeechEngine(context)
+                if (engine == null) {
+                    saveResult(context, "fallback=no-engine")
+                } else {
+                    speech = engine.also { recognizer ->
+                        recognizer.start(
+                            onPartial = { },
+                            onFinal = { final -> saveResult(context, "recognized=${final.text},audio=${final.audioFile != null}") },
+                            onError = { saveResult(context, "fallback=$it") },
+                        )
+                    }
                 }
                 "recognition-started"
             }
@@ -48,6 +62,16 @@ class SpeechProbeReceiver : BroadcastReceiver() {
         }
     }
 
+    private fun onDeviceAvailable(context: Context): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            android.speech.SpeechRecognizer.isOnDeviceRecognitionAvailable(context)
+
+    private fun sherpaPresent(context: Context): Boolean =
+        runCatching {
+            context.assets.list("sherpa-ncnn-streaming-zipformer-zh-14M-2023-02-23")
+                ?.contains("tokens.txt") == true
+        }.getOrDefault(false)
+
     private fun saveResult(context: Context, value: String) {
         preferences(context).edit().putString(RESULT, value).apply()
     }
@@ -62,7 +86,7 @@ class SpeechProbeReceiver : BroadcastReceiver() {
         const val ACTION_RECORD_STOP = "com.anchor.app.speech.RECORD_STOP_PROBE"
         const val ACTION_CLEAN = "com.anchor.app.speech.CLEAN_PROBE"
         private const val RESULT = "result"
-        private var speech: AndroidOfflineSpeech? = null
+        private var speech: com.anchor.app.speech.SpeechEngine? = null
         private var recorder: AndroidLocalAudioRecorder? = null
         private var lastFile: File? = null
     }

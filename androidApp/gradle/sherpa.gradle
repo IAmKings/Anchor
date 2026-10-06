@@ -1,0 +1,144 @@
+// sherpa-ncnn 构建期依赖：构建时下载并解压 so 库与中文 14M 流式模型，仓库保持零二进制。
+// 两个 tar 包均以 sha256 锁定；已存在且校验匹配则跳过下载。CI 与本地首次构建需要联网。
+import java.security.MessageDigest
+
+def sherpaRoot = layout.buildDirectory.dir("sherpa").get().asFile
+
+def sherpaLibsUrl = "https://github.com/k2-fsa/sherpa-ncnn/releases/download/v2.1.15/sherpa-ncnn-v2.1.15-android.tar.bz2"
+def sherpaLibsSha256 = "7fbdb6f8bb1f8ec092467ed61d9ec85c01f060d125ccf632ef9d7ec5816d4a65"
+
+def sherpaModelUrl = "https://github.com/k2-fsa/sherpa-ncnn/releases/download/models/sherpa-ncnn-streaming-zipformer-zh-14M-2023-02-23.tar.bz2"
+def sherpaModelSha256 = "b12f7af0ee53b9ec7089579349b8536d03ec0b4a0e1f4d8ea26be14c395e597f"
+def sherpaModelDir = "sherpa-ncnn-streaming-zipformer-zh-14M-2023-02-23"
+// 模型包里只有这 7 个文件是运行时需要的；test_wavs/README 等不进 APK。
+def sherpaModelFiles = [
+    "tokens.txt",
+    "encoder_jit_trace-pnnx.ncnn.param", "encoder_jit_trace-pnnx.ncnn.bin",
+    "decoder_jit_trace-pnnx.ncnn.param", "decoder_jit_trace-pnnx.ncnn.bin",
+    "joiner_jit_trace-pnnx.ncnn.param", "joiner_jit_trace-pnnx.ncnn.bin",
+]
+
+def sherpaLibsTar = new File(sherpaRoot, "libs.tar.bz2")
+def sherpaModelTar = new File(sherpaRoot, "model.tar.bz2")
+
+tasks.register("downloadSherpaLibs", SherpaDownloadTask) {
+    url = sherpaLibsUrl
+    expectedSha256 = sherpaLibsSha256
+    tarFile.set(sherpaLibsTar)
+}
+
+tasks.register("extractSherpaLibs", Copy) {
+    dependsOn("downloadSherpaLibs")
+    from({ tarTree(resources.bzip2(sherpaLibsTar)) })
+    into(new File(sherpaRoot, "libs"))
+}
+
+tasks.register("downloadSherpaModel", SherpaDownloadTask) {
+    url = sherpaModelUrl
+    expectedSha256 = sherpaModelSha256
+    tarFile.set(sherpaModelTar)
+}
+
+tasks.register("extractSherpaModel", SherpaExtractModelTask) {
+    dependsOn("downloadSherpaModel")
+    tarFile.set(sherpaModelTar)
+    modelDirName = sherpaModelDir
+    modelFiles = sherpaModelFiles
+    outputDir.set(new File(sherpaRoot, "model-assets/${sherpaModelDir}"))
+    workDir.set(new File(sherpaRoot, "model-src"))
+}
+
+afterEvaluate {
+    preBuild.dependsOn "extractSherpaLibs", "extractSherpaModel"
+}
+
+android {
+    sourceSets["main"].jniLibs.srcDir(new File(sherpaRoot, "libs/jniLibs"))
+    sourceSets["main"].assets.srcDir(new File(sherpaRoot, "model-assets"))
+}
+
+abstract class SherpaDownloadTask extends DefaultTask {
+    @Input
+    String url
+
+    @Input
+    String expectedSha256
+
+    @OutputFile
+    abstract RegularFileProperty getTarFile()
+
+    @Inject
+    abstract WorkerExecutor getWorkerExecutor()
+
+    @TaskAction
+    void run() {
+        def tar = tarFile.get().asFile
+        if (tar.isFile() && sha256Of(tar) != expectedSha256) tar.delete()
+        if (!tar.isFile()) {
+            println("sherpa: 下载 ${url}")
+            tar.parentFile.mkdirs()
+            def conn = new URL(url).openConnection()
+            conn.connectTimeout = 30_000
+            conn.readTimeout = 300_000
+            conn.instanceFollowRedirects = true
+            conn.setRequestProperty("User-Agent", "anchor-build")
+            if (conn.responseCode != 200) {
+                throw new GradleException("下载失败 HTTP ${conn.responseCode}：${url}")
+            }
+            conn.inputStream.withStream { input ->
+                tar.withOutputStream { output -> output << input }
+            }
+        }
+        if (sha256Of(tar) != expectedSha256) {
+            throw new GradleException("sherpa 下载包 sha256 不匹配，拒绝继续构建：${tar.name}")
+        }
+    }
+
+    private static String sha256Of(File file) {
+        def digest = MessageDigest.getInstance("SHA-256")
+        file.withInputStream { stream ->
+            def buf = new byte[1 << 16]
+            def n
+            while ((n = stream.read(buf)) > 0) digest.update(buf, 0, n)
+        }
+        digest.digest().collect { String.format("%02x", it) }.join()
+    }
+}
+
+abstract class SherpaExtractModelTask extends DefaultTask {
+    @InputFile
+    abstract RegularFileProperty getTarFile()
+
+    @Input
+    String modelDirName
+
+    @Input
+    List<String> modelFiles
+
+    @OutputDirectory
+    abstract DirectoryProperty getOutputDir()
+
+    @Internal
+    abstract DirectoryProperty getWorkDir()
+
+    @Inject
+    abstract ExecOperations getExecOps()
+
+    @TaskAction
+    void run() {
+        def out = outputDir.get().asFile
+        def ready = modelFiles.every { new File(out, it).isFile() }
+        if (ready) return
+        def work = workDir.get().asFile
+        work.mkdirs()
+        execOps.exec { commandLine("tar", "-xjf", tarFile.get().asFile.absolutePath, "-C", work.absolutePath) }
+        modelFiles.each { name ->
+            def src = new File(work, "${modelDirName}/${name}")
+            if (!src.isFile()) throw new GradleException("模型包缺少 ${name}")
+            def dst = new File(out, name)
+            dst.parentFile.mkdirs()
+            java.nio.file.Files.copy(src.toPath(), dst.toPath(),
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        }
+    }
+}

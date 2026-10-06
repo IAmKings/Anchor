@@ -13,6 +13,8 @@ class WorryCopyTest {
         assertEquals("封存", hangSealLabel)
         assertEquals("语音速记", hangSpeechLabel)
         assertEquals("停止并保存录音", hangSpeechStopLabel)
+        assertEquals("停止转写", hangSpeechStopTranscribeLabel)
+        assertFalse(hangSpeechStopTranscribeLabel.contains("保存"))
         assertFalse(hangSheetTitle.contains("今晚"))
         assertFalse(vaultSealedMessage(false, "明天 20:00").contains("今晚"))
     }

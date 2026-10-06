@@ -5,6 +5,7 @@ internal const val hangFieldHint = "说话，或写一句…"
 internal const val hangSealLabel = "封存"
 internal const val hangSpeechLabel = "语音速记"
 internal const val hangSpeechStopLabel = "停止并保存录音"
+internal const val hangSpeechStopTranscribeLabel = "停止转写"
 internal const val hangDismissKnown = "知道了"
 internal const val hangDismissCancel = "取消"
 

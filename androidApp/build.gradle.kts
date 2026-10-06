@@ -82,15 +82,18 @@ android {
     }
 }
 
-// 有渠道后 AGP 不再生成 installDebug（assemble* 聚合任务仍由 AGP 生成，会带上两个渠道）。
+// 渠道拆分后 AGP 不再生成 installDebug（assemble* 聚合任务仍由 AGP 生成，会带上两个渠道）。
 // QA 脚本与文档的旧命令继续指向默认渠道 standard。
 tasks.register("installDebug") { dependsOn("installStandardDebug") }
+
+apply(from = "gradle/sherpa.gradle")
 
 dependencies {
     implementation(project(":shared"))
     implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.fragment:fragment:1.5.1")
     implementation("androidx.biometric:biometric:1.1.0")
+    testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test:runner:1.7.0")
 }

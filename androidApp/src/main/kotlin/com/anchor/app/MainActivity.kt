@@ -31,6 +31,10 @@ import com.anchor.app.settings.ReminderToggle
 import com.anchor.app.safety.phoneTelUri
 import com.anchor.app.settings.ThemeChoice
 import com.anchor.app.settings.useDark
+import com.anchor.app.speech.AndroidLocalAudioRecorder
+import com.anchor.app.speech.SpeechEngine
+import com.anchor.app.speech.SpeechFinal
+import com.anchor.app.speech.createSpeechEngine
 import com.anchor.app.timer.AndroidBackgroundTimer
 import com.anchor.app.timer.BackgroundTimerKind
 import com.anchor.app.storage.AndroidDatabaseKey
@@ -87,10 +91,14 @@ class MainActivity : FragmentActivity() {
     private var appUnlocked by mutableStateOf(true)
     private var authenticationInProgress = false
     private var appLockMessage by mutableStateOf<String?>(null)
-    private lateinit var offlineSpeech: AndroidOfflineSpeech
     private lateinit var audioRecorder: AndroidLocalAudioRecorder
+    private var speechEngine: SpeechEngine? = null
     private var speechStatus by mutableStateOf<String?>(null)
     private var speechRecording by mutableStateOf(false)
+    private var speechPartial by mutableStateOf<String?>(null)
+    private var speechResult by mutableStateOf<SpeechFinal?>(null)
+    private var speechTranscribes by mutableStateOf(false)
+    private var speechFinalDelivered = false
     private var audioPlaybackStatus by mutableStateOf<String?>(null)
     private var mediaPlayer: MediaPlayer? = null
     private var exportPassword by mutableStateOf("")
@@ -128,7 +136,6 @@ class MainActivity : FragmentActivity() {
         themeChoice = themePreference.choice
         syncAnchorNightMode(this, themeChoice)
         refreshNotificationPermission()
-        offlineSpeech = AndroidOfflineSpeech(this)
         audioRecorder = AndroidLocalAudioRecorder(this)
         val databaseKey = AndroidDatabaseKey.getOrCreate(this, DATABASE_NAME)
         anchorStore = AndroidEncryptedProbeStore(this, DATABASE_NAME, databaseKey)
@@ -179,16 +186,18 @@ class MainActivity : FragmentActivity() {
                 },
                 speechStatus = speechStatus,
                 speechRecording = speechRecording,
-                onTestOfflineSpeech = { testOfflineSpeech() },
-                onCaptureWorrySpeech = { onResult -> captureOfflineSpeech(onResult) },
-                onStopWorryRecording = { stopRecording() },
+                speechPartial = speechPartial,
+                speechResult = speechResult,
+                speechTranscribes = speechTranscribes,
+                onCaptureWorrySpeech = { beginWorrySpeech() },
+                onFinalizeWorrySpeech = { finalizeWorrySpeech() },
+                onDiscardWorrySpeech = { name -> discardWorrySpeech(name) },
+                onConsumeWorrySpeechResult = {
+                    speechResult = null
+                    speechStatus = null
+                },
                 audioPlaybackStatus = audioPlaybackStatus,
                 onPlayWorryAudio = { playWorryAudio(it) },
-                onTestRecordingFallback = {
-                    if (speechRecording) stopRecording() else withMicrophonePermission {
-                        startRecording("正在录音；内容只保存在 App 私有目录。")
-                    }
-                },
                 exportPassword = exportPassword,
                 onExportPasswordChange = { exportPassword = it },
                 exportStatus = exportStatus,
@@ -298,15 +307,20 @@ class MainActivity : FragmentActivity() {
 
     override fun onStop() {
         super.onStop()
-        offlineSpeech.destroy()
+        destroySpeechEngine()
         stopAudioPlayback()
-        if (speechRecording) stopRecording()
+        if (speechRecording) {
+            stopRecording()
+            speechRecording = false
+        }
+        speechPartial = null
+        speechFinalDelivered = true
         if (appLockEnabled) appUnlocked = false
     }
 
     override fun onDestroy() {
         deadlineHandler.removeCallbacks(deadlineTick)
-        offlineSpeech.destroy()
+        destroySpeechEngine()
         stopAudioPlayback()
         anchorStore.close()
         super.onDestroy()
@@ -341,17 +355,85 @@ class MainActivity : FragmentActivity() {
         )
     }
 
-    private fun testOfflineSpeech() = captureOfflineSpeech()
-
-    private fun captureOfflineSpeech(onResult: (String) -> Unit = {}) = withMicrophonePermission {
+    private fun beginWorrySpeech() = withMicrophonePermission {
+        if (speechRecording) return@withMicrophonePermission
+        speechPartial = null
+        speechResult = null
+        speechFinalDelivered = false
+        val engine = createSpeechEngine(this)
+        if (engine == null) {
+            speechTranscribes = false
+            startRecording("当前设备没有可用的转写引擎，已改为纯录音。")
+            return@withMicrophonePermission
+        }
+        speechEngine = engine
+        speechTranscribes = true
+        speechRecording = true
         speechStatus = "请说一句话。识别只在设备上进行。"
-        offlineSpeech.start(
-            onResult = { text ->
-                speechStatus = "已完成端侧识别。"
-                onResult(text)
+        engine.start(
+            onPartial = { text -> speechPartial = text },
+            onFinal = { final ->
+                deliverSpeechFinal(
+                    SpeechFinal(
+                        text = final.text.takeIf { it.isNotBlank() },
+                        audioFileName = final.audioFile?.name,
+                    ),
+                )
             },
-            onFailure = { reason -> startRecording("$reason 已切换为本地录音，请重新说一次。") },
+            onError = { reason ->
+                // 转写引擎失败（模型加载、麦克风被占等）：落到纯录音兜底，文案说明原因。
+                if (speechRecording) {
+                    destroySpeechEngine()
+                    startRecording("$reason 已改为纯录音。")
+                }
+            },
         )
+    }
+
+    private fun finalizeWorrySpeech() {
+        val engine = speechEngine
+        if (engine != null) {
+            engine.stop()
+            return
+        }
+        if (speechRecording) {
+            // 纯录音兜底：停止即产出（保留既有"停止并保存录音"语义，由 UI 直接封存）。
+            deliverSpeechFinal(SpeechFinal(text = null, audioFileName = stopRecording()))
+        }
+    }
+
+    private fun deliverSpeechFinal(final: SpeechFinal) {
+        if (speechFinalDelivered) return
+        speechFinalDelivered = true
+        speechRecording = false
+        speechPartial = null
+        speechResult = final
+        speechStatus = when {
+            !final.text.isNullOrBlank() -> "已完成端侧识别。"
+            final.audioFileName != null -> "本地录音已保存。"
+            else -> "没有识别到内容。"
+        }
+        destroySpeechEngine()
+    }
+
+    /** 取消语音输入/放弃未封存结果：[pendingAudioName] 是 UI 侧尚未封存的录音文件。 */
+    private fun discardWorrySpeech(pendingAudioName: String?) {
+        destroySpeechEngine()
+        if (speechRecording) {
+            speechRecording = false
+            stopRecording()?.let { name -> File(filesDir, "voice-notes/$name").delete() }
+        }
+        pendingAudioName?.let { name ->
+            File(filesDir, "voice-notes/$name").takeIf { it.isFile }?.delete()
+        }
+        speechResult = null
+        speechPartial = null
+        speechFinalDelivered = true
+    }
+
+    private fun destroySpeechEngine() {
+        speechEngine?.destroy()
+        speechEngine = null
     }
 
     private fun startRecording(message: String) {
@@ -566,9 +648,13 @@ class MainActivity : FragmentActivity() {
     private fun deleteAllLocalData() {
         runCatching {
             pendingAudioAction = null
-            offlineSpeech.destroy()
+            destroySpeechEngine()
             stopAudioPlayback()
             if (speechRecording) stopRecording()
+            speechRecording = false
+            speechPartial = null
+            speechResult = null
+            speechFinalDelivered = true
             backgroundTimer.cancel()
             microActionTimer.cancel()
             AndroidReminderScheduler(this).cancelAll()
