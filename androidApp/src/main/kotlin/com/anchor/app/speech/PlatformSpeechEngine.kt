@@ -20,10 +20,12 @@ class PlatformSpeechEngine(private val context: Context) : SpeechEngine {
 
     override fun start(
         onPartial: (String) -> Unit,
+        onAmplitude: (Float) -> Unit,
         onFinal: (SpeechFinalResult) -> Unit,
         onError: (String) -> Unit,
     ) {
         delivered = false
+        // 平台端侧识别拿不到音频流，振幅回调不可用（UI 侧降级为静态提示）。
         main.post { begin(onPartial, onFinal, onError) }
     }
 

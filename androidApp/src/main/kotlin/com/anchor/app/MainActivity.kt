@@ -98,8 +98,10 @@ class MainActivity : FragmentActivity() {
     private var speechPartial by mutableStateOf<String?>(null)
     private var speechResult by mutableStateOf<SpeechFinal?>(null)
     private var speechTranscribes by mutableStateOf(false)
+    private var speechAmplitude by mutableStateOf(0f)
     private var speechFinalDelivered = false
     private var audioPlaybackStatus by mutableStateOf<String?>(null)
+    private var audioPlaying by mutableStateOf(false)
     private var mediaPlayer: MediaPlayer? = null
     private var exportPassword by mutableStateOf("")
     private var exportStatus by mutableStateOf<String?>(null)
@@ -189,6 +191,7 @@ class MainActivity : FragmentActivity() {
                 speechPartial = speechPartial,
                 speechResult = speechResult,
                 speechTranscribes = speechTranscribes,
+                speechAmplitude = speechAmplitude,
                 onCaptureWorrySpeech = { beginWorrySpeech() },
                 onFinalizeWorrySpeech = { finalizeWorrySpeech() },
                 onDiscardWorrySpeech = { name -> discardWorrySpeech(name) },
@@ -197,6 +200,8 @@ class MainActivity : FragmentActivity() {
                     speechStatus = null
                 },
                 audioPlaybackStatus = audioPlaybackStatus,
+                audioPlaying = audioPlaying,
+                onStopWorryAudioPlayback = { stopAudioPlayback() },
                 onPlayWorryAudio = { playWorryAudio(it) },
                 exportPassword = exportPassword,
                 onExportPasswordChange = { exportPassword = it },
@@ -314,6 +319,7 @@ class MainActivity : FragmentActivity() {
             speechRecording = false
         }
         speechPartial = null
+        speechAmplitude = 0f
         speechFinalDelivered = true
         if (appLockEnabled) appUnlocked = false
     }
@@ -358,6 +364,7 @@ class MainActivity : FragmentActivity() {
     private fun beginWorrySpeech() = withMicrophonePermission {
         if (speechRecording) return@withMicrophonePermission
         speechPartial = null
+        speechAmplitude = 0f
         speechResult = null
         speechFinalDelivered = false
         val engine = createSpeechEngine(this)
@@ -372,6 +379,7 @@ class MainActivity : FragmentActivity() {
         speechStatus = "请说一句话。识别只在设备上进行。"
         engine.start(
             onPartial = { text -> speechPartial = text },
+            onAmplitude = { value -> speechAmplitude = value },
             onFinal = { final ->
                 deliverSpeechFinal(
                     SpeechFinal(
@@ -407,6 +415,7 @@ class MainActivity : FragmentActivity() {
         speechFinalDelivered = true
         speechRecording = false
         speechPartial = null
+        speechAmplitude = 0f
         speechResult = final
         speechStatus = when {
             !final.text.isNullOrBlank() -> "已完成端侧识别。"
@@ -419,6 +428,7 @@ class MainActivity : FragmentActivity() {
     /** 取消语音输入/放弃未封存结果：[pendingAudioName] 是 UI 侧尚未封存的录音文件。 */
     private fun discardWorrySpeech(pendingAudioName: String?) {
         destroySpeechEngine()
+        stopAudioPlayback()
         if (speechRecording) {
             speechRecording = false
             stopRecording()?.let { name -> File(filesDir, "voice-notes/$name").delete() }
@@ -428,6 +438,7 @@ class MainActivity : FragmentActivity() {
         }
         speechResult = null
         speechPartial = null
+        speechAmplitude = 0f
         speechFinalDelivered = true
     }
 
@@ -479,6 +490,7 @@ class MainActivity : FragmentActivity() {
                 }
                 player.prepare()
                 player.start()
+                audioPlaying = true
             }
         }.onSuccess {
             audioPlaybackStatus = "正在播放本地录音。"
@@ -491,6 +503,7 @@ class MainActivity : FragmentActivity() {
     private fun stopAudioPlayback() {
         mediaPlayer?.release()
         mediaPlayer = null
+        audioPlaying = false
     }
 
     private fun refreshNotificationPermission() {
@@ -653,6 +666,7 @@ class MainActivity : FragmentActivity() {
             if (speechRecording) stopRecording()
             speechRecording = false
             speechPartial = null
+        speechAmplitude = 0f
             speechResult = null
             speechFinalDelivered = true
             backgroundTimer.cancel()

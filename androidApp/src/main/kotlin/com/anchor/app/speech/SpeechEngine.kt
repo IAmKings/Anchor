@@ -11,10 +11,12 @@ data class SpeechFinalResult(val text: String, val audioFile: java.io.File?)
 interface SpeechEngine {
     /**
      * 开始采集并转写。初始化失败通过 [onError] 报告（上层落到纯录音兜底），
-     * 部分文本经 [onPartial] 实时送达，停止后经 [onFinal] 一次性给出最终结果。
+     * 部分文本经 [onPartial] 实时送达，停止后经 [onFinal] 一次性给出最终结果；
+     * [onAmplitude] 送出归一化录音振幅（0..1，驱动音波动效），无音频流的实现可以不回调。
      */
     fun start(
         onPartial: (String) -> Unit,
+        onAmplitude: (Float) -> Unit,
         onFinal: (SpeechFinalResult) -> Unit,
         onError: (String) -> Unit,
     )
@@ -40,6 +42,19 @@ fun selectSpeechEngineKind(
     apiLevel >= 31 && onDeviceRecognitionAvailable -> SpeechEngineKind.Platform
     sherpaModelPresent -> SpeechEngineKind.Sherpa
     else -> null
+}
+
+/**
+ * 16bit PCM 块的归一化 RMS 振幅（0..1）。纯函数便于单测。
+ */
+fun computeAmplitude(chunk: ShortArray, count: Int = chunk.size): Float {
+    if (count <= 0) return 0f
+    var sum = 0.0
+    for (i in 0 until count) {
+        val v = chunk[i] / 32768.0
+        sum += v * v
+    }
+    return kotlin.math.sqrt(sum / count).toFloat().coerceIn(0f, 1f)
 }
 
 /** 按当前设备能力构造引擎；返回 null 表示两条转写路径都不可用（上层落纯录音兜底）。 */

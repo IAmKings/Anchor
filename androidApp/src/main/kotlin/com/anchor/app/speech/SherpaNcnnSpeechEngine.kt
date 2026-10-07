@@ -55,13 +55,14 @@ class SherpaNcnnSpeechEngine(
 
     override fun start(
         onPartial: (String) -> Unit,
+        onAmplitude: (Float) -> Unit,
         onFinal: (SpeechFinalResult) -> Unit,
         onError: (String) -> Unit,
     ) {
         stopRequested = false
         released = false
         sherpaExecutor.execute {
-            runCatching { capture(onPartial, onFinal) }.onFailure { cause ->
+            runCatching { capture(onPartial, onAmplitude, onFinal) }.onFailure { cause ->
                 Log.w(TAG, "sherpa capture 失败：${cause.message}")
                 if (!released) main.post { onError(cause.message ?: "语音转写初始化失败。") }
             }
@@ -71,6 +72,7 @@ class SherpaNcnnSpeechEngine(
     @SuppressLint("MissingPermission") // RECORD_AUDIO 由 MainActivity 运行时把关
     private fun capture(
         onPartial: (String) -> Unit,
+        onAmplitude: (Float) -> Unit,
         onFinal: (SpeechFinalResult) -> Unit,
     ) {
         val recognizer = sharedRecognizer ?: SherpaNcnn(
@@ -134,10 +136,23 @@ class SherpaNcnnSpeechEngine(
         val chunk = ShortArray(1_024)
         var lastPartial = ""
         var settledText = ""
+        // 安静环境下 RMS 只有 0.02~0.05，不做增益音波就是一条直线；×5 并限幅让小声也能看见起伏。
+        var lastAmplitudePostAt = 0L
+        var lastAmplitudePosted = -1f
 
         while (!stopRequested && !released) {
             val read = record.read(chunk, 0, chunk.size)
             if (read <= 0) continue
+            val amplitude = (computeAmplitude(chunk, read) * 5f).coerceIn(0f, 1f)
+            val now = System.currentTimeMillis()
+            // ~12 次/秒起步，跳变立即送出：压低无谓的重组频率，音波依旧连续。
+            if (now - lastAmplitudePostAt >= 80 || kotlin.math.abs(amplitude - lastAmplitudePosted) > 0.15f) {
+                lastAmplitudePostAt = now
+                lastAmplitudePosted = amplitude
+                main.post {
+                    if (!released && !stopRequested) onAmplitude(amplitude)
+                }
+            }
             recognizer.acceptSamples(FloatArray(read) { chunk[it] / 32768f })
             while (recognizer.isReady()) recognizer.decode()
             val text = (settledText + " " + recognizer.text).trim()

@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
@@ -48,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import com.anchor.app.safety.CrisisClarificationDialog
 import com.anchor.app.safety.findCrisisPhrase
 import com.anchor.app.speech.SpeechFinal
+import com.anchor.app.speech.VOICE_HOLD_LIMIT_SECONDS
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.WorryCard
 import com.anchor.app.storage.WorryResolution
@@ -69,11 +71,14 @@ fun WorryVaultScreen(
     speechPartial: String?,
     speechResult: SpeechFinal?,
     speechTranscribes: Boolean,
+    speechAmplitude: Float,
     onCaptureSpeech: () -> Unit,
     onFinalizeSpeech: () -> Unit,
     onDiscardSpeech: (String?) -> Unit,
     onConsumeSpeechResult: () -> Unit,
     audioPlaybackStatus: String?,
+    audioPlaying: Boolean,
+    onStopPendingAudioPlayback: () -> Unit,
     onPlayAudio: (String) -> Unit,
     onCrisisGuidance: () -> Unit = {},
     onClose: () -> Unit,
@@ -84,6 +89,8 @@ fun WorryVaultScreen(
     var forcedOpen by remember { mutableStateOf(false) }
     var savedMessage by remember { mutableStateOf<String?>(null) }
     var pendingAudio by remember { mutableStateOf<String?>(null) }
+    var pureVoicePending by remember { mutableStateOf(false) }
+    var secondsLeft by remember { mutableStateOf<Int?>(null) }
     var action by remember { mutableStateOf("") }
     var processedCount by remember { mutableIntStateOf(0) }
     var step by remember { mutableStateOf(VaultStep.Overview) }
@@ -94,20 +101,32 @@ fun WorryVaultScreen(
     val current = pending.firstOrNull()
 
     // 转写结果一次性消费：到达即清空宿主状态（否则每次进入本页都会重复封存同一张录音卡）。
-    // 语义与挂卡弹层一致：有文字先回输入框过目；纯录音直接封存。
+    // 纯语音路径（原地松手/到限）：忽略转写文字，直接封存纯录音卡。
     LaunchedEffect(speechResult) {
         speechResult?.let { final ->
             onConsumeSpeechResult()
-            if (final.text.isNullOrBlank()) {
-                final.audioFileName?.let { fileName ->
-                    store.addWorryCard("", nowMillis(), nextSessionMillis(), fileName)
-                    savedMessage = vaultSealedMessage(isSessionOpen() || forcedOpen, nextSessionLabel())
-                    revision++
-                }
-            } else {
-                content = final.text
-                pendingAudio = final.audioFileName
+            if (pureVoicePending) {
+                pureVoicePending = false
+                content = ""
             }
+            content = final.text ?: ""
+            pendingAudio = final.audioFileName
+        }
+    }
+
+    // 按住说话的 60 秒倒计时：到限按纯语音结算。
+    LaunchedEffect(speechRecording) {
+        if (speechRecording) {
+            for (left in VOICE_HOLD_LIMIT_SECONDS downTo 1) {
+                secondsLeft = left
+                delay(1_000)
+            }
+            secondsLeft = 0
+            content = "" // 到限纯语音结算：清掉上一轮残留
+            pureVoicePending = true
+            onFinalizeSpeech()
+        } else {
+            secondsLeft = null
         }
     }
 
@@ -174,6 +193,13 @@ fun WorryVaultScreen(
                     speechStatus = speechStatus,
                     speechRecording = speechRecording,
                     speechTranscribes = speechTranscribes,
+                    speechAmplitude = speechAmplitude,
+                    secondsLeft = secondsLeft,
+                    pendingAudio = pendingAudio,
+                    audioPlaybackStatus = audioPlaybackStatus,
+                    audioPlaying = audioPlaying,
+                    onStopPendingAudioPlayback = onStopPendingAudioPlayback,
+                    onPlayPendingAudio = onPlayAudio,
                     sealEnabled = content.isNotBlank() || pendingAudio != null,
                     confirmationVisible = confirmationVisible,
                     nextSessionLabel = nextSessionLabel(),
@@ -190,8 +216,24 @@ fun WorryVaultScreen(
                             revision++
                         }
                     },
-                    onSpeech = {
-                        if (speechRecording) onFinalizeSpeech() else onCaptureSpeech()
+                    onCaptureSpeech = onCaptureSpeech,
+                    onReleaseVoice = { release ->
+                        when (release) {
+                            VoiceRelease.Cancel -> {
+                                if (speechRecording || pendingAudio != null) onDiscardSpeech(pendingAudio)
+                                pendingAudio = null
+                                onConsumeSpeechResult()
+                            }
+                            VoiceRelease.Text -> {
+                                content = "" // 清掉上一轮残留，等新文字回填
+                                onFinalizeSpeech()
+                            }
+                            VoiceRelease.Voice -> {
+                                content = "" // 纯语音：松手即清，等纯录音卡封存
+                                pureVoicePending = true
+                                onFinalizeSpeech()
+                            }
+                        }
                     },
                     onAskOpenNow = { confirmationVisible = true },
                     onConfirmOpen = { forcedOpen = true; confirmationVisible = false },
@@ -238,12 +280,20 @@ private fun OverviewStep(
     speechStatus: String?,
     speechRecording: Boolean,
     speechTranscribes: Boolean,
+    speechAmplitude: Float,
+    secondsLeft: Int?,
+    pendingAudio: String?,
+    audioPlaybackStatus: String?,
+    audioPlaying: Boolean,
+    onStopPendingAudioPlayback: () -> Unit,
+    onPlayPendingAudio: (String) -> Unit,
     sealEnabled: Boolean,
     confirmationVisible: Boolean,
     nextSessionLabel: String,
     nowMillis: Long,
     onHang: () -> Unit,
-    onSpeech: () -> Unit,
+    onCaptureSpeech: () -> Unit,
+    onReleaseVoice: (VoiceRelease) -> Unit,
     onAskOpenNow: () -> Unit,
     onConfirmOpen: () -> Unit,
     onWaitForSession: () -> Unit,
@@ -256,10 +306,18 @@ private fun OverviewStep(
         onContent = onContent,
         speechRecording = speechRecording,
         speechTranscribes = speechTranscribes,
+        speechAmplitude = speechAmplitude,
+        secondsLeft = secondsLeft,
+        pendingAudio = pendingAudio,
+        audioPlaybackStatus = audioPlaybackStatus,
+        audioPlaying = audioPlaying,
+        onStopPendingAudioPlayback = onStopPendingAudioPlayback,
+        onPlayPendingAudio = onPlayPendingAudio,
         sealEnabled = sealEnabled,
         speechStatus = speechStatus,
         savedMessage = savedMessage,
-        onSpeech = onSpeech,
+        onCaptureSpeech = onCaptureSpeech,
+        onReleaseVoice = onReleaseVoice,
         onHang = onHang,
     )
     if (!open) {

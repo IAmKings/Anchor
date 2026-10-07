@@ -28,6 +28,7 @@ class SpeechProbeReceiver : BroadcastReceiver() {
                     speech = engine.also { recognizer ->
                         recognizer.start(
                             onPartial = { },
+                            onAmplitude = { },
                             onFinal = { final -> saveResult(context, "recognized=${final.text},audio=${final.audioFile != null}") },
                             onError = { saveResult(context, "fallback=$it") },
                         )

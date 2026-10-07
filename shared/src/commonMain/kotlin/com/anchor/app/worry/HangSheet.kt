@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -48,14 +49,17 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.safety.CrisisClarificationDialog
 import com.anchor.app.safety.findCrisisPhrase
 import com.anchor.app.speech.SpeechFinal
+import com.anchor.app.speech.VOICE_HOLD_LIMIT_SECONDS
 import com.anchor.app.storage.AnchorStore
 import kotlin.math.roundToInt
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private val SheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
@@ -74,6 +78,11 @@ fun HangSheet(
     speechPartial: String?,
     speechResult: SpeechFinal?,
     speechTranscribes: Boolean,
+    speechAmplitude: Float,
+    audioPlaybackStatus: String?,
+    audioPlaying: Boolean,
+    onStopPendingAudioPlayback: () -> Unit,
+    onPlayWorryAudio: (String) -> Unit,
     onCaptureSpeech: () -> Unit,
     onFinalizeSpeech: () -> Unit,
     onDiscardSpeech: (String?) -> Unit,
@@ -85,22 +94,37 @@ fun HangSheet(
     var savedMessage by remember { mutableStateOf<String?>(null) }
     var pendingPhrase by remember { mutableStateOf<String?>(null) }
     var pendingAudio by remember { mutableStateOf<String?>(null) }
+    var pureVoicePending by remember { mutableStateOf(false) }
+    var secondsLeft by remember { mutableStateOf<Int?>(null) }
 
     // 转写结果一次性消费：到达即清空宿主状态（否则每次进入组合都会重新封存同一张录音卡）。
-    // 有文字先填进输入框让用户过目（录音文件随卡片一起封存）；
-    // 纯录音兜底没有文字可看，维持"停止并保存录音"的直接封存语义。
+    // 三种松手结果统一落到「输入框 + 待封存录音」，由用户点封存挂卡、点取消/关闭删除录音：
+    // 纯语音（原地松手/到限）：忽略转写文字，只保留录音；转文字：文字回输入框；纯录音兜底：只有录音。
     LaunchedEffect(speechResult) {
         speechResult?.let { final ->
             onConsumeSpeechResult()
-            if (final.text.isNullOrBlank()) {
-                final.audioFileName?.let { fileName ->
-                    store.addWorryCard("", nowMillis(), nextSessionMillis(), fileName)
-                    savedMessage = vaultSealedMessage(isSessionOpen(), nextSessionLabel())
-                }
-            } else {
-                content = final.text
-                pendingAudio = final.audioFileName
+            if (pureVoicePending) {
+                pureVoicePending = false
+                content = ""
             }
+            content = final.text ?: ""
+            pendingAudio = final.audioFileName
+        }
+    }
+
+    // 按住说话的 60 秒倒计时：到限按纯语音结算（与松手默认一致）。
+    LaunchedEffect(speechRecording) {
+        if (speechRecording) {
+            for (left in VOICE_HOLD_LIMIT_SECONDS downTo 1) {
+                secondsLeft = left
+                delay(1_000)
+            }
+            secondsLeft = 0
+            content = "" // 到限纯语音结算：清掉上一轮残留
+            pureVoicePending = true
+            onFinalizeSpeech()
+        } else {
+            secondsLeft = null
         }
     }
 
@@ -220,11 +244,34 @@ fun HangSheet(
                     onContent = { if (!speechRecording) content = it },
                     speechRecording = speechRecording,
                     speechTranscribes = speechTranscribes,
+                    speechAmplitude = speechAmplitude,
+                    secondsLeft = secondsLeft,
+                    pendingAudio = pendingAudio,
+                    audioPlaybackStatus = audioPlaybackStatus,
+                    audioPlaying = audioPlaying,
+                    onStopPendingAudioPlayback = onStopPendingAudioPlayback,
+                    onPlayPendingAudio = onPlayWorryAudio,
                     sealEnabled = content.isNotBlank() || pendingAudio != null,
                     speechStatus = speechStatus,
                     savedMessage = savedMessage,
-                    onSpeech = {
-                        if (speechRecording) onFinalizeSpeech() else onCaptureSpeech()
+                    onCaptureSpeech = onCaptureSpeech,
+                    onReleaseVoice = { release ->
+                        when (release) {
+                            VoiceRelease.Cancel -> {
+                                if (speechRecording || pendingAudio != null) onDiscardSpeech(pendingAudio)
+                                pendingAudio = null
+                                onConsumeSpeechResult()
+                            }
+                            VoiceRelease.Text -> {
+                                content = "" // 清掉上一轮残留，等新文字回填
+                                onFinalizeSpeech()
+                            }
+                            VoiceRelease.Voice -> {
+                                content = "" // 纯语音：松手即清，等纯录音卡封存
+                                pureVoicePending = true
+                                onFinalizeSpeech()
+                            }
+                        }
                     },
                     onHang = { seal() },
                     onDismiss = { close() },
@@ -251,10 +298,18 @@ internal fun HangComposer(
     onContent: (String) -> Unit,
     speechRecording: Boolean,
     speechTranscribes: Boolean,
+    speechAmplitude: Float,
+    secondsLeft: Int?,
+    pendingAudio: String?,
+    audioPlaybackStatus: String?,
+    audioPlaying: Boolean,
+    onStopPendingAudioPlayback: () -> Unit,
+    onPlayPendingAudio: (String) -> Unit,
     sealEnabled: Boolean,
     speechStatus: String?,
     savedMessage: String?,
-    onSpeech: () -> Unit,
+    onCaptureSpeech: () -> Unit,
+    onReleaseVoice: (VoiceRelease) -> Unit,
     onHang: () -> Unit,
     onDismiss: (() -> Unit)? = null,
     showDismiss: Boolean = false,
@@ -283,21 +338,51 @@ internal fun HangComposer(
             minLines = 2,
             maxLines = 4,
         )
-        OutlinedButton(
-            onClick = onSpeech,
-            modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
-            shape = FieldShape,
-        ) {
-            Text(
-                when {
-                    speechRecording && speechTranscribes -> hangSpeechStopTranscribeLabel
-                    speechRecording -> hangSpeechStopLabel
-                    else -> hangSpeechLabel
-                },
-                fontSize = 17.sp,
-            )
+        VoiceMemoButton(
+            speechRecording = speechRecording,
+            speechTranscribes = speechTranscribes,
+            amplitude = speechAmplitude,
+            secondsLeft = secondsLeft,
+            statusText = speechStatus,
+            onCapture = onCaptureSpeech,
+            onRelease = onReleaseVoice,
+        )
+        pendingAudio?.let { fileName ->
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = FieldShape,
+                color = MaterialTheme.colorScheme.surfaceVariant,
+            ) {
+                Row(
+                    Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        hangVoiceReadyLabel,
+                        Modifier.weight(1f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                    )
+                    TextButton(onClick = {
+                        if (audioPlaying) onStopPendingAudioPlayback() else onPlayPendingAudio(fileName)
+                    }) {
+                        Text(
+                            if (audioPlaying) hangVoiceChipStopLabel else hangVoiceChipPlayLabel,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 15.sp,
+                        )
+                    }
+                }
+                audioPlaybackStatus?.let {
+                    Text(
+                        it,
+                        Modifier.fillMaxWidth().padding(start = 16.dp, bottom = 8.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 13.sp,
+                    )
+                }
+            }
         }
-        speechStatus?.let { Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp) }
         Button(
             onClick = onHang,
             enabled = sealEnabled,
@@ -305,7 +390,15 @@ internal fun HangComposer(
             shape = FieldShape,
         ) { Text(hangSealLabel, fontSize = 17.sp) }
         savedMessage?.let {
-            Text(it, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold, fontSize = 15.sp, lineHeight = 22.sp)
+            Text(
+                it,
+                Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp,
+                lineHeight = 22.sp,
+                textAlign = TextAlign.Center,
+            )
         }
         if (onDismiss != null) {
             TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
