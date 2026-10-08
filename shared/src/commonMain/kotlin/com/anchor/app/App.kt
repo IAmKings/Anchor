@@ -432,32 +432,51 @@ fun App(
                 return@Surface
             }
             if (worryVaultVisible) {
-                WorryVaultScreen(
-                    store = store,
-                    nowMillis = nowMillis,
-                    isSessionOpen = isWorrySessionOpen,
-                    nextSessionMillis = nextWorrySessionMillis,
-                    nextSessionLabel = nextWorrySessionLabel,
-                    speechStatus = speechStatus,
-                    speechRecording = speechRecording,
-                    speechPartial = speechPartial,
-                    speechResult = speechResult,
-                    speechTranscribes = speechTranscribes,
-                    speechAmplitude = speechAmplitude,
-                    onCaptureSpeech = onCaptureWorrySpeech,
-                    onFinalizeSpeech = onFinalizeWorrySpeech,
-                    onDiscardSpeech = onDiscardWorrySpeech,
-                    onConsumeSpeechResult = onConsumeWorrySpeechResult,
-                    onTranscriptEdited = onTranscriptEdited,
-                    audioPlaybackStatus = audioPlaybackStatus,
-                    audioPlaying = audioPlaying,
-                    onStopPendingAudioPlayback = onStopWorryAudioPlayback,
-                    onPlayAudio = onPlayWorryAudio,
-                    onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
-                    onClose = {
-                        worryVaultVisible = false
-                    },
-                )
+                Box(Modifier.fillMaxSize()) {
+                    WorryVaultScreen(
+                        store = store,
+                        nowMillis = nowMillis,
+                        isSessionOpen = isWorrySessionOpen,
+                        nextSessionMillis = nextWorrySessionMillis,
+                        nextSessionLabel = nextWorrySessionLabel,
+                        externalRevision = worryDataRevision,
+                        onHang = { hangSheetVisible = true },
+                        audioPlaybackStatus = audioPlaybackStatus,
+                        onPlayAudio = onPlayWorryAudio,
+                        onClose = {
+                            worryVaultVisible = false
+                        },
+                    )
+                    if (hangSheetVisible) {
+                        AppHangSheet(
+                            store = store,
+                            nowMillis = nowMillis,
+                            isSessionOpen = isWorrySessionOpen,
+                            nextSessionMillis = nextWorrySessionMillis,
+                            nextSessionLabel = nextWorrySessionLabel,
+                            speechStatus = speechStatus,
+                            speechRecording = speechRecording,
+                            speechPartial = speechPartial,
+                            speechResult = speechResult,
+                            speechTranscribes = speechTranscribes,
+                            speechAmplitude = speechAmplitude,
+                            onCaptureWorrySpeech = onCaptureWorrySpeech,
+                            onFinalizeWorrySpeech = onFinalizeWorrySpeech,
+                            onDiscardWorrySpeech = onDiscardWorrySpeech,
+                            onConsumeWorrySpeechResult = onConsumeWorrySpeechResult,
+                            onTranscriptEdited = onTranscriptEdited,
+                            audioPlaybackStatus = audioPlaybackStatus,
+                            audioPlaying = audioPlaying,
+                            onStopWorryAudioPlayback = onStopWorryAudioPlayback,
+                            onPlayWorryAudio = onPlayWorryAudio,
+                            onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
+                            onClose = {
+                                hangSheetVisible = false
+                                worryDataRevision++
+                            },
+                        )
+                    }
+                }
                 return@Surface
             }
             if (microActionHistoryVisible) {
@@ -727,7 +746,7 @@ fun App(
                     onEmotion = { if (canPractice(FirstAnchor.EmotionLabel)) emotionCardsVisible = true },
                 )
                 if (hangSheetVisible) {
-                    HangSheet(
+                    AppHangSheet(
                         store = store,
                         nowMillis = nowMillis,
                         isSessionOpen = isWorrySessionOpen,
@@ -739,20 +758,20 @@ fun App(
                         speechResult = speechResult,
                         speechTranscribes = speechTranscribes,
                         speechAmplitude = speechAmplitude,
-                        onCaptureSpeech = onCaptureWorrySpeech,
-                        onFinalizeSpeech = onFinalizeWorrySpeech,
-                        onDiscardSpeech = onDiscardWorrySpeech,
-                        onConsumeSpeechResult = onConsumeWorrySpeechResult,
+                        onCaptureWorrySpeech = onCaptureWorrySpeech,
+                        onFinalizeWorrySpeech = onFinalizeWorrySpeech,
+                        onDiscardWorrySpeech = onDiscardWorrySpeech,
+                        onConsumeWorrySpeechResult = onConsumeWorrySpeechResult,
                         onTranscriptEdited = onTranscriptEdited,
                         audioPlaybackStatus = audioPlaybackStatus,
                         audioPlaying = audioPlaying,
-                        onStopPendingAudioPlayback = onStopWorryAudioPlayback,
+                        onStopWorryAudioPlayback = onStopWorryAudioPlayback,
                         onPlayWorryAudio = onPlayWorryAudio,
-                    onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
-                    onClose = {
-                        hangSheetVisible = false
-                        worryDataRevision++
-                    },
+                        onCrisisGuidance = { openCrisisFromText(persistWaiting = true) },
+                        onClose = {
+                            hangSheetVisible = false
+                            worryDataRevision++
+                        },
                     )
                 }
                 if (!hangSheetVisible) {
@@ -761,6 +780,60 @@ fun App(
             }
         }
     }
+}
+
+/**
+ * 全应用唯一的挂卡浮层接线：首页 FAB 与忧虑保险箱共用，挂卡逻辑单点维护。
+ */
+@Composable
+private fun AppHangSheet(
+    store: AnchorStore,
+    nowMillis: () -> Long,
+    isSessionOpen: () -> Boolean,
+    nextSessionMillis: () -> Long,
+    nextSessionLabel: () -> String,
+    speechStatus: String?,
+    speechRecording: Boolean,
+    speechPartial: String?,
+    speechResult: SpeechFinal?,
+    speechTranscribes: Boolean,
+    speechAmplitude: Float,
+    onCaptureWorrySpeech: () -> Unit,
+    onFinalizeWorrySpeech: () -> Unit,
+    onDiscardWorrySpeech: (String?) -> Unit,
+    onConsumeWorrySpeechResult: () -> Unit,
+    onTranscriptEdited: () -> Unit,
+    audioPlaybackStatus: String?,
+    audioPlaying: Boolean,
+    onStopWorryAudioPlayback: () -> Unit,
+    onPlayWorryAudio: (String) -> Unit,
+    onCrisisGuidance: () -> Unit,
+    onClose: () -> Unit,
+) {
+    HangSheet(
+        store = store,
+        nowMillis = nowMillis,
+        isSessionOpen = isSessionOpen,
+        nextSessionMillis = nextSessionMillis,
+        nextSessionLabel = nextSessionLabel,
+        speechStatus = speechStatus,
+        speechRecording = speechRecording,
+        speechPartial = speechPartial,
+        speechResult = speechResult,
+        speechTranscribes = speechTranscribes,
+        speechAmplitude = speechAmplitude,
+        onCaptureSpeech = onCaptureWorrySpeech,
+        onFinalizeSpeech = onFinalizeWorrySpeech,
+        onDiscardSpeech = onDiscardWorrySpeech,
+        onConsumeSpeechResult = onConsumeWorrySpeechResult,
+        onTranscriptEdited = onTranscriptEdited,
+        audioPlaybackStatus = audioPlaybackStatus,
+        audioPlaying = audioPlaying,
+        onStopPendingAudioPlayback = onStopWorryAudioPlayback,
+        onPlayWorryAudio = onPlayWorryAudio,
+        onCrisisGuidance = onCrisisGuidance,
+        onClose = onClose,
+    )
 }
 
 @Composable

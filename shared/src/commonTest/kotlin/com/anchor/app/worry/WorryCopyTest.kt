@@ -43,6 +43,7 @@ class WorryCopyTest {
         assertEquals("忧虑保险箱", vaultTitle)
         assertEquals("念头已经在纸上了", vaultLockedCaption)
         assertEquals("现在就想处理", vaultAskOpenNowLabel)
+        assertEquals("还有新念头？挂一张卡", vaultHangEntryLabel)
         assertEquals("确认开箱", vaultConfirmOpenLabel)
         assertEquals("等到专场", vaultWaitForSessionLabel)
         assertEquals("专场已开启", vaultOpenCaption)

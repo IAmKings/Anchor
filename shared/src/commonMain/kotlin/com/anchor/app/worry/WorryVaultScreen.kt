@@ -31,13 +31,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
@@ -46,10 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.anchor.app.safety.CrisisClarificationDialog
-import com.anchor.app.safety.findCrisisPhrase
-import com.anchor.app.speech.SpeechFinal
-import com.anchor.app.speech.VOICE_HOLD_LIMIT_SECONDS
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.WorryCard
 import com.anchor.app.storage.WorryResolution
@@ -66,87 +60,25 @@ fun WorryVaultScreen(
     isSessionOpen: () -> Boolean,
     nextSessionMillis: () -> Long,
     nextSessionLabel: () -> String,
-    speechStatus: String?,
-    speechRecording: Boolean,
-    speechPartial: String?,
-    speechResult: SpeechFinal?,
-    speechTranscribes: Boolean,
-    speechAmplitude: Float,
-    onCaptureSpeech: () -> Unit,
-    onFinalizeSpeech: () -> Unit,
-    onDiscardSpeech: (String?) -> Unit,
-    onConsumeSpeechResult: () -> Unit,
-    onTranscriptEdited: () -> Unit,
+    externalRevision: Int,
+    onHang: () -> Unit,
     audioPlaybackStatus: String?,
-    audioPlaying: Boolean,
-    onStopPendingAudioPlayback: () -> Unit,
     onPlayAudio: (String) -> Unit,
-    onCrisisGuidance: () -> Unit = {},
     onClose: () -> Unit,
 ) {
-    var content by remember { mutableStateOf("") }
     var confirmationVisible by remember { mutableStateOf(false) }
-    var pendingPhrase by remember { mutableStateOf<String?>(null) }
     var forcedOpen by remember { mutableStateOf(false) }
     var savedMessage by remember { mutableStateOf<String?>(null) }
-    var pendingAudio by remember { mutableStateOf<String?>(null) }
-    var voiceOnlyPending by remember { mutableStateOf(false) }
-    var awaitingTranscriptEdit by remember { mutableStateOf(false) }
-    var secondsLeft by remember { mutableStateOf<Int?>(null) }
     var action by remember { mutableStateOf("") }
     var processedCount by remember { mutableIntStateOf(0) }
     var step by remember { mutableStateOf(VaultStep.Overview) }
     var revision by remember { mutableIntStateOf(0) }
-    val cards = remember(revision) { store.worryCards() }
+    val cards = remember(revision, externalRevision) { store.worryCards() }
     val pending = cards.filter { it.resolution == WorryResolution.Pending }
     val open = isSessionOpen() || forcedOpen
     val current = pending.firstOrNull()
 
-    // 转写结果一次性消费：到达即清空宿主状态（否则每次进入本页都会重复封存同一张录音卡）。
-    // 默认（原地松手/60 秒到限）：文字（自动标点）+ 录音回填待封存；
-    // 「仅录音」（滑右）：忽略转写文字，只封录音卡；转写为空时自动封纯录音卡（兜底）。
-    LaunchedEffect(speechResult) {
-        speechResult?.let { final ->
-            onConsumeSpeechResult()
-            if (voiceOnlyPending) {
-                voiceOnlyPending = false
-                content = ""
-                final.audioFileName?.let { fileName ->
-                    store.addWorryCard("", nowMillis(), nextSessionMillis(), fileName)
-                    savedMessage = vaultSealedMessage(isSessionOpen() || forcedOpen, nextSessionLabel())
-                    revision++
-                }
-            } else {
-                content = final.text ?: ""
-                pendingAudio = final.audioFileName
-                awaitingTranscriptEdit = content.isNotBlank()
-            }
-        }
-    }
-
-    // 按住说话的 60 秒倒计时：到限按纯语音结算。
-    LaunchedEffect(speechRecording) {
-        if (speechRecording) {
-            for (left in VOICE_HOLD_LIMIT_SECONDS downTo 1) {
-                secondsLeft = left
-                delay(1_000)
-            }
-            secondsLeft = 0
-            onFinalizeSpeech()
-        } else {
-            secondsLeft = null
-        }
-    }
-
-    AnchorBackBar(
-        onBack = {
-            if (speechRecording || pendingAudio != null) onDiscardSpeech(pendingAudio)
-            pendingAudio = null
-            onConsumeSpeechResult()
-            onClose()
-        },
-        title = vaultTitle,
-    ) {
+    AnchorBackBar(onBack = onClose, title = vaultTitle) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -192,67 +124,14 @@ fun WorryVaultScreen(
                     },
                     onBack = { step = VaultStep.Overview },
                 )
-                else -> OverviewStep(
+                                else -> OverviewStep(
                     open = open,
                     pending = pending,
-                    // 录音中显示完整转写（引擎侧 1 秒节流控制排版开销），光标钉尾跟随最新语音。
-                    content = if (speechRecording) (speechPartial ?: "") else content,
-                    onContent = {
-                        if (!speechRecording) {
-                            if (awaitingTranscriptEdit) {
-                                awaitingTranscriptEdit = false
-                                onTranscriptEdited()
-                            }
-                            content = it
-                        }
-                    },
                     savedMessage = savedMessage,
-                    speechStatus = speechStatus,
-                    speechRecording = speechRecording,
-                    speechTranscribes = speechTranscribes,
-                    speechAmplitude = speechAmplitude,
-                    secondsLeft = secondsLeft,
-                    pendingAudio = pendingAudio,
-                    audioPlaybackStatus = audioPlaybackStatus,
-                    audioPlaying = audioPlaying,
-                    onStopPendingAudioPlayback = onStopPendingAudioPlayback,
-                    onPlayPendingAudio = onPlayAudio,
-                    sealEnabled = content.isNotBlank() || pendingAudio != null,
                     confirmationVisible = confirmationVisible,
                     nextSessionLabel = nextSessionLabel(),
                     nowMillis = nowMillis(),
-                    onHang = {
-                        val hit = findCrisisPhrase(content)
-                        if (hit != null) pendingPhrase = hit
-                        else {
-                            store.addWorryCard(content, nowMillis(), nextSessionMillis(), pendingAudio)
-                            content = ""
-                            pendingAudio = null
-                            onConsumeSpeechResult()
-                            savedMessage = vaultSealedMessage(open, nextSessionLabel())
-                            revision++
-                        }
-                    },
-                    onCaptureSpeech = onCaptureSpeech,
-                    onReleaseVoice = { release ->
-                        when (release) {
-                            VoiceRelease.Cancel -> {
-                                if (speechRecording || pendingAudio != null) onDiscardSpeech(pendingAudio)
-                                pendingAudio = null
-                                onConsumeSpeechResult()
-                            }
-                            VoiceRelease.Settle -> {
-                                // 到限自动结算后手指仍按着，松手会产生幽灵结算——只在录音中有效。
-                                if (speechRecording) onFinalizeSpeech()
-                            }
-                            VoiceRelease.VoiceOnly -> {
-                                if (speechRecording) {
-                                    voiceOnlyPending = true
-                                    onFinalizeSpeech()
-                                }
-                            }
-                        }
-                    },
+                    onHang = onHang,
                     onAskOpenNow = { confirmationVisible = true },
                     onConfirmOpen = { forcedOpen = true; confirmationVisible = false },
                     onWaitForSession = { confirmationVisible = false },
@@ -262,82 +141,23 @@ fun WorryVaultScreen(
             Spacer(Modifier.height(24.dp))
         }
     }
-    pendingPhrase?.let { phrase ->
-        CrisisClarificationDialog(
-            phrase = phrase,
-            onNotSelf = {
-                store.addWorryCard(content, nowMillis(), nextSessionMillis())
-                content = ""
-                savedMessage = vaultSealedMessage(open, nextSessionLabel())
-                revision++
-                pendingPhrase = null
-            },
-            onSelf = {
-                store.addWorryCard(content, nowMillis(), nextSessionMillis())
-                content = ""
-                pendingPhrase = null
-                onCrisisGuidance()
-            },
-            onUncertain = {
-                store.addWorryCard(content, nowMillis(), nextSessionMillis())
-                content = ""
-                pendingPhrase = null
-                onCrisisGuidance()
-            },
-        )
-    }
 }
 
 @Composable
 private fun OverviewStep(
     open: Boolean,
     pending: List<WorryCard>,
-    content: String,
-    onContent: (String) -> Unit,
     savedMessage: String?,
-    speechStatus: String?,
-    speechRecording: Boolean,
-    speechTranscribes: Boolean,
-    speechAmplitude: Float,
-    secondsLeft: Int?,
-    pendingAudio: String?,
-    audioPlaybackStatus: String?,
-    audioPlaying: Boolean,
-    onStopPendingAudioPlayback: () -> Unit,
-    onPlayPendingAudio: (String) -> Unit,
-    sealEnabled: Boolean,
     confirmationVisible: Boolean,
     nextSessionLabel: String,
     nowMillis: Long,
     onHang: () -> Unit,
-    onCaptureSpeech: () -> Unit,
-    onReleaseVoice: (VoiceRelease) -> Unit,
     onAskOpenNow: () -> Unit,
     onConfirmOpen: () -> Unit,
     onWaitForSession: () -> Unit,
     onStartProcess: () -> Unit,
 ) {
-    HangComposer(
-        title = vaultTitle,
-        fieldLabel = hangFieldHint,
-        content = content,
-        onContent = onContent,
-        speechRecording = speechRecording,
-        speechTranscribes = speechTranscribes,
-        speechAmplitude = speechAmplitude,
-        secondsLeft = secondsLeft,
-        pendingAudio = pendingAudio,
-        audioPlaybackStatus = audioPlaybackStatus,
-        audioPlaying = audioPlaying,
-        onStopPendingAudioPlayback = onStopPendingAudioPlayback,
-        onPlayPendingAudio = onPlayPendingAudio,
-        sealEnabled = sealEnabled,
-        speechStatus = speechStatus,
-        savedMessage = savedMessage,
-        onCaptureSpeech = onCaptureSpeech,
-        onReleaseVoice = onReleaseVoice,
-        onHang = onHang,
-    )
+    // 未开箱：状态标 + 张数卡（含挂卡入口，浮层式）+ 确认开箱卡；开箱：收起挂卡入口，专注整理。
     if (!open) {
         StatusMark(LockedIcon, vaultLockedCaption)
         Surface(
@@ -348,6 +168,13 @@ private fun OverviewStep(
             Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(vaultRuminationMessage(nextSessionLabel), fontWeight = FontWeight.SemiBold, fontSize = 17.sp, lineHeight = 26.sp)
                 Text(vaultPendingSummary(pending.size), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
+                OutlinedButton(
+                    onClick = onHang,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(vaultHangEntryLabel, fontSize = 17.sp)
+                }
                 OutlinedButton(
                     onClick = onAskOpenNow,
                     modifier = Modifier.fillMaxWidth().heightIn(min = VaultActionMinHeight),
