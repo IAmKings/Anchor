@@ -76,6 +76,7 @@ fun WorryVaultScreen(
     onFinalizeSpeech: () -> Unit,
     onDiscardSpeech: (String?) -> Unit,
     onConsumeSpeechResult: () -> Unit,
+    onTranscriptEdited: () -> Unit,
     audioPlaybackStatus: String?,
     audioPlaying: Boolean,
     onStopPendingAudioPlayback: () -> Unit,
@@ -89,7 +90,8 @@ fun WorryVaultScreen(
     var forcedOpen by remember { mutableStateOf(false) }
     var savedMessage by remember { mutableStateOf<String?>(null) }
     var pendingAudio by remember { mutableStateOf<String?>(null) }
-    var pureVoicePending by remember { mutableStateOf(false) }
+    var voiceOnlyPending by remember { mutableStateOf(false) }
+    var awaitingTranscriptEdit by remember { mutableStateOf(false) }
     var secondsLeft by remember { mutableStateOf<Int?>(null) }
     var action by remember { mutableStateOf("") }
     var processedCount by remember { mutableIntStateOf(0) }
@@ -101,16 +103,24 @@ fun WorryVaultScreen(
     val current = pending.firstOrNull()
 
     // 转写结果一次性消费：到达即清空宿主状态（否则每次进入本页都会重复封存同一张录音卡）。
-    // 纯语音路径（原地松手/到限）：忽略转写文字，直接封存纯录音卡。
+    // 默认（原地松手/60 秒到限）：文字（自动标点）+ 录音回填待封存；
+    // 「仅录音」（滑右）：忽略转写文字，只封录音卡；转写为空时自动封纯录音卡（兜底）。
     LaunchedEffect(speechResult) {
         speechResult?.let { final ->
             onConsumeSpeechResult()
-            if (pureVoicePending) {
-                pureVoicePending = false
+            if (voiceOnlyPending) {
+                voiceOnlyPending = false
                 content = ""
+                final.audioFileName?.let { fileName ->
+                    store.addWorryCard("", nowMillis(), nextSessionMillis(), fileName)
+                    savedMessage = vaultSealedMessage(isSessionOpen() || forcedOpen, nextSessionLabel())
+                    revision++
+                }
+            } else {
+                content = final.text ?: ""
+                pendingAudio = final.audioFileName
+                awaitingTranscriptEdit = content.isNotBlank()
             }
-            content = final.text ?: ""
-            pendingAudio = final.audioFileName
         }
     }
 
@@ -122,8 +132,6 @@ fun WorryVaultScreen(
                 delay(1_000)
             }
             secondsLeft = 0
-            content = "" // 到限纯语音结算：清掉上一轮残留
-            pureVoicePending = true
             onFinalizeSpeech()
         } else {
             secondsLeft = null
@@ -187,8 +195,17 @@ fun WorryVaultScreen(
                 else -> OverviewStep(
                     open = open,
                     pending = pending,
+                    // 录音中显示完整转写（引擎侧 1 秒节流控制排版开销），光标钉尾跟随最新语音。
                     content = if (speechRecording) (speechPartial ?: "") else content,
-                    onContent = { if (!speechRecording) content = it },
+                    onContent = {
+                        if (!speechRecording) {
+                            if (awaitingTranscriptEdit) {
+                                awaitingTranscriptEdit = false
+                                onTranscriptEdited()
+                            }
+                            content = it
+                        }
+                    },
                     savedMessage = savedMessage,
                     speechStatus = speechStatus,
                     speechRecording = speechRecording,
@@ -224,14 +241,15 @@ fun WorryVaultScreen(
                                 pendingAudio = null
                                 onConsumeSpeechResult()
                             }
-                            VoiceRelease.Text -> {
-                                content = "" // 清掉上一轮残留，等新文字回填
-                                onFinalizeSpeech()
+                            VoiceRelease.Settle -> {
+                                // 到限自动结算后手指仍按着，松手会产生幽灵结算——只在录音中有效。
+                                if (speechRecording) onFinalizeSpeech()
                             }
-                            VoiceRelease.Voice -> {
-                                content = "" // 纯语音：松手即清，等纯录音卡封存
-                                pureVoicePending = true
-                                onFinalizeSpeech()
+                            VoiceRelease.VoiceOnly -> {
+                                if (speechRecording) {
+                                    voiceOnlyPending = true
+                                    onFinalizeSpeech()
+                                }
                             }
                         }
                     },

@@ -43,7 +43,7 @@ private var sharedRecognizer: SherpaNcnn? = null
 class SherpaNcnnSpeechEngine(
     private val context: Context,
     private val sampleRate: Int = 16_000,
-    private val maxCaptureMillis: Long = 10 * 60_000L,
+    private val maxCaptureMillis: Long = 11 * 60_000L,
 ) : SpeechEngine {
     private val main = Handler(Looper.getMainLooper())
 
@@ -136,6 +136,8 @@ class SherpaNcnnSpeechEngine(
         val chunk = ShortArray(1_024)
         var lastPartial = ""
         var settledText = ""
+        val segments = mutableListOf<String>()
+        var lastPartialPostAt = 0L
         // 安静环境下 RMS 只有 0.02~0.05，不做增益音波就是一条直线；×5 并限幅让小声也能看见起伏。
         var lastAmplitudePostAt = 0L
         var lastAmplitudePosted = -1f
@@ -158,13 +160,20 @@ class SherpaNcnnSpeechEngine(
             val text = (settledText + " " + recognizer.text).trim()
             if (text.isNotEmpty() && text != lastPartial) {
                 lastPartial = text
-                main.post { if (!released && !stopRequested) onPartial(text) }
+                // 三档流式：3000 字内（=10 分钟典型输入）固定 200ms 流式，越线阶梯降频。
+                val now = System.currentTimeMillis()
+                if (now - lastPartialPostAt >= partialIntervalMillis(text.length)) {
+                    lastPartialPostAt = now
+                    main.post { if (!released && !stopRequested) onPartial(text) }
+                }
             }
             if (recognizer.isEndpoint()) {
-                // 端点判定（默认 2.4s 静音）：把已出文本收进 settledText 再复位，长停顿不丢字。
+                // 端点判定（默认 2.4s 静音）：把已出文本收进 settledText 与分段表，长停顿不丢字。
                 settledText = text
+                segments += text
                 recognizer.reset()
                 lastPartial = settledText
+                lastPartialPostAt = 0L
             }
             if (System.currentTimeMillis() - captureStartedAt >= maxCaptureMillis) stopRequested = true
         }
@@ -172,7 +181,9 @@ class SherpaNcnnSpeechEngine(
         record.stop()
         record.release()
 
-        val text = (settledText + " " + recognizer.text).trim()
+        val tail = recognizer.text.trim()
+        if (tail.isNotEmpty()) segments += tail
+        val text = (settledText + " " + tail).trim()
         val audioFile = if (!released) {
             val stopped = runCatching { recorder?.stop() }.isSuccess
             recorder?.release()
@@ -185,7 +196,7 @@ class SherpaNcnnSpeechEngine(
         }
 
         if (!released) {
-            main.post { onFinal(SpeechFinalResult(text, audioFile)) }
+            main.post { onFinal(SpeechFinalResult(text, audioFile, segments = segments.toList())) }
         }
     }
 

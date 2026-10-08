@@ -37,8 +37,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/** 松手结算：滑到左侧取消；滑到右侧转文字；原地松手纯语音。 */
-enum class VoiceRelease { Cancel, Text, Voice }
+/** 松手结算：滑到左侧取消；滑到右侧仅录音；原地松手转文字（默认）。 */
+enum class VoiceRelease { Cancel, Settle, VoiceOnly }
 
 private val HoldShape = RoundedCornerShape(999.dp)
 /** 手指进入按钮左/右三分之一即视为滑入对应区域。 */
@@ -99,13 +99,12 @@ fun VoiceMemoButton(
             if (holdActive) {
                 SidePill(hangVoiceCancelLabel, cancelZone, Modifier.weight(1f))
                 Text(
-                    when {
-                        (secondsLeft ?: 0) in 1..10 -> "还能说 $secondsLeft 秒"
-                        else -> statusText ?: hangVoiceReleaseHint
-                    },
+                    // 录音中倒计时优先（用户反馈：10 分钟版倒计时被状态文字顶掉了）；非录音显示状态。
+                    if (holdActive || (secondsLeft ?: 0) > 0) countdownText(secondsLeft)
+                    else statusText ?: countdownText(secondsLeft),
                     Modifier.weight(1.6f),
                     textAlign = TextAlign.Center,
-                    color = if ((secondsLeft ?: 61) in 1..10) {
+                    color = if ((secondsLeft ?: 601) in 1..10) {
                         MaterialTheme.colorScheme.secondary
                     } else {
                         MaterialTheme.colorScheme.onSurfaceVariant
@@ -153,11 +152,11 @@ fun VoiceMemoButton(
                         holdActive = false
                         val release = when {
                             fingerX < buttonWidth / ZONE_DIVISOR -> VoiceRelease.Cancel
-                            fingerX > buttonWidth * (ZONE_DIVISOR - 1) / ZONE_DIVISOR -> VoiceRelease.Text
-                            else -> VoiceRelease.Voice
+                            fingerX > buttonWidth * (ZONE_DIVISOR - 1) / ZONE_DIVISOR -> VoiceRelease.VoiceOnly
+                            else -> VoiceRelease.Settle
                         }
                         // 误触轻点（空闲态快速起落、未滑出中间区）：保持录音，不结算（无障碍切换态）。
-                        if (release == VoiceRelease.Voice && !wasRecording &&
+                        if (release == VoiceRelease.Settle && !wasRecording &&
                             upAt - downAt < TAP_TOGGLE_MILLIS
                         ) {
                             return@awaitEachGesture
@@ -172,12 +171,12 @@ fun VoiceMemoButton(
                         else -> hangVoiceHoldLabel
                     }
                     onClick {
-                        if (!currentRecording) currentOnCapture() else currentOnRelease(VoiceRelease.Voice)
+                        if (!currentRecording) currentOnCapture() else currentOnRelease(VoiceRelease.Settle)
                         true
                     }
                     customActions = listOf(
                         CustomAccessibilityAction(hangVoiceTextLabel) {
-                            if (currentRecording) currentOnRelease(VoiceRelease.Text)
+                            if (currentRecording) currentOnRelease(VoiceRelease.VoiceOnly)
                             true
                         },
                     )
@@ -208,6 +207,18 @@ fun VoiceMemoButton(
                 }
             }
         }
+    }
+}
+
+/** 剩余时间的自然中文显示：>60 秒用分，整分钟不带零秒。 */
+internal fun countdownText(secondsLeft: Int?): String {
+    if (secondsLeft == null || secondsLeft <= 0) return hangVoiceReleaseHint
+    return if (secondsLeft >= 60) {
+        val minutes = secondsLeft / 60
+        val seconds = secondsLeft % 60
+        if (seconds == 0) "还能说 $minutes 分钟" else "还能说 $minutes 分 $seconds 秒"
+    } else {
+        "还能说 $secondsLeft 秒"
     }
 }
 

@@ -32,6 +32,10 @@ import com.anchor.app.safety.phoneTelUri
 import com.anchor.app.settings.ThemeChoice
 import com.anchor.app.settings.useDark
 import com.anchor.app.speech.AndroidLocalAudioRecorder
+import com.anchor.app.speech.AndroidOnnxModelManager
+import com.anchor.app.speech.OnnxAsrState
+import com.anchor.app.speech.SherpaOnnxRuntime
+import com.anchor.app.speech.punctuateTranscript
 import com.anchor.app.speech.SpeechEngine
 import com.anchor.app.speech.SpeechFinal
 import com.anchor.app.speech.createSpeechEngine
@@ -102,6 +106,8 @@ class MainActivity : FragmentActivity() {
     private var speechFinalDelivered = false
     private var audioPlaybackStatus by mutableStateOf<String?>(null)
     private var audioPlaying by mutableStateOf(false)
+    private lateinit var onnxModelManager: AndroidOnnxModelManager
+    private var onnxAsrState by mutableStateOf(OnnxAsrState())
     private var mediaPlayer: MediaPlayer? = null
     private var exportPassword by mutableStateOf("")
     private var exportStatus by mutableStateOf<String?>(null)
@@ -139,6 +145,14 @@ class MainActivity : FragmentActivity() {
         syncAnchorNightMode(this, themeChoice)
         refreshNotificationPermission()
         audioRecorder = AndroidLocalAudioRecorder(this)
+        onnxModelManager = AndroidOnnxModelManager(this)
+        onnxAsrState = onnxModelManager.currentState()
+        onnxModelManager.onStateChanged = { state ->
+            onnxAsrState = state
+            if (state.enabled && state.modelReady && !SherpaOnnxRuntime.isWarm()) {
+                warmUpOnnxEngine()
+            }
+        }
         val databaseKey = AndroidDatabaseKey.getOrCreate(this, DATABASE_NAME)
         anchorStore = AndroidEncryptedProbeStore(this, DATABASE_NAME, databaseKey)
         backgroundTimer = AndroidBackgroundTimer(this)
@@ -202,6 +216,24 @@ class MainActivity : FragmentActivity() {
                 audioPlaybackStatus = audioPlaybackStatus,
                 audioPlaying = audioPlaying,
                 onStopWorryAudioPlayback = { stopAudioPlayback() },
+                onTranscriptEdited = { recordTranscriptEditSession() },
+                speechDownloading = onnxAsrState.downloading,
+                speechDownloadProgress = onnxAsrState.downloadProgress,
+                speechReady = onnxAsrState.modelReady,
+                speechEnabled = onnxAsrState.enabled,
+                speechError = onnxAsrState.error,
+                onSpeechDownload = { onnxModelManager.startDownload() },
+                onSpeechCancelDownload = { onnxModelManager.cancelDownload() },
+                onSpeechToggle = { enabled ->
+                    onnxModelManager.setEnabled(enabled)
+                    onnxAsrState = onnxModelManager.currentState()
+                    if (enabled) warmUpOnnxEngine() else SherpaOnnxRuntime.release()
+                },
+                onSpeechDelete = {
+                    onnxModelManager.deleteModel()
+                    SherpaOnnxRuntime.release()
+                    onnxAsrState = onnxModelManager.currentState()
+                },
                 onPlayWorryAudio = { playWorryAudio(it) },
                 exportPassword = exportPassword,
                 onExportPasswordChange = { exportPassword = it },
@@ -288,8 +320,14 @@ class MainActivity : FragmentActivity() {
     private fun isNightMode(): Boolean =
         (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
+    private var onnxStartupWarmupArmed = false
+
     override fun onResume() {
         super.onResume()
+        if (!onnxStartupWarmupArmed && onnxModelManager.enabled) {
+            onnxStartupWarmupArmed = true
+            Handler(Looper.getMainLooper()).postDelayed({ warmUpOnnxEngine() }, 5_000)
+        }
         refreshNotificationPermission()
         refreshExactAlarm()
         backgroundTimer.promoteToExactAlarm()
@@ -380,13 +418,29 @@ class MainActivity : FragmentActivity() {
         engine.start(
             onPartial = { text -> speechPartial = text },
             onAmplitude = { value -> speechAmplitude = value },
-            onFinal = { final ->
-                deliverSpeechFinal(
-                    SpeechFinal(
-                        text = final.text.takeIf { it.isNotBlank() },
-                        audioFileName = final.audioFile?.name,
-                    ),
-                )
+            onFinal = onFinal@{ final ->
+                // 空文本也必须交付：否则 speechRecording 不复位，状态机卡死在「录音中」。
+                fun deliver(text: String?) {
+                    deliverSpeechFinal(
+                        SpeechFinal(text = text, audioFileName = final.audioFile?.name),
+                        decodeLoad = final.decodeLoad,
+                    )
+                }
+                if (onnxModelManager.punctReady() && !final.text.isNullOrBlank()) {
+                    // L1：CT-transformer 文本级标点（3000 字亚秒~秒级），推理在后台执行器排队。
+                    speechStatus = "正在整理标点…"
+                    SherpaOnnxRuntime.addPunctuation(this, final.text) { punctuated ->
+                        deliver((punctuated ?: final.text).takeIf { it.isNotBlank() })
+                    }
+                } else if (final.segments.isNotEmpty()) {
+                    // L0 标点：按端点分段连接（段间「，」末段「。」）。
+                    deliver(
+                        punctuateTranscript(final.segments).takeIf { it.isNotBlank() }
+                            ?: final.text?.takeIf { it.isNotBlank() },
+                    )
+                } else {
+                    deliver(final.text?.takeIf { it.isNotBlank() })
+                }
             },
             onError = { reason ->
                 // 转写引擎失败（模型加载、麦克风被占等）：落到纯录音兜底，文案说明原因。
@@ -410,15 +464,16 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    private fun deliverSpeechFinal(final: SpeechFinal) {
+    private fun deliverSpeechFinal(final: SpeechFinal, decodeLoad: Double? = null) {
         if (speechFinalDelivered) return
         speechFinalDelivered = true
         speechRecording = false
         speechPartial = null
         speechAmplitude = 0f
         speechResult = final
+        val loadNote = decodeLoad?.let { " 解码负载 %.2f。".format(it) } ?: ""
         speechStatus = when {
-            !final.text.isNullOrBlank() -> "已完成端侧识别。"
+            !final.text.isNullOrBlank() -> "已完成端侧识别。$loadNote"
             final.audioFileName != null -> "本地录音已保存。"
             else -> "没有识别到内容。"
         }
@@ -440,6 +495,21 @@ class MainActivity : FragmentActivity() {
         speechPartial = null
         speechAmplitude = 0f
         speechFinalDelivered = true
+    }
+
+    private fun warmUpOnnxEngine() {
+        if (!onnxModelManager.enabled || !onnxModelManager.modelReady()) return
+        SherpaOnnxRuntime.warmUp(this) { }
+    }
+
+    /** 挂卡/保险箱里的修正会话计数：转写回填后用户编辑过文本即 +1。 */
+    fun recordTranscriptEditSession() {
+        val prefs = getSharedPreferences("anchor-transcript-edits", MODE_PRIVATE)
+        val count = prefs.getInt("count", 0) + 1
+        prefs.edit().putInt("count", count).apply()
+        if (count == 3 || count == 10) {
+            inAppBannerText = "识别准确率不满意？可在 我的 → 语音识别 获取高精度语音包（202MB，含标点，仅本机运行）"
+        }
     }
 
     private fun destroySpeechEngine() {

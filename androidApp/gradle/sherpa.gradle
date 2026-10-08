@@ -7,6 +7,14 @@ def sherpaRoot = layout.buildDirectory.dir("sherpa").get().asFile
 def sherpaLibsUrl = "https://github.com/k2-fsa/sherpa-ncnn/releases/download/v2.1.15/sherpa-ncnn-v2.1.15-android.tar.bz2"
 def sherpaLibsSha256 = "7fbdb6f8bb1f8ec092467ed61d9ec85c01f060d125ccf632ef9d7ec5816d4a65"
 
+// sherpa-onnx 运行时 so（可选高精度引擎，arm64-v8a；4 个 so 互相链接必须同时打包）。
+def onnxLibsUrl = "https://github.com/k2-fsa/sherpa-onnx/releases/download/v1.13.8/sherpa-onnx-v1.13.8-android.tar.bz2"
+def onnxLibsSha256 = "2ff63469a71cb6009aa2e3ed5f4a670f8abdcbe4bb9ffd23776afc792a6b4f44"
+def onnxArm64SoFiles = [
+    "libsherpa-onnx-jni.so", "libonnxruntime.so",
+    "libsherpa-onnx-c-api.so", "libsherpa-onnx-cxx-api.so",
+]
+
 def sherpaModelUrl = "https://github.com/k2-fsa/sherpa-ncnn/releases/download/models/sherpa-ncnn-streaming-zipformer-zh-14M-2023-02-23.tar.bz2"
 def sherpaModelSha256 = "b12f7af0ee53b9ec7089579349b8536d03ec0b4a0e1f4d8ea26be14c395e597f"
 def sherpaModelDir = "sherpa-ncnn-streaming-zipformer-zh-14M-2023-02-23"
@@ -20,6 +28,7 @@ def sherpaModelFiles = [
 
 def sherpaLibsTar = new File(sherpaRoot, "libs.tar.bz2")
 def sherpaModelTar = new File(sherpaRoot, "model.tar.bz2")
+def onnxLibsTar = new File(sherpaRoot, "onnx-android.tar.bz2")
 
 tasks.register("downloadSherpaLibs", SherpaDownloadTask) {
     url = sherpaLibsUrl
@@ -31,6 +40,25 @@ tasks.register("extractSherpaLibs", Copy) {
     dependsOn("downloadSherpaLibs")
     from({ tarTree(resources.bzip2(sherpaLibsTar)) })
     into(new File(sherpaRoot, "libs"))
+}
+
+tasks.register("downloadOnnxLibs", SherpaDownloadTask) {
+    url = onnxLibsUrl
+    expectedSha256 = onnxLibsSha256
+    tarFile.set(onnxLibsTar)
+}
+
+// 只取 arm64-v8a 的 4 个 so（发布 ABI 已收窄到 arm64）；README 不进包。
+// 保留 <abi>/ 目录层级：jniLibs srcDir 下必须是 arm64-v8a/*.so 结构。
+tasks.register("extractOnnxLibs", Copy) {
+    dependsOn("downloadOnnxLibs")
+    def includePatterns = onnxArm64SoFiles.collect { "jniLibs/arm64-v8a/$it" }
+    from({ tarTree(resources.bzip2(onnxLibsTar)) }) {
+        include(includePatterns)
+        eachFile { it.path = it.path.replaceFirst("^jniLibs/", "") }
+        includeEmptyDirs = false
+    }
+    into(new File(sherpaRoot, "onnx-libs"))
 }
 
 tasks.register("downloadSherpaModel", SherpaDownloadTask) {
@@ -49,11 +77,14 @@ tasks.register("extractSherpaModel", SherpaExtractModelTask) {
 }
 
 afterEvaluate {
-    preBuild.dependsOn "extractSherpaLibs", "extractSherpaModel"
+    preBuild.dependsOn "extractSherpaLibs", "extractSherpaModel", "extractOnnxLibs"
 }
 
 android {
-    sourceSets["main"].jniLibs.srcDir(new File(sherpaRoot, "libs/jniLibs"))
+    sourceSets["main"].jniLibs.srcDirs(
+        new File(sherpaRoot, "libs/jniLibs"),
+        new File(sherpaRoot, "onnx-libs"),
+    )
     sourceSets["main"].assets.srcDir(new File(sherpaRoot, "model-assets"))
 }
 

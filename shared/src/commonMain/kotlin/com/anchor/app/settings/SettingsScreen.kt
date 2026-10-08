@@ -20,6 +20,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -63,6 +64,16 @@ fun SettingsScreen(
     onRequestExactAlarm: () -> Unit = {},
     themeChoice: ThemeChoice = ThemeChoice.System,
     onThemeChoice: (ThemeChoice) -> Unit = {},
+    speechMode: String = "",
+    speechDownloading: Boolean = false,
+    speechDownloadProgress: Int = 0,
+    speechReady: Boolean = false,
+    speechEnabled: Boolean = false,
+    speechError: String? = null,
+    onSpeechDownload: () -> Unit = {},
+    onSpeechCancelDownload: () -> Unit = {},
+    onSpeechToggle: (Boolean) -> Unit = {},
+    onSpeechDelete: () -> Unit = {},
     exportPassword: String,
     onExportPasswordChange: (String) -> Unit,
     exportStatus: String?,
@@ -115,6 +126,47 @@ fun SettingsScreen(
             Text(settingsAppearanceIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
             SettingsCard {
                 ThemeChoiceRow(selected = themeChoice, onSelect = onThemeChoice)
+            }
+
+            Text(settingsSpeechTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+            Text(settingsSpeechIntro, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+            SettingsCard {
+                Text(settingsSpeechMode(speechEnabled, speechReady), fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                if (speechDownloading) {
+                    LinearProgressIndicator(
+                        progress = { speechDownloadProgress / 100f },
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 8.dp),
+                    )
+                    Text(
+                        "$speechDownloadProgress%",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                    )
+                }
+                if (!speechReady) {
+                    Button(
+                        onClick = if (speechDownloading) onSpeechCancelDownload else onSpeechDownload,
+                        modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight),
+                        shape = RoundedCornerShape(12.dp),
+                    ) {
+                        Text(settingsSpeechDownloadAction(speechDownloading), fontSize = 17.sp)
+                    }
+                }
+                if (speechReady) {
+                    ToggleRow(
+                        title = settingsSpeechEnableLabel,
+                        detail = if (speechEnabled) "下次按住说话即生效" else "下载完成后可开启",
+                        checked = speechEnabled,
+                        enabled = true,
+                        onToggle = { onSpeechToggle(!speechEnabled) },
+                    )
+                    TextButton(onClick = onSpeechDelete, modifier = Modifier.fillMaxWidth()) {
+                        Text(settingsSpeechDeleteLabel)
+                    }
+                }
+                speechError?.let {
+                    Text(it, color = MaterialTheme.colorScheme.secondary, fontSize = 14.sp, lineHeight = 20.sp)
+                }
             }
 
             Text(settingsRemindersTitle, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)

@@ -98,6 +98,16 @@ for path in source_manifests():
             ", ".join(declared),
         )
         continue
+    if path.resolve() == (ROOT / "androidApp/src/main/AndroidManifest.xml").resolve():
+        # 主清单允许 INTERNET：唯一用途是「我的 → 语音识别」按需下载高精度模型
+        # （用户主动发起，识别本身全程离线）。以下网络类权限仍然禁止。
+        declared = re.findall(r'<uses-permission[^>]*android:name="([^"]+)"', text)
+        check(
+            "main manifest requests only INTERNET among network permissions",
+            [p for p in declared if p in FORBIDDEN_PERMISSIONS] == ["android.permission.INTERNET"],
+            ", ".join(declared),
+        )
+        continue
     for permission in FORBIDDEN_PERMISSIONS:
         check(
             f"manifest {rel} has no {permission}",

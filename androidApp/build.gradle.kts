@@ -33,6 +33,8 @@ android {
         targetSdk = 36
         versionCode = appVersionCode
         versionName = appVersionName
+        // 语音模型与 onnxruntime 体积大，仅发布 arm64-v8a（2019 年后的设备全覆盖）。
+        ndk { abiFilters += "arm64-v8a" }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("boolean", "UPDATE_ENABLED", "false")
     }

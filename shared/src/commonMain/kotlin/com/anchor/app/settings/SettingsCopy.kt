@@ -74,6 +74,22 @@ internal fun settingsNotificationAction(permission: NotificationPermission): Str
     NotificationPermission.Blocked -> "去系统设置打开"
 }
 
+internal const val settingsSpeechTitle = "语音识别"
+internal const val settingsSpeechIntro = "识别只在设备上进行。高精度语音包约 202MB（含标点模型），下载后可随时关回或删除。"
+
+internal fun settingsSpeechMode(enabled: Boolean, ready: Boolean): String = when {
+    enabled && ready -> "高精度（已启用）"
+    ready -> "高精度模型已下载，未启用"
+    else -> "标准"
+}
+
+internal fun settingsSpeechDownloadAction(downloading: Boolean): String =
+    if (downloading) "取消下载" else "下载高精度语音包（202MB）"
+
+internal const val settingsSpeechEnableLabel = "启用高精度语音识别"
+internal const val settingsSpeechDeleteLabel = "删除高精度模型"
+internal const val settingsSpeechPreparing = "高精度引擎准备中…"
+
 internal const val settingsExactAlarmTitle = "准时提醒"
 
 internal fun settingsExactAlarmDetail(granted: Boolean): String = if (granted) {

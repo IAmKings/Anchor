@@ -49,6 +49,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -87,6 +89,7 @@ fun HangSheet(
     onFinalizeSpeech: () -> Unit,
     onDiscardSpeech: (String?) -> Unit,
     onConsumeSpeechResult: () -> Unit,
+    onTranscriptEdited: () -> Unit,
     onCrisisGuidance: () -> Unit = {},
     onClose: () -> Unit,
 ) {
@@ -94,25 +97,32 @@ fun HangSheet(
     var savedMessage by remember { mutableStateOf<String?>(null) }
     var pendingPhrase by remember { mutableStateOf<String?>(null) }
     var pendingAudio by remember { mutableStateOf<String?>(null) }
-    var pureVoicePending by remember { mutableStateOf(false) }
+    var voiceOnlyPending by remember { mutableStateOf(false) }
+    var awaitingTranscriptEdit by remember { mutableStateOf(false) }
     var secondsLeft by remember { mutableStateOf<Int?>(null) }
 
     // 转写结果一次性消费：到达即清空宿主状态（否则每次进入组合都会重新封存同一张录音卡）。
-    // 三种松手结果统一落到「输入框 + 待封存录音」，由用户点封存挂卡、点取消/关闭删除录音：
-    // 纯语音（原地松手/到限）：忽略转写文字，只保留录音；转文字：文字回输入框；纯录音兜底：只有录音。
+    // 默认（原地松手/60 秒到限）：文字（自动标点）+ 录音回填待封存；
+    // 「仅录音」（滑右）：忽略转写文字，只封录音卡；转写为空时自动封纯录音卡（兜底）。
     LaunchedEffect(speechResult) {
         speechResult?.let { final ->
             onConsumeSpeechResult()
-            if (pureVoicePending) {
-                pureVoicePending = false
+            if (voiceOnlyPending) {
+                voiceOnlyPending = false
                 content = ""
+                final.audioFileName?.let { fileName ->
+                    store.addWorryCard("", nowMillis(), nextSessionMillis(), fileName)
+                    savedMessage = vaultSealedMessage(isSessionOpen(), nextSessionLabel())
+                }
+            } else {
+                content = final.text ?: ""
+                pendingAudio = final.audioFileName
+                awaitingTranscriptEdit = content.isNotBlank()
             }
-            content = final.text ?: ""
-            pendingAudio = final.audioFileName
         }
     }
 
-    // 按住说话的 60 秒倒计时：到限按纯语音结算（与松手默认一致）。
+    // 按住说话的 10 分钟倒计时：到限按松手默认（转文字）结算。
     LaunchedEffect(speechRecording) {
         if (speechRecording) {
             for (left in VOICE_HOLD_LIMIT_SECONDS downTo 1) {
@@ -120,8 +130,6 @@ fun HangSheet(
                 delay(1_000)
             }
             secondsLeft = 0
-            content = "" // 到限纯语音结算：清掉上一轮残留
-            pureVoicePending = true
             onFinalizeSpeech()
         } else {
             secondsLeft = null
@@ -240,8 +248,17 @@ fun HangSheet(
                 HangComposer(
                     title = hangSheetTitle,
                     fieldLabel = hangFieldHint,
+                    // 录音中显示完整转写（引擎侧 1 秒节流控制排版开销），光标钉尾跟随最新语音。
                     content = if (speechRecording) (speechPartial ?: "") else content,
-                    onContent = { if (!speechRecording) content = it },
+                    onContent = {
+                        if (!speechRecording) {
+                            if (awaitingTranscriptEdit) {
+                                awaitingTranscriptEdit = false
+                                onTranscriptEdited()
+                            }
+                            content = it
+                        }
+                    },
                     speechRecording = speechRecording,
                     speechTranscribes = speechTranscribes,
                     speechAmplitude = speechAmplitude,
@@ -262,14 +279,15 @@ fun HangSheet(
                                 pendingAudio = null
                                 onConsumeSpeechResult()
                             }
-                            VoiceRelease.Text -> {
-                                content = "" // 清掉上一轮残留，等新文字回填
-                                onFinalizeSpeech()
+                            VoiceRelease.Settle -> {
+                                // 到限自动结算后手指仍按着，松手会产生幽灵结算——只在录音中有效。
+                                if (speechRecording) onFinalizeSpeech()
                             }
-                            VoiceRelease.Voice -> {
-                                content = "" // 纯语音：松手即清，等纯录音卡封存
-                                pureVoicePending = true
-                                onFinalizeSpeech()
+                            VoiceRelease.VoiceOnly -> {
+                                if (speechRecording) {
+                                    voiceOnlyPending = true
+                                    onFinalizeSpeech()
+                                }
                             }
                         }
                     },
@@ -329,15 +347,35 @@ internal fun HangComposer(
                 .background(MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(999.dp)),
         )
         Text(title, Modifier.semantics { heading() }, fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+        // 录音中预览每 0.1 秒更新：光标钉在末尾让视口跟随最新语音；转写回填后光标同样落到末尾；
+        // 用户手动编辑（非录音）时不干扰光标位置。
+        var fieldValue by remember { mutableStateOf(TextFieldValue(content)) }
+        LaunchedEffect(content, speechRecording) {
+            if (speechRecording || fieldValue.text != content) {
+                fieldValue = TextFieldValue(content, TextRange(content.length))
+            }
+        }
         OutlinedTextField(
-            value = content,
-            onValueChange = onContent,
+            value = fieldValue,
+            onValueChange = { newValue ->
+                fieldValue = newValue
+                onContent(newValue.text)
+            },
             label = { Text(fieldLabel) },
             modifier = Modifier.fillMaxWidth().semantics { contentDescription = "挂卡输入" },
             shape = FieldShape,
             minLines = 2,
             maxLines = 4,
         )
+        if (content.isNotEmpty()) {
+            Text(
+                "${content.length} 字",
+                Modifier.fillMaxWidth(),
+                textAlign = TextAlign.End,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 13.sp,
+            )
+        }
         VoiceMemoButton(
             speechRecording = speechRecording,
             speechTranscribes = speechTranscribes,

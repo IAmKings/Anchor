@@ -2,8 +2,8 @@ package com.anchor.app.speech
 
 import kotlin.random.Random
 
-/** 按住说话的时长上限（秒）；引擎另有 10 分钟硬上限兜底。 */
-const val VOICE_HOLD_LIMIT_SECONDS = 60
+/** 按住说话的时长上限（秒，10 分钟）；引擎另有 11 分钟硬上限兜底（≥ UI 上限防竞态截断）。 */
+const val VOICE_HOLD_LIMIT_SECONDS = 600
 
 /**
  * 一次语音输入的最终产物，由平台端侧识别或 sherpa-ncnn 转写产出后一次性交给 UI。

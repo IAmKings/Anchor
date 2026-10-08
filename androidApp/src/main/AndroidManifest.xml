@@ -3,6 +3,9 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 仅用于「我的 → 语音识别」按需下载高精度模型（用户主动发起）。
+         语音识别本身全程离线，应用不做任何其他网络通信。 -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <queries>
         <intent>

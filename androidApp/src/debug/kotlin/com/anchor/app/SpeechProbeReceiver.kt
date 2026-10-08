@@ -3,6 +3,7 @@ package com.anchor.app
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.anchor.app.speech.AndroidOnnxModelManager
 import com.anchor.app.speech.createSpeechEngine
 import com.anchor.app.speech.selectSpeechEngineKind
 import com.anchor.app.speech.AndroidLocalAudioRecorder
@@ -16,7 +17,9 @@ class SpeechProbeReceiver : BroadcastReceiver() {
                 "kind=${selectSpeechEngineKind(
                     apiLevel = Build.VERSION.SDK_INT,
                     onDeviceRecognitionAvailable = onDeviceAvailable(context),
-                    sherpaModelPresent = sherpaPresent(context),
+                    onnxReady = AndroidOnnxModelManager(context).modelReady(),
+                    onnxEnabled = AndroidOnnxModelManager(context).enabled,
+                    ncnnModelPresent = sherpaPresent(context),
                 )},recording=${recorder != null}," +
                     "result=${preferences(context).getString(RESULT, null)}"
             ACTION_RECOGNIZE -> {
