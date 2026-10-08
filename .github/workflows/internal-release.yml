@@ -102,8 +102,9 @@ jobs:
           printf '%s\n' "$STANDARD_BADGING" | grep -q "versionName='${version_name}'"
           printf '%s\n' "$PLAY_BADGING" | grep -q "versionCode='${version_code}'"
           printf '%s\n' "$PLAY_BADGING" | grep -q "versionName='${version_name}'"
-          printf '%s\n' "$STANDARD_BADGING" | grep -q "uses-permission: 'android.permission.USE_EXACT_ALARM'"
-          if printf '%s\n' "$PLAY_BADGING" | grep -q "uses-permission: 'android.permission.USE_EXACT_ALARM'"; then
+          # dump badging 的权限行格式带 name=（与 dump permissions 不同）。
+          printf '%s\n' "$STANDARD_BADGING" | grep -q "uses-permission: name='android.permission.USE_EXACT_ALARM'"
+          if printf '%s\n' "$PLAY_BADGING" | grep -q "uses-permission: name='android.permission.USE_EXACT_ALARM'"; then
             echo "play 渠道包不应包含 USE_EXACT_ALARM"
             exit 1
           fi
