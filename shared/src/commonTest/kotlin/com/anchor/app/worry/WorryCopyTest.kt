@@ -66,6 +66,7 @@ class WorryCopyTest {
         assertEquals("暂时无解", vaultUnsolvableLabel)
         assertEquals("已不再重要", vaultDismissLabel)
         assertEquals("播放本地录音", vaultPlayAudioLabel)
+        assertEquals("停止播放", vaultStopAudioLabel)
         assertEquals("“语音挂卡”", vaultQuotedCard(""))
         assertEquals("“担心汇报”", vaultQuotedCard("担心汇报"))
         assertEquals("明天 20:00 前无需再想。", vaultUnsolvableHint("明天 20:00"))

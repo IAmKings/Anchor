@@ -442,6 +442,8 @@ fun App(
                         externalRevision = worryDataRevision,
                         onHang = { hangSheetVisible = true },
                         audioPlaybackStatus = audioPlaybackStatus,
+                        audioPlaying = audioPlaying,
+                        onStopAudio = onStopWorryAudioPlayback,
                         onPlayAudio = onPlayWorryAudio,
                         onClose = {
                             worryVaultVisible = false
@@ -478,15 +480,6 @@ fun App(
                     }
                 }
                 return@Surface
-            }
-            if (microActionHistoryVisible) {
-                MicroActionHistoryScreen(
-                    store = store,
-                    formatLocalStamp = formatLocalStamp,
-                    onClose = { microActionHistoryVisible = false },
-                )
-                return@Surface
-            }
             if (microActionVisible) {
                 MicroActionScreen(
                     store = store,
@@ -495,6 +488,15 @@ fun App(
                     onCancelTimer = onCancelMicroActionTimer,
                     onOpenHistory = { microActionHistoryVisible = true },
                     onClose = { microActionVisible = false },
+                )
+                return@Surface
+            }
+            }
+            if (microActionHistoryVisible) {
+                MicroActionHistoryScreen(
+                    store = store,
+                    formatLocalStamp = formatLocalStamp,
+                    onClose = { microActionHistoryVisible = false },
                 )
                 return@Surface
             }
