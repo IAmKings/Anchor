@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -55,6 +57,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.onboarding.ClearTextIcon
 import com.anchor.app.safety.CrisisClarificationDialog
 import com.anchor.app.safety.findCrisisPhrase
 import com.anchor.app.speech.SpeechFinal
@@ -366,16 +369,27 @@ internal fun HangComposer(
             shape = FieldShape,
             minLines = 2,
             maxLines = 4,
+            // 一键清空转写文字：只清字、保留音频，封存即得纯录音卡；录音中不可清（展示的是实时转写）。
+            trailingIcon = {
+                if (content.isNotEmpty() && !speechRecording) {
+                    IconButton(onClick = { onContent("") }) {
+                        Icon(
+                            ClearTextIcon,
+                            contentDescription = hangClearTextLabel,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            },
         )
-        if (content.isNotEmpty()) {
-            Text(
-                "${content.length} 字",
-                Modifier.fillMaxWidth(),
-                textAlign = TextAlign.End,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp,
-            )
-        }
+        // 常驻元信息行：避免「N 字」条件渲染造成的浮层高度抖动；删光文字但有音频时提示封存产物是仅录音卡。
+        Text(
+            hangContentMetaLabel(if (content.isBlank()) 0 else content.length, pendingAudio != null),
+            Modifier.fillMaxWidth(),
+            textAlign = TextAlign.End,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 13.sp,
+        )
         VoiceMemoButton(
             speechRecording = speechRecording,
             speechTranscribes = speechTranscribes,

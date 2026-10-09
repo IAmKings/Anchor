@@ -21,6 +21,7 @@ class WorryCopyTest {
         assertEquals("录音已就绪", hangVoiceReadyLabel)
         assertEquals("播放", hangVoiceChipPlayLabel)
         assertEquals("停止", hangVoiceChipStopLabel)
+        assertEquals("清空文字", hangClearTextLabel)
         assertEquals("还能说 9 分 52 秒", countdownText(592))
         assertEquals("还能说 10 分钟", countdownText(600))
         assertEquals("还能说 52 秒", countdownText(52))
@@ -90,6 +91,15 @@ class WorryCopyTest {
         assertEquals("记录于 2 分钟前", worryRecordedLabel(0, 2 * 60_000))
         assertEquals("记录于 3 小时前", worryRecordedLabel(0, 3 * 60 * 60_000))
         assertEquals("记录于 2 天前", worryRecordedLabel(0, 2 * 24 * 60 * 60_000))
+    }
+
+    @Test
+    fun contentMetaRowIsAlwaysPresentAndNamesAudioOnlyOutcome() {
+        assertEquals("0 字", hangContentMetaLabel(length = 0, hasAudio = false))
+        assertEquals("12 字", hangContentMetaLabel(length = 12, hasAudio = false))
+        // 与 seal() 的 trim 语义一致：空白文字视同无字，有待封存音频则明示封存产物；有字以字数为准。
+        assertEquals("仅录音", hangContentMetaLabel(length = 0, hasAudio = true))
+        assertEquals("1 字", hangContentMetaLabel(length = 1, hasAudio = true))
     }
 
     @Test

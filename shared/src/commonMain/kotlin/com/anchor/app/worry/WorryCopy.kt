@@ -15,6 +15,7 @@ internal const val hangVoiceChipPlayLabel = "播放"
 internal const val hangVoiceChipStopLabel = "停止"
 internal const val hangDismissKnown = "知道了"
 internal const val hangDismissCancel = "取消"
+internal const val hangClearTextLabel = "清空文字"
 
 internal const val vaultTitle = "忧虑保险箱"
 internal const val vaultLockedCaption = "念头已经在纸上了"
@@ -49,6 +50,13 @@ internal const val vaultDoneFooter = "受理，而非压抑。"
 
 internal fun vaultQuotedCard(content: String): String =
     if (content.isBlank()) "“$vaultAudioHangLabel”" else "“$content”"
+
+// 输入框下方常驻的元信息行：与 seal() 的 trim 语义一致——空白文字视同无字，有音频则提示封存产物是纯录音卡。
+internal fun hangContentMetaLabel(length: Int, hasAudio: Boolean): String = when {
+    length > 0 -> "$length 字"
+    hasAudio -> hangVoiceTextLabel
+    else -> "0 字"
+}
 
 internal fun vaultUnsolvableHint(nextLabel: String): String = "${nextLabel} 前无需再想。"
 
