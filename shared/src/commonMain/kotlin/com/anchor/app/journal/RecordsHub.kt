@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.onboarding.EmotionLabelIcon
-import com.anchor.app.onboarding.factLogVisible
 import com.anchor.app.onboarding.FactsJournalIcon
 import com.anchor.app.onboarding.WorryVaultIcon
 import com.anchor.app.ui.AnchorIconWell
@@ -53,7 +52,6 @@ fun RecordsHub(
     onHelp: () -> Unit,
     onClose: () -> Unit,
     showEmotion: Boolean = true,
-    showJournal: Boolean = true,
     showWorry: Boolean = true,
     lockNote: String? = null,
 ) {
@@ -100,18 +98,16 @@ fun RecordsHub(
                     onClick = onEmotionCards,
                 )
             }
-            if (factLogVisible(medicalWaiting, showJournal)) {
-                RecordEntryCard(
-                    icon = FactsJournalIcon,
-                    wellColor = MaterialTheme.colorScheme.primaryContainer,
-                    iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    title = recordsJournalTitle,
-                    body = recordsJournalBody(),
-                    countLabel = recordsCountLabel("条", journalCount),
-                    contentDescription = recordsJournalTitle,
-                    onClick = onCameraLog,
-                )
-            }
+            RecordEntryCard(
+                icon = FactsJournalIcon,
+                wellColor = MaterialTheme.colorScheme.primaryContainer,
+                iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
+                title = recordsJournalTitle,
+                body = recordsJournalBody(),
+                countLabel = recordsCountLabel("条", journalCount),
+                contentDescription = recordsJournalTitle,
+                onClick = onCameraLog,
+            )
             if (!medicalWaiting && showWorry) {
                 RecordEntryCard(
                     icon = WorryVaultIcon,

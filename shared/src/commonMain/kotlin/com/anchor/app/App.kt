@@ -677,7 +677,6 @@ fun App(
                     onHelp = { safetyStack = pushSafety(safetyStack, SafetyPlace.Help) },
                     onClose = { recordsHubVisible = false },
                     showEmotion = canPractice(FirstAnchor.EmotionLabel) || store.emotionCards().isNotEmpty(),
-                    showJournal = canPractice(FirstAnchor.FactsJournal),
                     showWorry = canPractice(FirstAnchor.WorryVault),
                     lockNote = oneThingNote,
                 )
