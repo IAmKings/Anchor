@@ -39,12 +39,14 @@ internal const val microActionCustomFieldLabel = "写一个再小一点的动作
 internal const val microActionCustomConfirm = "确认自定义行动"
 internal const val microActionNeedPick = "请先选一个动作。"
 internal const val microActionTimerEnded = "计时已结束。"
-internal const val microActionSwapLabel = "换一个"
 internal const val microActionPredictPrompt = "开始前，你预测它有多难？1 很轻，10 很难。"
 internal const val microActionStartLabel = "开始 5 分钟"
+// 只落库不启动：挂上以后可以从「已挂上的动作」随时再开始。
+internal const val microActionSaveOnlyLabel = "先挂上，以后开始"
 internal const val microActionWaitBody = "不评估想不想。启动 5 分钟。"
+// 时间走完、等记体感时的正文：不再是「启动」，而是坐满的事实。
+internal const val microActionTimeUpBody = "5 分钟坐满了。"
 internal const val microActionFinishTimerLabel = "我已完成"
-internal const val microActionPauseLabel = "暂停 / 退出"
 internal const val microActionRatePrompt = "实际做起来有多难？"
 internal const val microActionSaveFeltLabel = "记下这次体感"
 internal const val microActionResultTitle = "动作完成"

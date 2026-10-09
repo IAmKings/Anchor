@@ -21,6 +21,10 @@ internal fun homeWorryUnlockLine(sessionOpen: Boolean, nextLabel: String): Strin
 internal fun homeMicroActionTitle(running: Boolean): String =
     if (running) "微行动 · 进行中" else "微行动"
 
+// 计时已走完但还没记体感：与「进行中」区分，避免首页卡停在 00:00 的死状态。
+internal const val homeMicroActionTimeUpTitle = "微行动 · 时间到"
+internal const val homeMicroActionTimeUpLabel = "记下这次体感"
+
 internal fun homeMicroActionBody(title: String?): String =
     title ?: "选一个低到无需说服自己的动作"
 

@@ -480,6 +480,17 @@ fun App(
                     }
                 }
                 return@Surface
+            }
+            // 历史分支须在微行动分支之前：从微行动页内打开历史时 microActionVisible 仍为 true，
+            // 若被微行动分支先匹配，历史页永远渲染不出来。
+            if (microActionHistoryVisible) {
+                MicroActionHistoryScreen(
+                    store = store,
+                    formatLocalStamp = formatLocalStamp,
+                    onClose = { microActionHistoryVisible = false },
+                )
+                return@Surface
+            }
             if (microActionVisible) {
                 MicroActionScreen(
                     store = store,
@@ -488,15 +499,6 @@ fun App(
                     onCancelTimer = onCancelMicroActionTimer,
                     onOpenHistory = { microActionHistoryVisible = true },
                     onClose = { microActionVisible = false },
-                )
-                return@Surface
-            }
-            }
-            if (microActionHistoryVisible) {
-                MicroActionHistoryScreen(
-                    store = store,
-                    formatLocalStamp = formatLocalStamp,
-                    onClose = { microActionHistoryVisible = false },
                 )
                 return@Surface
             }

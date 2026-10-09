@@ -67,13 +67,16 @@ fun MicroActionScreen(
     var actual by remember { mutableIntStateOf(5) }
     var custom by remember { mutableStateOf("") }
     var selectedId by remember { mutableStateOf<Long?>(null) }
+    // 延迟落库：新选的动作只先记住标题，点「开始 5 分钟」才写库；预测页放弃不残留任何记录。
+    var pendingTitle by remember { mutableStateOf<String?>(null) }
     var justCompletedId by remember { mutableStateOf<Long?>(null) }
-    var tick by remember { mutableStateOf(0L) }
+    // tick 存纪元毫秒，供组合期读取订阅每秒重组；帧时钟只做节拍，不直接当时间用（frame 是开机起算的毫秒）。
+    var tick by remember { mutableStateOf(nowMillis()) }
     val actions = remember(revision) { store.microActions() }
     val active = actions.firstOrNull { it.startedAtMillis != null && it.completedAtMillis == null }
-    val ready = actions.filter { it.startedAtMillis == null }
+    // 展示层按标题去重：修复前的重复挂卡不再成排出现（数据保留，不再新增重复）。
+    val ready = actions.filter { it.startedAtMillis == null }.distinctBy { it.title }
     val completed = actions.filter { it.completedAtMillis != null }
-    val selected = actions.firstOrNull { it.id == selectedId } ?: ready.firstOrNull()
     val finished = actions.firstOrNull { it.id == justCompletedId }
     var step by remember {
         mutableStateOf(
@@ -85,13 +88,31 @@ fun MicroActionScreen(
     }
 
     LaunchedEffect(active?.id) {
-        while (active != null) {
-            withFrameMillis { frame -> if (frame - tick >= 1_000) tick = frame }
+        var lastFrame = 0L
+        while (true) {
+            withFrameMillis { frame ->
+                if (frame - lastFrame >= 1_000) {
+                    lastFrame = frame
+                    tick = nowMillis()
+                }
+            }
         }
     }
 
+    // 层级返回：预测页退回选卡列表（换一个），其余步骤退出到首页。
+    val backLabel = if (step == ActionStep.Predict) "换一个" else "返回"
     AnchorBackBar(
-        onBack = onClose,
+        onBack = when (step) {
+            ActionStep.Predict -> {
+                {
+                    selectedId = null
+                    pendingTitle = null
+                    step = ActionStep.Pick
+                }
+            }
+            else -> onClose
+        },
+        label = backLabel,
         title = if (step == ActionStep.Pick) microActionTitle else null,
     ) {
         Column(
@@ -108,38 +129,75 @@ fun MicroActionScreen(
                     hasHistory = completed.isNotEmpty(),
                     custom = custom,
                     onCustom = { custom = it },
-                    onPickExisting = { selectedId = it; step = ActionStep.Predict },
+                    onPickExisting = { id ->
+                        selectedId = id
+                        pendingTitle = null
+                        step = ActionStep.Predict
+                    },
                     onPickPreset = { title ->
-                        store.addMicroAction(title, nowMillis())
-                        revision++
-                        selectedId = store.microActions().firstOrNull { it.title == title && it.startedAtMillis == null }?.id
+                        // 同名未开始动作只选一张，不新增；新标题仅暂存，启动时才落库。
+                        val existing = store.microActions().firstOrNull {
+                            it.title == title && it.startedAtMillis == null && it.completedAtMillis == null
+                        }
+                        if (existing == null) {
+                            selectedId = null
+                            pendingTitle = title
+                        } else {
+                            selectedId = existing.id
+                            pendingTitle = null
+                        }
                         custom = ""
                         step = ActionStep.Predict
                     },
                     onOpenHistory = onOpenHistory,
                 )
-                ActionStep.Predict -> selected?.let { action ->
-                    PredictStep(
-                        title = action.title,
-                        predicted = predicted,
-                        onPredicted = { predicted = it },
-                        onStart = {
-                            store.startMicroAction(action.id, predicted, nowMillis())
-                            onStartTimer(MICRO_ACTION_MILLIS)
-                            revision++
-                            step = ActionStep.Run
-                        },
-                        onBack = { step = ActionStep.Pick },
-                    )
-                } ?: Text(microActionNeedPick)
+                ActionStep.Predict -> {
+                    val chosen = actions.firstOrNull { it.id == selectedId }
+                    val title = chosen?.title ?: pendingTitle
+                    if (title == null) {
+                        Text(microActionNeedPick)
+                    } else {
+                        PredictStep(
+                            title = title,
+                            predicted = predicted,
+                            onPredicted = { predicted = it },
+                            onStart = {
+                                val id = chosen?.id ?: run {
+                                    store.addMicroAction(title, nowMillis())
+                                    store.microActions()
+                                        .firstOrNull { it.title == title && it.startedAtMillis == null }?.id
+                                }
+                                if (id != null) {
+                                    store.startMicroAction(id, predicted, nowMillis())
+                                    onStartTimer(MICRO_ACTION_MILLIS)
+                                    pendingTitle = null
+                                    revision++
+                                    step = ActionStep.Run
+                                }
+                            },
+                            // 新动作独有：只落库不启动，回选卡列表；已有动作本就在库里，不显示。
+                            onSaveOnly = if (chosen == null) {
+                                {
+                                    store.addMicroAction(title, nowMillis())
+                                    pendingTitle = null
+                                    selectedId = null
+                                    revision++
+                                    step = ActionStep.Pick
+                                }
+                            } else {
+                                null
+                            },
+                        )
+                    }
+                }
                 ActionStep.Run -> active?.let { action ->
-                    val remaining = (action.startedAtMillis!! + MICRO_ACTION_MILLIS - nowMillis()).coerceAtLeast(0)
+                    // 读取 tick 订阅每秒重组，圆环与倒计时数字才会走动；只用 nowMillis() 会在重组间隙冻结。
+                    val remaining = (action.startedAtMillis!! + MICRO_ACTION_MILLIS - tick).coerceAtLeast(0)
                     RunStep(
                         title = action.title,
                         predicted = action.predictedDifficulty,
                         remainingMillis = remaining,
                         onFinish = { step = ActionStep.Rate },
-                        onLeave = onClose,
                     )
                 } ?: Text(microActionTimerEnded)
                 ActionStep.Rate -> (active ?: finished)?.let { action ->
@@ -222,9 +280,8 @@ private fun PredictStep(
     predicted: Int,
     onPredicted: (Int) -> Unit,
     onStart: () -> Unit,
-    onBack: () -> Unit,
+    onSaveOnly: (() -> Unit)?,
 ) {
-    TextButton(onClick = onBack) { Text(microActionSwapLabel) }
     Text(title, Modifier.semantics { heading() }, fontSize = 22.sp, fontWeight = FontWeight.SemiBold)
     Text(microActionPredictPrompt, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp)
     ScoreRow(predicted, onPredicted)
@@ -235,6 +292,15 @@ private fun PredictStep(
     ) {
         Text(microActionStartLabel, fontSize = 17.sp)
     }
+    if (onSaveOnly != null) {
+        OutlinedButton(
+            onClick = onSaveOnly,
+            modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
+            shape = RoundedCornerShape(12.dp),
+        ) {
+            Text(microActionSaveOnlyLabel, fontSize = 17.sp)
+        }
+    }
 }
 
 @Composable
@@ -243,7 +309,6 @@ private fun RunStep(
     predicted: Int?,
     remainingMillis: Long,
     onFinish: () -> Unit,
-    onLeave: () -> Unit,
 ) {
     predicted?.let {
         Surface(color = MaterialTheme.colorScheme.surfaceVariant, shape = RoundedCornerShape(999.dp)) {
@@ -276,15 +341,22 @@ private fun RunStep(
             )
         }
     }
-    Text(microActionWaitBody, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-    Button(
-        onClick = onFinish,
-        modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
-        shape = RoundedCornerShape(12.dp),
-    ) {
-        Text(microActionFinishTimerLabel, fontSize = 17.sp)
+    Text(
+        if (remainingMillis <= 0L) microActionTimeUpBody else microActionWaitBody,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.fillMaxWidth(),
+        textAlign = TextAlign.Center,
+    )
+    // 等待期纯等待：离开用左上「返回」（计时照走）；坐满 5 分钟到 00:00，「我已完成」才出现 → 记体感。
+    if (remainingMillis <= 0L) {
+        Button(
+            onClick = onFinish,
+            modifier = Modifier.fillMaxWidth().heightIn(min = ActionMinHeight),
+            shape = RoundedCornerShape(12.dp),
+        ) {
+            Text(microActionFinishTimerLabel, fontSize = 17.sp)
+        }
     }
-    TextButton(onClick = onLeave, modifier = Modifier.fillMaxWidth()) { Text(microActionPauseLabel) }
 }
 
 @Composable

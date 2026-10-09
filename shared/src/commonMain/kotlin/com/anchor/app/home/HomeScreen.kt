@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -447,10 +445,13 @@ private fun PracticeHome(
     }
     var now by remember { mutableStateOf(nowMillis()) }
     LaunchedEffect(active?.id) {
+        // 只在剩余时间里逐帧走钟；时间到后停更，避免 00:00 死状态无限重组。
         if (active != null) {
-            while (true) {
+            val started = active.startedAtMillis ?: return@LaunchedEffect
+            while (now - started < FIVE_MINUTES) {
                 withFrameMillis { now = nowMillis() }
             }
+            now = nowMillis()
         }
     }
     val remaining = active?.startedAtMillis?.let { started ->
@@ -557,21 +558,28 @@ private fun PracticeHome(
                     if (toolLock && lockNote != null) {
                         OneThingLockLine(lockNote, onDismissLockPreview)
                     }
+                    // 各自贴合内容高度、顶部对齐：微行动卡因倒计时变长时，忧虑保险箱卡不该被拉高。
                     Row(
-                    Modifier.fillMaxWidth().height(IntrinsicSize.Min),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
                     if (showMicroAction) {
+                        val timeUp = remaining != null && remaining <= 0L
                         MicroActionBentoCard(
                             modifier = Modifier.weight(1f),
                             body = homeMicroActionBody(featured?.title),
-                            running = remaining != null,
-                            countdown = remaining?.let(::formatCountdown),
-                            actionLabel = homeMicroActionActionLabel(
-                                hasTitle = featured?.title != null,
-                                running = remaining != null,
-                                completed = featured?.completedAtMillis != null && remaining == null,
-                            ),
+                            running = remaining != null && !timeUp,
+                            timeUp = timeUp,
+                            countdown = if (timeUp) null else remaining?.let(::formatCountdown),
+                            actionLabel = if (timeUp) {
+                                homeMicroActionTimeUpLabel
+                            } else {
+                                homeMicroActionActionLabel(
+                                    hasTitle = featured?.title != null,
+                                    running = remaining != null,
+                                    completed = featured?.completedAtMillis != null && remaining == null,
+                                )
+                            },
                             onClick = onMicroAction,
                         )
                     }
@@ -999,6 +1007,7 @@ private fun MicroActionBentoCard(
     modifier: Modifier,
     body: String,
     running: Boolean,
+    timeUp: Boolean,
     countdown: String?,
     actionLabel: String,
     onClick: () -> Unit,
@@ -1008,12 +1017,16 @@ private fun MicroActionBentoCard(
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
         border = cardBorder(),
-        modifier = modifier.fillMaxHeight().semantics {
-            contentDescription = if (running) homeMicroActionTitle(true) else body
+        modifier = modifier.semantics {
+            contentDescription = when {
+                running -> homeMicroActionTitle(true)
+                timeUp -> homeMicroActionTimeUpTitle
+                else -> body
+            }
         },
     ) {
         Column(
-            Modifier.fillMaxHeight().padding(20.dp),
+            Modifier.padding(20.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -1022,9 +1035,9 @@ private fun MicroActionBentoCard(
                     MaterialTheme.colorScheme.tertiaryContainer,
                     tint = MaterialTheme.colorScheme.onTertiaryContainer,
                 )
-                if (running) {
+                if (running || timeUp) {
                     Text(
-                        homeMicroActionTitle(true),
+                        if (running) homeMicroActionTitle(true) else homeMicroActionTimeUpTitle,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp,
                     )
@@ -1073,10 +1086,10 @@ private fun WorryBentoCard(
         color = MaterialTheme.colorScheme.surface,
         shape = CardShape,
         border = cardBorder(),
-        modifier = modifier.fillMaxHeight().semantics { contentDescription = homeWorryLabel },
+        modifier = modifier.semantics { contentDescription = homeWorryLabel },
     ) {
         Column(
-            Modifier.fillMaxHeight().padding(20.dp),
+            Modifier.padding(20.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {

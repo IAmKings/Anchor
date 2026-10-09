@@ -69,6 +69,16 @@ fun MicroActionHistoryScreen(
                 fontSize = 15.sp,
                 lineHeight = 24.sp,
             )
+            // 引用句放头部：列表可能很长，压在底部要滑很久才看得到。
+            Text(
+                historyQuotedEvidence(),
+                Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 16.sp,
+                lineHeight = 26.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium,
+            )
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SummaryCard(
                     modifier = Modifier.weight(1f),
@@ -111,15 +121,6 @@ fun MicroActionHistoryScreen(
             } else {
                 Text(historyEmpty, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
             }
-            Text(
-                historyQuotedEvidence(),
-                Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 16.sp,
-                lineHeight = 26.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Medium,
-            )
             Spacer(Modifier.height(24.dp))
         }
     }

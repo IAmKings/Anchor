@@ -24,6 +24,9 @@ class HomeCopyTest {
         assertEquals("开始 5 分钟", homeMicroActionActionLabel(hasTitle = true, running = false, completed = false))
         assertEquals("已记下", homeMicroActionActionLabel(hasTitle = true, running = false, completed = true))
         assertEquals("", homeMicroActionActionLabel(hasTitle = true, running = true, completed = false))
+        // 时间到、等记体感的独立状态：不再显示 00:00 死状态。
+        assertEquals("微行动 · 时间到", homeMicroActionTimeUpTitle)
+        assertEquals("记下这次体感", homeMicroActionTimeUpLabel)
     }
 
     @Test
