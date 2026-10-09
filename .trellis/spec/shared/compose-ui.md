@@ -19,6 +19,7 @@ Theme tokens:
 
 - Primary green `0xFF466552` (light) / `0xFFACCFB8` (dark)
 - Secondary terracotta-equivalent `secondary` / `onSecondary` — use these for help / delete / crisis actions **and** the matching warning text (item 9 note, delete confirmations, step labels)
+- Icon wells use solid M3 tonal pairing: `container` background + `onContainer` icon tint (e.g. `tertiaryContainer` + `onTertiaryContainer`). Do not mix families (container from one role + icon from another) and do not apply alpha to the container — both read as mismatched on light theme (fixed 2026-10 sweep across home cards, records hub, journal, return-to-practice).
 - Background parchment `0xFFFCF9F3` / warm black `0xFF1C1B18`
 
 Do not reintroduce `Color(0xFFB26A4F)` or a local `Terracotta`. Crisis emphasis is `secondary`, not Material `error`.

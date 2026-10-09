@@ -662,10 +662,14 @@ private fun PracticeEntry(
             HomeAddedCard.Relation -> StatusCard(
                 icon = if (relationState.kind == HomeRelationKind.Exhausted) RestIcon else SocialEnergyIcon,
                 wellColor = when (relationState.kind) {
-                    HomeRelationKind.Filled -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f)
-                    HomeRelationKind.Drained -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.45f)
-                    HomeRelationKind.Exhausted -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.35f)
-                    else -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f)
+                    HomeRelationKind.Filled -> MaterialTheme.colorScheme.primaryContainer
+                    HomeRelationKind.Drained -> MaterialTheme.colorScheme.secondaryContainer
+                    HomeRelationKind.Exhausted -> MaterialTheme.colorScheme.secondaryContainer
+                    else -> MaterialTheme.colorScheme.primaryContainer
+                },
+                iconTint = when (relationState.kind) {
+                    HomeRelationKind.Filled -> MaterialTheme.colorScheme.onPrimaryContainer
+                    else -> MaterialTheme.colorScheme.onSecondaryContainer
                 },
                 label = relationEntryLabel(socialOn, altruismOn, relationState),
                 title = relationEntryBody(socialOn, altruismOn, relationState),
@@ -683,7 +687,8 @@ private fun PracticeEntry(
 private fun AnchorEntryCard(anchor: FirstAnchor, onClick: () -> Unit) {
     StatusCard(
         icon = firstAnchorIcon(anchor),
-        wellColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.35f),
+        wellColor = MaterialTheme.colorScheme.primaryContainer,
+        iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
         label = firstAnchorTitle(anchor),
         title = firstAnchorDescription(anchor),
         onClick = onClick,
@@ -980,7 +985,11 @@ private fun RhythmBentoCard(
                     Text(homeRhythmEmptyTitle, fontSize = 17.sp, fontWeight = FontWeight.Medium)
                 }
             }
-            AnchorIconWell(RhythmIcon, MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.55f))
+            AnchorIconWell(
+                RhythmIcon,
+                MaterialTheme.colorScheme.primaryContainer,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
         }
     }
 }
@@ -1010,7 +1019,8 @@ private fun MicroActionBentoCard(
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 AnchorIconWell(
                     MicroActionIcon,
-                    MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f),
+                    MaterialTheme.colorScheme.tertiaryContainer,
+                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
                 )
                 if (running) {
                     Text(
@@ -1070,7 +1080,11 @@ private fun WorryBentoCard(
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                AnchorIconWell(WorryVaultIcon, MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f))
+                AnchorIconWell(
+                    WorryVaultIcon,
+                    MaterialTheme.colorScheme.tertiaryContainer,
+                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                )
                 Text(homeWorryLabel, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 if (count == null) {
                     Text(
@@ -1109,6 +1123,7 @@ private fun WorryBentoCard(
 private fun StatusCard(
     icon: ImageVector,
     wellColor: Color,
+    iconTint: Color,
     label: String,
     title: String? = null,
     trailing: String? = null,
@@ -1128,7 +1143,7 @@ private fun StatusCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            AnchorIconWell(icon, wellColor)
+            AnchorIconWell(icon, wellColor, tint = iconTint)
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 if (title != null) {
@@ -1177,7 +1192,11 @@ private fun ToolRow(icon: ImageVector, title: String, body: String, onClick: () 
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.Top,
         ) {
-            AnchorIconWell(icon, MaterialTheme.colorScheme.surfaceVariant)
+            AnchorIconWell(
+                icon,
+                MaterialTheme.colorScheme.surfaceVariant,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(title, fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
                 Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)

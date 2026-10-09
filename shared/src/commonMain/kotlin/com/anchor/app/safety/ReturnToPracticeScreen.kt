@@ -115,7 +115,12 @@ private fun UnlockCard(icon: ImageVector, title: String, detail: String) {
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
         Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            AnchorIconWell(icon, MaterialTheme.colorScheme.surfaceVariant, size = 48.dp)
+            AnchorIconWell(
+                icon,
+                MaterialTheme.colorScheme.surfaceVariant,
+                size = 48.dp,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                 Text(detail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 20.sp)

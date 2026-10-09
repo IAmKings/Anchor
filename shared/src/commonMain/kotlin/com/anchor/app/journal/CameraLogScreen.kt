@@ -285,7 +285,7 @@ private fun ColumnCard(
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                AnchorIconWell(icon, wellColor)
+                AnchorIconWell(icon, wellColor, tint = MaterialTheme.colorScheme.onPrimaryContainer)
                 Column {
                     Text(title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                     Text(caption, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)

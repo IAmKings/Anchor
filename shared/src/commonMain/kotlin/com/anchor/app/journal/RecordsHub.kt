@@ -91,7 +91,8 @@ fun RecordsHub(
             if (!medicalWaiting && showEmotion) {
                 RecordEntryCard(
                     icon = EmotionLabelIcon,
-                    wellColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.55f),
+                    wellColor = MaterialTheme.colorScheme.secondaryContainer,
+                    iconTint = MaterialTheme.colorScheme.onSecondaryContainer,
                     title = recordsEmotionTitle,
                     body = recordsEmotionBody(),
                     countLabel = recordsCountLabel("张", emotionCount),
@@ -102,7 +103,8 @@ fun RecordsHub(
             if (factLogVisible(medicalWaiting, showJournal)) {
                 RecordEntryCard(
                     icon = FactsJournalIcon,
-                    wellColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
+                    wellColor = MaterialTheme.colorScheme.primaryContainer,
+                    iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
                     title = recordsJournalTitle,
                     body = recordsJournalBody(),
                     countLabel = recordsCountLabel("条", journalCount),
@@ -113,7 +115,8 @@ fun RecordsHub(
             if (!medicalWaiting && showWorry) {
                 RecordEntryCard(
                     icon = WorryVaultIcon,
-                    wellColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.45f),
+                    wellColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    iconTint = MaterialTheme.colorScheme.onTertiaryContainer,
                     title = recordsWorryTitle,
                     body = recordsWorryBody(),
                     countLabel = recordsWorryCountLabel(worryCount),
@@ -130,6 +133,7 @@ fun RecordsHub(
 private fun RecordEntryCard(
     icon: ImageVector,
     wellColor: androidx.compose.ui.graphics.Color,
+    iconTint: androidx.compose.ui.graphics.Color,
     title: String,
     body: String,
     countLabel: String?,
@@ -148,7 +152,7 @@ private fun RecordEntryCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.Top,
         ) {
-            AnchorIconWell(icon, wellColor, size = 48.dp)
+            AnchorIconWell(icon, wellColor, size = 48.dp, tint = iconTint)
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(title, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
                 Text(body, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 15.sp, lineHeight = 24.sp)
