@@ -254,6 +254,9 @@ ORDER BY id DESC;
 clearRhythmEntries:
 DELETE FROM rhythm_entry;
 
+deleteRhythmEntryById:
+DELETE FROM rhythm_entry WHERE id = ?;
+
 restoreAssessment:
 INSERT INTO assessment(completed_at, phq9_answers, gad7_answers, phq9_score, phq9_band, gad7_score, gad7_band, action)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?);

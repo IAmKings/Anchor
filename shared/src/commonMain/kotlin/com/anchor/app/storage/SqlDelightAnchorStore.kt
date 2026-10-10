@@ -182,6 +182,10 @@ internal class SqlDelightAnchorStore(
 
     override fun rhythmEntries(): List<RhythmEntry> = queries.selectRhythmEntries(::RhythmEntry).executeAsList()
 
+    override fun deleteRhythmEntries(ids: Set<Long>) {
+        ids.forEach { queries.deleteRhythmEntryById(it) }
+    }
+
     override fun addRelationContact(name: String, note: String?, createdAtMillis: Long) {
         validateRelationContact(name)
         queries.insertRelationContact(name.trim(), note?.trim()?.ifBlank { null }, createdAtMillis)

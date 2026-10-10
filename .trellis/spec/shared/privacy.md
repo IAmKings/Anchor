@@ -31,7 +31,7 @@ If you need a debug breadcrumb while developing, keep it out of committed `commo
 |---------|------|
 | SQLCipher DB | Keystore-wrapped random key; not a user password |
 | Private M4A worry audio | Local `voice-notes/`; export JSON has `hasAudio` + basename only; bytes live inside the encrypted `.anchor` zip under `audio/` |
-| Encrypted `.anchor` export | User-chosen password, **not** stored; PBKDF2 + AES-GCM; share via read-only FileProvider URI |
+| Encrypted `.anchor` export | User-chosen password, **not** stored; PBKDF2 + AES-GCM; share via read-only FileProvider URI, or save to a user-picked directory through the system folder picker (`CreateDocument`) — user-initiated, no storage permission, app never reads that location |
 | Notifications | Lock-screen text is the app name `锚点` only — no body |
 | App switcher | `FLAG_SECURE` while app lock is enabled |
 | Speech | On-device only; if the recognizer would go online, fall back to private recording and stop on background |

@@ -173,7 +173,9 @@ fun HomeScreen(
     }
     val profile = store.userProfile()
     val canAdd = canAddAnchor || forceUnlocked ||
-        (!forceOneThingLock && additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis()))
+        (profile.onboardingComplete &&
+            !forceOneThingLock &&
+            additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis()))
     val selectedAnchor = profile.firstAnchor ?: if (forceOneThingLock) FirstAnchor.MicroAction else null
     fun showPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, selectedAnchor, addedAnchors.toSet())
     Scaffold(
@@ -956,6 +958,7 @@ private fun RelationBanner(state: HomeRelationPresentation) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun RhythmBentoCard(
     wakeLabel: String,
@@ -978,7 +981,8 @@ private fun RhythmBentoCard(
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(homeRhythmKicker, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 if (recorded) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    // 200% 字体下一行放不下两个时间：FlowRow 让「见光」整块换行，不在时间中间断开。
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         MonoTime("起床", wakeLabel)
                         MonoTime("见光", lightLabel)
                     }

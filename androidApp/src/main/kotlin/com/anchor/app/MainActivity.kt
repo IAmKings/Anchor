@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.anchor.app.reminder.AndroidReminderScheduler
+import com.anchor.app.rhythm.seedRhythmDemoData
 import com.anchor.app.reminder.ReminderKind
 import com.anchor.app.settings.NotificationPermission
 import com.anchor.app.settings.ReminderToggle
@@ -192,6 +193,16 @@ class MainActivity : FragmentActivity() {
             App(
                 anchorStore = anchorStore,
                 debugTools = BuildConfig.DEBUG,
+                onSeedRhythmDemo = {
+                    val before = anchorStore.rhythmEntries().map { it.id }.toSet()
+                    seedRhythmDemoData(anchorStore, System.currentTimeMillis()) { AndroidWorrySessionClock.localMinuteOfDay(it) }
+                    val after = anchorStore.rhythmEntries().map { it.id }.toSet()
+                    saveDemoRhythmIds(after - before)
+                },
+                onClearRhythmDemo = {
+                    anchorStore.deleteRhythmEntries(loadDemoRhythmIds())
+                    clearDemoRhythmIds()
+                },
                 inAppBannerText = inAppBannerText,
                 onDismissInAppBanner = { inAppBannerText = null },
                 appLocked = appLockEnabled && !appUnlocked,
@@ -703,6 +714,24 @@ class MainActivity : FragmentActivity() {
             exportStatus = it.message ?: "无法生成加密导出文件。"
         }
         password.fill('\u0000')
+    }
+
+    private fun saveDemoRhythmIds(ids: Set<Long>) {
+        getSharedPreferences("m0-debug", MODE_PRIVATE)
+            .edit()
+            .putStringSet("rhythm-demo-ids", ids.map(Long::toString).toSet())
+            .apply()
+    }
+
+    private fun loadDemoRhythmIds(): Set<Long> =
+        getSharedPreferences("m0-debug", MODE_PRIVATE)
+            .getStringSet("rhythm-demo-ids", emptySet())
+            .orEmpty()
+            .mapNotNull { it.toLongOrNull() }
+            .toSet()
+
+    private fun clearDemoRhythmIds() {
+        getSharedPreferences("m0-debug", MODE_PRIVATE).edit().remove("rhythm-demo-ids").apply()
     }
 
     private fun copyLastExportTo(uri: Uri) {

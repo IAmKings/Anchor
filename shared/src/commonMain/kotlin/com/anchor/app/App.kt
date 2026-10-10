@@ -80,7 +80,6 @@ import com.anchor.app.action.MicroActionHistoryScreen
 import com.anchor.app.action.MicroActionScreen
 import com.anchor.app.relation.RelationFlow
 import com.anchor.app.rhythm.RhythmScreen
-import com.anchor.app.rhythm.seedRhythmDemoData
 import com.anchor.app.insights.LocalInsightsScreen
 import com.anchor.app.settings.ExportCompleteScreen
 import com.anchor.app.settings.NotificationPermission
@@ -208,6 +207,8 @@ fun App(
     formatLocalStamp: (Long) -> String = { "--" },
     localMinuteOfDay: (Long) -> Int = { 0 },
     debugTools: Boolean = false,
+    onSeedRhythmDemo: () -> Unit = {},
+    onClearRhythmDemo: () -> Unit = {},
     installedVersionName: String = "",
     updateCheckAvailable: Boolean = false,
     updatePhase: UpdatePhase = UpdatePhase.Idle,
@@ -249,7 +250,10 @@ fun App(
     var previewAdded by remember { mutableStateOf(emptyList<FirstAnchor>()) }
     var addAnchorVisible by remember { mutableStateOf(false) }
     val profile = store.userProfile()
+    // 首启未完成时档案可能为空（firstAnchorAtMillis == null 会被误判为已解锁），
+    // 必须以 onboardingComplete 为前提，否则删除数据后未选锚点也能「再加一件」。
     val canAddAnchor = !oneThingLockPreview &&
+        profile.onboardingComplete &&
         (unlockPreview || additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis()))
     val addedAnchors = profile.addedAnchors + if (unlockPreview) previewAdded else emptyList()
     val lockedAnchor = profile.firstAnchor ?: if (oneThingLockPreview) FirstAnchor.MicroAction else null
@@ -637,7 +641,8 @@ fun App(
                             unlockPreview = true
                         },
                         debugSeedVisible = debugTools,
-                        onSeedRhythmDemo = { seedRhythmDemoData(store, nowMillis(), localMinuteOfDay) },
+                        onSeedRhythmDemo = onSeedRhythmDemo,
+                        onClearRhythmDemo = onClearRhythmDemo,
                         onOpenReassessment = { settingsVisible = false; reassessmentVisible = true },
                         installedVersionName = installedVersionName,
                         updateCheckAvailable = updateCheckAvailable,

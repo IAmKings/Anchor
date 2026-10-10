@@ -3,6 +3,8 @@ package com.anchor.app.onboarding
 import com.anchor.app.safety.AssessmentBand
 import com.anchor.app.safety.SafetyAction
 import com.anchor.app.storage.FirstAnchor
+import com.anchor.app.storage.InMemoryAnchorStore
+import com.anchor.app.storage.UserProfile
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -51,6 +53,24 @@ class BaselineAssessmentTest {
         assertEquals(relationAltruismHint, relationFamilyHint(FirstAnchor.AltruisticTask, setOf(FirstAnchor.SocialEnergy)))
         assertEquals(relationInventoryHint, relationFamilyHint(FirstAnchor.SocialEnergy, setOf(FirstAnchor.AltruisticTask)))
         assertEquals(null, relationFamilyHint(FirstAnchor.Rhythm, setOf(FirstAnchor.SocialEnergy, FirstAnchor.AltruisticTask)))
+    }
+
+    @Test
+    fun freshProfileMustNotUnlockAdditionalAnchor() {
+        // 删除全部数据后的空档案：firstAnchorAtMillis == null 不等于已解锁，首启完成是前提。
+        val store = InMemoryAnchorStore()
+        store.clearAllData()
+        store.saveUserProfile(UserProfile())
+        val profile = store.userProfile()
+        assertTrue(profile.firstAnchorAtMillis == null)
+        assertTrue(additionalPracticeUnlocked(profile.firstAnchorAtMillis, 10_000L * 24 * 60 * 60 * 1_000))
+
+        store.saveUserProfile(
+            profile.copy(onboardingComplete = true, firstAnchor = FirstAnchor.Rhythm, firstAnchorAtMillis = 10_000L),
+        )
+        val locked = store.userProfile()
+        assertFalse(additionalPracticeUnlocked(locked.firstAnchorAtMillis, 10_000L + 60_000))
+        assertTrue(additionalPracticeUnlocked(locked.firstAnchorAtMillis, 10_000L + 15L * 24 * 60 * 60 * 1_000))
     }
 
     @Test

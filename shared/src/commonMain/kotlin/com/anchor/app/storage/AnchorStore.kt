@@ -167,6 +167,7 @@ interface AnchorStore {
     fun startMicroAction(id: Long, predictedDifficulty: Int, startedAtMillis: Long)
     fun completeMicroAction(id: Long, actualDifficulty: Int, completedAtMillis: Long)
     fun addRhythmEntry(wakeAtMillis: Long?, lightAtMillis: Long?, createdAtMillis: Long)
+    fun deleteRhythmEntries(ids: Set<Long>)
     fun rhythmEntries(): List<RhythmEntry>
     fun addRelationContact(name: String, note: String?, createdAtMillis: Long)
     fun relationContacts(): List<RelationContact>
@@ -319,6 +320,10 @@ class InMemoryAnchorStore : AnchorStore {
     override fun addRhythmEntry(wakeAtMillis: Long?, lightAtMillis: Long?, createdAtMillis: Long) {
         validateRhythmEntry(wakeAtMillis, lightAtMillis, createdAtMillis)
         rhythmEntries += RhythmEntry(nextRhythmEntryId++, wakeAtMillis, lightAtMillis, createdAtMillis)
+    }
+
+    override fun deleteRhythmEntries(ids: Set<Long>) {
+        rhythmEntries.removeAll { it.id in ids }
     }
 
     override fun rhythmEntries(): List<RhythmEntry> = rhythmEntries.toList().reversed()

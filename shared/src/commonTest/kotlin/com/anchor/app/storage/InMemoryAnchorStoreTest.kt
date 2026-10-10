@@ -59,6 +59,11 @@ class InMemoryAnchorStoreTest {
         assertFailsWith<IllegalArgumentException> { store.addRhythmEntry(null, null, 10_000) }
         store.addRhythmEntry(9_000, null, 10_000)
         assertEquals(9_000, store.rhythmEntries().single().wakeAtMillis)
+        val rhythmId = store.rhythmEntries().single().id
+        store.deleteRhythmEntries(setOf(rhythmId + 1))
+        assertEquals(1, store.rhythmEntries().size)
+        store.deleteRhythmEntries(setOf(rhythmId))
+        assertEquals(0, store.rhythmEntries().size)
         store.addWorryCard("", 7_000, 8_000, "voice.m4a")
         assertEquals("voice.m4a", store.worryCards().first().audioFileName)
         store.dismissWorryCard(store.worryCards().first().id)

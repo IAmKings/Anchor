@@ -144,7 +144,8 @@ internal data class HomeRelationPresentation(
     val cardHint: String? = null,
 )
 
-internal const val homeRelationBannerWindowMillis = 24L * 60 * 60 * 1_000
+// 横幅是「刚才记下了」的即时回执，本质是陪用户尽快走出去：3 分钟后退场，不随新记录无限续期。
+internal const val homeRelationBannerWindowMillis = 3L * 60 * 1_000
 internal const val homeRelationFilledTitle = "刚才记下了回血"
 internal const val homeRelationFilledBody = "这段相处是被充满的。不是得分。"
 internal const val homeRelationDrainedTitle = "刚才记下了抽干"
