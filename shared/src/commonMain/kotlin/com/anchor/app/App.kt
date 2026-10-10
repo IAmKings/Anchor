@@ -338,6 +338,10 @@ fun App(
             }
             if (addAnchorVisible) {
                 FirstAnchorChoice(
+                    alreadyAdded = buildSet {
+                        lockedAnchor?.let(::add)
+                        addAll(addedAnchors)
+                    },
                     options = choosableFirstAnchors.filter { it.anchor in anchorsAvailableToAdd(lockedAnchor, addedAnchors) },
                     headline = addAnchorHeadline,
                     body = addAnchorBody,

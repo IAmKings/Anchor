@@ -81,6 +81,18 @@ internal fun availableDuringOneThingLock(anchor: FirstAnchor): Boolean = when (a
 internal fun practiceVisible(anchor: FirstAnchor, selected: FirstAnchor?, added: Set<FirstAnchor> = emptySet()): Boolean =
     availableDuringOneThingLock(anchor) || selected == null || selected == anchor || anchor in added
 
+// 社交能量与利他任务共用首页的关系卡：另一件已挂上时，选项上说明共用关系与解锁内容，避免「覆盖」误会。
+internal const val relationInventoryHint = "与首页的关系卡共用入口；加上后解锁关系盘点与能量账本。"
+internal const val relationAltruismHint = "与首页的关系卡共用入口；加上后解锁「微小利他」。"
+
+internal fun relationFamilyHint(anchor: FirstAnchor, alreadyAdded: Set<FirstAnchor>): String? = when (anchor) {
+    FirstAnchor.SocialEnergy ->
+        if (FirstAnchor.AltruisticTask in alreadyAdded) relationInventoryHint else null
+    FirstAnchor.AltruisticTask ->
+        if (FirstAnchor.SocialEnergy in alreadyAdded) relationAltruismHint else null
+    else -> null
+}
+
 internal fun anchorsAvailableToAdd(selected: FirstAnchor?, added: Collection<FirstAnchor>): List<FirstAnchor> =
     choosableFirstAnchors.map { it.anchor }.filter { it != selected && it !in added }
 

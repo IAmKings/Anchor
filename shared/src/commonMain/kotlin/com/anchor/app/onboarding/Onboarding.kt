@@ -73,6 +73,7 @@ import androidx.compose.ui.unit.sp
 import com.anchor.app.ui.AnchorAppIcon
 import com.anchor.app.ui.AnchorBackRow
 import com.anchor.app.ui.AnchorGlyph
+import com.anchor.app.ui.AnchorIconWell
 import com.anchor.app.safety.SafetyAction
 import com.anchor.app.safety.SafetyOutcome
 import com.anchor.app.safety.SafetyPolicy
@@ -869,6 +870,7 @@ internal fun FirstAnchorChoice(
     body: String = firstAnchorBody,
     commitHint: String? = firstAnchorCommitHint,
     confirmLabel: String = confirmFirstAnchorLabel,
+    alreadyAdded: Set<FirstAnchor> = emptySet(),
 ) {
     var selected by remember { mutableStateOf<FirstAnchor?>(null) }
     Scaffold(
@@ -928,14 +930,10 @@ internal fun FirstAnchorChoice(
                 val checked = selected == option.anchor
                 Surface(
                     onClick = { selected = option.anchor },
-                    color = if (checked) {
-                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
-                    } else {
-                        MaterialTheme.colorScheme.surface
-                    },
+                    color = MaterialTheme.colorScheme.surface,
                     shape = CardShape,
                     border = BorderStroke(
-                        1.dp,
+                        if (checked) 2.dp else 1.dp,
                         if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f),
                     ),
                     modifier = Modifier.selectable(
@@ -949,28 +947,6 @@ internal fun FirstAnchorChoice(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.Top,
                     ) {
-                        Surface(
-                            color = if (checked) {
-                                MaterialTheme.colorScheme.onPrimaryContainer
-                            } else {
-                                MaterialTheme.colorScheme.surfaceVariant
-                            },
-                            shape = CircleShape,
-                            modifier = Modifier.size(32.dp),
-                        ) {
-                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                Icon(
-                                    imageVector = firstAnchorIcon(option.anchor),
-                                    contentDescription = null,
-                                    tint = if (checked) {
-                                        MaterialTheme.colorScheme.primaryContainer
-                                    } else {
-                                        MaterialTheme.colorScheme.primary
-                                    },
-                                    modifier = Modifier.size(20.dp),
-                                )
-                            }
-                        }
                         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             Text(option.title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                             Text(
@@ -979,7 +955,16 @@ internal fun FirstAnchorChoice(
                                 fontSize = 14.sp,
                                 lineHeight = 20.sp,
                             )
+                            relationFamilyHint(option.anchor, alreadyAdded)?.let {
+                                Text(it, color = MaterialTheme.colorScheme.primary, fontSize = 13.sp, lineHeight = 18.sp)
+                            }
                         }
+                        // 与首页工具卡同一语言：文字在左，圆形图标井在右（container + onContainer 同族配对）。
+                        AnchorIconWell(
+                            firstAnchorIcon(option.anchor),
+                            MaterialTheme.colorScheme.primaryContainer,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
                     }
                 }
             }

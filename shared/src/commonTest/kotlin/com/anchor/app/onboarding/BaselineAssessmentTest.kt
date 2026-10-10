@@ -6,6 +6,7 @@ import com.anchor.app.storage.FirstAnchor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class BaselineAssessmentTest {
@@ -42,6 +43,14 @@ class BaselineAssessmentTest {
         assertFalse(p0FirstAnchors.any { it.title.startsWith("✓") })
         val icons = FirstAnchor.entries.map { firstAnchorIcon(it) }
         assertEquals(FirstAnchor.entries.size, icons.toSet().size)
+    }
+
+    @Test
+    fun relationFamilyHintExplainsSharedCardWhenSiblingAdded() {
+        assertEquals(null, relationFamilyHint(FirstAnchor.AltruisticTask, emptySet()))
+        assertEquals(relationAltruismHint, relationFamilyHint(FirstAnchor.AltruisticTask, setOf(FirstAnchor.SocialEnergy)))
+        assertEquals(relationInventoryHint, relationFamilyHint(FirstAnchor.SocialEnergy, setOf(FirstAnchor.AltruisticTask)))
+        assertEquals(null, relationFamilyHint(FirstAnchor.Rhythm, setOf(FirstAnchor.SocialEnergy, FirstAnchor.AltruisticTask)))
     }
 
     @Test

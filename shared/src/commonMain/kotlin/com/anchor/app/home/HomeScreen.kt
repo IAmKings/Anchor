@@ -669,16 +669,9 @@ private fun PracticeEntry(
             HomeAddedCard.Facts -> AnchorEntryCard(FirstAnchor.FactsJournal, onFacts)
             HomeAddedCard.Relation -> StatusCard(
                 icon = if (relationState.kind == HomeRelationKind.Exhausted) RestIcon else SocialEnergyIcon,
-                wellColor = when (relationState.kind) {
-                    HomeRelationKind.Filled -> MaterialTheme.colorScheme.primaryContainer
-                    HomeRelationKind.Drained -> MaterialTheme.colorScheme.secondaryContainer
-                    HomeRelationKind.Exhausted -> MaterialTheme.colorScheme.secondaryContainer
-                    else -> MaterialTheme.colorScheme.primaryContainer
-                },
-                iconTint = when (relationState.kind) {
-                    HomeRelationKind.Filled -> MaterialTheme.colorScheme.onPrimaryContainer
-                    else -> MaterialTheme.colorScheme.onSecondaryContainer
-                },
+                // 与其他工具卡统一深绿圆底；回血/抽干状态由文案表达，不做颜色警示。
+                wellColor = MaterialTheme.colorScheme.primaryContainer,
+                iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
                 label = relationEntryLabel(socialOn, altruismOn, relationState),
                 title = relationEntryBody(socialOn, altruismOn, relationState),
                 onClick = onRelation,
@@ -1139,8 +1132,6 @@ private fun StatusCard(
     iconTint: Color,
     label: String,
     title: String? = null,
-    trailing: String? = null,
-    actionLabel: String? = null,
     onClick: () -> Unit,
     extra: (@Composable () -> Unit)? = null,
 ) {
@@ -1151,42 +1142,25 @@ private fun StatusCard(
         border = cardBorder(),
         modifier = Modifier.fillMaxWidth(),
     ) {
+        // 与晨间节律卡同一语言：文字在左，圆形图标井在右。
         Row(
-            Modifier.fillMaxWidth().padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            Modifier.fillMaxWidth().padding(20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top,
         ) {
-            AnchorIconWell(icon, wellColor, tint = iconTint)
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                Text(label, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
                 if (title != null) {
-                    Text(title, fontSize = 17.sp, fontWeight = FontWeight.Medium, lineHeight = 24.sp)
+                    Text(
+                        title,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                    )
                 }
                 extra?.invoke()
             }
-            when {
-                !actionLabel.isNullOrBlank() -> {
-                    Surface(
-                        color = Color.Transparent,
-                        shape = RoundedCornerShape(999.dp),
-                        border = cardBorder(),
-                    ) {
-                        Text(
-                            actionLabel,
-                            Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 14.sp,
-                        )
-                    }
-                }
-                trailing != null -> Text(
-                    trailing,
-                    color = if (trailing.contains(':')) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
-                    fontFamily = if (trailing.contains(':')) FontFamily.Monospace else FontFamily.Default,
-                    fontSize = if (trailing.contains(':')) 20.sp else 16.sp,
-                    fontWeight = FontWeight.Medium,
-                )
-            }
+            AnchorIconWell(icon, wellColor, tint = iconTint)
         }
     }
 }
