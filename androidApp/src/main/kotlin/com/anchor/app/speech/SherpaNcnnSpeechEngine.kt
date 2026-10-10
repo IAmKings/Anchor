@@ -1,6 +1,7 @@
 package com.anchor.app.speech
 
 import android.annotation.SuppressLint
+import com.anchor.app.BuildConfig
 import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -63,7 +64,7 @@ class SherpaNcnnSpeechEngine(
         released = false
         sherpaExecutor.execute {
             runCatching { capture(onPartial, onAmplitude, onFinal) }.onFailure { cause ->
-                Log.w(TAG, "sherpa capture 失败：${cause.message}")
+                if (BuildConfig.DEBUG) Log.w(TAG, "sherpa capture 失败：${cause.message}")
                 if (!released) main.post { onError(cause.message ?: "语音转写初始化失败。") }
             }
         }
@@ -118,7 +119,7 @@ class SherpaNcnnSpeechEngine(
             recorder = mediaRecorder
             recorderFile = file
         }.onFailure {
-            Log.w(TAG, "并行录音启动失败（转写不受影响）：${it.message}")
+            if (BuildConfig.DEBUG) Log.w(TAG, "并行录音启动失败（转写不受影响）：${it.message}")
         }
 
         val minBuffer = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
@@ -201,7 +202,7 @@ class SherpaNcnnSpeechEngine(
     }
 
     override fun stop() {
-        Log.d(TAG, "capture: stop() 被调用")
+        if (BuildConfig.DEBUG) Log.d(TAG, "capture: stop() 被调用")
         stopRequested = true
     }
 

@@ -96,6 +96,14 @@ fun WorryVaultScreen(
     var scrollState by remember { mutableStateOf(ScrollState(0)) }
     val cards = remember(revision, externalRevision) { store.worryCards() }
     val pending = cards.filter { it.resolution == WorryResolution.Pending }
+    // 专场开/闭按墙钟判定且组合期无订阅：每分钟对齐一次，让开始/结束在一分钟内翻转。
+    var sessionTick by remember { mutableIntStateOf(0) }
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(60_000L + 1_000L)
+            sessionTick++
+        }
+    }
     val open = isSessionOpen() || forcedOpen
     // 选中卡优先（点击列表直接处理该张），未选中按列表顺序。
     val current = pending.firstOrNull { it.id == selectedCardId } ?: pending.firstOrNull()

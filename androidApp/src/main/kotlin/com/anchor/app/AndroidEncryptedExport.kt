@@ -41,13 +41,19 @@ class AndroidEncryptedExport(
         require(password.size >= 8) { "密码至少需要 8 个字符" }
         val salt = ByteArray(SALT_BYTES).also(random::nextBytes)
         val nonce = ByteArray(NONCE_BYTES).also(random::nextBytes)
-        val plaintext = zip(json, csv, audio)
+        // 子类暴露内部缓冲：加密完成后擦除明文副本（普通 toByteArray 是拷贝，擦不掉原件）。
+        val plaintextBuffer = object : ByteArrayOutputStream() {
+            @Suppress("unused")
+            fun wipe() = buf.fill(0)
+        }
+        val plaintext = zip(json, csv, audio, plaintextBuffer)
         val encrypted = Cipher.getInstance("AES/GCM/NoPadding").run {
             init(Cipher.ENCRYPT_MODE, deriveKey(password, salt), GCMParameterSpec(TAG_BITS, nonce))
             updateAAD(MAGIC)
             doFinal(plaintext)
         }
         plaintext.fill(0)
+        plaintextBuffer.wipe()
 
         val directory = File(context.cacheDir, cacheFolder).apply { mkdirs() }
         directory.listFiles()?.forEach(File::delete)
@@ -90,7 +96,7 @@ class AndroidEncryptedExport(
         }
     }
 
-    private fun zip(json: String, csv: String, audio: Map<String, ByteArray>) = ByteArrayOutputStream().use { bytes ->
+    private fun zip(json: String, csv: String, audio: Map<String, ByteArray>, bytes: ByteArrayOutputStream) = with (bytes) {
         ZipOutputStream(bytes).use { zip ->
             mapOf("anchor.json" to json.toByteArray(), "anchor.csv" to csv.toByteArray()).forEach { (name, value) ->
                 zip.putNextEntry(ZipEntry(name))

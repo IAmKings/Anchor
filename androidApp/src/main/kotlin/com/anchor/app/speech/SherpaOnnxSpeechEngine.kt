@@ -1,6 +1,7 @@
 package com.anchor.app.speech
 
 import android.annotation.SuppressLint
+import com.anchor.app.BuildConfig
 import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioRecord
@@ -46,10 +47,10 @@ object SherpaOnnxRuntime {
                 ensureRecognizer(context)
                 // 标点器随预热一并加载；模型未下载时失败不打断 ASR 预热（标点回落启发式）。
                 runCatching { ensurePunctuator(context) }
-                    .onFailure { Log.w(TAG, "标点器预热失败：${it.message}") }
+                    .onFailure { if (BuildConfig.DEBUG) Log.w(TAG, "标点器预热失败：${it.message}") }
             }
-            result.onFailure { Log.w(TAG, "warmUp 失败：${it::class.simpleName}: ${it.message}") }
-            Log.d(TAG, "warmUp: ok=${result.isSuccess}")
+            result.onFailure { if (BuildConfig.DEBUG) Log.w(TAG, "warmUp 失败：${it::class.simpleName}: ${it.message}") }
+            if (BuildConfig.DEBUG) Log.d(TAG, "warmUp: ok=${result.isSuccess}")
             onDone(result.isSuccess)
         }
     }
@@ -68,7 +69,7 @@ object SherpaOnnxRuntime {
             ),
         ).also {
             punctuator = it
-            Log.d(TAG, "punctuator ready")
+            if (BuildConfig.DEBUG) Log.d(TAG, "punctuator ready")
         }
 
     /** 释放常驻 recognizer（关闭开关 / 低内存时）。 */
@@ -78,7 +79,7 @@ object SherpaOnnxRuntime {
             recognizer = null
             punctuator?.release()
             punctuator = null
-            Log.d(TAG, "warmUp: released")
+            if (BuildConfig.DEBUG) Log.d(TAG, "warmUp: released")
         }
     }
 
@@ -108,7 +109,7 @@ object SherpaOnnxRuntime {
         executor.execute {
             val result = runCatching {
                 ensurePunctuator(context).addPunctuation(text)
-            }.onFailure { Log.w(TAG, "标点推理失败：${it.message}") }
+            }.onFailure { if (BuildConfig.DEBUG) Log.w(TAG, "标点推理失败：${it.message}") }
                 .getOrNull()
             onDone(result)
         }
@@ -174,7 +175,7 @@ class SherpaOnnxSpeechEngine(
         released = false
         SherpaOnnxRuntime.post {
             runCatching { capture(onPartial, onAmplitude, onFinal) }.onFailure { cause ->
-                Log.w(TAG, "onnx capture 失败：${cause.message}")
+                if (BuildConfig.DEBUG) Log.w(TAG, "onnx capture 失败：${cause.message}")
                 if (!released) main.post { onError(cause.message ?: "高精度语音转写初始化失败。") }
             }
         }
@@ -211,7 +212,7 @@ class SherpaOnnxSpeechEngine(
             recorder = mediaRecorder
             recorderFile = file
         }.onFailure {
-            Log.w(TAG, "并行录音启动失败（转写不受影响）：${it.message}")
+            if (BuildConfig.DEBUG) Log.w(TAG, "并行录音启动失败（转写不受影响）：${it.message}")
         }
 
         val minBuffer = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
@@ -306,7 +307,7 @@ class SherpaOnnxSpeechEngine(
     }
 
     override fun stop() {
-        Log.d(TAG, "capture: stop() 被调用")
+        if (BuildConfig.DEBUG) Log.d(TAG, "capture: stop() 被调用")
         stopRequested = true
     }
 

@@ -1,6 +1,7 @@
 package com.anchor.app.speech
 
 import android.content.Context
+import com.anchor.app.BuildConfig
 import android.os.Handler
 import android.os.Looper
 import android.os.StatFs
@@ -134,7 +135,7 @@ class AndroidOnnxModelManager(private val context: Context) {
                 check(modelReady()) { "解压后模型文件不完整。" }
                 // 标点模型失败不阻断转写（回落 L0 启发式），只记日志。
                 runCatching { downloadPunct() }
-                    .onFailure { Log.w(TAG, "标点模型下载失败（转写不受影响）：${it.message}") }
+                    .onFailure { if (BuildConfig.DEBUG) Log.w(TAG, "标点模型下载失败（转写不受影响）：${it.message}") }
                 if (!cancelRequested) {
                     downloading = false
                     progressPercent = 100
@@ -144,7 +145,7 @@ class AndroidOnnxModelManager(private val context: Context) {
                     notifyChanged()
                 }
             } catch (e: Exception) {
-                Log.w(TAG, "模型下载失败：${e.message}")
+                if (BuildConfig.DEBUG) Log.w(TAG, "模型下载失败：${e.message}")
                 downloading = false
                 if (!cancelRequested) fail(e.message ?: "下载失败。")
                 else notifyChanged()
@@ -189,7 +190,7 @@ class AndroidOnnxModelManager(private val context: Context) {
                     return
                 }
             } catch (e: Exception) {
-                Log.w(TAG, "下载源失败 $source：${e.message}")
+                if (BuildConfig.DEBUG) Log.w(TAG, "下载源失败 $source：${e.message}")
                 lastSourceError = e.message
                 archive.delete()
                 finalArchive.delete()

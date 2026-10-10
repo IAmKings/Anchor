@@ -711,6 +711,7 @@ class MainActivity : FragmentActivity() {
         }.onFailure {
             lastExportFile = null
             exportPasswordCopied = false
+            exportPassword = ""
             exportStatus = it.message ?: "无法生成加密导出文件。"
         }
         password.fill('\u0000')
@@ -767,14 +768,18 @@ class MainActivity : FragmentActivity() {
             val decrypted = AndroidEncryptedExport(this).decrypt(temporary, password)
             val restoredNames = decrypted.audio.keys.mapNotNull(::worryAudioExportName).toSet()
             anchorStore.restoreFromJson(decrypted.json, restoredNames)
-            replaceRestoredWorryAudio(this, decrypted.audio)
+            // DB 已替换后才写录音；写盘失败时记录已恢复但音频可能不全，必须让用户知道。
+            runCatching { replaceRestoredWorryAudio(this, decrypted.audio) }
+                .onFailure { throw IllegalStateException("录音写入未完成", it) }
         }.onSuccess {
             exportPassword = ""
             exportStatus = "备份恢复成功。"
             recreate()
         }.onFailure {
+            exportPassword = ""
             exportStatus = when (it) {
                 is javax.crypto.AEADBadTagException -> "密码错误或备份已损坏。"
+                is IllegalStateException -> if (it.message.orEmpty().contains("录音")) "记录已恢复，但部分录音可能未写入，请检查。" else it.message ?: "无法恢复备份。"
                 else -> it.message ?: "无法恢复备份。"
             }
         }
@@ -797,11 +802,15 @@ class MainActivity : FragmentActivity() {
             microActionTimer.cancel()
             AndroidReminderScheduler(this).cancelAll()
             getSystemService(NotificationManager::class.java).cancelAll()
-            anchorStore.clearAllData()
-            check(File(cacheDir, "exports").let { !it.exists() || it.deleteRecursively() }) {
-                "无法删除导出缓存。"
+            // 次要清理尽力而为：失败不中断（缓存残留无碍），绝不能出现"报错但已清空"的状态。
+            runCatching {
+                check(File(cacheDir, "exports").let { !it.exists() || it.deleteRecursively() }) {
+                    "无法删除导出缓存。"
+                }
             }
             biometricLock.enabled = false
+            // 不可逆的清库放最后：只有真正清空成功才会走到重建界面。
+            anchorStore.clearAllData()
         }.onSuccess {
             appLockEnabled = false
             appUnlocked = true

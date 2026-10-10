@@ -76,6 +76,7 @@ import com.anchor.app.relation.homeRelationPreviewNote
 import com.anchor.app.relation.previewHomeRelation
 import com.anchor.app.onboarding.AddIcon
 import com.anchor.app.onboarding.AutoGraphIcon
+import com.anchor.app.onboarding.REASSESSMENT_INTERVAL_MILLIS
 import com.anchor.app.onboarding.ChecklistIcon
 import com.anchor.app.onboarding.FactsJournalFilledIcon
 import com.anchor.app.onboarding.FactsJournalIcon
@@ -117,6 +118,7 @@ import com.anchor.app.wave.waveHomeStatus
 import com.anchor.app.wave.waveHomeStatusMaxMillis
 import com.anchor.app.wave.waveHomeTitle
 import kotlinx.coroutines.delay
+import kotlin.math.min
 
 private val CardShape = RoundedCornerShape(16.dp)
 
@@ -172,10 +174,20 @@ fun HomeScreen(
         }
     }
     val profile = store.userProfile()
+    // 组合期判定读墙钟无订阅：对齐 14 天解锁时刻补一次心跳，跨过边界后 UI 立即翻转。
+    var unlockTick by remember { mutableStateOf(false) }
+    LaunchedEffect(profile.firstAnchorAtMillis) {
+        val at = profile.firstAnchorAtMillis ?: return@LaunchedEffect
+        val deadline = at + REASSESSMENT_INTERVAL_MILLIS
+        while (nowMillis() < deadline) {
+            delay(min(deadline - nowMillis(), 60_000L) + 1_000L)
+        }
+        unlockTick = true
+    }
     val canAdd = canAddAnchor || forceUnlocked ||
         (profile.onboardingComplete &&
             !forceOneThingLock &&
-            additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis()))
+            (unlockTick || additionalPracticeUnlocked(profile.firstAnchorAtMillis, nowMillis())))
     val selectedAnchor = profile.firstAnchor ?: if (forceOneThingLock) FirstAnchor.MicroAction else null
     fun showPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, selectedAnchor, addedAnchors.toSet())
     Scaffold(
