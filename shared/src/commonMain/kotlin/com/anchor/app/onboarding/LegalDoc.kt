@@ -272,6 +272,17 @@ fun LegalDocumentScreen(
                 fontSize = 14.sp,
                 lineHeight = 21.sp,
             )
+            // 网页是权威版本：应用内为随版本发布的快照。放顶部，避免长文翻底才看得到出口。
+            val uriHandler = LocalUriHandler.current
+            TextButton(
+                onClick = {
+                    runCatching {
+                        uriHandler.openUri(if (kind == LegalDocKind.Terms) termsUrl else privacyUrl)
+                    }
+                },
+            ) {
+                Text("在浏览器中查看最新版本", fontSize = 14.sp)
+            }
             sections.forEach { section ->
                 Text(
                     section.heading,
@@ -282,22 +293,6 @@ fun LegalDocumentScreen(
                 section.paragraphs.forEach { paragraph ->
                     Text(paragraph, fontSize = 15.sp, lineHeight = 24.sp)
                 }
-            }
-            Spacer(Modifier.height(16.dp))
-            // 网页是权威版本：应用内为随版本发布的快照，想看最新文本可跳浏览器（用户主动，非 WebView）。
-            val uriHandler = LocalUriHandler.current
-            TextButton(
-                onClick = {
-                    runCatching {
-                        uriHandler.openUri(if (kind == LegalDocKind.Terms) termsUrl else privacyUrl)
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    "在浏览器中查看最新版本",
-                    fontSize = 14.sp,
-                )
             }
             Spacer(Modifier.height(24.dp))
         }
