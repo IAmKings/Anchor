@@ -73,21 +73,21 @@ class AndroidEncryptedExport(
     }
 
     internal fun decrypt(file: File, password: CharArray): DecryptedAnchorExport {
-        val input = DataInputStream(file.inputStream())
-        val magic = ByteArray(MAGIC.size).also(input::readFully)
-        require(magic.contentEquals(MAGIC)) { "不是 Anchor 导出文件" }
-        val iterations = input.readInt()
-        require(iterations in 1..ITERATIONS) { "不支持的加密参数" }
-        val salt = ByteArray(SALT_BYTES).also(input::readFully)
-        val nonce = ByteArray(NONCE_BYTES).also(input::readFully)
-        val encrypted = input.readBytes()
-        input.close()
-        val plaintext = Cipher.getInstance("AES/GCM/NoPadding").run {
-            init(Cipher.DECRYPT_MODE, deriveKey(password, salt, iterations), GCMParameterSpec(TAG_BITS, nonce))
-            updateAAD(MAGIC)
-            doFinal(encrypted)
+        DataInputStream(file.inputStream()).use { input ->
+            val magic = ByteArray(MAGIC.size).also(input::readFully)
+            require(magic.contentEquals(MAGIC)) { "不是 Anchor 导出文件" }
+            val iterations = input.readInt()
+            require(iterations in 1..ITERATIONS) { "不支持的加密参数" }
+            val salt = ByteArray(SALT_BYTES).also(input::readFully)
+            val nonce = ByteArray(NONCE_BYTES).also(input::readFully)
+            val encrypted = input.readBytes()
+            val plaintext = Cipher.getInstance("AES/GCM/NoPadding").run {
+                init(Cipher.DECRYPT_MODE, deriveKey(password, salt, iterations), GCMParameterSpec(TAG_BITS, nonce))
+                updateAAD(MAGIC)
+                doFinal(encrypted)
+            }
+            return unzip(plaintext).also { plaintext.fill(0) }
         }
-        return unzip(plaintext).also { plaintext.fill(0) }
     }
 
     private fun zip(json: String, csv: String, audio: Map<String, ByteArray>) = ByteArrayOutputStream().use { bytes ->

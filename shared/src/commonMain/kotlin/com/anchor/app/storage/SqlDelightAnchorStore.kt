@@ -134,8 +134,9 @@ internal class SqlDelightAnchorStore(
         val audioFileName = queries.selectWorryAudioFileName(id) { it.orEmpty() }
             .executeAsOneOrNull()
             ?.takeIf(String::isNotEmpty)
-        audioFileName?.let(deleteAudioFile)
+        // 先落库再删文件：录音不可再生；DB 更新失败时不能先丢录音，孤儿文件由清空数据兜底。
         queries.dismissWorryCard(id)
+        audioFileName?.let(deleteAudioFile)
     }
 
     override fun resolveWorryAsAction(id: Long, action: String, createdAtMillis: Long) {

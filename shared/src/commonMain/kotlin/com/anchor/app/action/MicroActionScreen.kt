@@ -88,8 +88,12 @@ fun MicroActionScreen(
     }
 
     LaunchedEffect(active?.id) {
+        val started = active?.startedAtMillis
+        if (started == null) return@LaunchedEffect
+        // 节拍只服务倒计时：到点即停，避免非倒计时步骤持续 1Hz 全屏重组。
+        val deadline = started + MICRO_ACTION_MILLIS
         var lastFrame = 0L
-        while (true) {
+        while (tick < deadline) {
             withFrameMillis { frame ->
                 if (frame - lastFrame >= 1_000) {
                     lastFrame = frame
@@ -97,6 +101,7 @@ fun MicroActionScreen(
                 }
             }
         }
+        tick = nowMillis()
     }
 
     // 层级返回：预测页退回选卡列表（换一个），其余步骤退出到首页。

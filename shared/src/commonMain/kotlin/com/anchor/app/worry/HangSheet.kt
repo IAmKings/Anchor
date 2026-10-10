@@ -39,6 +39,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -146,6 +147,9 @@ fun HangSheet(
         pendingAudio = null
         onClose()
     }
+    // 手势回调挂在 pointerInput(Unit) 上只捕获一次；经 rememberUpdatedState 读取最新 close，
+    // 否则录音中拖拽关闭会拿到陈旧的 speechRecording=false，漏掉丢弃逻辑留下幽灵挂卡。
+    val currentClose by rememberUpdatedState { close() }
 
     fun seal() {
         val text = content.trim()
@@ -216,11 +220,11 @@ fun HangSheet(
                         onVerticalDrag = { change, dragAmount ->
                             change.consume()
                             dragY = (dragY + dragAmount).coerceAtLeast(0f)
-                            if (dragY >= hardDismiss) close()
+                            if (dragY >= hardDismiss) currentClose()
                         },
                         onDragEnd = {
                             if (dragY >= dismissThreshold) {
-                                close()
+                                currentClose()
                             } else {
                                 scope.launch {
                                     animate(dragY, 0f, animationSpec = spring()) { value, _ ->

@@ -21,7 +21,7 @@ The `internal` build type is the only exception, and only for a version check. S
 
 `make verify` runs `scripts/verify_privacy.py`, which scans Gradle files, manifests, and Kotlin imports for those coordinates.
 
-If you need a debug breadcrumb while developing, keep it out of committed `commonMain` / `androidMain` product paths. Never log worry text, camera-log facts, PHQ answers, export passwords, or SQLCipher keys.
+If you need a debug breadcrumb while developing, keep it out of committed `commonMain` / `androidMain` product paths. Never log worry text, camera-log facts, PHQ answers, export passwords, or SQLCipher keys. Known, audited exception: the on-device speech engines (`SherpaOnnxSpeechEngine`, `SherpaNcnnSpeechEngine`, `AndroidOnnxModelManager`) use `android.util.Log` for engine diagnostics — exception messages, model URLs, file names only. Never add user content (transcripts, partials, audio paths with recordings) to those calls, and do not extend `Log` usage past the speech engines.
 
 ---
 
@@ -32,6 +32,8 @@ If you need a debug breadcrumb while developing, keep it out of committed `commo
 | SQLCipher DB | Keystore-wrapped random key; not a user password |
 | Private M4A worry audio | Local `voice-notes/`; export JSON has `hasAudio` + basename only; bytes live inside the encrypted `.anchor` zip under `audio/` |
 | Encrypted `.anchor` export | User-chosen password, **not** stored; PBKDF2 + AES-GCM; share via read-only FileProvider URI, or save to a user-picked directory through the system folder picker (`CreateDocument`) — user-initiated, no storage permission, app never reads that location |
+| Export password in clipboard | Auto-copied once on export, flagged `EXTRA_IS_SENSITIVE` on API 33+; never persisted by the app |
+| Worry audio deletion | DB row update first, file delete second — the recording is unrecoverable, so never delete the file before the store commit succeeds |
 | Notifications | Lock-screen text is the app name `锚点` only — no body |
 | App switcher | `FLAG_SECURE` while app lock is enabled |
 | Speech | On-device only; if the recognizer would go online, fall back to private recording and stop on background |
