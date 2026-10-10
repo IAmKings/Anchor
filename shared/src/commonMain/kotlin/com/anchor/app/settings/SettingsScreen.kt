@@ -89,6 +89,8 @@ fun SettingsScreen(
     onPreviewCrisisClarification: () -> Unit = {},
     onPreviewOneThingLock: () -> Unit = {},
     onPreviewUnlock: () -> Unit = {},
+    debugSeedVisible: Boolean = false,
+    onSeedRhythmDemo: () -> Unit = {},
     onOpenReassessment: () -> Unit = {},
     installedVersionName: String = "",
     updateCheckAvailable: Boolean = false,
@@ -326,6 +328,9 @@ fun SettingsScreen(
                 TextButton(onClick = onPreviewCrisisClarification) { Text(settingsPreviewCrisis) }
                 TextButton(onClick = onPreviewOneThingLock) { Text(settingsPreviewLock) }
                 TextButton(onClick = onPreviewUnlock) { Text(settingsPreviewUnlock) }
+                if (debugSeedVisible) {
+                    TextButton(onClick = onSeedRhythmDemo) { Text(settingsSeedRhythmDemo) }
+                }
             }
             Spacer(Modifier.height(16.dp))
         }

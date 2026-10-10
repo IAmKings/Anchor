@@ -32,6 +32,43 @@ internal val interpretationTemplates = listOf(
         factCues = listOf("批评", "被否", "说我", "骂", "指摘"),
         inferenceCues = listOf("整个人", "不专业", "没用", "不行", "否定"),
     ),
+    InterpretationTemplate(
+        label = "出错 = 完蛋",
+        factCues = listOf("出错", "失误", "搞砸", "迟到", "忘了", "搞错", "考砸", "被拒"),
+        inferenceCues = listOf("完蛋", "全完了", "灾难", "毁了", "没救", "不可收拾"),
+    ),
+    InterpretationTemplate(
+        label = "被夸 = 不算数",
+        factCues = listOf("夸", "表扬", "好评", "称赞"),
+        inferenceCues = listOf("客气", "碰巧", "侥幸", "不算", "随口说说"),
+    ),
+    // 过度概括、个人化、非黑即白、应该句式、读心的语言特征几乎都在推断栏，
+    // 事实栏不做限制（factCues 为空 = 仅看推断栏）。
+    InterpretationTemplate(
+        label = "一次 = 总是",
+        factCues = emptyList(),
+        inferenceCues = listOf("总是", "从来", "每次", "永远", "一向", "谁都", "人人都"),
+    ),
+    InterpretationTemplate(
+        label = "别人的反应 = 我的错",
+        factCues = emptyList(),
+        inferenceCues = listOf("我的错", "怪我", "都怪我", "因为我才", "我害"),
+    ),
+    InterpretationTemplate(
+        label = "不完美 = 一无是处",
+        factCues = emptyList(),
+        inferenceCues = listOf("一无是处", "全废", "全错", "不完美就是"),
+    ),
+    InterpretationTemplate(
+        label = "本可以 = 自责",
+        factCues = emptyList(),
+        inferenceCues = listOf("本可以", "本应该", "早知道", "我应该早"),
+    ),
+    InterpretationTemplate(
+        label = "别人 = 在笑话我",
+        factCues = emptyList(),
+        inferenceCues = listOf("笑话我", "议论我", "看不起我", "嘲笑", "背后说"),
+    ),
 )
 
 internal fun CameraLog.hasInference(): Boolean = inference.isNotBlank()

@@ -69,6 +69,63 @@ class LocalInsightsTest {
     }
 
     @Test
+    fun interpretationTemplatesCoverCatastrophizingOvergeneralizationPersonalization() {
+        fun log(index: Long, fact: String, inference: String) = CameraLog(index, fact, inference, false, index)
+        // 自由文本（如反复出现的「测试」）不是模板，永不命中。
+        val free = log(0, "开会", "测试")
+        assertTrue(interpretationTemplates.none { it.matches(free) })
+
+        val usable = buildList {
+            add(log(1, "方案出错被退回", "这回全完了"))
+            add(log(2, "汇报搞砸了", "项目要毁了他的印象也完蛋"))
+            add(log(3, "今天又迟到了一次", "我总是把事情搞成这样"))
+            add(log(4, "忘带钥匙", "每次都这样，从来靠不住"))
+            add(log(5, "会议冷场", "气氛不好都是我的错"))
+            add(log(6, "他没接电话", "都怪我，因为我才不高兴"))
+            repeat(9) { index -> add(log((10 + index).toLong(), "今天开了会", "记录一下")) }
+        }
+        val hits = interpretationHits(usable)
+        assertEquals(3, hits.size, "灾难化/过度概括/个人化三组各命中 2 次")
+        assertTrue(hits.any { it.label == "出错 = 完蛋" && it.count == 2 })
+        assertTrue(hits.any { it.label == "一次 = 总是" && it.count == 2 })
+        assertTrue(hits.any { it.label == "别人的反应 = 我的错" && it.count == 2 })
+        // 填充记录不越线命中
+        assertTrue(hits.all { it.count == 2 })
+    }
+
+    @Test
+    fun interpretationTemplatesCoverDisqualifyingPositiveDichotomousShouldAndMindReading() {
+        fun log(index: Long, fact: String, inference: String) = CameraLog(index, fact, inference, false, index)
+        val usable = buildList {
+            add(log(1, "客户表扬了方案", "他就是客气"))
+            add(log(2, "同事夸我做得快", "碰巧而已，不算本事"))
+            add(log(3, "报告差一个数据", "不完美就是不合格"))
+            add(log(4, "演讲有点结巴", "这次表现全废"))
+            add(log(5, "没提前查路线", "本可以早点准备"))
+            add(log(6, "晚了十分钟", "早知道就该早出门"))
+            add(log(7, "茶水间安静", "他们一定在背后说我"))
+            add(log(8, "群里没人回", "他们在笑话我"))
+            repeat(7) { index -> add(log((20 + index).toLong(), "今天开了会", "记录一下")) }
+        }
+        val hits = interpretationHits(usable)
+        assertEquals(4, hits.size, "贬低正面/非黑即白/应该句式/读心四组各命中 2 次")
+        assertTrue(hits.any { it.label == "被夸 = 不算数" && it.count == 2 })
+        assertTrue(hits.any { it.label == "不完美 = 一无是处" && it.count == 2 })
+        assertTrue(hits.any { it.label == "本可以 = 自责" && it.count == 2 })
+        assertTrue(hits.any { it.label == "别人 = 在笑话我" && it.count == 2 })
+    }
+
+    @Test
+    fun interpretationVocabDialogNamesEveryTemplateAndDisclaimsClassification() {
+        assertEquals("解释词表", interpretationVocabTitle)
+        assertEquals("知道了", interpretationVocabClose)
+        assertTrue(interpretationVocabNote.contains("不会被归类"))
+        assertTrue(interpretationVocabNote.contains("不是诊断").not())
+        // 词表必须与模板一一对应：弹窗列出全部模板，不遗漏也不多列
+        assertEquals(10, interpretationTemplates.size)
+    }
+
+    @Test
     fun screenCopyAvoidsPercentGoalsAndDiagnosis() {
         assertEquals("洞察", insightsTitle)
         assertEquals("看长期，不看某一天", insightsAverageReady)

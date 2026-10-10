@@ -80,6 +80,7 @@ import com.anchor.app.action.MicroActionHistoryScreen
 import com.anchor.app.action.MicroActionScreen
 import com.anchor.app.relation.RelationFlow
 import com.anchor.app.rhythm.RhythmScreen
+import com.anchor.app.rhythm.seedRhythmDemoData
 import com.anchor.app.insights.LocalInsightsScreen
 import com.anchor.app.settings.ExportCompleteScreen
 import com.anchor.app.settings.NotificationPermission
@@ -205,6 +206,7 @@ fun App(
     formatLocalTime: (Long) -> String = { "--:--" },
     formatLocalStamp: (Long) -> String = { "--" },
     localMinuteOfDay: (Long) -> Int = { 0 },
+    debugTools: Boolean = false,
     installedVersionName: String = "",
     updateCheckAvailable: Boolean = false,
     updatePhase: UpdatePhase = UpdatePhase.Idle,
@@ -237,6 +239,8 @@ fun App(
     var settingsVisible by remember { mutableStateOf(false) }
     var safetyStack by remember { mutableStateOf(emptyList<SafetyPlace>()) }
     val homeScroll = rememberScrollState()
+    // 洞察页滚动状态提升：进微行动历史再返回时不丢进度（页面会短暂离开组合）。
+    val insightsScroll = rememberScrollState()
     var homeRelationPreview by remember { mutableStateOf<HomeRelationKind?>(null) }
     var crisisClarificationPreviewVisible by remember { mutableStateOf(false) }
     var oneThingLockPreview by remember { mutableStateOf(false) }
@@ -512,6 +516,7 @@ fun App(
                     localMinuteOfDay = localMinuteOfDay,
                     onOpenHistory = { microActionHistoryVisible = true },
                     onClose = { insightsVisible = false },
+                    scrollState = insightsScroll,
                 )
                 return@Surface
             }
@@ -625,6 +630,8 @@ fun App(
                             previewAdded = emptyList()
                             unlockPreview = true
                         },
+                        debugSeedVisible = debugTools,
+                        onSeedRhythmDemo = { seedRhythmDemoData(store, nowMillis(), localMinuteOfDay) },
                         onOpenReassessment = { settingsVisible = false; reassessmentVisible = true },
                         installedVersionName = installedVersionName,
                         updateCheckAvailable = updateCheckAvailable,

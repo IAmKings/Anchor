@@ -79,6 +79,9 @@ internal const val interpretationTitle = "反复出现的解释"
 internal const val interpretationNotEnough = "记录还不够"
 internal const val interpretationEmpty = "还没有反复出现的解释"
 internal const val interpretationDetail = "满 15 条带推断的双栏后才回看。只计次数，不是诊断。"
+internal const val interpretationVocabTitle = "解释词表"
+internal const val interpretationVocabNote = "只有上面这几类固定评价词会被计数。你的其他措辞不会被归类，也不会被诊断。"
+internal const val interpretationVocabClose = "知道了"
 
 internal fun interpretationCopy(sampleCount: Int, hits: List<InterpretationHit>): String = when {
     sampleCount < INTERPRETATION_MIN_SAMPLES -> interpretationNotEnough

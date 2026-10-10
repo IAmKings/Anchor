@@ -12,15 +12,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.anchor.app.onboarding.ExclamationIcon
 import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -29,6 +39,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,20 +81,22 @@ fun LocalInsightsScreen(
     localMinuteOfDay: (Long) -> Int,
     onOpenHistory: () -> Unit = {},
     onClose: () -> Unit,
+    scrollState: ScrollState,
 ) {
     val rhythmEntries = store.rhythmEntries()
     val actions = store.microActions()
-    val pairs = predictionPairs(actions)
+    val pairs = predictionPairs(actions.sortedByDescending { it.completedAtMillis ?: 0L })
     val wakeMinutes = wakeMinutesOldestFirst(rhythmEntries, localMinuteOfDay)
     val stability = wakeStabilityMinutes(rhythmEntries, localMinuteOfDay)
     val predictionBias = averagePredictionBias(actions)
     val averages = movingAverage(wakeMinutes, window = 7)
 
+    var vocabDialogVisible by remember { mutableStateOf(false) }
     AnchorBackBar(onBack = onClose, label = insightsBackLabel, title = insightsTitle) {
         Column(
             Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
@@ -111,7 +125,7 @@ fun LocalInsightsScreen(
                 value = biasCopy(predictionBias),
                 detail = insightsBiasDetail,
             ) {
-                if (pairs.isNotEmpty()) BiasChart(pairs.take(6).reversed())
+                if (pairs.isNotEmpty()) BiasChart(pairs.take(5))
                 OutlinedButton(
                     onClick = onOpenHistory,
                     modifier = Modifier.fillMaxWidth().heightIn(min = InsightsActionMinHeight),
@@ -137,6 +151,15 @@ fun LocalInsightsScreen(
                     title = interpretationTitle,
                     value = interpretationCopy(interpretationSampleCount(logs), hits),
                     detail = interpretationDetail,
+                    titleTrailing = {
+                        IconButton(onClick = { vocabDialogVisible = true }) {
+                            Icon(
+                                ExclamationIcon,
+                                contentDescription = interpretationVocabTitle,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    },
                 ) {
                     hits.forEach { hit ->
                         Text(interpretationHitLine(hit), fontSize = 15.sp, lineHeight = 22.sp)
@@ -185,6 +208,42 @@ fun LocalInsightsScreen(
             Spacer(Modifier.height(16.dp))
         }
     }
+    if (vocabDialogVisible) {
+        AlertDialog(
+            onDismissRequest = { vocabDialogVisible = false },
+            title = {
+                Text(
+                    interpretationVocabTitle,
+                    Modifier.semantics { heading() },
+                    fontWeight = FontWeight.SemiBold,
+                )
+            },
+            text = {
+                Column(
+                    Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    interpretationTemplates.forEach { template ->
+                        Text("· ${template.label}", fontSize = 15.sp, lineHeight = 22.sp)
+                    }
+                    Text(
+                        interpretationVocabNote,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                        lineHeight = 22.sp,
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = { vocabDialogVisible = false },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(interpretationVocabClose)
+                }
+            },
+        )
+    }
 }
 
 @Composable
@@ -192,6 +251,7 @@ private fun InsightCard(
     title: String,
     value: String,
     detail: String,
+    titleTrailing: (@Composable () -> Unit)? = null,
     extra: (@Composable () -> Unit)? = null,
 ) {
     Surface(
@@ -200,7 +260,10 @@ private fun InsightCard(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(title, fontWeight = FontWeight.SemiBold)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(title, Modifier.weight(1f), fontWeight = FontWeight.SemiBold)
+                titleTrailing?.invoke()
+            }
             Text(value, fontSize = 22.sp, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
             extra?.invoke()
             Text(detail, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)

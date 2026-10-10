@@ -182,6 +182,7 @@ class MainActivity : FragmentActivity() {
             SideEffect { applyAnchorSystemBars(window, view, darkBars) }
             App(
                 anchorStore = anchorStore,
+                debugTools = BuildConfig.DEBUG,
                 inAppBannerText = inAppBannerText,
                 onDismissInAppBanner = { inAppBannerText = null },
                 appLocked = appLockEnabled && !appUnlocked,
