@@ -325,11 +325,15 @@ fun SettingsScreen(
                 TextButton(onClick = onOpenHelp, modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight)) {
                     Text(settingsHelpLink, fontSize = 17.sp)
                 }
-                TextButton(onClick = onOpenTerms, modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight)) {
-                    Text(termsTitle, fontSize = 17.sp)
-                }
-                TextButton(onClick = onOpenPrivacy, modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight)) {
-                    Text(privacyTitle, fontSize = 17.sp)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    TextButton(
+                        onClick = onOpenTerms,
+                        modifier = Modifier.weight(1f).heightIn(min = SettingsActionMinHeight),
+                    ) { Text(termsTitle, fontSize = 17.sp) }
+                    TextButton(
+                        onClick = onOpenPrivacy,
+                        modifier = Modifier.weight(1f).heightIn(min = SettingsActionMinHeight),
+                    ) { Text(privacyTitle, fontSize = 17.sp) }
                 }
                 TextButton(onClick = onOpenReassessment, modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight)) {
                     Text(settingsReassessmentLink, fontSize = 17.sp)

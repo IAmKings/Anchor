@@ -11,8 +11,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -282,14 +284,21 @@ fun LegalDocumentScreen(
                 }
             }
             Spacer(Modifier.height(16.dp))
-            Text(
-                "最新版本以 anchor-legal.125457.xyz 上的公开网页为准。",
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp,
-                lineHeight = 20.sp,
-                textAlign = TextAlign.Center,
+            // 网页是权威版本：应用内为随版本发布的快照，想看最新文本可跳浏览器（用户主动，非 WebView）。
+            val uriHandler = LocalUriHandler.current
+            TextButton(
+                onClick = {
+                    runCatching {
+                        uriHandler.openUri(if (kind == LegalDocKind.Terms) termsUrl else privacyUrl)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(),
-            )
+            ) {
+                Text(
+                    "在浏览器中查看最新版本",
+                    fontSize = 14.sp,
+                )
+            }
             Spacer(Modifier.height(24.dp))
         }
     }
