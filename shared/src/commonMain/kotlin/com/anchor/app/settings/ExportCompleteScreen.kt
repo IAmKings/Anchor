@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -43,6 +44,7 @@ fun ExportCompleteScreen(
     fileName: String?,
     passwordCopied: Boolean,
     onShare: () -> Unit,
+    onSaveToFolder: () -> Unit = {},
     onHome: () -> Unit,
     onBack: () -> Unit,
 ) {
@@ -113,6 +115,13 @@ fun ExportCompleteScreen(
             Spacer(Modifier.height(12.dp))
             Button(onClick = onShare, modifier = Modifier.fillMaxWidth().height(56.dp), shape = PillShape) {
                 Text(exportShareLabel, fontSize = 17.sp)
+            }
+            OutlinedButton(
+                onClick = onSaveToFolder,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
+                shape = PillShape,
+            ) {
+                Text(exportSaveToFolderLabel, fontSize = 17.sp)
             }
             TextButton(onClick = onHome, modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)) {
                 Text(exportHomeLabel, fontSize = 17.sp)

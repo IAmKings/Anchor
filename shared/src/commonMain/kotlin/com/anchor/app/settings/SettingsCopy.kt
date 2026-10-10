@@ -46,6 +46,7 @@ internal const val exportPasswordCopiedBody = "密码已存入剪贴板。为保
 internal const val exportPasswordRememberTitle = "请自行记下密码"
 internal const val exportPasswordRememberBody = "密码没有保存在应用里。分享文件时，请通过其他安全渠道单独发送密码。"
 internal const val exportShareLabel = "点击分享"
+internal const val exportSaveToFolderLabel = "保存到文件夹"
 internal const val exportHomeLabel = "返回主页"
 internal const val settingsBackLabel = "返回"
 internal const val settingsTitle = "我的"

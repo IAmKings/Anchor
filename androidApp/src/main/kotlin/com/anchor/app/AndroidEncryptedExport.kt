@@ -156,7 +156,7 @@ class AndroidEncryptedExport(
         private const val SALT_BYTES = 16
         private const val NONCE_BYTES = 12
         private const val TAG_BITS = 128
-        private const val MIME_TYPE = "application/vnd.anchor.encrypted-export"
+        internal const val MIME_TYPE = "application/vnd.anchor.encrypted-export"
     }
 }
 

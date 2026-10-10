@@ -50,6 +50,13 @@ import com.anchor.app.worry.AndroidWorrySessionClock
 import java.io.File
 
 class MainActivity : FragmentActivity() {
+    // SAF：把最近一次导出的加密文件另存到用户选择的文件夹（sdcard 任意位置），无需存储权限。
+    private val saveExportToFolder = registerForActivityResult(
+        ActivityResultContracts.CreateDocument(AndroidEncryptedExport.MIME_TYPE),
+    ) { uri ->
+        if (uri != null) copyLastExportTo(uri)
+    }
+
     private val importBackup = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri?.let(::restoreEncryptedExport)
     }
@@ -244,6 +251,9 @@ class MainActivity : FragmentActivity() {
                 exportPasswordCopied = exportPasswordCopied,
                 onTestEncryptedExport = { testEncryptedExport() },
                 onShareExport = { shareLastExport() },
+                onSaveExportToFolder = {
+                    saveExportToFolder.launch(lastExportFile?.name ?: "anchor-export.anchor")
+                },
                 onDismissExportComplete = {
                     exportStatus = null
                     exportPasswordCopied = false
@@ -693,6 +703,18 @@ class MainActivity : FragmentActivity() {
             exportStatus = it.message ?: "无法生成加密导出文件。"
         }
         password.fill('\u0000')
+    }
+
+    private fun copyLastExportTo(uri: Uri) {
+        val file = lastExportFile ?: return
+        runCatching {
+            contentResolver.openOutputStream(uri)?.use { out ->
+                file.inputStream().use { input -> input.copyTo(out) }
+            } ?: error("无法写入所选位置")
+            exportStatus = "已生成 ${file.name}；已保存到所选位置。密码未保存，请另行保管。"
+        }.onFailure {
+            exportStatus = it.message ?: "无法保存到所选位置。"
+        }
     }
 
     private fun shareLastExport() {

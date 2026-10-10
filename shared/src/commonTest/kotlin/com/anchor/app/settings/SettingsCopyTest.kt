@@ -28,6 +28,7 @@ class SettingsCopyTest {
         )
         assertEquals("提取密码已复制", exportPasswordCopiedTitle)
         assertEquals("点击分享", exportShareLabel)
+        assertEquals("保存到文件夹", exportSaveToFolderLabel)
         assertEquals("生成加密导出文件", settingsExportAction)
         assertEquals("删除全部本地数据", settingsDeleteAction)
         assertEquals("新备份会带上本地录音。更早的备份恢复后，录音仍会缺失。", settingsAudioNotRestored)

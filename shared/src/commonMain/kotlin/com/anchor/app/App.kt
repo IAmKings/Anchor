@@ -181,6 +181,7 @@ fun App(
     exportPasswordCopied: Boolean = false,
     onTestEncryptedExport: () -> Unit = {},
     onShareExport: () -> Unit = {},
+    onSaveExportToFolder: () -> Unit = {},
     onDismissExportComplete: () -> Unit = {},
     onImportEncryptedExport: () -> Unit = {},
     deleteStatus: String? = null,
@@ -571,6 +572,7 @@ fun App(
                         fileName = exportFileLabel(exportStatus),
                         passwordCopied = exportPasswordCopied,
                         onShare = onShareExport,
+                        onSaveToFolder = onSaveExportToFolder,
                         onHome = {
                             settingsVisible = false
                             onDismissExportComplete()
