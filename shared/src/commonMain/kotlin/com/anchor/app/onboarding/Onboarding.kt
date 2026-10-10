@@ -31,7 +31,6 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
@@ -65,7 +64,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -136,6 +134,7 @@ fun FirstRunAssessment(
     onOpenChecklist: () -> Unit = {},
     onClose: () -> Unit,
     onDial: (String) -> Unit = {},
+    onOpenLegal: (LegalDocKind) -> Unit = {},
 ) {
     var step by remember { mutableStateOf(Step.Welcome) }
     var ageGroup by remember { mutableStateOf<AgeGroup?>(null) }
@@ -192,6 +191,7 @@ fun FirstRunAssessment(
             allowClose = !persist,
             onClose = onClose,
             onStart = { step = Step.Phq9 },
+            onOpenLegal = onOpenLegal,
         )
         Step.Phq9 -> ScaleForm(
             title = "情绪自评 (PHQ-9)",
@@ -249,16 +249,8 @@ private fun Welcome(
     allowClose: Boolean,
     onClose: () -> Unit,
     onStart: () -> Unit,
+    onOpenLegal: (LegalDocKind) -> Unit = {},
 ) {
-    var legal by remember { mutableStateOf<Pair<String, String>?>(null) }
-    val uriHandler = LocalUriHandler.current
-    fun openLegal(url: String, title: String, body: String) {
-        try {
-            uriHandler.openUri(url)
-        } catch (_: IllegalArgumentException) {
-            legal = title to body
-        }
-    }
     Column(Modifier.fillMaxSize()) {
         if (allowClose) {
             AnchorBackRow(onBack = onClose)
@@ -353,7 +345,7 @@ private fun Welcome(
                         LinkAnnotation.Clickable(
                             tag = "terms",
                             styles = linkStyle,
-                            linkInteractionListener = { openLegal(termsUrl, termsTitle, termsBody) },
+                            linkInteractionListener = { onOpenLegal(LegalDocKind.Terms) },
                         ),
                     ) { append(termsTitle) }
                     append(" ")
@@ -363,7 +355,7 @@ private fun Welcome(
                         LinkAnnotation.Clickable(
                             tag = "privacy",
                             styles = linkStyle,
-                            linkInteractionListener = { openLegal(privacyUrl, privacyTitle, privacyBody) },
+                            linkInteractionListener = { onOpenLegal(LegalDocKind.Privacy) },
                         ),
                     ) { append(privacyTitle) }
                 },
@@ -387,14 +379,6 @@ private fun Welcome(
         }
         Spacer(Modifier.height(24.dp))
         }
-    }
-    legal?.let { (title, body) ->
-        AlertDialog(
-            onDismissRequest = { legal = null },
-            confirmButton = { TextButton(onClick = { legal = null }) { Text("知道了") } },
-            title = { Text(title) },
-            text = { Text(body, lineHeight = 22.sp) },
-        )
     }
 }
 

@@ -26,6 +26,8 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.anchor.app.onboarding.privacyTitle
+import com.anchor.app.onboarding.termsTitle
 import com.anchor.app.ui.AnchorBackBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -94,6 +96,8 @@ fun SettingsScreen(
     debugSeedVisible: Boolean = false,
     onSeedRhythmDemo: () -> Unit = {},
     onClearRhythmDemo: () -> Unit = {},
+    onOpenTerms: () -> Unit = {},
+    onOpenPrivacy: () -> Unit = {},
     onOpenReassessment: () -> Unit = {},
     installedVersionName: String = "",
     updateCheckAvailable: Boolean = false,
@@ -320,6 +324,12 @@ fun SettingsScreen(
                 }
                 TextButton(onClick = onOpenHelp, modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight)) {
                     Text(settingsHelpLink, fontSize = 17.sp)
+                }
+                TextButton(onClick = onOpenTerms, modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight)) {
+                    Text(termsTitle, fontSize = 17.sp)
+                }
+                TextButton(onClick = onOpenPrivacy, modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight)) {
+                    Text(privacyTitle, fontSize = 17.sp)
                 }
                 TextButton(onClick = onOpenReassessment, modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight)) {
                     Text(settingsReassessmentLink, fontSize = 17.sp)

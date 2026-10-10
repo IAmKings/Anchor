@@ -36,6 +36,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.onboarding.FirstRunAssessment
+import com.anchor.app.onboarding.LegalDocKind
+import com.anchor.app.onboarding.LegalDocumentScreen
 import com.anchor.app.onboarding.FirstAnchorChoice
 import com.anchor.app.onboarding.addAnchorBody
 import com.anchor.app.onboarding.addAnchorConfirm
@@ -282,6 +284,7 @@ fun App(
     var onboardingVisible by remember(store) {
         mutableStateOf(!store.userProfile().onboardingComplete)
     }
+    var legalDoc by remember { mutableStateOf<LegalDocKind?>(null) }
     var anchorChoiceVisible by remember(store) {
         val profile = store.userProfile()
         mutableStateOf(
@@ -296,6 +299,10 @@ fun App(
                 LockedApp(appLockMessage, onUnlock)
                 return@Surface
             }
+            legalDoc?.let { kind ->
+                LegalDocumentScreen(kind) { legalDoc = null }
+                return@Surface
+            }
             if (onboardingVisible) {
                 FirstRunAssessment(
                     store = store,
@@ -305,6 +312,7 @@ fun App(
                     onOpenChecklist = { onboardingVisible = false; safetyStack = listOf(SafetyPlace.Checklist) },
                     onDial = onDial,
                     onClose = { onboardingVisible = false },
+                    onOpenLegal = { legalDoc = it },
                 )
                 return@Surface
             }
@@ -643,6 +651,8 @@ fun App(
                         debugSeedVisible = debugTools,
                         onSeedRhythmDemo = onSeedRhythmDemo,
                         onClearRhythmDemo = onClearRhythmDemo,
+                        onOpenTerms = { legalDoc = LegalDocKind.Terms },
+                        onOpenPrivacy = { legalDoc = LegalDocKind.Privacy },
                         onOpenReassessment = { settingsVisible = false; reassessmentVisible = true },
                         installedVersionName = installedVersionName,
                         updateCheckAvailable = updateCheckAvailable,

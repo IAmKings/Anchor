@@ -74,6 +74,18 @@ class BaselineAssessmentTest {
     }
 
     @Test
+    fun legalOfflineDocumentsAreComplete() {
+        // 应用内全文快照：章节数与网页一致，每章非空
+        assertEquals(10, termsSections.size)
+        assertEquals(17, privacySections.size)
+        assertTrue(termsSections.all { it.heading.isNotBlank() && it.paragraphs.isNotEmpty() && it.paragraphs.all(String::isNotBlank) })
+        assertTrue(privacySections.all { it.heading.isNotBlank() && it.paragraphs.isNotEmpty() && it.paragraphs.all(String::isNotBlank) })
+        // 短摘要保留（首启勾选行的对话场景仍在文案里）
+        assertTrue(termsBody.contains("不是医疗器械"))
+        assertTrue(privacyBody.contains("不会上传"))
+    }
+
+    @Test
     fun welcomeRequiresAgeAndAgreement() {
         assertFalse(canStartBaseline(ageSelected = false, agreed = false))
         assertFalse(canStartBaseline(ageSelected = true, agreed = false))
