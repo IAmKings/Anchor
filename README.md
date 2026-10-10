@@ -34,10 +34,10 @@
 | **今天**：一次只练一件事，14 天锁定不铺开 | **挂卡**：念头来了速记封存，支持按住说话离线转文字 |
 | ![忧虑保险箱](docs/screenshots/worry-vault.png) | ![微行动](docs/screenshots/micro-action.png) |
 | **忧虑保险箱**：白天封存，20:00 专场统一开箱处理 | **微行动**：预测难度 → 5 分钟 → 实际体感，翻看历史证据 |
-| ![洞察](docs/screenshots/insights.png) | ![记录](docs/screenshots/records.png) |
+| ![洞察](docs/screenshots/insights.png) | ![记录](docs/screenshots/records.jpg) |
 | **洞察**：本地现算的长期趋势，不是得分 | **记录**：情绪、双栏日志、忧虑的统一入口 |
-| ![设置导出](docs/screenshots/settings-export.png) | |
-| **数据管理**：加密导出 / 恢复 / 彻底删除，全部手动 | |
+| ![设置导出](docs/screenshots/settings-export.jpg) | ![帮助](docs/screenshots/help.jpg) |
+| **数据管理**：加密导出 / 恢复 / 彻底删除，全部手动 | **此刻需要帮助**：三步热线与就医指引，立即危险一键拨打 |
 
 完整模块一览：
 
