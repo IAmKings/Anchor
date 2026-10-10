@@ -6,7 +6,7 @@
 
 面向亚临床情绪波动与内耗：用极简动作和事实记录改变输入，而不是说服自己。
 
-当前版本 `0.1.2` · Kotlin Multiplatform · Android 首发
+当前版本 `0.1.3` · Kotlin Multiplatform · Android 首发
 
 </div>
 
