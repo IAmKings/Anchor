@@ -105,7 +105,9 @@ class AndroidReminderScheduler(context: Context) {
     fun cancelMedicalWaitingCare() = disable(ReminderKind.MEDICAL_WAITING)
 
     fun rescheduleAll(nowMillis: Long = System.currentTimeMillis()) {
-        if (preferences.getBoolean(ReminderKind.WORRY_SESSION.enabledKey, false)) {
+        // 忧虑专场提醒默认开启：只要用户没有主动关掉，启动/重启都补挂闹钟，
+        // 避免全新安装后从未碰过开关导致 19:55 提醒永远不装填。
+        if (allows(ReminderKind.WORRY_SESSION)) {
             scheduleWorry(nowMillis)
         }
         ReminderKind.entries

@@ -143,6 +143,8 @@ class MainActivity : FragmentActivity() {
         themePreference = AndroidThemePreference(this)
         themeChoice = themePreference.choice
         syncAnchorNightMode(this, themeChoice)
+        // 每次启动补挂提醒：忧虑专场默认开启（未主动关即装填），其余按既有计划重挂。
+        AndroidReminderScheduler(this).rescheduleAll()
         refreshNotificationPermission()
         audioRecorder = AndroidLocalAudioRecorder(this)
         onnxModelManager = AndroidOnnxModelManager(this)
