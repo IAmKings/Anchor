@@ -4,6 +4,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -91,6 +93,7 @@ fun SettingsScreen(
     onPreviewUnlock: () -> Unit = {},
     debugSeedVisible: Boolean = false,
     onSeedRhythmDemo: () -> Unit = {},
+    onClearRhythmDemo: () -> Unit = {},
     onOpenReassessment: () -> Unit = {},
     installedVersionName: String = "",
     updateCheckAvailable: Boolean = false,
@@ -330,6 +333,7 @@ fun SettingsScreen(
                 TextButton(onClick = onPreviewUnlock) { Text(settingsPreviewUnlock) }
                 if (debugSeedVisible) {
                     TextButton(onClick = onSeedRhythmDemo) { Text(settingsSeedRhythmDemo) }
+                    TextButton(onClick = onClearRhythmDemo) { Text(settingsClearRhythmDemo) }
                 }
             }
             Spacer(Modifier.height(16.dp))
@@ -338,14 +342,18 @@ fun SettingsScreen(
 }
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 private fun ThemeChoiceRow(selected: ThemeChoice, onSelect: (ThemeChoice) -> Unit) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    FlowRow(
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         ThemeChoice.entries.forEach { choice ->
             val chosen = choice == selected
             Surface(
                 onClick = { onSelect(choice) },
                 modifier = Modifier
-                    .weight(1f)
                     .heightIn(min = SettingsActionMinHeight)
                     .semantics {
                         role = Role.RadioButton
@@ -363,7 +371,7 @@ private fun ThemeChoiceRow(selected: ThemeChoice, onSelect: (ThemeChoice) -> Uni
                 ),
             ) {
                 Box(
-                    Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 12.dp),
+                    Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(

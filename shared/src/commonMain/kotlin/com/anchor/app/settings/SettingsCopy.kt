@@ -128,6 +128,7 @@ internal const val settingsPreviewCrisis = "预览危机澄清（不改状态）
 internal const val settingsPreviewLock = "预览一次一件锁定（不改选择）"
 internal const val settingsPreviewUnlock = "预览 14 天已开放（不改选择）"
 internal const val settingsSeedRhythmDemo = "注入 30 天节律演示数据（仅测试包）"
+internal const val settingsClearRhythmDemo = "清除演示节律数据（仅测试包）"
 internal const val unlockPreviewNote = "预览中，不会改选择。"
 
 internal fun isExportSuccess(status: String?): Boolean =
