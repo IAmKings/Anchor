@@ -4,4 +4,8 @@
     <color name="anchor_primary">#A9D5B7</color>
     <color name="anchor_icon_background">#F7F3E9</color>
     <color name="anchor_icon_foreground">#7E9E87</color>
+    <!-- 小组件深色：取自 App.kt AnchorDarkColors -->
+    <color name="anchor_widget_background">#1C1B18</color>
+    <color name="anchor_widget_on_background">#E8E4DC</color>
+    <color name="anchor_widget_primary">#ACCFB8</color>
 </resources>

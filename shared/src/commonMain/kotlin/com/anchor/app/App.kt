@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -211,6 +212,9 @@ fun App(
     debugTools: Boolean = false,
     onSeedRhythmDemo: () -> Unit = {},
     onClearRhythmDemo: () -> Unit = {},
+    // 桌面小组件深链：hang=挂卡浮层，wave=浪潮等待，micro=微行动。空值或未知值忽略。
+    openRequest: String? = null,
+    onConsumedOpenRequest: () -> Unit = {},
     installedVersionName: String = "",
     updateCheckAvailable: Boolean = false,
     updatePhase: UpdatePhase = UpdatePhase.Idle,
@@ -260,6 +264,15 @@ fun App(
     val addedAnchors = profile.addedAnchors + if (unlockPreview) previewAdded else emptyList()
     val lockedAnchor = profile.firstAnchor ?: if (oneThingLockPreview) FirstAnchor.MicroAction else null
     fun canPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, lockedAnchor, addedAnchors.toSet())
+    // 深链消费：与首页按钮同一套 canPractice 守卫（等待期/未添加自然被挡）；应用锁下 App 未组合，请求保留到解锁后。
+    LaunchedEffect(openRequest) {
+        when (openRequest) {
+            "hang" -> if (canPractice(FirstAnchor.WorryVault)) hangSheetVisible = true
+            "wave" -> if (canPractice(FirstAnchor.WaveWaiting)) waveVisible = true
+            "micro" -> if (canPractice(FirstAnchor.MicroAction)) microActionVisible = true
+        }
+        if (openRequest != null) onConsumedOpenRequest()
+    }
     val oneThingNote = lockedAnchor?.takeIf { !canAddAnchor }?.let(::oneThingLockBody)
     fun openCrisisFromText(persistWaiting: Boolean) {
         if (persistWaiting) store.enterCrisisWaiting()

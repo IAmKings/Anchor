@@ -112,3 +112,11 @@ Do not assert pixel layout in commonTest. Device checks stay on Debug installs (
 - New 12sp captions "to fit the mock".
 - Putting PHQ item-9 crisis handling only in UI without `SafetyPolicy`.
 - Using Stitch hope-line `24` as a crisis number.
+
+## Home-screen widget (Android)
+
+The 「锚点 · 快捷」 widget (`AnchorQuickWidgetReceiver` + `layout/anchor_widget_quick.xml`) is a launcher shortcut, not a dashboard. Rules it established:
+
+- Classic `RemoteViews` + XML, no Glance, no new dependencies; `updatePeriodMillis="0"` — the quick widget has nothing to refresh. A future status widget (slice two) refreshes only from `MainActivity.onResume` + `onUpdate`, never a periodic alarm.
+- Receiver is `exported="false"`; tap targets use explicit Intents to `MainActivity` with `FLAG_IMMUTABLE | FLAG_UPDATE_CURRENT` and per-button request codes. MainActivity is `singleTop` and routes the `EXTRA_OPEN` extra (`hang|wave|micro`) through `App(openRequest)` — consumption reuses the same `canPractice` guards as home buttons, so medical-waiting and un-added anchors cannot be deep-linked into practice.
+- Zero user content on the widget surface: no counts, no streaks, no deadlines, no terracotta red. Palette comes from the same values as `App.kt` (`anchor_widget_*` in `values/colors.xml` + `values-night/`); never tint widgets with the launcher-icon colors.

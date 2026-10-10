@@ -95,6 +95,8 @@ class MainActivity : FragmentActivity() {
         deadlineHandler.postDelayed(deadlineTick, delayMillis)
     }
     private var inAppBannerText by mutableStateOf<String?>(null)
+    // 桌面小组件深链：hang=挂卡浮层，wave=浪潮等待，micro=微行动。应用锁未解锁时自然保留到解锁后。
+    private var pendingOpen by mutableStateOf<String?>(null)
     private lateinit var biometricLock: AndroidBiometricLock
     private lateinit var themePreference: AndroidThemePreference
     private var themeChoice by mutableStateOf(ThemeChoice.System)
@@ -153,6 +155,7 @@ class MainActivity : FragmentActivity() {
         syncAnchorNightMode(this, themeChoice)
         // 每次启动补挂提醒：忧虑专场默认开启（未主动关即装填），其余按既有计划重挂。
         AndroidReminderScheduler(this).rescheduleAll()
+        pendingOpen = intent?.getStringExtra(EXTRA_OPEN) ?: pendingOpen
         refreshNotificationPermission()
         audioRecorder = AndroidLocalAudioRecorder(this)
         onnxModelManager = AndroidOnnxModelManager(this)
@@ -205,6 +208,8 @@ class MainActivity : FragmentActivity() {
                 },
                 inAppBannerText = inAppBannerText,
                 onDismissInAppBanner = { inAppBannerText = null },
+                openRequest = pendingOpen,
+                onConsumedOpenRequest = { pendingOpen = null },
                 appLocked = appLockEnabled && !appUnlocked,
                 appLockAvailable = appLockAvailable,
                 appLockEnabled = appLockEnabled,
@@ -370,6 +375,12 @@ class MainActivity : FragmentActivity() {
         anchorStore.assessments().maxOfOrNull { it.completedAtMillis }?.let { lastAt ->
             AndroidReminderScheduler(this).scheduleReassessment(lastAt)
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        intent.getStringExtra(EXTRA_OPEN)?.let { pendingOpen = it }
     }
 
     override fun onStop() {
@@ -858,9 +869,10 @@ class MainActivity : FragmentActivity() {
         applyPrivacyShield(window, appLockEnabled)
     }
 
-    private companion object {
+    companion object {
         const val MICROPHONE_REQUEST_CODE = 7
         const val DATABASE_NAME = "anchor.db"
+        const val EXTRA_OPEN = "com.anchor.app.extra.OPEN"
         const val NOTIFICATION_PREFERENCES = "anchor-notification"
         const val NOTIFICATION_ASKED = "asked"
         const val EXACT_ALARM_PREFERENCES = "anchor-exact-alarm"
