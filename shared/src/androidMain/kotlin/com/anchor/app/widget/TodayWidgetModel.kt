@@ -2,6 +2,8 @@ package com.anchor.app.widget
 
 import com.anchor.app.home.homeMicroActionActionLabel
 import com.anchor.app.home.homeMicroActionTimeUpLabel
+import com.anchor.app.home.homeMicroActionTimeUpTitle
+import com.anchor.app.home.homeMicroActionTitle
 import com.anchor.app.home.homeWorryBody
 import com.anchor.app.onboarding.firstAnchorTitle
 import com.anchor.app.storage.AnchorStore
@@ -41,7 +43,6 @@ fun todayWidgetModel(store: AnchorStore, wallNow: Long, elapsedNow: Long): Today
     // 与首页 featured 同序：进行中优先 → 最新未完成 → 任意第一条
     val featured = active ?: actions.firstOrNull { it.completedAtMillis == null } ?: actions.firstOrNull()
 
-    // 标题用组件短文案（行首图标已表达「微行动」语义，带「微行动 · 」前缀在 2×2 宽度下会换行）。
     val microTitle: String
     val microLabel: String
     var countdownBase: Long? = null
@@ -53,16 +54,16 @@ fun todayWidgetModel(store: AnchorStore, wallNow: Long, elapsedNow: Long): Today
         active != null -> {
             val remaining = (active.startedAtMillis!! + FIVE_MINUTES - wallNow).coerceAtLeast(0)
             if (remaining > 0) {
-                microTitle = "进行中"
+                microTitle = homeMicroActionTitle(running = true)
                 microLabel = ""
                 countdownBase = elapsedNow + remaining
             } else {
-                microTitle = "时间到"
+                microTitle = homeMicroActionTimeUpTitle
                 microLabel = homeMicroActionTimeUpLabel
             }
         }
         else -> {
-            microTitle = "微行动"
+            microTitle = homeMicroActionTitle(running = false)
             microLabel = homeMicroActionActionLabel(
                 hasTitle = featured?.title != null,
                 running = false,
