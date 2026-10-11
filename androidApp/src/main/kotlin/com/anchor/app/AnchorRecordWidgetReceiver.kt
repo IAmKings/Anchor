@@ -28,6 +28,7 @@ class AnchorRecordWidgetReceiver : AppWidgetProvider() {
         val targets = listOf(
             R.id.record_facts to "facts",
             R.id.record_emotion to "emotion",
+            R.id.record_insights to "insights",
         )
         targets.forEachIndexed { index, (viewId, open) ->
             val intent = Intent(launch).putExtra(MainActivity.EXTRA_OPEN, open)

@@ -214,7 +214,7 @@ fun App(
     onSeedRhythmDemo: () -> Unit = {},
     onClearRhythmDemo: () -> Unit = {},
     // 桌面小组件深链：hang=挂卡浮层，wave=浪潮等待，micro=微行动，vault=忧虑保险箱，
-    // facts=双栏日志，emotion=情绪标签箱。守卫按目标语义分级（等待期 facts 明确允许）。
+    // facts=双栏日志，emotion=情绪标签箱，insights=洞察。守卫按目标语义分级（等待期 facts 明确允许）。
     // 空值或未知值忽略。
     openRequest: String? = null,
     onConsumedOpenRequest: () -> Unit = {},
@@ -343,6 +343,11 @@ fun App(
                 ) {
                     closeContentPagesForDeepLink()
                     emotionCardsVisible = true
+                }
+                // 洞察：只读本机统计，无任何门控（等待期亦可用）。
+                "insights" -> {
+                    closeContentPagesForDeepLink()
+                    insightsVisible = true
                 }
             }
         }
