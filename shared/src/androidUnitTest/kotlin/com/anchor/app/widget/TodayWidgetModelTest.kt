@@ -16,6 +16,20 @@ class TodayWidgetModelTest {
     private val fiveMinutes = 5L * 60 * 1_000
 
     @Test
+    fun worryLineIsCountWithAcceptancePhraseOrInvitation() {
+        val store = InMemoryAnchorStore().apply {
+            addWorryCard("一张卡", 1_000, 2_000, null)
+            addWorryCard("另一张", 3_000, 4_000, null)
+        }
+        val withCards = todayWidgetModel(store, wallNow = 10_000, elapsedNow = 10_000)
+        assertEquals("2张卡，都在纸上", withCards.worryLine)
+
+        val empty = InMemoryAnchorStore()
+        val none = todayWidgetModel(empty, wallNow = 10_000, elapsedNow = 10_000)
+        assertEquals("点这里把念头放进去", none.worryLine)
+    }
+
+    @Test
     fun countdownRenderedOnlyOutsideSafetyMargin() {
         val store = storeWithRunningAction(startedAtWall = 60_000)
         // 剩余 10 秒（> 余量 3 秒）：渲染 Chronometer，base = elapsedNow + remaining，并安排 R2 提前刷新
