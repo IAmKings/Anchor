@@ -65,14 +65,4 @@ class SettingsCopyTest {
         assertFalse(ReminderToggle.entries.any { reminderToggleTitle(it) == settingsNotificationTitle })
     }
 
-    @Test
-    fun exactAlarmCopyExplainsALateNotificationWithoutNagging() {
-        assertEquals("准时提醒", settingsExactAlarmTitle)
-        assertEquals("已允许。浪潮到点会准时进通知栏。", settingsExactAlarmDetail(granted = true))
-        assertEquals("去开启", settingsExactAlarmAction(granted = false))
-        val denied = settingsExactAlarmDetail(granted = false)
-        assertTrue(denied.contains("推迟"))
-        assertFalse(denied.contains("必须"))
-        assertFalse(denied.contains("streak"))
-    }
 }

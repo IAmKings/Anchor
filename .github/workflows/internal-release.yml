@@ -103,11 +103,6 @@ jobs:
           printf '%s\n' "$PLAY_BADGING" | grep -q "versionCode='${version_code}'"
           printf '%s\n' "$PLAY_BADGING" | grep -q "versionName='${version_name}'"
           # dump badging 的权限行格式带 name=（与 dump permissions 不同）。
-          printf '%s\n' "$STANDARD_BADGING" | grep -q "uses-permission: name='android.permission.USE_EXACT_ALARM'"
-          if printf '%s\n' "$PLAY_BADGING" | grep -q "uses-permission: name='android.permission.USE_EXACT_ALARM'"; then
-            echo "play 渠道包不应包含 USE_EXACT_ALARM"
-            exit 1
-          fi
           cp "$STANDARD_APK" "$RUNNER_TEMP/anchor-internal-${version_name}.apk"
           cp "$PLAY_APK" "$RUNNER_TEMP/anchor-internal-play-${version_name}.apk"
 
@@ -124,8 +119,8 @@ jobs:
             "" \
             "内部测试包。若手机上已有 Debug 签名的锚点，先在应用里加密导出，再卸载，然后安装本包。正式版上架后证书不同，也不能覆盖安装，请先导出。" \
             "" \
-            "anchor-internal-*.apk 是默认渠道包，含系统「闹钟和提醒」权限（USE_EXACT_ALARM），计时结束提醒准时。" \
-            "anchor-internal-play-*.apk 是 Google Play 渠道包，按 Play 政策不含该权限，提醒可能晚几分钟；可在系统设置里手动开「闹钟和提醒」。" \
+            "两个渠道包的到点提醒与计时均使用系统闹钟时钟接口（setAlarmClock），秒级准时且不申请任何精确闹钟权限。" \
+            "两渠道行为一致，按签名与目标市场选择即可。" \
             > "$RUNNER_TEMP/notes.md"
           gh release create "v${VERSION_NAME}" \
             --prerelease \

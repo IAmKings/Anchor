@@ -42,15 +42,6 @@ internal fun waveLeave(): String = "离开"
 internal fun waveBackToToday(): String = "回到今天"
 internal fun waveNoteEmotion(): String = "顺手记一张情绪卡"
 
-/** Shown once before the first round when exact alarms are not granted. */
-internal fun waveExactAlarmPromptTitle(): String = "想让到点提醒准时吗"
-
-internal fun waveExactAlarmPromptBody(): String =
-    "还没开系统的「闹钟和提醒」。开着的话，练习一到点，提醒就准时进通知栏；不开，手机可能把它推迟几分钟。之后也可以在「我的」里再开。"
-
-internal const val waveExactAlarmPromptAllow = "去开启"
-internal const val waveExactAlarmPromptSkip = "先不用"
-
 internal const val waveHomeTitle = "浪潮等待"
 internal const val waveHomeIdleStatus = "等待中"
 internal const val waveHomeCaption = "难受的时候点这里"
