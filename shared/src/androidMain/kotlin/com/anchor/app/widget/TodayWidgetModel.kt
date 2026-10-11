@@ -22,8 +22,9 @@ data class TodayWidgetModel(
     val anchorTitle: String,
     val microTitle: String,
     val microLabel: String,
-    /** RemoteViews Chronometer 的 base（elapsedRealtime 时基，倒计时模式）；null = 不显示计时。 */
-    val microCountdownBase: Long?,
+    /** 倒计时的分钟级展示文本（如「约 3 分」）；null = 不显示。静态文本 + 自续链闹钟刷新，
+     *  弃用 Chronometer：OEM 策略下精确闹钟可降级为最长 1 小时窗口，Chronometer 过零后无法钳位会显示负数。 */
+    val microCountdownText: String?,
     val worryLine: String,
 )
 
@@ -33,12 +34,7 @@ private const val FIVE_MINUTES = 5L * 60 * 1_000
  * @param microDeadlineElapsed 微行动后台计时器存的 deadline（elapsedRealtime 时基，见
  *   AndroidBackgroundTimer 的 prefs；0 或 null 表示无计时），与 store 的 startedAt 互为印证。
  */
-fun todayWidgetModel(
-    store: AnchorStore,
-    wallNow: Long,
-    elapsedNow: Long,
-    microDeadlineElapsed: Long?,
-): TodayWidgetModel {
+fun todayWidgetModel(store: AnchorStore, wallNow: Long): TodayWidgetModel {
     val profile = store.userProfile()
     val waiting = store.safetyState().mode == SafetyMode.MedicalWaiting
 
@@ -49,7 +45,7 @@ fun todayWidgetModel(
 
     val microTitle: String
     val microLabel: String
-    var countdownBase: Long? = null
+    var countdownText: String? = null
     when {
         waiting -> {
             microTitle = "就医等待期"
@@ -60,12 +56,8 @@ fun todayWidgetModel(
             if (remaining > 0) {
                 microTitle = homeMicroActionTitle(running = true)
                 microLabel = ""
-                // 与 AndroidBackgroundTimer 的 prefs deadline 同为 elapsedRealtime 时基；缺省时由墙钟换算。
-                countdownBase = if (microDeadlineElapsed != null && microDeadlineElapsed > elapsedNow) {
-                    microDeadlineElapsed
-                } else {
-                    elapsedNow + remaining
-                }
+                // 分钟粒度：模型永远按墙钟判定，任何迟到刷新都不会产生负数或低于真实剩余的展示。
+                countdownText = "约 ${remaining / 60_000L + 1} 分"
             } else {
                 microTitle = homeMicroActionTimeUpTitle
                 microLabel = homeMicroActionTimeUpLabel
@@ -92,7 +84,7 @@ fun todayWidgetModel(
         anchorTitle = profile.firstAnchor?.let(::firstAnchorTitle) ?: "锚点",
         microTitle = microTitle,
         microLabel = microLabel,
-        microCountdownBase = countdownBase,
+        microCountdownText = countdownText,
         worryLine = worryLine,
     )
 }
