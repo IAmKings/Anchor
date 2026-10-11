@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anchor.app.onboarding.FirstRunAssessment
+import com.anchor.app.onboarding.factLogVisible
 import com.anchor.app.onboarding.LegalDocKind
 import com.anchor.app.onboarding.LegalDocumentScreen
 import com.anchor.app.onboarding.FirstAnchorChoice
@@ -47,7 +48,6 @@ import com.anchor.app.onboarding.addAnchorHint
 import com.anchor.app.onboarding.additionalPracticeUnlocked
 import com.anchor.app.onboarding.anchorsAvailableToAdd
 import com.anchor.app.onboarding.choosableFirstAnchors
-import com.anchor.app.onboarding.factLogVisible
 import com.anchor.app.onboarding.oneThingLockBody
 import com.anchor.app.onboarding.practiceVisible
 import com.anchor.app.storage.FirstAnchor
@@ -213,7 +213,9 @@ fun App(
     debugTools: Boolean = false,
     onSeedRhythmDemo: () -> Unit = {},
     onClearRhythmDemo: () -> Unit = {},
-    // 桌面小组件深链：hang=挂卡浮层，wave=浪潮等待，micro=微行动，vault=忧虑保险箱。空值或未知值忽略。
+    // 桌面小组件深链：hang=挂卡浮层，wave=浪潮等待，micro=微行动，vault=忧虑保险箱，
+    // facts=双栏日志，emotion=情绪标签箱。守卫按目标语义分级（等待期 facts 明确允许）。
+    // 空值或未知值忽略。
     openRequest: String? = null,
     onConsumedOpenRequest: () -> Unit = {},
     // 本机数据变化（忧虑卡/微行动）后通知宿主刷新桌面小组件。
@@ -329,6 +331,18 @@ fun App(
                 "vault" -> if (!waiting && canPractice(FirstAnchor.WorryVault)) {
                     closeContentPagesForDeepLink()
                     worryVaultVisible = true
+                }
+                // 双栏日志与记录页入口同语义：无条件可达（记录工具，等待期仍可写，P05 起常驻）。
+                "facts" -> {
+                    closeContentPagesForDeepLink()
+                    cameraLogVisible = true
+                }
+                // 情绪标签箱与记录页 showEmotion 同规则：等待期隐藏，有历史卡则常驻。
+                "emotion" -> if (!waiting && canPractice(FirstAnchor.EmotionLabel) ||
+                    !waiting && store.emotionCards().isNotEmpty()
+                ) {
+                    closeContentPagesForDeepLink()
+                    emotionCardsVisible = true
                 }
             }
         }

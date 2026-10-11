@@ -25,6 +25,8 @@ class AnchorQuickWidgetReceiver : AppWidgetProvider() {
             R.id.widget_hang to "hang",
             R.id.widget_wave to "wave",
             R.id.widget_micro to "micro",
+            R.id.widget_facts to "facts",
+            R.id.widget_emotion to "emotion",
         )
         targets.forEachIndexed { index, (viewId, open) ->
             val intent = Intent(launch).putExtra(MainActivity.EXTRA_OPEN, open)

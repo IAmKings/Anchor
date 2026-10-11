@@ -5,5 +5,7 @@
     <string name="anchor_widget_hang">挂一张卡</string>
     <string name="anchor_widget_wave">浪潮等待</string>
     <string name="anchor_widget_micro">微行动</string>
+    <string name="anchor_widget_facts">双栏日志</string>
+    <string name="anchor_widget_emotion">情绪标签箱</string>
     <string name="anchor_widget_today_description">今天的练习状态：微行动、忧虑保险箱与下一场专场</string>
 </resources>
