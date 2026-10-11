@@ -100,6 +100,10 @@ docs/            可行性、ADR、调研、QA 脚本
 make verify                              # 隐私门禁 + PRD 结构校验
 ./gradlew :shared:testDebugUnitTest      # 共享模块单元测试
 ./gradlew :androidApp:assembleStandardDebug && adb install -r androidApp/build/outputs/apk/standard/debug/androidApp-standard-debug.apk
+
+# 一键发版（版本号/法务日期/README+site 同步 → tag → CI 双渠道 → 转正 → 部署 legal+site → 装机）
+# 先 DRY_RUN=1 ./scripts/release.sh 0.1.6 预演；第二个参数为可选的更新亮点 Markdown 文件
+./scripts/release.sh 0.1.6 release-notes.md
 ```
 
 环境：JDK 11+、Android SDK（compileSdk / targetSdk 36、minSdk 26）。依赖镜像在 `settings.gradle.kts` 配置。
