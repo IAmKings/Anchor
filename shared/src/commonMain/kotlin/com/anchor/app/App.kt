@@ -215,6 +215,8 @@ fun App(
     // 桌面小组件深链：hang=挂卡浮层，wave=浪潮等待，micro=微行动。空值或未知值忽略。
     openRequest: String? = null,
     onConsumedOpenRequest: () -> Unit = {},
+    // 本机数据变化（忧虑卡/微行动）后通知宿主刷新桌面小组件。
+    onDataChanged: () -> Unit = {},
     installedVersionName: String = "",
     updateCheckAvailable: Boolean = false,
     updatePhase: UpdatePhase = UpdatePhase.Idle,
@@ -542,6 +544,9 @@ fun App(
                             onClose = {
                                 hangSheetVisible = false
                                 worryDataRevision++
+                            onDataChanged()
+                                onDataChanged()
+                                onDataChanged()
                             },
                         )
                     }
@@ -564,6 +569,7 @@ fun App(
                     nowMillis = nowMillis,
                     onStartTimer = onStartMicroActionTimer,
                     onCancelTimer = onCancelMicroActionTimer,
+                    onDataChanged = onDataChanged,
                     onOpenHistory = { microActionHistoryVisible = true },
                     onClose = { microActionVisible = false },
                 )
@@ -848,6 +854,8 @@ fun App(
                         onClose = {
                             hangSheetVisible = false
                             worryDataRevision++
+                            onDataChanged()
+                            onDataChanged()
                         },
                     )
                 }

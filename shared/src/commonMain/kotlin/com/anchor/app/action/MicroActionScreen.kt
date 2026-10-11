@@ -59,6 +59,7 @@ fun MicroActionScreen(
     nowMillis: () -> Long,
     onStartTimer: (Long) -> Unit,
     onCancelTimer: () -> Unit,
+    onDataChanged: () -> Unit = {},
     onOpenHistory: () -> Unit = {},
     onClose: () -> Unit,
 ) {
@@ -187,6 +188,7 @@ fun MicroActionScreen(
                                     pendingTitle = null
                                     selectedId = null
                                     revision++
+                                    onDataChanged()
                                     step = ActionStep.Pick
                                 }
                             } else {

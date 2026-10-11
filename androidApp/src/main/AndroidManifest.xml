@@ -41,6 +41,17 @@
             </intent-filter>
         </activity>
         <receiver
+            android:name=".AnchorTodayWidgetReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.anchor.app.action.TODAY_WIDGET_REFRESH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/anchor_widget_today_info" />
+        </receiver>
+        <receiver
             android:name=".AnchorQuickWidgetReceiver"
             android:exported="false">
             <intent-filter>

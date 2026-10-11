@@ -85,6 +85,7 @@ class MainActivity : FragmentActivity() {
         if (!::backgroundTimer.isInitialized) return
         backgroundTimer.deliverIfDue()
         microActionTimer.deliverIfDue()
+        AnchorTodayWidgetReceiver.updateAll(this)
         val waveLeft = backgroundTimer.remainingMillis()
         val microLeft = microActionTimer.remainingMillis()
         val wait = minOf(
@@ -210,6 +211,7 @@ class MainActivity : FragmentActivity() {
                 onDismissInAppBanner = { inAppBannerText = null },
                 openRequest = pendingOpen,
                 onConsumedOpenRequest = { pendingOpen = null },
+                onDataChanged = { AnchorTodayWidgetReceiver.updateAll(this@MainActivity) },
                 appLocked = appLockEnabled && !appUnlocked,
                 appLockAvailable = appLockAvailable,
                 appLockEnabled = appLockEnabled,
@@ -305,8 +307,13 @@ class MainActivity : FragmentActivity() {
                 onStartMicroActionTimer = {
                     microActionTimer.schedule(it)
                     armDeadlineWatch()
+                    AnchorTodayWidgetReceiver.updateAll(this@MainActivity)
                 },
-                onCancelMicroActionTimer = { microActionTimer.cancel() },
+                onCancelMicroActionTimer = {
+                    microActionTimer.cancel()
+            AnchorTodayWidgetReceiver.updateAll(this)
+                    AnchorTodayWidgetReceiver.updateAll(this@MainActivity)
+                },
                 formatLocalTime = { AndroidWorrySessionClock.formatLocalTime(it) },
                 formatLocalStamp = { AndroidWorrySessionClock.formatLocalStamp(it) },
                 localMinuteOfDay = { AndroidWorrySessionClock.localMinuteOfDay(it) },
@@ -363,6 +370,7 @@ class MainActivity : FragmentActivity() {
         microActionTimer.promoteToExactAlarm()
         backgroundTimer.deliverIfDue()
         microActionTimer.deliverIfDue()
+        AnchorTodayWidgetReceiver.updateAll(this)
         armDeadlineWatch()
         inAppBannerText = when {
             backgroundTimer.consumePendingInAppNotice() ->
@@ -811,6 +819,7 @@ class MainActivity : FragmentActivity() {
             speechFinalDelivered = true
             backgroundTimer.cancel()
             microActionTimer.cancel()
+            AnchorTodayWidgetReceiver.updateAll(this)
             AndroidReminderScheduler(this).cancelAll()
             getSystemService(NotificationManager::class.java).cancelAll()
             // 次要清理尽力而为：失败不中断（缓存残留无碍），绝不能出现"报错但已清空"的状态。

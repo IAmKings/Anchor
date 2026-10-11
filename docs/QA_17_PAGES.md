@@ -353,8 +353,18 @@
 
 本页：通过（2026-10-11，真机。ColorOS 添加后需重启桌面刷新组件列表缓存；深链守卫与跨页面行为经 adb 直测 + 桌面实测）
 
-### 切片二（未实现，登记）
-「锚点 · 今天」状态 widget：微行动剩余时间（Chronometer 自走，base=elapsedRealtime deadline）、保险箱张数 + 下一场专场（AndroidWorrySessionClock.nextSessionMillis()）、当前锚点名。刷新钩子 = MainActivity.onResume + onUpdate；计数文案沿用首页 bento 措辞防 KPI 化。
+### 切片二：「锚点 · 今天」状态 widget（已实现）
+
+**进**：桌面长按 → 添加小组件 → 锚点 →「锚点 · 今天」。
+
+- [ ] 添加 2×2「锚点 · 今天」：浅色/深色渲染正常
+- [ ] 显示当前锚点名；未选定锚点时显示「锚点」
+- [ ] 微行动进行中：标题「微行动 · 进行中」+ 倒计时走动（Chronometer）；到点后台自动切「微行动 · 时间到」
+- [ ] 微行动完成当天显示「已记下」；无动作显示「选择」
+- [ ] 忧虑行「N张卡，明天 20:00开箱」与首页一致；就医等待期显示「就医等待期 · 暂停练习，不是惩罚」
+- [ ] 挂卡封存/保险箱处理/微行动完成后回桌面，组件在数秒内反映最新数据（onResume + 数据变更回调）
+
+刷新机制：onUpdate（系统）+ WIDGET_REFRESH 广播（后台计时到点）+ MainActivity.onResume / 计时启停 / 清数据 / onDataChanged 回调（忧虑 revision 与微行动挂卡）。
 
 ---
 
