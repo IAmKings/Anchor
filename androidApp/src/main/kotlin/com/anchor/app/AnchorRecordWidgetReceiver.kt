@@ -42,7 +42,14 @@ class AnchorRecordWidgetReceiver : AppWidgetProvider() {
         appWidgetIds.forEach { id -> appWidgetManager.updateAppWidget(id, views) }
     }
 
-    private companion object {
-        const val REQUEST_CODE_BASE = 8500
+    companion object {
+    /** 宿主统一刷新入口（主题切换等外观事件）。 */
+    fun updateAll(context: Context) {
+        val manager = AppWidgetManager.getInstance(context)
+        val ids = manager.getAppWidgetIds(ComponentName(context, AnchorRecordWidgetReceiver::class.java))
+        if (ids.isEmpty()) return
+        AnchorRecordWidgetReceiver().onUpdate(context, manager, ids)
+    }
+        private const val REQUEST_CODE_BASE = 8500
     }
 }

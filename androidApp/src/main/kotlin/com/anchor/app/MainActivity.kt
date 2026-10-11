@@ -338,6 +338,10 @@ class MainActivity : FragmentActivity() {
                     themeChoice = choice
                     themePreference.choice = choice
                     syncAnchorNightMode(this, choice)
+                    // 组件配色跟随应用主题选择：切换后立即重渲染，不等下一次 onResume。
+                    AnchorQuickWidgetReceiver.updateAll(this)
+                    AnchorTodayWidgetReceiver.updateAll(this)
+                    AnchorRecordWidgetReceiver.updateAll(this)
                 },
                 onDial = ::dialNumber,
             )
