@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import com.anchor.app.widget.ACTION_TODAY_WIDGET_REFRESH
+import com.anchor.app.widget.EXTRA_REFRESH_TIMER_KIND
 import android.os.SystemClock
 
 private const val PREFERENCES = "m0-background-timer"
@@ -128,7 +129,9 @@ class BackgroundTimerReceiver : BroadcastReceiver() {
         AndroidBackgroundTimer(context, kind).onAlarm()
         // 微行动计时到点：「今天」小组件从倒计时切「时间到」态（广播在同应用内，receiver exported=false）。
         context.sendBroadcast(
-            Intent(ACTION_TODAY_WIDGET_REFRESH).setPackage(context.packageName),
+            Intent(ACTION_TODAY_WIDGET_REFRESH)
+                .setPackage(context.packageName)
+                .putExtra(EXTRA_REFRESH_TIMER_KIND, kind.name),
         )
     }
 }

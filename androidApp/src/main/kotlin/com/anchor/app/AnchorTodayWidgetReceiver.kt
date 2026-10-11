@@ -13,7 +13,9 @@ import java.util.concurrent.Executors
 import com.anchor.app.storage.AndroidDatabaseKey
 import com.anchor.app.storage.AndroidEncryptedProbeStore
 import com.anchor.app.widget.ACTION_TODAY_WIDGET_REFRESH
+import com.anchor.app.widget.EXTRA_REFRESH_TIMER_KIND
 import com.anchor.app.widget.todayWidgetModel
+import com.anchor.app.widget.timeUpWidgetModel
 
 /**
  * 「锚点 · 今天」状态小组件：当前锚点、微行动状态（进行中显示 Chronometer 倒计时）、
@@ -34,8 +36,26 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
         if (intent.action == ACTION_TODAY_WIDGET_REFRESH) {
             val manager = AppWidgetManager.getInstance(context)
             val ids = manager.getAppWidgetIds(ComponentName(context, AnchorTodayWidgetReceiver::class.java))
-            renderAllAsync(context, manager, ids)
+            // 微行动到点：零库读取快翻结束态（抢在 Chronometer 过零前），全量渲染随后校正缓存陈旧；
+            // 浪潮到点与「今天」组件无关，走全量渲染按现值重算，绝不错误快翻微行动状态。
+            if (intent.getStringExtra(EXTRA_REFRESH_TIMER_KIND) == "MicroAction") {
+                fastFlipTimeUp(context, manager, ids)
+            } else {
+                renderAllAsync(context, manager, ids)
+            }
         }
+    }
+
+    /** 零库读取的结束态快翻：缓存锚点名/忧虑行 + 时间到常量，毫秒级消除 Chronometer 负数窗口。 */
+    private fun fastFlipTimeUp(context: Context, manager: AppWidgetManager, appWidgetIds: IntArray) {
+        if (appWidgetIds.isEmpty()) return
+        val cache = context.getSharedPreferences(WIDGET_CACHE_PREFERENCES, Context.MODE_PRIVATE)
+        val model = timeUpWidgetModel(
+            anchorTitle = cache.getString(CACHE_ANCHOR, "锚点") ?: "锚点",
+            worryLine = cache.getString(CACHE_WORRY, "") ?: "",
+        )
+        val views = buildViews(context, model)
+        appWidgetIds.forEach { id -> manager.updateAppWidget(id, views) }
     }
 
     private fun renderAllAsync(context: Context, manager: AppWidgetManager, appWidgetIds: IntArray) {
@@ -47,12 +67,23 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
 
     private fun renderAll(context: Context, manager: AppWidgetManager, appWidgetIds: IntArray) {
         if (appWidgetIds.isEmpty()) return
-        val views = buildViews(context)
+        val model = readModel(context)
+        val views = buildViews(context, model)
         appWidgetIds.forEach { id -> manager.updateAppWidget(id, views) }
+        // 全量渲染后写显示缓存：供到点快翻零库读取（缓存陈旧由快翻后的本次全量渲染顺序保证最新）。
+        context.getSharedPreferences(WIDGET_CACHE_PREFERENCES, Context.MODE_PRIVATE)
+            .edit()
+            .putString(CACHE_ANCHOR, model.anchorTitle)
+            .putString(CACHE_WORRY, model.worryLine)
+            .apply()
     }
 
     private fun buildViews(context: Context): RemoteViews {
         val model = readModel(context)
+        return buildViews(context, model)
+    }
+
+    private fun buildViews(context: Context, model: com.anchor.app.widget.TodayWidgetModel): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.anchor_widget_today)
         views.setTextViewText(R.id.today_anchor, model.anchorTitle)
         views.setTextViewText(R.id.today_micro_title, model.microTitle)
@@ -137,6 +168,9 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
     companion object {
         private const val REQUEST_CODE = 8400
         private const val REFRESH_REQUEST_CODE = 8420
+        private const val WIDGET_CACHE_PREFERENCES = "m0-widget-cache"
+        private const val CACHE_ANCHOR = "anchor_title"
+        private const val CACHE_WORRY = "worry_line"
 
         // 渲染含 SQLCipher 打开（PBKDF2 密钥推导），必须在主线程外；单线程串行避免连接争用。
         private val RENDER_EXECUTOR = Executors.newSingleThreadExecutor()

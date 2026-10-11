@@ -14,6 +14,9 @@ import com.anchor.app.worry.AndroidWorrySessionClock
 /** 「今天」状态小组件与宿主间的刷新广播：计时到点等后台事件触发 widget 重渲染。 */
 const val ACTION_TODAY_WIDGET_REFRESH = "com.anchor.app.action.TODAY_WIDGET_REFRESH"
 
+/** 到点广播的来源计时器 kind（BackgroundTimerKind.name），用于区分快翻与全量渲染。 */
+const val EXTRA_REFRESH_TIMER_KIND = "com.anchor.app.extra.REFRESH_TIMER_KIND"
+
 /**
  * 「今天」小组件的渲染模型。文案与首页同一套 HomeCopy，防 KPI 化措辞由共享层保证；
  * androidApp 侧只负责把模型映射到 RemoteViews。
@@ -30,6 +33,19 @@ data class TodayWidgetModel(
 )
 
 private const val FIVE_MINUTES = 5L * 60 * 1_000
+
+/**
+ * 快翻工厂：计时到点广播触发时零库读取的结束态模型（锚点名与忧虑行来自最近一次全量渲染的缓存）。
+ * 微行动行首图标已表达语义，标题直接用时间到态；全量渲染随后跟进校正缓存陈旧。
+ */
+fun timeUpWidgetModel(anchorTitle: String, worryLine: String): TodayWidgetModel = TodayWidgetModel(
+    anchorTitle = anchorTitle,
+    microTitle = homeMicroActionTimeUpTitle,
+    microLabel = homeMicroActionTimeUpLabel,
+    microCountdownBase = null,
+    microCountdownRefreshAtWall = null,
+    worryLine = worryLine,
+)
 
 /**
  * 倒计时安全余量：剩余 ≤ 此值时一律渲染「时间到」，绝不渲染 Chronometer。
