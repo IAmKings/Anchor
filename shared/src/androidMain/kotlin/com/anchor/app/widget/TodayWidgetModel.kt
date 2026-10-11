@@ -100,12 +100,10 @@ fun todayWidgetModel(store: AnchorStore, wallNow: Long, elapsedNow: Long): Today
         }
     }
 
+    // 忧虑行只显示计数（0 卡显示邀请文案）：专场排期信息由 19:55 的系统通知承担，
+    // 组件不随专场边界翻面——计数只随数据事件变化，永远新鲜，也不需要边界闹钟。
     val pendingWorry = store.worryCards().count { it.resolution == WorryResolution.Pending }
-    val worryLine = homeWorryBody(
-        pendingCount = pendingWorry,
-        sessionOpen = AndroidWorrySessionClock.isOpen(wallNow),
-        nextLabel = AndroidWorrySessionClock.nextSessionLabel(wallNow),
-    )
+    val worryLine = if (pendingWorry > 0) "${pendingWorry}张卡" else "点这里把念头放进去"
 
     return TodayWidgetModel(
         anchorTitle = profile.firstAnchor?.let(::firstAnchorTitle) ?: "锚点",

@@ -143,7 +143,8 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
                 .putExtra(MainActivity.EXTRA_OPEN, extra),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
-        views.setOnClickPendingIntent(R.id.today_worry_row, rowIntent("vault", REQUEST_CODE + 1))
+        // 忧虑行 = 计数展示 + 一键挂卡：点击直达挂卡浮层（0 卡的邀请文案与点击行为一致）
+        views.setOnClickPendingIntent(R.id.today_worry_row, rowIntent("hang", REQUEST_CODE + 1))
         views.setOnClickPendingIntent(R.id.today_micro_row, rowIntent("micro", REQUEST_CODE + 2))
         views.setOnClickPendingIntent(R.id.today_status_slot, rowIntent("micro", REQUEST_CODE + 2))
         return views
