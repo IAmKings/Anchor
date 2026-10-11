@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.anchor.app.storage.MICRO_ACTION_TITLE_MAX
 import com.anchor.app.storage.AnchorStore
 import com.anchor.app.storage.MicroAction
 import com.anchor.app.ui.formatCountdown
@@ -277,8 +278,9 @@ private fun PickStep(
     Text(microActionCustomHint(), color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
     OutlinedTextField(
         value = custom,
-        onValueChange = onCustom,
+        onValueChange = { onCustom(it.take(MICRO_ACTION_TITLE_MAX)) },
         label = { Text(microActionCustomFieldLabel) },
+        supportingText = { Text("${custom.length}/$MICRO_ACTION_TITLE_MAX") },
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
     )

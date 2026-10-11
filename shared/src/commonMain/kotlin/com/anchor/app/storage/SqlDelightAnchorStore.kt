@@ -151,6 +151,7 @@ internal class SqlDelightAnchorStore(
 
     override fun addMicroAction(title: String, createdAtMillis: Long) {
         require(title.isNotBlank()) { "请写下一个低到无需说服自己的动作。" }
+        validateMicroActionTitle(title.trim())
         queries.insertMicroAction(title.trim(), null, createdAtMillis)
     }
 

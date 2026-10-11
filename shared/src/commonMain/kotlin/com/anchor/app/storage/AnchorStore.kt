@@ -49,6 +49,15 @@ internal val adoptableAnchors = listOf(
     FirstAnchor.AltruisticTask,
 )
 
+internal const val MICRO_ACTION_TITLE_MAX = 20
+
+// 微行动的名字是「标题」而非描述：超长标题会把首页卡片撑变形，输入端与存储端共用同一上限。
+internal fun validateMicroActionTitle(title: String) {
+    require(title.length <= MICRO_ACTION_TITLE_MAX) {
+        "名字有点长，一句话说清这个小动作就好。最多 $MICRO_ACTION_TITLE_MAX 字。"
+    }
+}
+
 internal fun validateAddedAnchors(firstAnchor: FirstAnchor?, added: List<FirstAnchor>) {
     require(added.distinct() == added) { "同一件不能加两次。" }
     added.forEach { anchor ->
@@ -291,6 +300,7 @@ class InMemoryAnchorStore : AnchorStore {
 
     override fun addMicroAction(title: String, createdAtMillis: Long) {
         require(title.isNotBlank()) { "请写下一个低到无需说服自己的动作。" }
+        validateMicroActionTitle(title.trim())
         microActions += MicroAction(nextMicroActionId++, title.trim(), null, createdAtMillis)
     }
 

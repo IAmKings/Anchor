@@ -63,6 +63,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -1051,7 +1052,14 @@ private fun MicroActionBentoCard(
                         fontSize = 14.sp,
                     )
                 }
-                Text(body, fontSize = 17.sp, fontWeight = FontWeight.Medium, lineHeight = 24.sp)
+                Text(
+                    body,
+                    fontSize = 17.sp,
+                    fontWeight = FontWeight.Medium,
+                    lineHeight = 24.sp,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                )
             }
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 countdown?.let {

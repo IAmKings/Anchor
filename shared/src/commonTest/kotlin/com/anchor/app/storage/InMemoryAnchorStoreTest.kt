@@ -56,6 +56,8 @@ class InMemoryAnchorStoreTest {
         assertFailsWith<IllegalArgumentException> { store.completeMicroAction(converted.id, 4, 8_999) }
         store.completeMicroAction(converted.id, 4, 10_000)
         assertEquals(4, store.microActions().first { it.id == converted.id }.actualDifficulty)
+        store.addMicroAction("一个正好二十字的动作名称用来验证上限边界处理".take(20), 9_500)
+        assertFailsWith<IllegalArgumentException> { store.addMicroAction("一个超过二十字的动作名称用来验证上限边界处理的超长输入", 9_600) }
         assertFailsWith<IllegalArgumentException> { store.addRhythmEntry(null, null, 10_000) }
         store.addRhythmEntry(9_000, null, 10_000)
         assertEquals(9_000, store.rhythmEntries().single().wakeAtMillis)
