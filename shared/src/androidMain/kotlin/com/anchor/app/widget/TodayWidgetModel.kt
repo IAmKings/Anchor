@@ -22,13 +22,21 @@ data class TodayWidgetModel(
     val anchorTitle: String,
     val microTitle: String,
     val microLabel: String,
-    /** RemoteViews Chronometer 的 base（elapsedRealtime 时基，倒计时模式）；null = 不显示。
-     *  到点切换依赖 setAlarmClock 的秒级准时间钟（豁免 OEM 降级），负数窗口已消除。 */
+    /** RemoteViews Chronometer 的 base（elapsedRealtime 时基，倒计时模式）；null = 不显示。 */
     val microCountdownBase: Long?,
+    /** R2：倒计时安全余量边界的墙钟时刻（deadline − M），宿主据此调度提前刷新闹钟；null = 无需调度。 */
+    val microCountdownRefreshAtWall: Long?,
     val worryLine: String,
 )
 
 private const val FIVE_MINUTES = 5L * 60 * 1_000
+
+/**
+ * 倒计时安全余量：剩余 ≤ 此值时一律渲染「时间到」，绝不渲染 Chronometer。
+ * 到点刷新链路（闹钟唤醒→广播→开库→桌面应用）实测存在 0.5–3 秒延迟，
+ * Chronometer 过零后无法钳位会显示负数——本余量就是给这条链路的缓冲。
+ */
+const val WIDGET_COUNTDOWN_MARGIN_MILLIS = 3_000L
 
 /**
  * @param microDeadlineElapsed 微行动后台计时器存的 deadline（elapsedRealtime 时基，见
@@ -46,6 +54,7 @@ fun todayWidgetModel(store: AnchorStore, wallNow: Long, elapsedNow: Long): Today
     val microTitle: String
     val microLabel: String
     var countdownBase: Long? = null
+    var countdownRefreshAtWall: Long? = null
     when {
         waiting -> {
             microTitle = "就医等待期"
@@ -53,11 +62,14 @@ fun todayWidgetModel(store: AnchorStore, wallNow: Long, elapsedNow: Long): Today
         }
         active != null -> {
             val remaining = (active.startedAtMillis!! + FIVE_MINUTES - wallNow).coerceAtLeast(0)
-            if (remaining > 0) {
+            if (remaining > WIDGET_COUNTDOWN_MARGIN_MILLIS) {
                 microTitle = homeMicroActionTitle(running = true)
                 microLabel = ""
                 countdownBase = elapsedNow + remaining
+                // R2：在余量边界（deadline − M）安排一次刷新，让 R1 在过零前把 Chronometer 换成结束态。
+                countdownRefreshAtWall = wallNow + (remaining - WIDGET_COUNTDOWN_MARGIN_MILLIS)
             } else {
+                // R1 不变量：剩余进入安全余量（含 ≤0）后，任何渲染都是结束态——数据层不产生负数倒计时。
                 microTitle = homeMicroActionTimeUpTitle
                 microLabel = homeMicroActionTimeUpLabel
             }
@@ -84,6 +96,7 @@ fun todayWidgetModel(store: AnchorStore, wallNow: Long, elapsedNow: Long): Today
         microTitle = microTitle,
         microLabel = microLabel,
         microCountdownBase = countdownBase,
+        microCountdownRefreshAtWall = countdownRefreshAtWall,
         worryLine = worryLine,
     )
 }

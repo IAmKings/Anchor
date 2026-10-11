@@ -69,6 +69,25 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
             views.setViewVisibility(R.id.today_micro_label, android.view.View.VISIBLE)
         }
         views.setTextViewText(R.id.today_worry, model.worryLine)
+        // R2：倒计时存续期间排「余量边界」刷新（deadline − 3s），到点触发 R1 把 Chronometer 换成结束态；
+        // 即使此闹钟被 OEM 拖过零点，到点准点闹钟（R3）也会再次刷新收敛——负数只可能闪现亚秒级。
+        val refreshPi = PendingIntent.getBroadcast(
+            context,
+            REFRESH_REQUEST_CODE,
+            Intent(context, AnchorTodayWidgetReceiver::class.java).setAction(ACTION_TODAY_WIDGET_REFRESH),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        val alarm = context.getSystemService(AlarmManager::class.java)
+        val refreshAtWall = model.microCountdownRefreshAtWall
+        if (refreshAtWall != null) {
+            alarm.cancel(refreshPi)
+            alarm.setAlarmClock(
+                AlarmManager.AlarmClockInfo(refreshAtWall, showIntent(context)),
+                refreshPi,
+            )
+        } else {
+            alarm.cancel(refreshPi)
+        }
         // 整卡点按 = 打开应用（无 extra），进入哪页由应用自己决定
         val pending = PendingIntent.getActivity(
             context,
@@ -93,6 +112,17 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
         return views
     }
 
+    private fun showIntent(context: Context): PendingIntent {
+        val launch = context.packageManager.getLaunchIntentForPackage(context.packageName)
+            ?: Intent().setPackage(context.packageName)
+        return PendingIntent.getActivity(
+            context,
+            0,
+            launch,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
+
     private fun readModel(context: Context): com.anchor.app.widget.TodayWidgetModel {
         val key = AndroidDatabaseKey.getOrCreate(context, MainActivity.DATABASE_NAME)
         AndroidEncryptedProbeStore(context, MainActivity.DATABASE_NAME, key).use { store ->
@@ -106,6 +136,7 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
 
     companion object {
         private const val REQUEST_CODE = 8400
+        private const val REFRESH_REQUEST_CODE = 8420
 
         // 渲染含 SQLCipher 打开（PBKDF2 密钥推导），必须在主线程外；单线程串行避免连接争用。
         private val RENDER_EXECUTOR = Executors.newSingleThreadExecutor()
