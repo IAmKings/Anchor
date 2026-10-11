@@ -13,3 +13,8 @@ install-debug:
 install-debug-test:
 	sh scripts/install_debug.sh --with-test
 
+
+# 一键发版：版本号/法务日期/README+site 同步 → tag → CI 双渠道 → 转正+亮点 → 部署 legal+site → 本机装机
+# 用法: make release V=0.1.6 HIGHLIGHTS=release-notes.md   （先用 DRY_RUN=1 make release V=0.1.6 预演）
+release:
+	DRY_RUN=$(DRY_RUN) ./scripts/release.sh $(V) $(HIGHLIGHTS)
