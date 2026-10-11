@@ -62,8 +62,11 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
             views.setViewVisibility(R.id.today_countdown, android.view.View.VISIBLE)
             views.setChronometer(R.id.today_countdown, countdownBase, null, true)
             views.setChronometerCountDown(R.id.today_countdown, true)
+            views.setViewVisibility(R.id.today_micro_label, android.view.View.GONE)
         } else {
             views.setViewVisibility(R.id.today_countdown, android.view.View.GONE)
+            // 插槽重构后标签默认 gone：空闲/等待/完成态必须显式设回，否则「开始 5 分钟」不出现。
+            views.setViewVisibility(R.id.today_micro_label, android.view.View.VISIBLE)
         }
         views.setTextViewText(R.id.today_worry, model.worryLine)
         // 整卡点按 = 打开应用（无 extra），进入哪页由应用自己决定
