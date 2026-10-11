@@ -141,7 +141,7 @@ internal fun exportFileLabel(status: String?): String? {
 }
 
 internal fun reminderToggleDetail(toggle: ReminderToggle): String = when (toggle) {
-    ReminderToggle.WorrySession -> "专场开始前 5 分钟。锁屏只显示「锚点」。"
+    ReminderToggle.WorrySession -> "专场开始前 5 分钟，保险箱有挂卡时提醒。锁屏只显示「锚点」。"
     ReminderToggle.CrisisCare -> "拦截后 24 小时和 72 小时各一条，不连续追问。"
     ReminderToggle.Reassessment -> "距上次评估两周时邀请一次，可以关掉。"
     ReminderToggle.MedicalWaiting -> "屏蔽状态下每 7 天一条，提醒资源还在。"

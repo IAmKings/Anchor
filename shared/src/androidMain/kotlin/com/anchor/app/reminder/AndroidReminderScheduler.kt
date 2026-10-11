@@ -12,6 +12,9 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import java.time.ZoneId
+import com.anchor.app.storage.AndroidDatabaseKey
+import com.anchor.app.storage.AndroidEncryptedProbeStore
+import com.anchor.app.storage.WorryResolution
 
 private const val PREFERENCES = "m0-reminders"
 private const val CHANNEL = "reminders"
@@ -228,6 +231,11 @@ class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val kind = intent.getStringExtra(EXTRA_KIND)?.let(ReminderKind::valueOf) ?: return
         val scheduler = AndroidReminderScheduler(context)
+        // 忧虑专场提醒只在保险箱有挂卡时才有行动价值：空箱静默跳过（仍自动排明天 19:55）。
+        if (kind == ReminderKind.WORRY_SESSION && !hasPendingWorryCards(context)) {
+            scheduler.onDelivered(kind)
+            return
+        }
         if (!deliverReminder(context, kind)) {
             val preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
             val pending = preferences.getStringSet(PENDING, emptySet()).orEmpty()
@@ -246,6 +254,13 @@ class ReminderRescheduleReceiver : BroadcastReceiver() {
         AndroidReminderScheduler(context).rescheduleAll()
     }
 }
+
+private fun hasPendingWorryCards(context: Context): Boolean = runCatching {
+    val key = AndroidDatabaseKey.getOrCreate(context, "anchor.db")
+    AndroidEncryptedProbeStore(context, "anchor.db", key).use { store ->
+        store.worryCards().any { it.resolution == WorryResolution.Pending }
+    }
+}.getOrDefault(true)
 
 private fun deliverReminder(context: Context, kind: ReminderKind): Boolean {
     val manager = context.getSystemService(NotificationManager::class.java)
