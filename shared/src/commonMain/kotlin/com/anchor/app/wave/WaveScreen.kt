@@ -44,8 +44,20 @@ import androidx.compose.runtime.withFrameMillis
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.drawscope.translate
+import kotlin.math.PI
+import kotlin.math.sin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -62,6 +74,9 @@ private enum class WaveStep { Recognize, Locate, Wait }
 
 private val WaveActionMinHeight = 52.dp
 private val WaveLocationMinHeight = 96.dp
+internal val WaveDisc = Color(0xFFD7E6DC)
+internal val WaveSage = Color(0xFF7A9B86)
+internal val WaveSageDeep = Color(0xFF5A7B66)
 private val WaveBreathClearance = 32.dp
 
 @Composable
@@ -154,7 +169,8 @@ private fun RecognizeStep(onSeen: () -> Unit) {
         )
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(Modifier.size(diameter), contentAlignment = Alignment.Center) {
-                BreathingCircles(Modifier.fillMaxSize())
+                // 承认/定位阶段：平静盘，深色步骤文案保持可读；浪在开始等待时才涌起。
+                RollingWaves(Modifier.fillMaxSize(), rolling = false)
                 val copyWidth = waveRecognizeCopyWidth(diameter.value).dp
                 Column(
                     Modifier
@@ -330,7 +346,7 @@ private fun WaitStep(
                 )
                 Spacer(Modifier.height(WaveBreathClearance))
                 Box(Modifier.size(diameter), contentAlignment = Alignment.Center) {
-                    BreathingCircles(Modifier.fillMaxSize())
+                    RollingWaves(Modifier.fillMaxSize())
                     CountdownRing(
                         remainingMillis = remainingMillis,
                         sessionTotalMillis = sessionTotalMillis,
@@ -414,8 +430,12 @@ private fun CountdownRing(
 }
 
 @Composable
-private fun BreathingCircles(modifier: Modifier = Modifier) {
-    val transition = rememberInfiniteTransition(label = "wave-breathe")
+private fun RollingWaves(modifier: Modifier = Modifier, rolling: Boolean = true) {
+    // 涌浪圆盘：3 层有机浪（双谐波叠加，非正圆）横向翻滚（8s 内分别平移 1/2/3 个波长——
+    // 整波长平移保证 Restart 循环接缝无缝）+ 涌落沿用既有呼吸节奏（waveBreathUnit/Scale，测试覆盖的语义）。
+    // 层内纵向渐变为 DESIGN.md 特许的浪潮用渐变。波形参数为初值，装机截屏后可校准。
+    // rolling = false 为平静盘（承认/定位阶段）：浪未涌起，仅一层低透明度底浪，深色步骤文案保持可读。
+    val transition = rememberInfiniteTransition(label = "wave-roll")
     val t by transition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
@@ -423,25 +443,58 @@ private fun BreathingCircles(modifier: Modifier = Modifier) {
             animation = tween(durationMillis = 8_000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart,
         ),
-        label = "wave-breathe-t",
+        label = "wave-roll-t",
     )
-    val color = MaterialTheme.colorScheme.primaryContainer
-    Box(modifier, contentAlignment = Alignment.Center) {
-        GlowCircle(fraction = 1f, alpha = 0.18f, phase = 0f, t = t, color = color)
-        GlowCircle(fraction = 0.72f, alpha = 0.22f, phase = 0.25f, t = t, color = color)
-        GlowCircle(fraction = 0.48f, alpha = 0.28f, phase = 0.5f, t = t, color = color)
+    Canvas(modifier) {
+        val unit = size.minDimension / 200f
+        scale(unit, unit, pivot = Offset.Zero) {
+            val disc = Path().apply { addOval(Rect(center = Offset(100f, 100f), radius = 90f)) }
+            clipPath(disc) {
+                drawCircle(WaveDisc, radius = 90f, center = Offset(100f, 100f))
+                // 涌落：呼吸缩放的「未收缩余量」作为整组浪层的缓升位移，随 8s 周期过零衔接。
+                val swell = (1f - waveBreathScale(waveBreathUnit(t, 0f))) * 12f
+                translate(top = swell) {
+                    if (rolling) {
+                        rollingWavePath(wavelength = 130f, loops = 1, base = 108f, amp1 = 12f, amp2 = 6f, phase = 0f)
+                            .let { drawPath(it, WaveSage.copy(alpha = 0.35f)) }
+                        rollingWavePath(wavelength = 130f, loops = 2, base = 126f, amp1 = 14f, amp2 = 7f, phase = 2.1f)
+                            .let { drawPath(it, WaveSage.copy(alpha = 0.6f)) }
+                        rollingWavePath(wavelength = 130f, loops = 3, base = 144f, amp1 = 16f, amp2 = 8f, phase = 4.2f)
+                            .let { drawPath(it, Brush.verticalGradient(0f to WaveSage.copy(alpha = 0.55f), 1f to WaveSageDeep.copy(alpha = 0.9f))) }
+                    } else {
+                        rollingWavePath(wavelength = 130f, loops = 1, base = 158f, amp1 = 10f, amp2 = 5f, phase = 0f)
+                            .let { drawPath(it, WaveSage.copy(alpha = 0.28f)) }
+                    }
+                }
+            }
+        }
     }
 }
 
-@Composable
-private fun GlowCircle(fraction: Float, alpha: Float, phase: Float, t: Float, color: androidx.compose.ui.graphics.Color) {
-    val scale = waveBreathScale(waveBreathUnit(t, phase))
-    Box(
-        Modifier
-            .fillMaxWidth(fraction)
-            .aspectRatio(1f)
-            .graphicsLayer { scaleX = scale; scaleY = scale; this.alpha = alpha }
-            .clip(CircleShape)
-            .background(color),
-    )
+/**
+ * 单层浪的静态路径（一次构建，逐帧仅平移）：y = base − (a1·sin(2πx/λ) + a2·sin(4πx/λ + φ))。
+ * 两条谐波周期均为 λ 或 λ/2 → 整条路径以 λ 为周期，平移 loops·λ 后与原图重合（Restart 无缝）。
+ * 平移方向向左（浪向左涌）；路径横向跨度覆盖 [−loops·λ−10, 210+10]，保证最大平移下盘内不露边。
+ */
+private fun rollingWavePath(
+    wavelength: Float,
+    loops: Int,
+    base: Float,
+    amp1: Float,
+    amp2: Float,
+    phase: Float,
+): Path = Path().apply {
+    val maxShift = loops * wavelength
+    fun yAt(x: Float): Float = base -
+        (amp1 * sin(x * 2f * PI / wavelength + phase).toFloat() +
+            amp2 * sin(x * 4f * PI / wavelength + phase * 1.7f).toFloat())
+    var x = -maxShift - 10f
+    moveTo(x, yAt(x))
+    while (x < 210f + 10f) {
+        x += 6f
+        lineTo(x, yAt(x))
+    }
+    lineTo(210f + 10f, 210f)
+    lineTo(-maxShift - 10f, 210f)
+    close()
 }

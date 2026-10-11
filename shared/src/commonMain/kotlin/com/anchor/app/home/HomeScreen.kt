@@ -112,6 +112,9 @@ import com.anchor.app.storage.WorryResolution
 import com.anchor.app.ui.AnchorAppIcon
 import com.anchor.app.ui.AnchorIconWell
 import com.anchor.app.ui.formatCountdown
+import com.anchor.app.wave.WaveDisc
+import com.anchor.app.wave.WaveSage
+import com.anchor.app.wave.WaveSageDeep
 import com.anchor.app.wave.waveHomeCaption
 import com.anchor.app.wave.waveHomeContentDescription
 import com.anchor.app.wave.waveHomeIdleStatus
@@ -802,9 +805,6 @@ private fun OneThingLockLine(note: String, onDismiss: (() -> Unit)?) {
 }
 
 private val WaveParchment = Color(0xFFFCF9F3)
-private val WaveDisc = Color(0xFFD7E6DC)
-private val WaveSage = Color(0xFF7A9B86)
-private val WaveSageDeep = Color(0xFF5A7B66)
 private val WaveInk = Color(0xFF133222)
 
 @Composable
