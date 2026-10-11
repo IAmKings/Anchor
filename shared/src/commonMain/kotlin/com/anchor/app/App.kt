@@ -94,6 +94,7 @@ import com.anchor.app.settings.exportFileLabel
 import com.anchor.app.settings.isExportSuccess
 import com.anchor.app.update.UpdatePhase
 import com.anchor.app.update.UpdatePromptDialog
+import com.anchor.app.wave.WaveExactAlarmPrompt
 import com.anchor.app.wave.WaveWaitingScreen
 
 private val AnchorColors = lightColorScheme(
@@ -191,6 +192,10 @@ fun App(
     onToggleReminder: (ReminderToggle) -> Unit = {},
     notificationPermission: NotificationPermission? = null,
     onRequestNotificationPermission: () -> Unit = {},
+    exactAlarmGranted: Boolean? = null,
+    onRequestExactAlarm: () -> Unit = {},
+    showExactAlarmPrompt: Boolean = false,
+    onExactAlarmPromptShown: () -> Unit = {},
     onPostponeReassessment: () -> Unit = {},
     nowMillis: () -> Long = { 0L },
     waveClockMillis: () -> Long = nowMillis,
@@ -226,6 +231,7 @@ fun App(
     val store = anchorStore ?: remember { InMemoryAnchorStore() }
     var waveVisible by remember { mutableStateOf(false) }
     var waveEmotionNote by remember { mutableStateOf(false) }
+    var waveExactAlarmPromptVisible by remember { mutableStateOf(false) }
     var emotionCardsVisible by remember { mutableStateOf(false) }
     var recordsHubVisible by remember { mutableStateOf(false) }
     var cameraLogVisible by remember { mutableStateOf(false) }
@@ -444,7 +450,10 @@ fun App(
                     WaveWaitingScreen(
                         nowMillis = waveClockMillis,
                         initialRemainingMillis = waveRemainingMillis(),
-                        onSchedule = onStartWaveTimer,
+                        onSchedule = { millis ->
+                            onStartWaveTimer(millis)
+                            if (showExactAlarmPrompt) waveExactAlarmPromptVisible = true
+                        },
                         onNoteEmotion = { waveEmotionNote = true },
                         onClose = {
                             waveEmotionNote = false
@@ -474,6 +483,19 @@ fun App(
                                 onClose = { waveEmotionNote = false },
                             )
                         }
+                    }
+                    if (waveExactAlarmPromptVisible && showExactAlarmPrompt) {
+                        WaveExactAlarmPrompt(
+                            onAllow = {
+                                waveExactAlarmPromptVisible = false
+                                onExactAlarmPromptShown()
+                                onRequestExactAlarm()
+                            },
+                            onSkip = {
+                                waveExactAlarmPromptVisible = false
+                                onExactAlarmPromptShown()
+                            },
+                        )
                     }
                 }
                 return@Surface
@@ -641,6 +663,8 @@ fun App(
                         onToggleReminder = onToggleReminder,
                         notificationPermission = notificationPermission,
                         onRequestNotificationPermission = onRequestNotificationPermission,
+                        exactAlarmGranted = exactAlarmGranted,
+                        onRequestExactAlarm = onRequestExactAlarm,
                         themeChoice = themeChoice,
                         onThemeChoice = onThemeChoice,
                         speechDownloading = speechDownloading,

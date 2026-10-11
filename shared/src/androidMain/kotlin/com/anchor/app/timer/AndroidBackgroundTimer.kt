@@ -47,6 +47,9 @@ class AndroidBackgroundTimer(context: Context, private val kind: BackgroundTimer
         return true
     }
 
+    fun canScheduleExactAlarms(): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarmManager.canScheduleExactAlarms()
+
     fun remainingMillis(nowMillis: Long = SystemClock.elapsedRealtime()): Long =
         (preferences.getLong(DEADLINE, nowMillis) - nowMillis).coerceAtLeast(0)
 

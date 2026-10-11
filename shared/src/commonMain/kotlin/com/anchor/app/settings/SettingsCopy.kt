@@ -90,6 +90,17 @@ internal fun settingsSpeechDownloadAction(downloading: Boolean): String =
 internal const val settingsSpeechEnableLabel = "启用高精度语音识别"
 internal const val settingsSpeechDeleteLabel = "删除高精度模型"
 internal const val settingsSpeechPreparing = "高精度引擎准备中…"
+
+internal const val settingsExactAlarmTitle = "准时提醒"
+
+internal fun settingsExactAlarmDetail(granted: Boolean): String = if (granted) {
+    "已允许。浪潮到点会准时进通知栏。"
+} else {
+    "没开的话，手机会把到点通知推迟几分钟。通知权限本身不管准时。"
+}
+
+internal fun settingsExactAlarmAction(granted: Boolean): String = if (granted) "已允许" else "去开启"
+
 internal const val settingsDataTitle = "数据管理"
 internal const val settingsExportTitle = "加密导出"
 internal const val settingsExportBody = "导出 JSON 与 CSV。密码不会保存，遗失后无法恢复。"

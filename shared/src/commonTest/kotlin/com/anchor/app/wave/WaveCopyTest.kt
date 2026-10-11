@@ -33,6 +33,17 @@ class WaveCopyTest {
         assertFalse(waveNoteEmotion().contains("必须"))
     }
 
+    @Test
+    fun exactAlarmPromptExplainsCostWithoutPressure() {
+        assertEquals("想让到点提醒准时吗", waveExactAlarmPromptTitle())
+        assertTrue(waveExactAlarmPromptBody().contains("闹钟和提醒"))
+        assertTrue(waveExactAlarmPromptBody().contains("推迟几分钟"))
+        assertTrue(waveExactAlarmPromptBody().contains("「我的」"))
+        assertFalse(waveExactAlarmPromptBody().contains("必须"))
+        assertFalse(waveExactAlarmPromptBody().contains("建议"))
+        assertEquals("去开启", waveExactAlarmPromptAllow)
+        assertEquals("先不用", waveExactAlarmPromptSkip)
+    }
 
     @Test
     fun homeOrbUsesApproximateMinutesOnlyWhileARoundIsRunning() {

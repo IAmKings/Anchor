@@ -76,6 +76,8 @@ class MainActivity : FragmentActivity() {
         refreshNotificationPermission()
     }
     private var notificationPermission by mutableStateOf(NotificationPermission.Requestable)
+    private var exactAlarmGranted by mutableStateOf(true)
+    private var exactAlarmPromptAsked by mutableStateOf(true)
     private val deadlineHandler = Handler(Looper.getMainLooper())
     private val deadlineTick: Runnable = Runnable { onDeadlineTick() }
 
@@ -169,6 +171,8 @@ class MainActivity : FragmentActivity() {
         anchorStore = AndroidEncryptedProbeStore(this, DATABASE_NAME, databaseKey)
         backgroundTimer = AndroidBackgroundTimer(this)
         microActionTimer = AndroidBackgroundTimer(this, BackgroundTimerKind.MicroAction)
+        refreshExactAlarm()
+        exactAlarmPromptAsked = exactAlarmPrefs().getBoolean(EXACT_ALARM_ASKED, false)
         armDeadlineWatch()
         databaseKey.fill(0)
         appLockAvailable = biometricLock.isAvailable()
@@ -282,6 +286,13 @@ class MainActivity : FragmentActivity() {
                 onToggleReminder = { toggleReminder(it) },
                 notificationPermission = notificationPermission,
                 onRequestNotificationPermission = { requestNotificationPermission() },
+                exactAlarmGranted = exactAlarmGranted,
+                onRequestExactAlarm = { requestExactAlarm() },
+                showExactAlarmPrompt = !exactAlarmGranted && !exactAlarmPromptAsked,
+                onExactAlarmPromptShown = {
+                    exactAlarmPromptAsked = true
+                    exactAlarmPrefs().edit().putBoolean(EXACT_ALARM_ASKED, true).apply()
+                },
                 onPostponeReassessment = { AndroidReminderScheduler(this).postponeReassessment() },
                 nowMillis = System::currentTimeMillis,
                 waveClockMillis = SystemClock::elapsedRealtime,
@@ -354,6 +365,7 @@ class MainActivity : FragmentActivity() {
             Handler(Looper.getMainLooper()).postDelayed({ warmUpOnnxEngine() }, 5_000)
         }
         refreshNotificationPermission()
+        refreshExactAlarm()
         backgroundTimer.deliverIfDue()
         microActionTimer.deliverIfDue()
         AnchorTodayWidgetReceiver.updateAll(this)
@@ -609,9 +621,29 @@ class MainActivity : FragmentActivity() {
         notificationPermission = currentNotificationPermission()
     }
 
+    private fun refreshExactAlarm() {
+        exactAlarmGranted = backgroundTimer.canScheduleExactAlarms()
+    }
+
     private fun armDeadlineWatch() {
         deadlineHandler.removeCallbacks(deadlineTick)
         deadlineHandler.post(deadlineTick)
+    }
+
+    private fun requestExactAlarm() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || backgroundTimer.canScheduleExactAlarms()) {
+            exactAlarmGranted = true
+            return
+        }
+        val request = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+            .setData(Uri.parse("package:$packageName"))
+        try {
+            startActivity(request)
+        } catch (_: ActivityNotFoundException) {
+            startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)),
+            )
+        }
     }
 
     private fun currentNotificationPermission(): NotificationPermission {
@@ -659,6 +691,9 @@ class MainActivity : FragmentActivity() {
 
     private fun notificationPrefs() =
         getSharedPreferences(NOTIFICATION_PREFERENCES, MODE_PRIVATE)
+
+    private fun exactAlarmPrefs() =
+        getSharedPreferences(EXACT_ALARM_PREFERENCES, MODE_PRIVATE)
 
     private fun withMicrophonePermission(action: () -> Unit) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) ==
@@ -847,5 +882,7 @@ class MainActivity : FragmentActivity() {
         const val EXTRA_OPEN = "com.anchor.app.extra.OPEN"
         const val NOTIFICATION_PREFERENCES = "anchor-notification"
         const val NOTIFICATION_ASKED = "asked"
+        const val EXACT_ALARM_PREFERENCES = "anchor-exact-alarm"
+        const val EXACT_ALARM_ASKED = "asked"
     }
 }
