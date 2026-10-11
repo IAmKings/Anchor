@@ -71,6 +71,7 @@ fun WaveWaitingScreen(
     onSchedule: (Long) -> Unit,
     onClose: () -> Unit,
     onNoteEmotion: () -> Unit = {},
+    parallelNote: String? = null,
 ) {
     var step by remember { mutableStateOf(if (initialRemainingMillis > 0) WaveStep.Wait else WaveStep.Recognize) }
     var bodyLocation by remember { mutableStateOf<String?>(null) }
@@ -93,6 +94,15 @@ fun WaveWaitingScreen(
 
     Box(Modifier.fillMaxSize()) {
         AnchorBackBar(onBack = onClose, label = waveLeave()) {
+            if (step == WaveStep.Wait && parallelNote != null) {
+                Text(
+                    parallelNote,
+                    Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp,
+                    lineHeight = 20.sp,
+                )
+            }
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 when (step) {
                     WaveStep.Recognize -> RecognizeStep(onSeen = { step = WaveStep.Locate })

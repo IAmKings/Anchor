@@ -62,6 +62,7 @@ fun MicroActionScreen(
     onDataChanged: () -> Unit = {},
     onOpenHistory: () -> Unit = {},
     onClose: () -> Unit,
+    parallelNote: String? = null,
 ) {
     var revision by remember { mutableIntStateOf(0) }
     var predicted by remember { mutableIntStateOf(5) }
@@ -129,6 +130,14 @@ fun MicroActionScreen(
                 .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+            if (step == ActionStep.Run && parallelNote != null) {
+                Text(
+                    parallelNote,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp,
+                    lineHeight = 20.sp,
+                )
+            }
             when (step) {
                 ActionStep.Pick -> PickStep(
                     ready = ready,

@@ -27,6 +27,9 @@ class HomeCopyTest {
         // 时间到、等记体感的独立状态：不再显示 00:00 死状态。
         assertEquals("微行动 · 时间到", homeMicroActionTimeUpTitle)
         assertEquals("记下这次体感", homeMicroActionTimeUpLabel)
+        // 并行计时说明：允许两件事并行，措辞不施压
+        assertEquals("另一件事还在计时。两件事互不打扰。", parallelTimersNote)
+        assertFalse(parallelTimersNote.contains("必须"))
     }
 
     @Test

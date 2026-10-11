@@ -6,6 +6,9 @@ internal const val homeRhythmEmptyTitle = "见光记录"
 internal const val homeWorryLabel = "忧虑保险箱"
 internal const val homeWorryCountUnit = "张卡"
 
+// 方案一：允许两个计时并行，启动第二件事时在页面顶部说明一次（条件即「另一件事仍在计时」）。
+internal const val parallelTimersNote = "另一件事还在计时。两件事互不打扰。"
+
 internal fun homeWorryBody(pendingCount: Int, sessionOpen: Boolean, nextLabel: String): String = when {
     pendingCount <= 0 -> "点这里把念头放进去"
     sessionOpen -> "${pendingCount}张卡，专场已开箱"

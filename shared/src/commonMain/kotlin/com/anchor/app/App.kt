@@ -58,6 +58,7 @@ import com.anchor.app.onboarding.lastAssessmentAt
 import com.anchor.app.onboarding.reassessmentDue
 import com.anchor.app.emotion.EmotionCardsScreen
 import com.anchor.app.home.HomeScreen
+import com.anchor.app.home.parallelTimersNote
 import com.anchor.app.relation.HomeRelationKind
 import com.anchor.app.journal.CameraLogScreen
 import com.anchor.app.journal.RecordsHub
@@ -454,6 +455,13 @@ fun App(
                     WaveWaitingScreen(
                         nowMillis = waveClockMillis,
                         initialRemainingMillis = waveRemainingMillis(),
+                        parallelNote = if (store.microActions()
+                                .any { it.startedAtMillis != null && it.completedAtMillis == null }
+                        ) {
+                            parallelTimersNote
+                        } else {
+                            null
+                        },
                         onSchedule = { millis ->
                             onStartWaveTimer(millis)
                             if (showExactAlarmPrompt) waveExactAlarmPromptVisible = true
@@ -574,6 +582,7 @@ fun App(
                     onStartTimer = onStartMicroActionTimer,
                     onCancelTimer = onCancelMicroActionTimer,
                     onDataChanged = onDataChanged,
+                    parallelNote = if (waveRemainingMillis() > 0) parallelTimersNote else null,
                     onOpenHistory = { microActionHistoryVisible = true },
                     onClose = { microActionVisible = false },
                 )
