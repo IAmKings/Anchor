@@ -29,6 +29,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/today_micro_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -55,6 +56,7 @@
 
     <!-- 固定高度状态插槽：倒计时（大字）与状态文案互换内容不换高度，底部忧虑行钉死 -->
     <FrameLayout
+        android:id="@+id/today_status_slot"
         android:layout_width="match_parent"
         android:layout_height="36dp">
         <Chronometer
@@ -79,6 +81,7 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/today_worry_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

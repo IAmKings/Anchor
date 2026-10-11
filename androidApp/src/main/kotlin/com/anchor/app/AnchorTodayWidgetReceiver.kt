@@ -77,6 +77,19 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
         views.setOnClickPendingIntent(R.id.today_root, pending)
+        // 行级直达：忧虑行 → 保险箱页；微行动行与状态插槽 → 微行动页（同 EXTRA_OPEN 深链通道，
+        // 能否进入由应用内 canPractice 守卫决定）。其余区域保留整卡打开应用。
+        fun rowIntent(extra: String, requestCode: Int): PendingIntent = PendingIntent.getActivity(
+            context,
+            requestCode,
+            Intent(context, MainActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                .putExtra(MainActivity.EXTRA_OPEN, extra),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        views.setOnClickPendingIntent(R.id.today_worry_row, rowIntent("vault", REQUEST_CODE + 1))
+        views.setOnClickPendingIntent(R.id.today_micro_row, rowIntent("micro", REQUEST_CODE + 2))
+        views.setOnClickPendingIntent(R.id.today_status_slot, rowIntent("micro", REQUEST_CODE + 2))
         return views
     }
 

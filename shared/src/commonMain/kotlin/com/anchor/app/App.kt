@@ -212,7 +212,7 @@ fun App(
     debugTools: Boolean = false,
     onSeedRhythmDemo: () -> Unit = {},
     onClearRhythmDemo: () -> Unit = {},
-    // 桌面小组件深链：hang=挂卡浮层，wave=浪潮等待，micro=微行动。空值或未知值忽略。
+    // 桌面小组件深链：hang=挂卡浮层，wave=浪潮等待，micro=微行动，vault=忧虑保险箱。空值或未知值忽略。
     openRequest: String? = null,
     onConsumedOpenRequest: () -> Unit = {},
     // 本机数据变化（忧虑卡/微行动）后通知宿主刷新桌面小组件。
@@ -324,6 +324,10 @@ fun App(
                 "micro" -> if (!waiting && canPractice(FirstAnchor.MicroAction)) {
                     closeContentPagesForDeepLink()
                     microActionVisible = true
+                }
+                "vault" -> if (!waiting && canPractice(FirstAnchor.WorryVault)) {
+                    closeContentPagesForDeepLink()
+                    worryVaultVisible = true
                 }
             }
         }
