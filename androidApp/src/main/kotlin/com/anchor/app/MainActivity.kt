@@ -84,8 +84,8 @@ class MainActivity : FragmentActivity() {
     private fun onDeadlineTick() {
         if (!::backgroundTimer.isInitialized) return
         backgroundTimer.deliverIfDue()
-        microActionTimer.deliverIfDue()
-        AnchorTodayWidgetReceiver.updateAll(this)
+        // 到点交付才需要刷新组件（切「时间到」态）；空轮询不渲染，避免每 30 秒一次的数据库打开。
+        if (microActionTimer.deliverIfDue()) AnchorTodayWidgetReceiver.updateAll(this)
         val waveLeft = backgroundTimer.remainingMillis()
         val microLeft = microActionTimer.remainingMillis()
         val wait = minOf(

@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import android.widget.RemoteViews
+import java.util.concurrent.Executors
 import com.anchor.app.storage.AndroidDatabaseKey
 import com.anchor.app.storage.AndroidEncryptedProbeStore
 import com.anchor.app.widget.ACTION_TODAY_WIDGET_REFRESH
@@ -25,7 +26,7 @@ import com.anchor.app.widget.todayWidgetModel
 class AnchorTodayWidgetReceiver : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        renderAll(context, appWidgetManager, appWidgetIds)
+        renderAllAsync(context, appWidgetManager, appWidgetIds)
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -33,7 +34,14 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
         if (intent.action == ACTION_TODAY_WIDGET_REFRESH || intent.action == ACTION_TODAY_WIDGET_TICK) {
             val manager = AppWidgetManager.getInstance(context)
             val ids = manager.getAppWidgetIds(ComponentName(context, AnchorTodayWidgetReceiver::class.java))
-            renderAll(context, manager, ids)
+            renderAllAsync(context, manager, ids)
+        }
+    }
+
+    private fun renderAllAsync(context: Context, manager: AppWidgetManager, appWidgetIds: IntArray) {
+        val appContext = context.applicationContext
+        RENDER_EXECUTOR.execute {
+            renderAll(appContext, manager, appWidgetIds)
         }
     }
 
@@ -104,12 +112,18 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
         private const val TICK_REQUEST_CODE = 8410
         private const val ACTION_TODAY_WIDGET_TICK = "com.anchor.app.action.TODAY_WIDGET_TICK"
 
-        /** 宿主（MainActivity 各钩子）统一调用的刷新入口。 */
+        // 渲染含 SQLCipher 打开（PBKDF2 密钥推导），必须在主线程外；单线程串行避免连接争用。
+        private val RENDER_EXECUTOR = Executors.newSingleThreadExecutor()
+
+        /** 宿主（MainActivity 各钩子）统一调用的刷新入口：入队后台渲染，绝不阻塞主线程。 */
         fun updateAll(context: Context) {
-            val manager = AppWidgetManager.getInstance(context)
-            val ids = manager.getAppWidgetIds(ComponentName(context, AnchorTodayWidgetReceiver::class.java))
+            val appContext = context.applicationContext
+            val manager = AppWidgetManager.getInstance(appContext)
+            val ids = manager.getAppWidgetIds(ComponentName(appContext, AnchorTodayWidgetReceiver::class.java))
             if (ids.isEmpty()) return
-            AnchorTodayWidgetReceiver().onUpdate(context, manager, ids)
+            RENDER_EXECUTOR.execute {
+                AnchorTodayWidgetReceiver().renderAll(appContext, manager, ids)
+            }
         }
     }
 }
