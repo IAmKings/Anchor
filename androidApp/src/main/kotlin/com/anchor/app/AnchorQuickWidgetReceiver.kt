@@ -18,6 +18,11 @@ class AnchorQuickWidgetReceiver : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         val views = RemoteViews(context.packageName, R.layout.anchor_widget_quick)
+        val palette = WidgetTheming.paletteFor(context)
+        WidgetTheming.applyBackground(views, palette, R.id.widget_root)
+        WidgetTheming.applyIconTint(views, palette, R.id.widget_anchor_icon, R.id.widget_hang_icon, R.id.widget_wave_icon, R.id.widget_micro_icon)
+        WidgetTheming.applyText(views, palette, R.id.widget_title)
+        WidgetTheming.applyMuted(views, palette, R.id.widget_hang_label, R.id.widget_wave_label, R.id.widget_micro_label)
         val launch = Intent(context, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }

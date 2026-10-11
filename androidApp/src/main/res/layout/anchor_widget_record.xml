@@ -13,12 +13,14 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <ImageView
+            android:id="@+id/record_anchor_icon"
             android:layout_width="14dp"
             android:layout_height="14dp"
             android:src="@drawable/ic_widget_anchor"
             android:tint="@color/anchor_widget_primary"
             android:contentDescription="@null" />
         <TextView
+            android:id="@+id/record_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
@@ -37,12 +39,14 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <ImageView
+            android:id="@+id/record_facts_icon"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:src="@drawable/ic_widget_facts"
             android:tint="@color/anchor_widget_primary"
             android:contentDescription="@string/anchor_widget_facts" />
         <TextView
+            android:id="@+id/record_facts_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -59,12 +63,14 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <ImageView
+            android:id="@+id/record_emotion_icon"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:src="@drawable/ic_widget_emotion"
             android:tint="@color/anchor_widget_primary"
             android:contentDescription="@string/anchor_widget_emotion" />
         <TextView
+            android:id="@+id/record_emotion_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"

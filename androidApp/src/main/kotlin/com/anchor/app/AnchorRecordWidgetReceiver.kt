@@ -18,6 +18,10 @@ class AnchorRecordWidgetReceiver : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         val views = RemoteViews(context.packageName, R.layout.anchor_widget_record)
+        val palette = WidgetTheming.paletteFor(context)
+        WidgetTheming.applyBackground(views, palette, R.id.record_root)
+        WidgetTheming.applyIconTint(views, palette, R.id.record_anchor_icon, R.id.record_facts_icon, R.id.record_emotion_icon)
+        WidgetTheming.applyText(views, palette, R.id.record_title, R.id.record_facts_label, R.id.record_emotion_label)
         val launch = Intent(context, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }

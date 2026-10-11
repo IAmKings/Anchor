@@ -84,7 +84,13 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
     }
 
     private fun buildViews(context: Context, model: com.anchor.app.widget.TodayWidgetModel): RemoteViews {
+        val palette = WidgetTheming.paletteFor(context)
         val views = RemoteViews(context.packageName, R.layout.anchor_widget_today)
+        WidgetTheming.applyBackground(views, palette, R.id.today_root)
+        WidgetTheming.applyIconTint(views, palette, R.id.today_anchor_icon, R.id.today_micro_icon, R.id.today_worry_icon)
+        WidgetTheming.applyText(views, palette, R.id.today_anchor, R.id.today_micro_title)
+        WidgetTheming.applyMuted(views, palette, R.id.today_micro_label, R.id.today_worry)
+        WidgetTheming.applyPrimaryText(views, palette, R.id.today_countdown)
         views.setTextViewText(R.id.today_anchor, model.anchorTitle)
         views.setTextViewText(R.id.today_micro_title, model.microTitle)
         views.setTextViewText(R.id.today_micro_label, model.microLabel)

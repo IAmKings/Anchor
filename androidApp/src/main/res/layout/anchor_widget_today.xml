@@ -13,6 +13,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <ImageView
+            android:id="@+id/today_anchor_icon"
             android:layout_width="14dp"
             android:layout_height="14dp"
             android:src="@drawable/ic_widget_anchor"
@@ -36,6 +37,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <ImageView
+            android:id="@+id/today_micro_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_widget_micro"
@@ -87,6 +89,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
         <ImageView
+            android:id="@+id/today_worry_icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_widget_worry"
