@@ -264,15 +264,6 @@ fun App(
     val addedAnchors = profile.addedAnchors + if (unlockPreview) previewAdded else emptyList()
     val lockedAnchor = profile.firstAnchor ?: if (oneThingLockPreview) FirstAnchor.MicroAction else null
     fun canPractice(anchor: FirstAnchor): Boolean = practiceVisible(anchor, lockedAnchor, addedAnchors.toSet())
-    // 深链消费：与首页按钮同一套 canPractice 守卫（等待期/未添加自然被挡）；应用锁下 App 未组合，请求保留到解锁后。
-    LaunchedEffect(openRequest) {
-        when (openRequest) {
-            "hang" -> if (canPractice(FirstAnchor.WorryVault)) hangSheetVisible = true
-            "wave" -> if (canPractice(FirstAnchor.WaveWaiting)) waveVisible = true
-            "micro" -> if (canPractice(FirstAnchor.MicroAction)) microActionVisible = true
-        }
-        if (openRequest != null) onConsumedOpenRequest()
-    }
     val oneThingNote = lockedAnchor?.takeIf { !canAddAnchor }?.let(::oneThingLockBody)
     fun openCrisisFromText(persistWaiting: Boolean) {
         if (persistWaiting) store.enterCrisisWaiting()
@@ -293,6 +284,48 @@ fun App(
                 reminderAllows[ReminderToggle.Reassessment] != false &&
                 reassessmentDue(store.assessments(), nowMillis()),
         )
+    }
+
+    // 深链消费：与首页按钮同一套 canPractice 守卫，另加两道——危机流程不打断，就医等待期不进练习。
+    // 目标页（尤其挂卡浮层）只在首页层渲染，因此先关闭全部内容页回到首页，再打开目标；
+    // 否则停在其他页面时置位不可见，返回首页时浮层又突然弹出。
+    fun closeContentPagesForDeepLink() {
+        waveEmotionNote = false
+        emotionCardsVisible = false
+        recordsHubVisible = false
+        cameraLogVisible = false
+        worryVaultVisible = false
+        relationVisible = false
+        returnToPracticePreviewVisible = false
+        practiceReturnedVisible = false
+        microActionVisible = false
+        microActionHistoryVisible = false
+        rhythmVisible = false
+        insightsVisible = false
+        settingsVisible = false
+        assessmentPreviewVisible = false
+        reassessmentVisible = false
+        addAnchorVisible = false
+    }
+    LaunchedEffect(openRequest) {
+        if (safetyStack.isEmpty() && profile.onboardingComplete) {
+            val waiting = store.safetyState().mode == SafetyMode.MedicalWaiting
+            when (openRequest) {
+                "hang" -> if (!waiting && canPractice(FirstAnchor.WorryVault)) {
+                    closeContentPagesForDeepLink()
+                    hangSheetVisible = true
+                }
+                "wave" -> if (!waiting && canPractice(FirstAnchor.WaveWaiting)) {
+                    closeContentPagesForDeepLink()
+                    waveVisible = true
+                }
+                "micro" -> if (!waiting && canPractice(FirstAnchor.MicroAction)) {
+                    closeContentPagesForDeepLink()
+                    microActionVisible = true
+                }
+            }
+        }
+        if (openRequest != null) onConsumedOpenRequest()
     }
     var onboardingVisible by remember(store) {
         mutableStateOf(!store.userProfile().onboardingComplete)
