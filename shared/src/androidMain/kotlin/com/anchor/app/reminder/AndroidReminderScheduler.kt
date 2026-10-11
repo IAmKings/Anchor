@@ -178,11 +178,23 @@ class AndroidReminderScheduler(context: Context) {
     }
 
     private fun schedule(kind: ReminderKind, atMillis: Long) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarmManager.canScheduleExactAlarms()) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atMillis, pendingIntent(kind))
-        } else {
-            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atMillis, pendingIntent(kind))
-        }
+        // setAlarmClock 豁免精确闹钟权限门控，OEM 策略（实测 ColorOS 把 setExactAndAllowWhileIdle
+        // 降级为最长 1 小时窗口）也把它按闹钟类对待——秒级准时。触发本身无铃声/震动，交付仍是应用的通知渠道。
+        alarmManager.setAlarmClock(
+            AlarmManager.AlarmClockInfo(atMillis, showIntent()),
+            pendingIntent(kind),
+        )
+    }
+
+    private fun showIntent(): PendingIntent {
+        val launch = appContext.packageManager.getLaunchIntentForPackage(appContext.packageName)
+            ?: Intent().setPackage(appContext.packageName)
+        return PendingIntent.getActivity(
+            appContext,
+            0,
+            launch,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
     }
 
     private fun disable(kind: ReminderKind) {

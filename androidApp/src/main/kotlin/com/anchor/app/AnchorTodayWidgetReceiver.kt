@@ -31,7 +31,7 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        if (intent.action == ACTION_TODAY_WIDGET_REFRESH || intent.action == ACTION_TODAY_WIDGET_TICK) {
+        if (intent.action == ACTION_TODAY_WIDGET_REFRESH) {
             val manager = AppWidgetManager.getInstance(context)
             val ids = manager.getAppWidgetIds(ComponentName(context, AnchorTodayWidgetReceiver::class.java))
             renderAllAsync(context, manager, ids)
@@ -57,36 +57,13 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
         views.setTextViewText(R.id.today_anchor, model.anchorTitle)
         views.setTextViewText(R.id.today_micro_title, model.microTitle)
         views.setTextViewText(R.id.today_micro_label, model.microLabel)
-        val countdownText = model.microCountdownText
-        if (countdownText != null) {
+        val countdownBase = model.microCountdownBase
+        if (countdownBase != null) {
             views.setViewVisibility(R.id.today_countdown, android.view.View.VISIBLE)
-            views.setTextViewText(R.id.today_countdown, countdownText)
-            // 自续链：每次渲染倒计时态都排一个下一分钟边界的刷新；到点后模型按墙钟切「时间到」，链自然终止。
-            val alarm = context.getSystemService(AlarmManager::class.java)
-            val tick = PendingIntent.getBroadcast(
-                context,
-                TICK_REQUEST_CODE,
-                Intent(context, AnchorTodayWidgetReceiver::class.java).setAction(ACTION_TODAY_WIDGET_TICK),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-            )
-            alarm.cancel(tick)
-            alarm.setWindow(
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() + 60_000L,
-                60_000L,
-                tick,
-            )
+            views.setChronometer(R.id.today_countdown, countdownBase, null, true)
+            views.setChronometerCountDown(R.id.today_countdown, true)
         } else {
             views.setViewVisibility(R.id.today_countdown, android.view.View.GONE)
-            context.getSystemService(AlarmManager::class.java)
-                .cancel(
-                    PendingIntent.getBroadcast(
-                        context,
-                        TICK_REQUEST_CODE,
-                        Intent(context, AnchorTodayWidgetReceiver::class.java).setAction(ACTION_TODAY_WIDGET_TICK),
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-                    ),
-                )
         }
         views.setTextViewText(R.id.today_worry, model.worryLine)
         // 整卡点按 = 打开应用（无 extra），进入哪页由应用自己决定
@@ -103,14 +80,16 @@ class AnchorTodayWidgetReceiver : AppWidgetProvider() {
     private fun readModel(context: Context): com.anchor.app.widget.TodayWidgetModel {
         val key = AndroidDatabaseKey.getOrCreate(context, MainActivity.DATABASE_NAME)
         AndroidEncryptedProbeStore(context, MainActivity.DATABASE_NAME, key).use { store ->
-                return todayWidgetModel(store = store, wallNow = System.currentTimeMillis())
+                return todayWidgetModel(
+                store = store,
+                wallNow = System.currentTimeMillis(),
+                elapsedNow = SystemClock.elapsedRealtime(),
+            )
         }
     }
 
     companion object {
         private const val REQUEST_CODE = 8400
-        private const val TICK_REQUEST_CODE = 8410
-        private const val ACTION_TODAY_WIDGET_TICK = "com.anchor.app.action.TODAY_WIDGET_TICK"
 
         // 渲染含 SQLCipher 打开（PBKDF2 密钥推导），必须在主线程外；单线程串行避免连接争用。
         private val RENDER_EXECUTOR = Executors.newSingleThreadExecutor()

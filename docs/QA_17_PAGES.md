@@ -359,12 +359,12 @@
 
 - [ ] 添加 2×2「锚点 · 今天」：浅色/深色渲染正常
 - [ ] 显示当前锚点名；未选定锚点时显示「锚点」
-- [ ] 微行动进行中：标题「微行动 · 进行中」+ 倒计时「约 N 分」（分钟粒度静态文本 + 自续链闹钟；曾用 Chronometer 因 OEM 闹钟降级出现过负数，已弃用）
+- [x] 微行动进行中：标题「微行动 · 进行中」+ Chronometer 每秒精准倒计时；到点由 setAlarmClock 准时切「微行动 · 时间到」，全程无负数（真机 E2E：dumpsys window=0，5 分钟全程观察通过；曾因 OEM 把 setExactAndAllowWhileIdle 降级 +1h 窗口出现负数，已换 setAlarmClock 根治）
 - [ ] 微行动完成当天显示「已记下」；无动作显示「选择」
 - [ ] 忧虑行「N张卡，明天 20:00开箱」与首页一致；就医等待期显示「就医等待期 · 暂停练习，不是惩罚」
 - [ ] 挂卡封存/保险箱处理/微行动完成后回桌面，组件在数秒内反映最新数据（onResume + 数据变更回调）
 
-刷新机制：onUpdate（系统）+ WIDGET_REFRESH 广播（后台计时到点）+ MainActivity.onResume / 计时启停 / 清数据 / onDataChanged 回调（忧虑 revision 与微行动挂卡）。
+刷新机制：onUpdate（系统）+ WIDGET_REFRESH 广播（后台计时到点）+ MainActivity.onResume / 计时启停 / 清数据 / onDataChanged 回调（忧虑 revision 与微行动挂卡）。计时到点与四类提醒的闹钟均已切换为 setAlarmClock（豁免 OEM 降级策略，触发无铃声/震动，锁屏可唤醒）。
 
 ---
 

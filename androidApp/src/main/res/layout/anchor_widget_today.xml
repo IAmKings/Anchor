@@ -39,7 +39,7 @@
         android:textSize="15sp"
         android:textStyle="bold" />
 
-    <TextView
+    <Chronometer
         android:id="@+id/today_countdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

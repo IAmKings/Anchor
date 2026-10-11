@@ -366,8 +366,6 @@ class MainActivity : FragmentActivity() {
         }
         refreshNotificationPermission()
         refreshExactAlarm()
-        backgroundTimer.promoteToExactAlarm()
-        microActionTimer.promoteToExactAlarm()
         backgroundTimer.deliverIfDue()
         microActionTimer.deliverIfDue()
         AnchorTodayWidgetReceiver.updateAll(this)

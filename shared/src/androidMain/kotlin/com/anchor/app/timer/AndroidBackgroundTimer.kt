@@ -34,21 +34,17 @@ class AndroidBackgroundTimer(context: Context, private val kind: BackgroundTimer
             .putLong(DEADLINE, deadline)
             .putBoolean(FIRED, false)
             .apply()
-        val exact = canScheduleExactAlarms()
-        if (exact) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                deadline,
-                pendingIntent(),
-            )
-        } else {
-            alarmManager.setAndAllowWhileIdle(
-                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                deadline,
-                pendingIntent(),
-            )
-        }
-        return exact
+        // setAlarmClock：豁免精确闹钟权限与 OEM 降级策略（实测 ColorOS 对 setExactAndAllowWhileIdle
+        // 加最长 1 小时窗口），计时到点秒级准时；触发本身无铃声/震动，仍是应用的通知渠道交付。
+        // 注意其触发时间是墙钟（RTC 纪元），deadline 是 elapsedRealtime——必须换算，否则立即触发。
+        alarmManager.setAlarmClock(
+            AlarmManager.AlarmClockInfo(
+                System.currentTimeMillis() + durationMillis,
+                showIntent(),
+            ),
+            pendingIntent(),
+        )
+        return true
     }
 
     fun canScheduleExactAlarms(): Boolean =
@@ -81,23 +77,6 @@ class AndroidBackgroundTimer(context: Context, private val kind: BackgroundTimer
         return true
     }
 
-    /** Switch a still-running round to an exact alarm after the user allows it. */
-    fun promoteToExactAlarm() {
-        if (!canScheduleExactAlarms()) return
-        val deadline = preferences.getLong(DEADLINE, 0L)
-        if (deadline == 0L || hasFired()) return
-        val now = SystemClock.elapsedRealtime()
-        if (now >= deadline) {
-            onAlarm()
-            return
-        }
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            deadline,
-            pendingIntent(),
-        )
-    }
-
     fun onAlarm() {
         if (!claimFire()) return
         val delivered = deliverTimerCompletionNotification(appContext, kind)
@@ -111,6 +90,17 @@ class AndroidBackgroundTimer(context: Context, private val kind: BackgroundTimer
             preferences.edit().putBoolean(FIRED, true).commit()
             return true
         }
+    }
+
+    private fun showIntent(): PendingIntent {
+        val launch = appContext.packageManager.getLaunchIntentForPackage(appContext.packageName)
+            ?: Intent().setPackage(appContext.packageName)
+        return PendingIntent.getActivity(
+            appContext,
+            0,
+            launch,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
     }
 
     private fun pendingIntent(): PendingIntent = PendingIntent.getBroadcast(

@@ -22,9 +22,9 @@ data class TodayWidgetModel(
     val anchorTitle: String,
     val microTitle: String,
     val microLabel: String,
-    /** 倒计时的分钟级展示文本（如「约 3 分」）；null = 不显示。静态文本 + 自续链闹钟刷新，
-     *  弃用 Chronometer：OEM 策略下精确闹钟可降级为最长 1 小时窗口，Chronometer 过零后无法钳位会显示负数。 */
-    val microCountdownText: String?,
+    /** RemoteViews Chronometer 的 base（elapsedRealtime 时基，倒计时模式）；null = 不显示。
+     *  到点切换依赖 setAlarmClock 的秒级准时间钟（豁免 OEM 降级），负数窗口已消除。 */
+    val microCountdownBase: Long?,
     val worryLine: String,
 )
 
@@ -34,7 +34,7 @@ private const val FIVE_MINUTES = 5L * 60 * 1_000
  * @param microDeadlineElapsed 微行动后台计时器存的 deadline（elapsedRealtime 时基，见
  *   AndroidBackgroundTimer 的 prefs；0 或 null 表示无计时），与 store 的 startedAt 互为印证。
  */
-fun todayWidgetModel(store: AnchorStore, wallNow: Long): TodayWidgetModel {
+fun todayWidgetModel(store: AnchorStore, wallNow: Long, elapsedNow: Long): TodayWidgetModel {
     val profile = store.userProfile()
     val waiting = store.safetyState().mode == SafetyMode.MedicalWaiting
 
@@ -45,7 +45,7 @@ fun todayWidgetModel(store: AnchorStore, wallNow: Long): TodayWidgetModel {
 
     val microTitle: String
     val microLabel: String
-    var countdownText: String? = null
+    var countdownBase: Long? = null
     when {
         waiting -> {
             microTitle = "就医等待期"
@@ -56,8 +56,7 @@ fun todayWidgetModel(store: AnchorStore, wallNow: Long): TodayWidgetModel {
             if (remaining > 0) {
                 microTitle = homeMicroActionTitle(running = true)
                 microLabel = ""
-                // 分钟粒度：模型永远按墙钟判定，任何迟到刷新都不会产生负数或低于真实剩余的展示。
-                countdownText = "约 ${remaining / 60_000L + 1} 分"
+                countdownBase = elapsedNow + remaining
             } else {
                 microTitle = homeMicroActionTimeUpTitle
                 microLabel = homeMicroActionTimeUpLabel
@@ -84,7 +83,7 @@ fun todayWidgetModel(store: AnchorStore, wallNow: Long): TodayWidgetModel {
         anchorTitle = profile.firstAnchor?.let(::firstAnchorTitle) ?: "锚点",
         microTitle = microTitle,
         microLabel = microLabel,
-        microCountdownText = countdownText,
+        microCountdownBase = countdownBase,
         worryLine = worryLine,
     )
 }
