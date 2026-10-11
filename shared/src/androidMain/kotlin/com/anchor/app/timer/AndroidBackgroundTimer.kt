@@ -34,16 +34,25 @@ class AndroidBackgroundTimer(context: Context, private val kind: BackgroundTimer
             .putLong(DEADLINE, deadline)
             .putBoolean(FIRED, false)
             .apply()
-        // setAlarmClock：豁免精确闹钟权限与 OEM 降级策略（实测 ColorOS 对 setExactAndAllowWhileIdle
-        // 加最长 1 小时窗口），计时到点秒级准时；触发本身无铃声/震动，仍是应用的通知渠道交付。
+        // setAlarmClock 在精确闹钟权限已授予时秒级准时（且实测绕过 ColorOS 对
+        // setExactAndAllowWhileIdle 的最长 1 小时降级窗口）；触发本身无铃声/震动。
         // 注意其触发时间是墙钟（RTC 纪元），deadline 是 elapsedRealtime——必须换算，否则立即触发。
-        alarmManager.setAlarmClock(
-            AlarmManager.AlarmClockInfo(
-                System.currentTimeMillis() + durationMillis,
-                showIntent(),
-            ),
-            pendingIntent(),
-        )
+        try {
+            alarmManager.setAlarmClock(
+                AlarmManager.AlarmClockInfo(
+                    System.currentTimeMillis() + durationMillis,
+                    showIntent(),
+                ),
+                pendingIntent(),
+            )
+        } catch (_: SecurityException) {
+            // 权限缺失（Play 渠道或被撤销）时降级：尽力而为，可能被 OEM 推迟，绝不崩溃。
+            alarmManager.setAndAllowWhileIdle(
+                AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                deadline,
+                pendingIntent(),
+            )
+        }
         return true
     }
 

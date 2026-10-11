@@ -178,12 +178,22 @@ class AndroidReminderScheduler(context: Context) {
     }
 
     private fun schedule(kind: ReminderKind, atMillis: Long) {
-        // setAlarmClock 豁免精确闹钟权限门控，OEM 策略（实测 ColorOS 把 setExactAndAllowWhileIdle
-        // 降级为最长 1 小时窗口）也把它按闹钟类对待——秒级准时。触发本身无铃声/震动，交付仍是应用的通知渠道。
-        alarmManager.setAlarmClock(
-            AlarmManager.AlarmClockInfo(atMillis, showIntent()),
-            pendingIntent(kind),
-        )
+        try {
+            // setAlarmClock 在精确闹钟权限已授予时秒级准时（且实测绕过 ColorOS 对
+            // setExactAndAllowWhileIdle 的最长 1 小时降级窗口）；触发本身无铃声/震动。
+            alarmManager.setAlarmClock(
+                AlarmManager.AlarmClockInfo(atMillis, showIntent()),
+                pendingIntent(kind),
+            )
+        } catch (_: SecurityException) {
+            // Android 14+ 的 setAlarmClock 同样要求精确闹钟权限（Play 渠道无 USE_EXACT_ALARM 或被撤销时）。
+            // 降级为尽力而为的非精确闹钟：可能被 OEM 推迟，绝不崩溃。
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atMillis, pendingIntent(kind))
+            } else {
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atMillis, pendingIntent(kind))
+            }
+        }
     }
 
     private fun showIntent(): PendingIntent {
