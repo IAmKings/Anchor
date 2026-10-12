@@ -90,3 +90,8 @@ internal fun interpretationHits(logs: List<CameraLog>): List<InterpretationHit> 
 }
 
 internal fun interpretationSampleCount(logs: List<CameraLog>): Int = logs.count { it.hasInference() }
+
+// 医生报告对单条日志打标：与洞察页共用同一词表，但不设 15 条样本门槛——
+// 报告只标注「这条推断命中的句式」，不做任何跨记录的归类或诊断结论。
+fun interpretationLabelsFor(log: CameraLog): List<String> =
+    interpretationTemplates.filter { it.matches(log) }.map { it.label }

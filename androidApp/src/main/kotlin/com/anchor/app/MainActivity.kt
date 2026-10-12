@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.anchor.app.medicalreport.buildMedicalReport
 import com.anchor.app.reminder.AndroidReminderScheduler
 import com.anchor.app.rhythm.seedRhythmDemoData
 import com.anchor.app.reminder.ReminderKind
@@ -60,6 +61,13 @@ class MainActivity : FragmentActivity() {
 
     private val importBackup = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri?.let(::restoreEncryptedExport)
+    }
+
+    // 医生审阅版 PDF 是明文（已脱敏），所以用普通 pdf MIME；加密备份仍是自定义 MIME，两条通道互不干扰。
+    private val saveMedicalReportToFolder = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/pdf"),
+    ) { uri ->
+        if (uri != null) copyMedicalReportTo(uri)
     }
     private val requestPostNotifications = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -123,6 +131,8 @@ class MainActivity : FragmentActivity() {
     private var exportPassword by mutableStateOf("")
     private var exportStatus by mutableStateOf<String?>(null)
     private var exportPasswordCopied by mutableStateOf(false)
+    private var medicalReportStatus by mutableStateOf<String?>(null)
+    private var lastMedicalReportFile: File? = null
     private var lastExportFile: File? = null
     private var deleteStatus by mutableStateOf<String?>(null)
     private var reminderAllows by mutableStateOf(ReminderToggle.entries.associateWith { true })
@@ -280,6 +290,8 @@ class MainActivity : FragmentActivity() {
                     exportStatus = null
                     importBackup.launch(arrayOf("application/vnd.anchor.encrypted-export", "application/octet-stream"))
                 },
+                medicalReportStatus = medicalReportStatus,
+                onExportMedicalReport = { generateMedicalReport() },
                 deleteStatus = deleteStatus,
                 onDeleteAllData = { deleteAllLocalData() },
                 reminderAllows = reminderAllows,
@@ -738,6 +750,44 @@ class MainActivity : FragmentActivity() {
         password.fill('\u0000')
     }
 
+    // 患者编号是跨报告的稳定假名：首次生成后存本地，页眉只展示打码版，完整值不进任何导出内容。
+    private fun medicalPatientId(): String {
+        val prefs = getSharedPreferences(MEDICAL_PREFERENCES, MODE_PRIVATE)
+        prefs.getString(MEDICAL_PATIENT_ID, null)?.let { return it }
+        val hex = "0123456789ABCDEF"
+        val random = java.security.SecureRandom()
+        fun group(size: Int) = buildString { repeat(size) { append(hex[random.nextInt(16)]) } }
+        val id = "ANC-${group(8)}-${group(4)}"
+        prefs.edit().putString(MEDICAL_PATIENT_ID, id).apply()
+        return id
+    }
+
+    private fun generateMedicalReport() {
+        runCatching {
+            val report = buildMedicalReport(anchorStore, medicalPatientId(), System.currentTimeMillis())
+            require(report.hasContent) { "还没有可报告的记录：先写双栏日志、情绪卡或微行动。" }
+            val file = renderMedicalReportPdf(this, report)
+            lastMedicalReportFile = file
+            medicalReportStatus = "已生成 ${file.name}，请选择保存位置。"
+            saveMedicalReportToFolder.launch(file.name)
+        }.onFailure {
+            lastMedicalReportFile = null
+            medicalReportStatus = it.message ?: "无法生成 PDF 报告。"
+        }
+    }
+
+    private fun copyMedicalReportTo(uri: Uri) {
+        val file = lastMedicalReportFile ?: return
+        runCatching {
+            contentResolver.openOutputStream(uri)?.use { out ->
+                file.inputStream().use { input -> input.copyTo(out) }
+            } ?: error("无法写入所选位置")
+            medicalReportStatus = "已保存 PDF。报告已脱敏但不加密，请自行妥善传递给医师。"
+        }.onFailure {
+            medicalReportStatus = it.message ?: "无法保存到所选位置。"
+        }
+    }
+
     private fun saveDemoRhythmIds(ids: Set<Long>) {
         getSharedPreferences("m0-debug", MODE_PRIVATE)
             .edit()
@@ -830,6 +880,8 @@ class MainActivity : FragmentActivity() {
                     "无法删除导出缓存。"
                 }
             }
+            // 患者假名是记录的档案身份，随记录一起消失；下次导出会重新生成，旧报告无法再与新报告对档。
+            getSharedPreferences(MEDICAL_PREFERENCES, MODE_PRIVATE).edit().clear().apply()
             biometricLock.enabled = false
             // 不可逆的清库放最后：只有真正清空成功才会走到重建界面。
             anchorStore.clearAllData()
@@ -888,5 +940,7 @@ class MainActivity : FragmentActivity() {
         const val NOTIFICATION_ASKED = "asked"
         const val EXACT_ALARM_PREFERENCES = "anchor-exact-alarm"
         const val EXACT_ALARM_ASKED = "asked"
+        const val MEDICAL_PREFERENCES = "anchor-medical"
+        const val MEDICAL_PATIENT_ID = "patient-id"
     }
 }

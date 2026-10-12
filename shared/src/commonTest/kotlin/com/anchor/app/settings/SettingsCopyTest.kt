@@ -41,6 +41,17 @@ class SettingsCopyTest {
     }
 
     @Test
+    fun medicalReportCopyDisclosesScopeAndNeverClaimsDiagnosis() {
+        assertEquals("医生审阅报告（PDF）", settingsMedicalReportTitle)
+        assertEquals("生成 PDF 报告", settingsMedicalReportAction)
+        assertTrue(settingsMedicalReportBody.contains("脱敏"))
+        assertTrue(settingsMedicalReportBody.contains("不是诊断"))
+        assertTrue(settingsMedicalReportBody.contains("录音"))
+        // 加密备份的文案保持只讲备份，不与 PDF 报告混流
+        assertFalse(settingsExportBody.contains("PDF"))
+    }
+
+    @Test
     fun themeChoiceDefaultsToSystemAndLabelsTheThreeModes() {
         assertEquals(ThemeChoice.System, ThemeChoice.entries.first())
         assertEquals(listOf("跟随系统", "浅色", "深色"), ThemeChoice.entries.map(::themeChoiceLabel))

@@ -83,6 +83,8 @@ fun SettingsScreen(
     exportStatus: String?,
     onExport: () -> Unit,
     onImport: () -> Unit,
+    medicalReportStatus: String? = null,
+    onExportMedicalReport: () -> Unit = {},
     deleteStatus: String?,
     onDeleteAllData: () -> Unit,
     onOpenHelp: () -> Unit = {},
@@ -268,6 +270,17 @@ fun SettingsScreen(
                 }
                 Text(settingsAudioNotRestored, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 exportStatus?.let { Text(it, color = MaterialTheme.colorScheme.primary, fontSize = 14.sp) }
+            }
+
+            SettingsCard {
+                Text(settingsMedicalReportTitle, fontWeight = FontWeight.SemiBold)
+                Text(settingsMedicalReportBody, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp, lineHeight = 22.sp)
+                Button(
+                    onClick = onExportMedicalReport,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = SettingsActionMinHeight),
+                    shape = RoundedCornerShape(12.dp),
+                ) { Text(settingsMedicalReportAction, fontSize = 17.sp) }
+                medicalReportStatus?.let { Text(it, color = MaterialTheme.colorScheme.primary, fontSize = 14.sp) }
             }
 
             SettingsCard {
