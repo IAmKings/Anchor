@@ -875,9 +875,12 @@ class MainActivity : FragmentActivity() {
             AndroidReminderScheduler(this).cancelAll()
             getSystemService(NotificationManager::class.java).cancelAll()
             // 次要清理尽力而为：失败不中断（缓存残留无碍），绝不能出现"报错但已清空"的状态。
-            runCatching {
-                check(File(cacheDir, "exports").let { !it.exists() || it.deleteRecursively() }) {
-                    "无法删除导出缓存。"
+            // medical-reports 是明文 PDF，比加密导出缓存更敏感，必须与 exports 同批清掉。
+            listOf("exports", MEDICAL_REPORT_CACHE_FOLDER).forEach { name ->
+                runCatching {
+                    check(File(cacheDir, name).let { !it.exists() || it.deleteRecursively() }) {
+                        "无法删除 $name 缓存。"
+                    }
                 }
             }
             // 患者假名是记录的档案身份，随记录一起消失；下次导出会重新生成，旧报告无法再与新报告对档。

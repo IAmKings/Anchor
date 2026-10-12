@@ -72,4 +72,4 @@ Release signing and iOS device QA are not on the current critical path (see `IMP
 
 ## When a change is out of scope
 
-Do not silently build: doctor PDF export, a fifth reminder class, lock-screen notification artwork, cloud sync, accounts, community, or an LLM chat. Those are listed as non-goals in the product plan and prior session notes. Create a Trellis task and wait for an explicit product decision.
+Do not silently build: a fifth reminder class, lock-screen notification artwork, cloud sync, accounts, community, or an LLM chat. (Doctor PDF export left the non-goals list on 2026-10-10 by explicit product decision — sanitized plaintext PDF, no worry-card text/audio, no diagnosis claims.) Those are listed as non-goals in the product plan and prior session notes. Create a Trellis task and wait for an explicit product decision.

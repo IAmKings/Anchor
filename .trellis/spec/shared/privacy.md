@@ -32,6 +32,7 @@ If you need a debug breadcrumb while developing, keep it out of committed `commo
 | SQLCipher DB | Keystore-wrapped random key; not a user password |
 | Private M4A worry audio | Local `voice-notes/`; export JSON has `hasAudio` + basename only; bytes live inside the encrypted `.anchor` zip under `audio/` |
 | Encrypted `.anchor` export | User-chosen password, **not** stored; PBKDF2 + AES-GCM; share via read-only FileProvider URI, or save to a user-picked directory through the system folder picker (`CreateDocument`) — user-initiated, no storage permission, app never reads that location |
+| Doctor report PDF (plaintext) | Generated on demand into `cacheDir/medical-reports/`, masked patient pseudonym only (`ANC-****-XXXX`; full random ID lives in app-private prefs and is wiped by 「彻底删除」). Never contains worry-card text, audio bytes/names, relation data, or scale scores. Leaves the device only via user-picked `CreateDocument("application/pdf")`; cache cleared with the export cache on full deletion |
 | Export password in clipboard | Auto-copied once on export, flagged `EXTRA_IS_SENSITIVE` on API 33+; never persisted by the app |
 | Worry audio deletion | DB row update first, file delete second — the recording is unrecoverable, so never delete the file before the store commit succeeds |
 | Notifications | Lock-screen text is the app name `锚点` only — no body |

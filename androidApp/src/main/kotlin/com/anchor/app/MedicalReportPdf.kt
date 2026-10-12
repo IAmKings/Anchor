@@ -26,6 +26,7 @@ import com.anchor.app.medicalreport.medicalReportColumnTime
 import com.anchor.app.medicalreport.medicalReportConfidential
 import com.anchor.app.medicalreport.medicalReportCountLine
 import com.anchor.app.medicalreport.medicalReportDisclaimer
+import com.anchor.app.medicalreport.medicalReportEmotionCountLine
 import com.anchor.app.medicalreport.medicalReportEmotionDetail
 import com.anchor.app.medicalreport.medicalReportEmotionFrequency
 import com.anchor.app.medicalreport.medicalReportEmotionLastAt
@@ -163,11 +164,13 @@ private class MedicalReportDocument(private val report: MedicalReport) {
         doc.finishPage(page)
     }
 
-    private fun ensureSpace(needed: Float) {
+    private fun ensureSpace(needed: Float): Boolean {
         if (y + needed > PAGE_HEIGHT - FOOTER_ZONE) {
             finishPage()
             startPage()
+            return true
         }
+        return false
     }
 
     private fun drawText(text: String, paint: TextPaint, x: Float, width: Int, center: Boolean = false): Float {
@@ -249,19 +252,34 @@ private class MedicalReportDocument(private val report: MedicalReport) {
     private val cameraTimeWidth = 78f
     private val cameraColumnWidth = (PAGE_WIDTH - 2 * MARGIN_H - cameraTimeWidth) / 2f
 
-    private fun cameraHeaderRow() {
+    // 表头横带 + 底线：两张表共用的骨架；返回是否翻到了新页，调用方据此补绘表头
+    private fun headerBand(drawLabels: (base: Float) -> Unit): Boolean {
         val rowHeight = 24f
-        ensureSpace(rowHeight)
+        val brokePage = ensureSpace(rowHeight)
         fillPaint.color = ReportHeaderBg
         canvas.drawRect(MARGIN_H, y, PAGE_WIDTH - MARGIN_H, y + rowHeight, fillPaint)
-        var x = MARGIN_H + 8f
-        val base = y + 15.5f
-        canvas.drawText(medicalReportColumnTime, x, base, headerLabelPaint)
-        x += cameraTimeWidth
-        canvas.drawText(medicalReportColumnFact, x + 6f, base, headerLabelPaint)
-        canvas.drawText(medicalReportColumnInference, x + cameraColumnWidth + 6f, base, headerLabelPaint)
+        drawLabels(y + 15.5f)
         y += rowHeight
         horizontalLine(ReportBorder)
+        return brokePage
+    }
+
+    private fun cameraHeaderRow() {
+        headerBand { base ->
+            canvas.drawText(medicalReportColumnTime, MARGIN_H + 8f, base, headerLabelPaint)
+            val columnX = MARGIN_H + 8f + cameraTimeWidth
+            canvas.drawText(medicalReportColumnFact, columnX + 6f, base, headerLabelPaint)
+            canvas.drawText(medicalReportColumnInference, columnX + cameraColumnWidth + 6f, base, headerLabelPaint)
+        }
+    }
+
+    // 表尾「共 N 条，仅列最近 10 条」注记：口径写在正文里（含推断 / 已完成），读者才知道为什么比总数少
+    private fun truncatedTail(total: Int, qualifier: String) {
+        val note = medicalReportTruncatedNote(total, qualifier)
+        if (note.isNotEmpty()) {
+            moveDown(6f)
+            drawText(note, detailPaint, MARGIN_H, contentWidth)
+        }
     }
 
     private fun drawCameraTable() {
@@ -279,8 +297,8 @@ private class MedicalReportDocument(private val report: MedicalReport) {
             val chipHeight = 15f
             val labelsHeight = row.labels.size * (chipHeight + 4f)
             val rowHeight = maxOf(factLayout.height.toFloat(), inferenceLayout.height + labelsHeight) + 14f
-            ensureSpace(rowHeight + 1f)
-            if (index > 0) horizontalLine(ReportBorder)
+            // 翻页后新页先重绘表头；只有同一页内的相邻行才画分隔线
+            if (ensureSpace(rowHeight + 1f)) cameraHeaderRow() else if (index > 0) horizontalLine(ReportBorder)
 
             val rowTop = y
             canvas.save()
@@ -308,11 +326,7 @@ private class MedicalReportDocument(private val report: MedicalReport) {
             y = rowTop + rowHeight
         }
         horizontalLine(ReportBorder)
-        val note = medicalReportTruncatedNote(report.cameraTotal)
-        if (note.isNotEmpty()) {
-            moveDown(6f)
-            drawText(note, detailPaint, MARGIN_H, contentWidth)
-        }
+        truncatedTail(report.cameraTotal, "含推断")
     }
 
     // ---------- 情绪 Top3 ----------
@@ -359,6 +373,8 @@ private class MedicalReportDocument(private val report: MedicalReport) {
             x += cardWidth + gap
         }
         moveDown(cardHeight)
+        // Top 3 之外的上下文：区块只展示前三种，医生需要知道总量
+        drawText(medicalReportEmotionCountLine(report.emotionTotal), detailPaint, MARGIN_H, contentWidth)
     }
 
     // ---------- 微行动表 ----------
@@ -367,21 +383,16 @@ private class MedicalReportDocument(private val report: MedicalReport) {
     private val actionColumnWidth = (PAGE_WIDTH - 2 * MARGIN_H - actionGapWidth * 3)
 
     private fun actionHeaderRow() {
-        val rowHeight = 24f
-        ensureSpace(rowHeight)
-        fillPaint.color = ReportHeaderBg
-        canvas.drawRect(MARGIN_H, y, PAGE_WIDTH - MARGIN_H, y + rowHeight, fillPaint)
-        val base = y + 15.5f
-        canvas.drawText(medicalReportColumnAction, MARGIN_H + 8f, base, headerLabelPaint)
-        fun centerAt(text: String, columnX: Float, width: Float) {
-            val w = headerLabelPaint.measureText(text)
-            canvas.drawText(text, columnX + (width - w) / 2f, base, headerLabelPaint)
+        headerBand { base ->
+            canvas.drawText(medicalReportColumnAction, MARGIN_H + 8f, base, headerLabelPaint)
+            fun centerAt(text: String, columnX: Float) {
+                val w = headerLabelPaint.measureText(text)
+                canvas.drawText(text, columnX + (actionGapWidth - w) / 2f, base, headerLabelPaint)
+            }
+            centerAt(medicalReportColumnPredicted, MARGIN_H + actionColumnWidth)
+            centerAt(medicalReportColumnActual, MARGIN_H + actionColumnWidth + actionGapWidth)
+            centerAt(medicalReportColumnGap, MARGIN_H + actionColumnWidth + actionGapWidth * 2)
         }
-        centerAt(medicalReportColumnPredicted, MARGIN_H + actionColumnWidth, actionGapWidth)
-        centerAt(medicalReportColumnActual, MARGIN_H + actionColumnWidth + actionGapWidth, actionGapWidth)
-        centerAt(medicalReportColumnGap, MARGIN_H + actionColumnWidth + actionGapWidth * 2, actionGapWidth)
-        y += rowHeight
-        horizontalLine(ReportBorder)
     }
 
     private fun drawActionTable() {
@@ -394,8 +405,8 @@ private class MedicalReportDocument(private val report: MedicalReport) {
         report.actionRows.forEachIndexed { index, row ->
             val titleLayout = layoutOf(row.title, bodyPaint, cellWidth)
             val rowHeight = maxOf(titleLayout.height.toFloat(), 16f) + 16f
-            ensureSpace(rowHeight + 1f)
-            if (index > 0) horizontalLine(ReportBorder)
+            // 与双栏表同规则：翻页续绘表头，同页相邻行才画分隔线
+            if (ensureSpace(rowHeight + 1f)) actionHeaderRow() else if (index > 0) horizontalLine(ReportBorder)
             val rowTop = y
             val base = rowTop + 11f
             canvas.save()
@@ -412,11 +423,7 @@ private class MedicalReportDocument(private val report: MedicalReport) {
             y = rowTop + rowHeight
         }
         horizontalLine(ReportBorder)
-        val note = com.anchor.app.medicalreport.medicalReportTruncatedNote(report.actionTotal)
-        if (note.isNotEmpty()) {
-            moveDown(6f)
-            drawText(note, detailPaint, MARGIN_H, contentWidth)
-        }
+        truncatedTail(report.actionTotal, "已完成")
     }
 
     // ---------- 页脚（每页） ----------

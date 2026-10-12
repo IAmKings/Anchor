@@ -25,7 +25,6 @@ data class MedicalReportEmotionStat(
 
 data class MedicalReportActionRow(
     val title: String,
-    val completedAtMillis: Long,
     val predicted: Int,
     val actual: Int,
 ) {
@@ -81,7 +80,6 @@ fun buildMedicalReport(store: AnchorStore, patientId: String, nowMillis: Long): 
     val actionRows = completed.take(MEDICAL_REPORT_ROW_LIMIT).map { action ->
         MedicalReportActionRow(
             title = action.title,
-            completedAtMillis = action.completedAtMillis ?: action.createdAtMillis,
             predicted = action.predictedDifficulty!!,
             actual = action.actualDifficulty!!,
         )
@@ -123,8 +121,12 @@ fun medicalReportPeriodDays(fromMillis: Long, toMillis: Long): Long =
 
 fun medicalReportCountLine(total: Int): String = "共 $total 条核心记录"
 
-fun medicalReportTruncatedNote(total: Int): String =
-    if (total > MEDICAL_REPORT_ROW_LIMIT) "共 $total 条，仅列最近 $MEDICAL_REPORT_ROW_LIMIT 条。" else ""
+// 双栏表只列含推断的记录、微行动表只列难度齐全的记录——注记必须说明口径，否则读起来像漏了数据。
+fun medicalReportTruncatedNote(total: Int, qualifier: String? = null): String {
+    if (total <= MEDICAL_REPORT_ROW_LIMIT) return ""
+    val subject = if (qualifier == null) "共 $total 条" else "共 $total 条$qualifier"
+    return "$subject，仅列最近 $MEDICAL_REPORT_ROW_LIMIT 条。"
+}
 
 const val medicalReportTitle = "状态记录导出报告"
 const val medicalReportSubtitle = "医生审阅版"
@@ -143,6 +145,8 @@ const val medicalReportEmotionTitle = "核心情绪卡片分布（Top 3）"
 const val medicalReportEmotionDetail = "应用内没有强度评分，条长为相对最常见情绪的出现次数。"
 const val medicalReportEmotionFrequency = "出现频次"
 const val medicalReportEmotionLastAt = "最近一次"
+
+fun medicalReportEmotionCountLine(total: Int): String = "共 $total 张情绪卡。"
 
 const val medicalReportActionTitle = "微行动验证试验（预测 vs. 实际）"
 const val medicalReportActionDetail = "行为激活记录：行动前预测的困难度与实际体感之间的落差。"

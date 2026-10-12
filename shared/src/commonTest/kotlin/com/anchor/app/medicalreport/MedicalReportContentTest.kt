@@ -37,12 +37,12 @@ class MedicalReportContentTest {
         // store 返回最新在前：第一行是最后写入的一条
         assertEquals("第11次方案出错被退回", report.cameraRows.first().fact)
         assertEquals(listOf("出错 = 完蛋"), report.cameraRows.first().labels)
-        assertEquals("共 12 条，仅列最近 10 条。", medicalReportTruncatedNote(report.cameraTotal))
+        assertEquals("共 12 条含推断，仅列最近 10 条。", medicalReportTruncatedNote(report.cameraTotal, "含推断"))
         assertEquals("ANC-****-9F8E", report.patientIdMasked)
         // 报告窗口 = 全部历史跨度
         assertEquals(1_000L, report.periodFromMillis)
         assertEquals(20_000L, report.periodToMillis)
-        assertTrue(medicalReportTruncatedNote(10).isEmpty())
+        assertTrue(medicalReportTruncatedNote(10, "含推断").isEmpty())
     }
 
     @Test
@@ -56,6 +56,7 @@ class MedicalReportContentTest {
 
         assertEquals(listOf("失望", "羞耻", "空虚"), report.emotionTop.map { it.emotion })
         assertEquals(7, report.emotionTotal)
+        assertEquals("共 7 张情绪卡。", medicalReportEmotionCountLine(report.emotionTotal))
         assertEquals(1f, report.emotionTop[0].relativeShare)
         assertEquals(1f, report.emotionTop[1].relativeShare)
         assertEquals(1f / 3f, report.emotionTop[2].relativeShare, 0.001f)
