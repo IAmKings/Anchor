@@ -75,7 +75,7 @@ run git push origin "$TAG"
 if [ "$DRY_RUN" = "1" ]; then
   echo "[dry-run] 等待 workflow 发布 $TAG 并验证双渠道资产"
 else
-  echo "等待 GitHub Actions（发布 $TAG）…"
+  echo "等待 GitHub Actions（发布 ${TAG}）…"
   sleep 20
   RUN_ID=$(gh run list --workflow=internal-release.yml --limit 5 --json databaseId,headBundle --jq ".[] | select(.headBranch == \"$TAG\") | .databaseId" | head -1)
   [ -n "$RUN_ID" ] || { echo "✗ 未找到 $TAG 的 workflow run，请手动检查 gh run list"; exit 1; }
