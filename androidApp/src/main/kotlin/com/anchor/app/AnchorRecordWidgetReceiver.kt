@@ -9,10 +9,10 @@ import android.content.Intent
 import android.widget.RemoteViews
 
 /**
- * 「锚点 · 记录」桌面小组件：双栏日志与情绪标签箱两个记录入口，样式与「锚点 · 快捷」一致。
+ * 「锚点 · 记录」桌面小组件：双栏日志 / 情绪标签箱 / 洞察三个记录入口，样式与「锚点 · 快捷」一致。
  *
- * 深链复用 EXTRA_OPEN 通道（facts/emotion），守卫与记录页同语义：
- * facts 无条件可达（记录工具，等待期仍可写）；emotion 非等待期且可练习/有历史卡。
+ * 深链复用 EXTRA_OPEN 通道（facts/emotion/insights），守卫与记录页同语义：
+ * facts 无条件可达（记录工具，等待期仍可写）；emotion 非等待期且可练习/有历史卡；insights 无条件（只读统计）。
  */
 class AnchorRecordWidgetReceiver : AppWidgetProvider() {
 
@@ -20,8 +20,8 @@ class AnchorRecordWidgetReceiver : AppWidgetProvider() {
         val views = RemoteViews(context.packageName, R.layout.anchor_widget_record)
         val palette = WidgetTheming.paletteFor(context)
         WidgetTheming.applyBackground(views, palette, R.id.record_root)
-        WidgetTheming.applyIconTint(views, palette, R.id.record_anchor_icon, R.id.record_facts_icon, R.id.record_emotion_icon)
-        WidgetTheming.applyText(views, palette, R.id.record_title, R.id.record_facts_label, R.id.record_emotion_label)
+        WidgetTheming.applyIconTint(views, palette, R.id.record_anchor_icon, R.id.record_facts_icon, R.id.record_emotion_icon, R.id.record_insights_icon)
+        WidgetTheming.applyText(views, palette, R.id.record_title, R.id.record_facts_label, R.id.record_emotion_label, R.id.record_insights_label)
         val launch = Intent(context, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
